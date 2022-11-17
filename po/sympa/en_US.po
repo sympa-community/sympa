@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa 6.2\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2022-11-17 02:12:58+0000\n"
+"POT-Creation-Date: 2022-11-17 02:17:44+0000\n"
 "PO-Revision-Date: 2022-10-08 12:52+0000\n"
 "Last-Translator: IKEDA Soji <ikeda@conversion.co.jp>\n"
 "Language-Team: English (US) <LL@li.org>\n"
@@ -15509,167 +15509,31 @@ msgstr "Web forum mailing list"
 msgid "Mailing list for intranets"
 msgstr "Mailing list for intranets"
 
-#: src/lib/Sympa/Config/Schema.pm:1180
-msgid ""
-"See \"anonymous_sender\" list parameter.\n"
-"Default value prior to Sympa 6.1.19 is:\n"
-"  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
-"To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
-msgstr ""
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
 
-#: src/lib/Sympa/Config/Schema.pm:2146
-msgid ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-msgstr ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an spam filter that adds them one "
+#~ "or more headers. This parameter is used to select a special scenario in "
+#~ "order to decide the message's spam status: ham, spam or unsure. This "
+#~ "parameter replaces antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Messages are supposed to be filtered by an spam filter that adds them one "
+#~ "or more headers. This parameter is used to select a special scenario in "
+#~ "order to decide the message's spam status: ham, spam or unsure. This "
+#~ "parameter replaces antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
 
-#: src/lib/Sympa/Config/Schema.pm:2400
-msgid "Header field to tag spams"
-msgstr ""
+#~ msgid "The following virtual robots are running on this server:"
+#~ msgstr "The following virtual robots are running on this server:"
 
-#: src/lib/Sympa/Config/Schema.pm:2402
-msgid ""
-"If a spam filter (like spamassassin or j-chkmail) add a header field to tag "
-"spams, name of this header field (example X-Spam-Status)"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2410
-msgid "Regular expression to check header field to tag spams"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2412
-msgid ""
-"Regular expression applied on this header to verify message is a spam "
-"(example Yes)"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2420
-msgid "Regular expression to determine spam or ham."
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2422
-msgid ""
-"Regular expression applied on this header field to verify message is NOT a "
-"spam (example No)"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2430
-msgid "Name of header field to inform"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2432
-msgid ""
-"Messages are supposed to be filtered by an spam filter that adds them one or "
-"more headers. This parameter is used to select a special scenario in order "
-"to decide the message's spam status: ham, spam or unsure. This parameter "
-"replaces antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-msgstr ""
-"Messages are supposed to be filtered by an spam filter that adds them one or "
-"more headers. This parameter is used to select a special scenario in order "
-"to decide the message's spam status: ham, spam or unsure. This parameter "
-"replaces antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-
-#: src/lib/Sympa/Config/Schema.pm:4957
-msgid ""
-"This allows generated authentication keys to differ from a site to another. "
-"It is also used for encryption of user passwords stored in the database. The "
-"presence of this string is one reason why access to \"sympa.conf\" needs to "
-"be restricted to the \"sympa\" user.\n"
-"Note that changing this parameter will break all HTTP cookies stored in "
-"users' browsers, as well as all user passwords and lists X509 private keys. "
-"To prevent a catastrophe, Sympa refuses to start if this \"cookie\" "
-"parameter was changed."
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5327
-msgid "Enable FastCGI"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5360
-msgid ""
-"Colors are used in style sheet (CSS). They may be changed using web "
-"interface by listmasters."
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5473
-msgid "Colors for web interface, obsoleted"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5979
-msgid ""
-"Defines the prefix allowing to recognize that a list is an automatic list."
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5985
-msgid ""
-"Default timeout between two action-triggered synchronizations of list "
-"members with data sources."
-msgstr ""
-
-#: cpanfile:202
-msgid ""
-"CAS Single Sign-On client libraries. Required if you configure Sympa to "
-"delegate web authentication to a CAS server."
-msgstr ""
-
-#: cpanfile:235
-msgid "ODBC database driver, required if you connect to a database via ODBC."
-msgstr ""
-
-#: cpanfile:239
-msgid "Oracle database driver, required if you connect to a Oracle database."
-msgstr ""
-
-#: cpanfile:244
-msgid ""
-"PostgreSQL database driver, required if you connect to a PostgreSQL database."
-msgstr ""
-
-#: cpanfile:249
-msgid "SQLite database driver, required if you connect to a SQLite database."
-msgstr ""
-
-#: cpanfile:258
-msgid ""
-"MySQL / MariaDB database driver, required if you connect to a MySQL (or "
-"MariaDB) database."
-msgstr ""
-
-#: cpanfile:262
-msgid ""
-"Used for configureable hardening of passwords via the password_validation "
-"sympa.conf directive."
-msgstr ""
-
-#: cpanfile:266
-msgid ""
-"Useful when running command line utilities in the console not supporting "
-"UTF-8 encoding."
-msgstr ""
-
-#: cpanfile:278
-msgid "Required in order to use ARC features to add ARC seals."
-msgstr ""
-
-#: cpanfile:291
-msgid "Required to support IPv6 with client features."
-msgstr ""
-
-#: cpanfile:306
-msgid "Required to query LDAP directories over TLS."
-msgstr ""
-
-#: default/web_tt2/serveradmin.tt2:20
-msgid "The following virtual robots are running on this server:"
-msgstr "The following virtual robots are running on this server:"
-
-#: default/web_tt2/serveradmin.tt2:59
-msgid "No Virtual Robot defined on this server"
-msgstr "No Virtual Robot defined on this server"
+#~ msgid "No Virtual Robot defined on this server"
+#~ msgstr "No Virtual Robot defined on this server"
 
 #, fuzzy
 #~ msgid "bounce management"

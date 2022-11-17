@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2022-11-17 02:12:58+0000\n"
+"POT-Creation-Date: 2022-11-17 02:17:44+0000\n"
 "PO-Revision-Date: 2022-06-17 06:02+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Euskara\n"
@@ -11621,6 +11621,7 @@ msgstr ""
 
 #. (family,robot,msg_id)
 #: default/mail_tt2/listmaster_notification.tt2:361
+#, fuzzy, smalltalk-format
 msgid ""
 "Failed to process message: family %1@%2 does not exist. Unable to create the "
 "dynamic list.  Message <%3> was ignored."
@@ -15103,109 +15104,33 @@ msgstr "Web foroaren eposta zerrenda"
 msgid "Mailing list for intranets"
 msgstr "Intranetentzako eposta zerrenda"
 
-#: src/lib/Sympa/Config/Schema.pm:1180
-msgid ""
-"See \"anonymous_sender\" list parameter.\n"
-"Default value prior to Sympa 6.1.19 is:\n"
-"  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
-"To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
-msgstr ""
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "Bakarra zehazten bada, ongietorri mezua itzulera bide bakarra erabiliz "
+#~ "bidaltzen da, errebotea baldin badago harpideduna zuzenean ezabatzeko."
 
-#: src/lib/Sympa/Config/Schema.pm:2146
-msgid ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-msgstr ""
-"Bakarra zehazten bada, ongietorri mezua itzulera bide bakarra erabiliz "
-"bidaltzen da, errebotea baldin badago harpideduna zuzenean ezabatzeko."
-
-#: src/lib/Sympa/Config/Schema.pm:2400
-msgid "Header field to tag spams"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2410
-msgid "Regular expression to check header field to tag spams"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2420
-msgid "Regular expression to determine spam or ham."
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2432
 #, fuzzy
-msgid ""
-"Messages are supposed to be filtered by an spam filter that adds them one or "
-"more headers. This parameter is used to select a special scenario in order "
-"to decide the message's spam status: ham, spam or unsure. This parameter "
-"replaces antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-msgstr ""
-"Mezuak antispam batetik pasako direla suposatzen da, eta honek goiburu bat "
-"edo gehiago gehituko dizkiela. Parametro hau eszenatoki berezi bat "
-"hautatzeko erabiltzen da, mezuaren spam izaera erabakitzeko : ona, spam-a "
-"edo ziurgabea. Parametro honek antispam_tag_header_name, "
-"antispam_tag_header_spam_regexp eta antispam_tag_header_ham_regexp ordezten "
-"ditu."
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an spam filter that adds them one "
+#~ "or more headers. This parameter is used to select a special scenario in "
+#~ "order to decide the message's spam status: ham, spam or unsure. This "
+#~ "parameter replaces antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Mezuak antispam batetik pasako direla suposatzen da, eta honek goiburu "
+#~ "bat edo gehiago gehituko dizkiela. Parametro hau eszenatoki berezi bat "
+#~ "hautatzeko erabiltzen da, mezuaren spam izaera erabakitzeko : ona, spam-a "
+#~ "edo ziurgabea. Parametro honek antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp eta antispam_tag_header_ham_regexp "
+#~ "ordezten ditu."
 
-#: src/lib/Sympa/Config/Schema.pm:4957
-msgid ""
-"This allows generated authentication keys to differ from a site to another. "
-"It is also used for encryption of user passwords stored in the database. The "
-"presence of this string is one reason why access to \"sympa.conf\" needs to "
-"be restricted to the \"sympa\" user.\n"
-"Note that changing this parameter will break all HTTP cookies stored in "
-"users' browsers, as well as all user passwords and lists X509 private keys. "
-"To prevent a catastrophe, Sympa refuses to start if this \"cookie\" "
-"parameter was changed."
-msgstr ""
+#~ msgid "The following virtual robots are running on this server:"
+#~ msgstr "Zerbitzari honetan ondoko robot birtualak daude martxan:"
 
-#: src/lib/Sympa/Config/Schema.pm:5327
-msgid "Enable FastCGI"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5360
-msgid ""
-"Colors are used in style sheet (CSS). They may be changed using web "
-"interface by listmasters."
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5473
-msgid "Colors for web interface, obsoleted"
-msgstr ""
-
-#: cpanfile:202
-msgid ""
-"CAS Single Sign-On client libraries. Required if you configure Sympa to "
-"delegate web authentication to a CAS server."
-msgstr ""
-
-#: cpanfile:214
-msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
-msgstr ""
-
-#: cpanfile:278
-msgid "Required in order to use ARC features to add ARC seals."
-msgstr ""
-
-#: cpanfile:291
-msgid "Required to support IPv6 with client features."
-msgstr ""
-
-#: cpanfile:306
-msgid "Required to query LDAP directories over TLS."
-msgstr ""
-
-#: cpanfile:321
-msgid "Sanitizes inputs with Unicode text."
-msgstr ""
-
-#: default/web_tt2/serveradmin.tt2:20
-msgid "The following virtual robots are running on this server:"
-msgstr "Zerbitzari honetan ondoko robot birtualak daude martxan:"
-
-#: default/web_tt2/serveradmin.tt2:59
-msgid "No Virtual Robot defined on this server"
-msgstr "Zerbitzari honetan ez dago robot birtualik"
+#~ msgid "No Virtual Robot defined on this server"
+#~ msgstr "Zerbitzari honetan ez dago robot birtualik"
 
 #~ msgid "bounce management"
 #~ msgstr "erreboteen kudeaketa"

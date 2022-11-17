@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2022-11-17 02:12:58+0000\n"
+"POT-Creation-Date: 2022-11-17 02:17:44+0000\n"
 "PO-Revision-Date: 2022-06-17 06:02+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Ελληνικά\n"
@@ -9400,6 +9400,7 @@ msgstr "Ανύπαρκτες αιτήσεις συνδρομής"
 
 #. (list,email)
 #: default/web_tt2/signoff.tt2:3
+#, fuzzy, smalltalk-format
 msgid "You are not subscribed to list %1 with e-mail address %2"
 msgstr "Δεν είστε συνδρομητής στη λίστα %1 με την διεύθυνση %1"
 
@@ -10452,6 +10453,7 @@ msgstr "Αυτές οι εντολές απέτυχαν λόγω εσωτερι�
 
 #. (conf.wwsympa_url)
 #: default/mail_tt2/command_report.tt2:130
+#, fuzzy, smalltalk-format
 msgid "For further information, check the mailing list web site %1"
 msgstr ""
 "Για περισσότερες πληροφορίες, δείτε την ιστοσελίδα του εξυπηρετητή "
@@ -12249,6 +12251,7 @@ msgstr "Οι προσαρμογές της λίστας \"%1\" έχουν αφα
 
 #. (list.name,domain,param0,param1,param2)
 #: default/mail_tt2/listowner_notification.tt2:45
+#, fuzzy, smalltalk-format
 msgid ""
 "List %1@%2 has been reinstantiated (family %3). \n"
 "Some of the customizations have been removed because they no longer respect "
@@ -13264,6 +13267,7 @@ msgstr "%1 διευθύνσεις έχουν αφαιρεθεί"
 
 #. (report_param.action)
 #: default/mail_tt2/report.tt2:409
+#, fuzzy, smalltalk-format
 msgid "%1: action completed"
 msgstr "1%: ενέργεια ολοκληρώθηκε"
 
@@ -15381,215 +15385,34 @@ msgstr "Web forum ML"
 msgid "Mailing list for intranets"
 msgstr "Λίστα για εσωτερικό δίκτυο"
 
-#: src/lib/Sympa/Config/Schema.pm:1180
-msgid ""
-"See \"anonymous_sender\" list parameter.\n"
-"Default value prior to Sympa 6.1.19 is:\n"
-"  Sender,X-Sender,Received,Message-id,From,X-Envelope-To,Resent-From,Reply-"
-"To,Organization,Disposition-Notification-To,X-Envelope-From,X-X-Sender"
-msgstr ""
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "Αν οριστεί ως μοναδικό (unique), το μήνυμα καλωσορίσματος χρησιμοποιεί "
+#~ "ένα μοναδικό μονοπάτι για την απευθείας διαγραφή του συνδρομητή σε "
+#~ "περίπτωση bounce."
 
-#: src/lib/Sympa/Config/Schema.pm:2146
-msgid ""
-"If set to unique, the welcome message is sent using a unique return path in "
-"order to remove the subscriber immediately in the case of a bounce."
-msgstr ""
-"Αν οριστεί ως μοναδικό (unique), το μήνυμα καλωσορίσματος χρησιμοποιεί ένα "
-"μοναδικό μονοπάτι για την απευθείας διαγραφή του συνδρομητή σε περίπτωση "
-"bounce."
-
-#: src/lib/Sympa/Config/Schema.pm:2400
-msgid "Header field to tag spams"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2410
-msgid "Regular expression to check header field to tag spams"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2420
-msgid "Regular expression to determine spam or ham."
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:2432
 #, fuzzy
-msgid ""
-"Messages are supposed to be filtered by an spam filter that adds them one or "
-"more headers. This parameter is used to select a special scenario in order "
-"to decide the message's spam status: ham, spam or unsure. This parameter "
-"replaces antispam_tag_header_name, antispam_tag_header_spam_regexp and "
-"antispam_tag_header_ham_regexp."
-msgstr ""
-"Τα μηνύματα υποτίθεται ότι φιλτράρονται από antispam που προσθέτουν μια ή "
-"περισσότερες κεφαλίδες στα μηνύματα. Αυτή η παράμετρος χρησιμοποιείται για "
-"την επιλογή ειδικού σεναρίου προκειμένου να αποφασιστεί η κατάσταση spam του "
-"μηνύματος: ham, spam, ή unsure. Αυτή η παράμετρος αντικαθιστά τα "
-"antispam_tag_header_name, antispam_tag_header_spam_regexp και "
-"antispam_tag_header_ham_regexp."
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an spam filter that adds them one "
+#~ "or more headers. This parameter is used to select a special scenario in "
+#~ "order to decide the message's spam status: ham, spam or unsure. This "
+#~ "parameter replaces antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Τα μηνύματα υποτίθεται ότι φιλτράρονται από antispam που προσθέτουν μια ή "
+#~ "περισσότερες κεφαλίδες στα μηνύματα. Αυτή η παράμετρος χρησιμοποιείται "
+#~ "για την επιλογή ειδικού σεναρίου προκειμένου να αποφασιστεί η κατάσταση "
+#~ "spam του μηνύματος: ham, spam, ή unsure. Αυτή η παράμετρος αντικαθιστά τα "
+#~ "antispam_tag_header_name, antispam_tag_header_spam_regexp και "
+#~ "antispam_tag_header_ham_regexp."
 
-#: src/lib/Sympa/Config/Schema.pm:4957
-msgid ""
-"This allows generated authentication keys to differ from a site to another. "
-"It is also used for encryption of user passwords stored in the database. The "
-"presence of this string is one reason why access to \"sympa.conf\" needs to "
-"be restricted to the \"sympa\" user.\n"
-"Note that changing this parameter will break all HTTP cookies stored in "
-"users' browsers, as well as all user passwords and lists X509 private keys. "
-"To prevent a catastrophe, Sympa refuses to start if this \"cookie\" "
-"parameter was changed."
-msgstr ""
+#~ msgid "The following virtual robots are running on this server:"
+#~ msgstr "Τα ακόλουθα virtual robots εκτελούνται στον εξυπηρετητή :"
 
-#: src/lib/Sympa/Config/Schema.pm:5051
-msgid ""
-"This parameter states which model is used to create an expire task. An "
-"expire task regularly checks the subscription or resubscription  date of "
-"subscribers and asks them to renew their subscription. If they don't they "
-"are deleted."
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5327
-msgid "Enable FastCGI"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5360
-msgid ""
-"Colors are used in style sheet (CSS). They may be changed using web "
-"interface by listmasters."
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5473
-msgid "Colors for web interface, obsoleted"
-msgstr ""
-
-#: src/lib/Sympa/Config/Schema.pm:5979
-msgid ""
-"Defines the prefix allowing to recognize that a list is an automatic list."
-msgstr ""
-
-#: cpanfile:202
-msgid ""
-"CAS Single Sign-On client libraries. Required if you configure Sympa to "
-"delegate web authentication to a CAS server."
-msgstr ""
-
-#: cpanfile:206
-msgid "Used to make copy of internal data structures."
-msgstr ""
-
-#: cpanfile:210
-msgid ""
-"This module provides reversible encryption of user passwords in the "
-"database.  Useful when updating from old version with password reversible "
-"encryption, or if secure session cookies in non-SSL environments are "
-"required."
-msgstr ""
-
-#: cpanfile:214
-msgid "Used to encrypt passwords with the Bcrypt hash algorithm."
-msgstr ""
-
-#: cpanfile:219
-msgid ""
-"Required to extract user certificates for SSL clients and S/MIME messages."
-msgstr ""
-
-#: cpanfile:227
-msgid "Required to sign, verify, encrypt and decrypt S/MIME messages."
-msgstr ""
-
-#: cpanfile:231
-msgid ""
-"CSV database driver, required if you include list members, owners or "
-"moderators from CSV file."
-msgstr ""
-
-#: cpanfile:235
-msgid "ODBC database driver, required if you connect to a database via ODBC."
-msgstr ""
-
-#: cpanfile:239
-msgid "Oracle database driver, required if you connect to a Oracle database."
-msgstr ""
-
-#: cpanfile:244
-msgid ""
-"PostgreSQL database driver, required if you connect to a PostgreSQL database."
-msgstr ""
-
-#: cpanfile:249
-msgid "SQLite database driver, required if you connect to a SQLite database."
-msgstr ""
-
-#: cpanfile:258
-msgid ""
-"MySQL / MariaDB database driver, required if you connect to a MySQL (or "
-"MariaDB) database."
-msgstr ""
-
-#: cpanfile:262
-msgid ""
-"Used for configureable hardening of passwords via the password_validation "
-"sympa.conf directive."
-msgstr ""
-
-#: cpanfile:266
-msgid ""
-"Useful when running command line utilities in the console not supporting "
-"UTF-8 encoding."
-msgstr ""
-
-#: cpanfile:274
-msgid ""
-"Required in order to use DKIM features (both for signature verification and "
-"signature insertion)."
-msgstr ""
-
-#: cpanfile:278
-msgid "Required in order to use ARC features to add ARC seals."
-msgstr ""
-
-#: cpanfile:282
-msgid ""
-"This is required if you set a value for \"dmarc_protection_mode\" which "
-"requires DNS verification."
-msgstr ""
-
-#: cpanfile:291
-msgid "Required to support IPv6 with client features."
-msgstr ""
-
-#: cpanfile:299
-msgid ""
-"Required to query LDAP directories. Sympa can do LDAP-based authentication ; "
-"it can also build mailing lists with LDAP-extracted members."
-msgstr ""
-
-#: cpanfile:306
-msgid "Required to query LDAP directories over TLS."
-msgstr ""
-
-#: cpanfile:310
-msgid ""
-"This is required if you set \"list_check_smtp\" sympa.conf parameter, used "
-"to check existing aliases before mailing list creation."
-msgstr ""
-
-#: cpanfile:314
-msgid ""
-"Required if you want to run the Sympa SOAP server that provides mailing list "
-"services via a \"web service\"."
-msgstr ""
-
-#: cpanfile:321
-msgid "Sanitizes inputs with Unicode text."
-msgstr ""
-
-#: default/web_tt2/serveradmin.tt2:20
-msgid "The following virtual robots are running on this server:"
-msgstr "Τα ακόλουθα virtual robots εκτελούνται στον εξυπηρετητή :"
-
-#: default/web_tt2/serveradmin.tt2:59
-msgid "No Virtual Robot defined on this server"
-msgstr "Δεν έχει οριστεί virtual robot στο συγκεκριμένο εξυπηρετητή"
+#~ msgid "No Virtual Robot defined on this server"
+#~ msgstr "Δεν έχει οριστεί virtual robot στο συγκεκριμένο εξυπηρετητή"
 
 #, fuzzy
 #~ msgid "bounce management"
