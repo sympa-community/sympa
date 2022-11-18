@@ -65,7 +65,10 @@ sub _run {
             only_changed => 1,
             filter => ([@{$options->{output} // []}, qw(explicit mandatory)])
         );
-        return 1 unless defined $out;
+        unless (defined $out) {
+            warn "Not changed.\n";
+            return 1;
+        }
 
         my $sympa_conf = Sympa::Constants::CONFIG();
         my $date = POSIX::strftime('%Y%m%d%H%M%S', localtime time);
