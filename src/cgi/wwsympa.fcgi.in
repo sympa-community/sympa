@@ -2332,7 +2332,7 @@ sub send_html {
         }
     }
 
-    # Main CSS, possiblly customized.
+    # Main CSS, possibly customized.
     my $main_css;
     if ($session->{'custom_css'}) {
         $main_css = Sympa::WWW::Tools::get_css_url(
