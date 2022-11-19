@@ -191,7 +191,7 @@ sub get_fields {
     }
     while (my $field = $sth->fetchrow_hashref('NAME_lc')) {
         # http://www.sqlite.org/datatype3.html
-        my $type = $field->{'type'};
+        my $type = lc $field->{'type'};
         if ($type =~ /int/) {
             $type = 'integer';
         } elsif ($type =~ /char|clob|text/) {
