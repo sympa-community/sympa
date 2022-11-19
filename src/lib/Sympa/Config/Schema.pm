@@ -1696,8 +1696,8 @@ our %pinfo = (
 
     shared_doc => {
         context    => [qw(list domain site)],
-        order      => 30.09,
-        group      => 'command',                #FIXME www_other/shared_doc
+        order      => 190.11,
+        group      => 'www_other',
         gettext_id => "Shared documents",
         gettext_comment =>
             'This paragraph defines read and edit access to the shared document repository.',
@@ -1719,7 +1719,6 @@ our %pinfo = (
             quota => {
                 context => [qw(list domain site)],
                 order   => 3,
-                #FIXME: group www_other/shared_doc
                 gettext_id   => "quota",
                 gettext_unit => 'Kbytes',
                 format       => '\d+',
@@ -5676,6 +5675,7 @@ our %pinfo = (
         context    => [qw(domain site)],
         order      => 190.10,
         group      => 'www_other',
+        enabling   => ['shared_doc'],
         format     => ['on', 'off'],                #XXX
         gettext_id => 'Enable shared repository',
         gettext_comment =>

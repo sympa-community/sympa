@@ -268,6 +268,20 @@ $(function() {
     });
 });
 
+/* If set to "on" / "off", enable / disable item specified by data-selector. */
+$(function() {
+    $('.disableIfOff').each(function(){
+        var selector = $(this).data('selector');
+        $(this).on('change', function(){
+            if ($(this).val() == 'off')
+                $(selector).fadeOut('slow');
+            else
+                $(selector).slideDown('normal');
+        });
+        $(selector).trigger('change');
+    });
+});
+
 /* Help button to hide/show online help.
    It may be closed only when javascript is enabled. */
 $(function() {
