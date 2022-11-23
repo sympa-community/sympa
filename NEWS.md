@@ -459,7 +459,7 @@ No changes.
 
 **Changes** (since 6.2.54) **:**
 
-- `http_host` parameter has been deprecated by the new `wwsympa_url_local` parameter [\#916](https://github.com/sympa-community/sympa/pull/916) ([ikedas](https://github.com/ikedas)). If you used `http_host` parameter, you possiblly need removing it (See [note](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6256)).
+- `http_host` parameter has been deprecated by the new `wwsympa_url_local` parameter [\#916](https://github.com/sympa-community/sympa/pull/916) ([ikedas](https://github.com/ikedas)). If you used `http_host` parameter, you possibly need removing it (See [note](https://sympa-community.github.io/manual/upgrade/notes.html#from-version-prior-to-6256)).
 
 **Implemented enhancements:**
 
@@ -1597,4 +1597,6 @@ Chrome and Internet Explorer.
   - \[12848\] \[\#10808\] \[Reported by X. Bachelot\] Suppressing some warnings by C compiler at build time.
 
 ---
-See the files [ONEWS](ONEWS) and [OChangeLog](OChangeLog) about earlier history.
+See the file [ONEWS](ONEWS) and the commit log of
+[Historic releases of Sympa](https://github.com/sympa-community/historic-sympa)
+about earlier history.

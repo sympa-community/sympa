@@ -268,6 +268,20 @@ $(function() {
     });
 });
 
+/* If set to "on" / "off", enable / disable item specified by data-selector. */
+$(function() {
+    $('.disableIfOff').each(function(){
+        var selector = $(this).data('selector');
+        $(this).on('change', function(){
+            if ($(this).val() == 'off')
+                $(selector).fadeOut('slow');
+            else
+                $(selector).slideDown('normal');
+        });
+        $(selector).trigger('change');
+    });
+});
+
 /* Help button to hide/show online help.
    It may be closed only when javascript is enabled. */
 $(function() {
@@ -312,6 +326,35 @@ $(function() {
         var tooltip = $(this);
         tooltip.html(tooltip.html().replace(/\r\n|\r|\n/g, '<br />'));
         return true;
+    });
+});
+
+/* Copy permalink on click. */
+$(function(){
+    $('.copyPermalinkContainer').each(function(){
+        var container = this;
+
+        var permalink = $(
+            '<span tabindex="0" style="cursor:pointer;"' +
+            ' title="' + sympa.copyPermalinkText + '">' +
+            '<i class="fa fa-link"></i>' +
+            '</span>'
+        );
+        $(container).append(permalink);
+
+        permalink.on('click', function(){
+            navigator.clipboard.writeText($(container).data('pl'));
+
+            $('#ephemeralMsg').remove();
+            var em = $('<div id="ephemeralMsg">' +
+                '<div data-alert class="alert-box success radius">' +
+                '<i class="fi-check"></i><p>' + sympa.copiedText + '</p>' +
+                '</div></div>');
+            $('body').append(em);
+            em.delay(500).fadeOut(4000);
+
+            return false;
+        });
     });
 });
 

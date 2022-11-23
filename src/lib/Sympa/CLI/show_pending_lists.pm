@@ -70,6 +70,6 @@ C<sympa show_pending_lists> I<domain>
 
 =head1 DESCRIPTION
 
-Print all pending lists for the robot, with informations.
+Print all pending lists for the robot, with information.
 
 =cut

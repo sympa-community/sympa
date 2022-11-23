@@ -30,10 +30,12 @@ package Sympa::Tools::Text;
 use strict;
 use warnings;
 use feature qw(fc);
+use Digest::MD5;
 use Encode qw();
 use English qw(-no_match_vars);
 use Encode::MIME::Header;    # 'MIME-Q' encoding.
 use HTML::Entities qw();
+use MIME::Base64 qw();       # encode_base64url() needs 3.11 or later.
 use MIME::EncWords;
 use Text::LineFold;
 use Unicode::GCString;
@@ -397,6 +399,13 @@ sub _url_query_string {
             } sort keys %$query
         );
     }
+}
+
+sub permalink_id {
+    my $message_id = shift;
+
+    $message_id =~ s/[\s<>]//g;
+    return MIME::Base64::encode_base64url(Digest::MD5::md5($message_id));
 }
 
 sub pad {
@@ -846,6 +855,10 @@ Otherwise, pads left.
 Returns:
 
 Padded string.
+
+=item permalink_id ( $message_id )
+
+Calculates permalink ID from mesage ID.
 
 =item qdecode_filename ( $filename )
 

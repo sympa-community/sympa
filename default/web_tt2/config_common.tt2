@@ -118,7 +118,9 @@
     [% IF pitem.privilege == 'write' ~%]
         <select name="single_param.[% ppaths.join('.') %]"
                 id="param.[% ppaths.join('.') %]"
-                [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
+                [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]
+                [%~ IF pitem.enabling %] class="disableIfOff" data-selector="
+                    [%~ "#item\\." _ pitem.enabling.join(",#item\\.") %]"[% END %]>
             [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
                 <option value=""></option>
             [%~ END %]
@@ -132,6 +134,8 @@
             [% END %]
         </select>
     [%~ ELSE ~%]
+        <span[%~ IF pitem.enabling %] class="disableIfOff" data-selector="
+            [%~ "#item\\." _ pitem.enabling.join(",#item\\.") %]"[% END %]>
         [% FOREACH enum = pitem.format ~%]
             [% IF enum == val ~%]
                 [% IF pitem.field_type == 'lang' ~%]
@@ -145,6 +149,7 @@
                 [%~ LAST %]
             [%~ END %]
         [%~ END %]
+        </span>
     [%~ END %]
     <!-- end enum -->
 [%~ END ~%]

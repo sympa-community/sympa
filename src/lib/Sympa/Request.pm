@@ -105,8 +105,10 @@ sub new {
             Sympa::Tools::Data::decode_custom_attribute($serialized);
     }
 
-    if ($self->{email}
-        and not(defined $self->{gecos} and length $self->{gecos})) {
+    #FIXME:Meddlesomeness to be removed.
+    if (    $self->{action} ne 'set'
+        and $self->{email}
+        and not length($self->{gecos} // '')) {
         my $user = Sympa::User->new($self->{email});
         $self->{gecos} = $user->gecos if $user and $user->gecos;
     }

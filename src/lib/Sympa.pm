@@ -252,10 +252,14 @@ my %diag_messages = (
     'default' => 'Other undefined Status',
     # success
     '2.1.5' => 'Destination address valid',
+    # forwarded to moderators
+    '2.3.0' => 'Other or undefined mail system status',
     # no available family, dynamic list creation failed, etc.
     '4.2.1' => 'Mailbox disabled, not accepting messages',
     # no subscribers in dynamic list
     '4.2.4' => 'Mailing list expansion problem',
+    # held for moderation
+    '4.3.0' => 'Other or undefined mail system status',
     # unknown list address
     '5.1.1' => 'Bad destination mailbox address',
     # unknown robot
@@ -336,7 +340,10 @@ sub send_dsn {
     # Diagnostic message.
     $diag ||= $diag_messages{$status} || $diag_messages{'default'};
     # Delivery result, "failed" or "delivered".
-    my $action = (index($status, '2') == 0) ? 'delivered' : 'failed';
+    my $action =
+          ($status eq '4.3.0') ? 'delayed'
+        : (0 == index $status, '2') ? 'delivered'
+        :                             'failed';
 
     # Attach original (not decrypted) content.
     my $msg_string = $message->as_string(original => 1);
@@ -673,7 +680,7 @@ sub get_listmasters_email {
         map  { Sympa::Tools::Text::canonic_email($_) }
         grep { Sympa::Tools::Text::valid_email($_) } split /\s*,\s*/,
         $listmaster;
-    # If no valid adresses found, use listmaster of site config.
+    # If no valid addresses found, use listmaster of site config.
     unless (@listmasters or (not ref $that and $that eq '*')) {
         $log->syslog('notice', 'Warning: No listmasters found for %s', $that);
         @listmasters = Sympa::get_listmasters_email('*');

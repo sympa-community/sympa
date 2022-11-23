@@ -317,7 +317,7 @@ Parameters:
 =item $type
 
 Type of data source.
-This corresponds to impemented subclasses.
+This corresponds to implemented subclasses.
 
 =item $role
 

@@ -36,7 +36,6 @@ use English qw(-no_match_vars);
 use Sympa;
 use Sympa::ConfDef;
 use Sympa::Constants;
-use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::Log;
 use Sympa::Regexps;
@@ -58,8 +57,6 @@ my $log = Sympa::Log->instance;
 
 =cut
 
-## Database and SQL statement handlers
-my $sth;
 # parameters hash, keyed by parameter name
 our %params =
     map { $_->{name} => $_ }
@@ -67,13 +64,10 @@ our %params =
 
 # valid virtual host parameters, keyed by parameter name
 my %valid_robot_key_words;
-my %db_storable_parameters;
 my %optional_key_words;
 foreach my $hash (@Sympa::ConfDef::params) {
     $valid_robot_key_words{$hash->{'name'}} = 1 if ($hash->{'vhost'});
-    $db_storable_parameters{$hash->{'name'}} = 1
-        if (defined($hash->{'db'}) and $hash->{'db'} ne 'none');
-    $optional_key_words{$hash->{'name'}} = 1 if ($hash->{'optional'});
+    $optional_key_words{$hash->{'name'}}    = 1 if ($hash->{'optional'});
 }
 
 our $params_by_categories = _get_parameters_names_by_category();
@@ -138,7 +132,7 @@ do not change gloval hash %Conf if RETURN_RESULT is set;
 
 sub load {
     my $config_file   = shift || get_sympa_conf();
-    my $no_db         = shift;
+    my $no_db         = shift;                       # No longer used.
     my $return_result = shift;
     my $force_reload;
 
@@ -196,8 +190,6 @@ sub load {
             $missing_modules_count);
     }
 
-    _replace_file_value_by_db_value({'config_hash' => \%Conf})
-        unless ($no_db);
     _load_server_specific_secondary_config_files({'config_hash' => \%Conf,});
     _load_robot_secondary_config_files({'config_hash' => \%Conf});
 
@@ -205,7 +197,6 @@ sub load {
     unless (
         load_robots(
             {   'config_hash'  => \%Conf,
-                'no_db'        => $no_db,
                 'force_reload' => $force_reload
             }
         )
@@ -238,7 +229,6 @@ sub load_robots {
         unless (
             $robot_conf = _load_single_robot_config(
                 {   'robot'        => $robot,
-                    'no_db'        => $param->{'no_db'},
                     'force_reload' => $param->{'force_reload'}
                 }
             )
@@ -375,183 +365,15 @@ sub get_parameters_group {
     return $param_hash;
 }
 
-## fetch the value from parameter $label of robot $robot from conf_table
-sub get_db_conf {
-    my $robot = shift;
-    my $label = shift;
+# Moved to: Sympa::WWW::Tools::get_color().
+#sub get_db_conf;
 
-    # if the value is related to a robot that is not explicitly defined, apply
-    # it to the default robot.
-    $robot = '*' unless (-f $Conf{'etc'} . '/' . $robot . '/robot.conf');
-    unless ($robot) { $robot = '*' }
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    unless (
-        $sdm
-        and $sth = $sdm->do_prepared_query(
-            q{SELECT value_conf AS value
-              FROM conf_table
-              WHERE robot_conf = ? AND label_conf = ?},
-            $robot, $label
-        )
-    ) {
-        $log->syslog(
-            'err',
-            'Unable retrieve value of parameter %s for robot %s from the database',
-            $label,
-            $robot
-        );
-        return undef;
-    }
-
-    my $value = $sth->fetchrow;
-
-    $sth->finish();
-    return $value;
-}
-
-## store the value from parameter $label of robot $robot from conf_table
-sub set_robot_conf {
-    my $robot = shift;
-    my $label = shift;
-    my $value = shift;
-
-    $log->syslog('info', 'Set config for robot %s, %s="%s"',
-        $robot, $label, $value);
-
-    # set the current config before to update database.
-    if (-f "$Conf{'etc'}/$robot/robot.conf") {
-        $Conf{'robots'}{$robot}{$label} = $value;
-    } else {
-        $Conf{$label} = $value;
-        $robot = '*';
-    }
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    unless (
-        $sdm
-        and $sth = $sdm->do_prepared_query(
-            q{SELECT COUNT(*)
-              FROM conf_table
-              WHERE robot_conf = ? AND label_conf = ?},
-            $robot, $label
-        )
-    ) {
-        $log->syslog(
-            'err',
-            'Unable to check presence of parameter %s for robot %s in database',
-            $label,
-            $robot
-        );
-        return undef;
-    }
-
-    my $count = $sth->fetchrow;
-    $sth->finish();
-
-    if ($count == 0) {
-        unless (
-            $sth = $sdm->do_prepared_query(
-                q{INSERT INTO conf_table
-                  (robot_conf, label_conf, value_conf)
-                  VALUES (?, ?, ?)},
-                $robot, $label, $value
-            )
-        ) {
-            $log->syslog(
-                'err',
-                'Unable add value %s for parameter %s in the robot %s DB conf',
-                $value,
-                $label,
-                $robot
-            );
-            return undef;
-        }
-    } else {
-        unless (
-            $sth = $sdm->do_prepared_query(
-                q{UPDATE conf_table
-                  SET robot_conf = ?, label_conf = ?, value_conf = ?
-                  WHERE robot_conf = ? AND label_conf = ?},
-                $robot, $label, $value,
-                $robot, $label
-            )
-        ) {
-            $log->syslog(
-                'err',
-                'Unable set parameter %s value to %s in the robot %s DB conf',
-                $label,
-                $value,
-                $robot
-            );
-            return undef;
-        }
-    }
-}
+# Moved to: Sympa::WWW::Tools::set_color().
+#sub set_robot_conf;
 
 # Store configs to database
-sub conf_2_db {
-    $log->syslog('debug2', '(%s)', @_);
-
-    my @conf_parameters = @Sympa::ConfDef::params;
-
-    # store in database robots parameters.
-    # load only parameters that are in a robot.conf file (do not apply
-    # defaults).
-    my $robots_conf = load_robots();
-
-    my $robots_ref = get_robots_list();
-    return undef unless $robots_ref;
-
-    foreach my $robot (@$robots_ref) {
-        my $config;
-        if (my $result_of_config_loading = _load_config_file_to_hash(
-                $Conf{'etc'} . '/' . $robot . '/robot.conf'
-            )
-        ) {
-            $config = $result_of_config_loading->{'config'};
-        }
-        _remove_unvalid_robot_entry($config);
-
-        for my $i (0 .. $#conf_parameters) {
-            if ($conf_parameters[$i]->{'name'}) {
-                # skip separators in conf_parameters structure
-                if (($conf_parameters[$i]->{'vhost'} eq '1')
-                    && #skip parameters that can't be define by robot so not to be loaded in db at that stage
-                    ($config->{$conf_parameters[$i]->{'name'}})
-                ) {
-                    Conf::set_robot_conf(
-                        $robot,
-                        $conf_parameters[$i]->{'name'},
-                        $config->{$conf_parameters[$i]->{'name'}}
-                    );
-                }
-            }
-        }
-    }
-
-    # Store sympa.conf into database.
-
-    ## Load configuration file. Ignoring database config and get result
-    my $global_conf;
-    unless ($global_conf =
-        Conf::load(Conf::get_sympa_conf(), 1, 'return_result')) {
-        $log->syslog('err', 'Configuration file %s has errors',
-            Conf::get_sympa_conf());
-        return undef;
-    }
-
-    for my $i (0 .. $#conf_parameters) {
-        if (($conf_parameters[$i]->{'edit'} eq '1')
-            && $global_conf->{$conf_parameters[$i]->{'name'}}) {
-            Conf::set_robot_conf(
-                "*",
-                $conf_parameters[$i]->{'name'},
-                $global_conf->{$conf_parameters[$i]->{'name'}}[0]
-            );
-        }
-    }
-}
+# Deprecated.
+#sub conf_2_db;
 
 ## Check required files and create them if required
 sub checkfiles_as_root {
@@ -843,6 +665,13 @@ sub _load_auth {
     my $current_paragraph;
 
     my %valid_keywords = (
+        'cgi' => {
+            'auth_scheme'          => '.*',
+            'remote_user_variable' => '.+',
+            'regexp'               => '.*',
+            'negative_regexp'      => '.*',
+        },
+
         'ldap' => {
             'regexp'          => '.*',
             'negative_regexp' => '.*',
@@ -953,7 +782,7 @@ sub _load_auth {
         if (/^\s*authentication_info_url\s+(.*\S)\s*$/o) {
             $Conf{'authentication_info_url'}{$robot} = $1;
             next;
-        } elsif (/^\s*(ldap|cas|user_table|generic_sso)\s*$/io) {
+        } elsif (/^\s*(cgi|ldap|user_table|cas|generic_sso)\s*$/io) {
             $current_paragraph->{'auth_type'} = lc($1);
         } elsif (/^\s*(\S+)\s+(.*\S)\s*$/o) {
             my ($keyword, $value) = ($1, $2);
@@ -1074,6 +903,9 @@ sub _load_auth {
                     $current_paragraph->{'scope'} ||= 'sub';
                 } elsif ($current_paragraph->{'auth_type'} eq 'user_table') {
                     ;
+                } elsif ($current_paragraph->{'auth_type'} eq 'cgi') {
+                    $current_paragraph->{'remote_user_variable'} ||=
+                        'REMOTE_USER';
                 }
                 # setting default
                 $current_paragraph->{'regexp'} = '.*'
@@ -2042,8 +1874,6 @@ sub _load_single_robot_config {
     #XXX    {'config_hash' => $robot_conf, 'source_file' => $config_file});
     return undef if ($config_err);
 
-    _replace_file_value_by_db_value({'config_hash' => $robot_conf})
-        unless $param->{'no_db'};
     _load_robot_secondary_config_files({'config_hash' => $robot_conf});
     return $robot_conf;
 }
@@ -2090,19 +1920,8 @@ sub _parse_custom_robot_parameters {
     }
 }
 
-sub _replace_file_value_by_db_value {
-    my $param = shift;
-    my $robot = $param->{'config_hash'}{'robot_name'};
-    # The name of the default robot is "*" in the database.
-    $robot = '*' if ($param->{'config_hash'}{'robot_name'} eq '');
-    foreach my $label (keys %db_storable_parameters) {
-        next unless ($robot ne '*' && $valid_robot_key_words{$label} == 1);
-        my $value = get_db_conf($robot, $label);
-        if (defined $value) {
-            $param->{'config_hash'}{$label} = $value;
-        }
-    }
-}
+# Deprecated: No longer used.
+#sub _replace_file_value_by_db_value;
 
 # Stores the config hash binary representation to a file.
 # Returns 1 or undef if something went wrong.

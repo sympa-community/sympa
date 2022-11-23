@@ -35,6 +35,7 @@ check_SCRIPTS = \
 	t/Message_urlize.t \
 	t/Regexps.t \
 	t/Request_Handler_add+del.t \
+	t/Request_Handler_set.t \
 	t/Scenario.t \
 	t/Tools_Data.t \
 	t/Tools_File.t \
@@ -92,7 +93,6 @@ EXTRA_DIST = \
 	CONTRIBUTING.md \
 	INSTALL.md \
 	NEWS.md \
-	OChangeLog \
 	ONEWS \
 	README.md \
 	etc_README \

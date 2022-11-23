@@ -29,10 +29,9 @@ package Sympa::Robot;
 
 use strict;
 use warnings;
-use Encode qw();
+use English qw(-no_match_vars);
 
 use Sympa;
-use Conf;
 use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::ListDef;
@@ -185,8 +184,6 @@ sub update_email_netidmap_db {
     return 1;
 }
 
-my $default_topics_visibility = 'noconceal';
-
 # Loads the list of topics if updated.
 # The topic names "others" and "topicsless" are reserved words therefore
 # ignored.  Note: "other" is not reserved and may be used.
@@ -201,24 +198,22 @@ sub load_topics {
         return;
     }
 
-    my $topics = {};
+    my $topics = $list_of_topics{$robot};
 
     ## Load if not loaded or changed on disk
-    if (!$list_of_topics{$robot}
+    if (not $topics
         or Sympa::Tools::File::get_mtime($conf_file) >
         $mtime{'topics'}{$robot}) {
 
-        ## delete previous list of topics
-        %list_of_topics = ();
+        # Delete previous list of topics
+        $list_of_topics{$robot} = $topics = {};
 
-        unless (-r $conf_file) {
-            $log->syslog('err', 'Unable to read %s', $conf_file);
-            return;
-        }
-
-        my $config_content = Sympa::Tools::Text::slurp($conf_file);
-        unless (defined $config_content) {
-            $log->syslog('err', 'Unable to open config file %s', $conf_file);
+        my $config_content;
+        if (open my $ifh, '<', $conf_file) {
+            $config_content = do { local $RS; <$ifh> };
+            close $ifh;
+        } else {
+            $log->syslog('err', 'Unable to read %s: %m', $conf_file);
             return;
         }
 
@@ -255,117 +250,59 @@ sub load_topics {
 
         $mtime{'topics'}{$robot} = Sympa::Tools::File::get_mtime($conf_file);
 
-        unless ($#rough_data > -1) {
+        unless (@rough_data) {
             $log->syslog('notice', 'No topic defined in %s', $conf_file);
             return;
         }
 
         ## Analysis
         foreach my $topic (@rough_data) {
-            my @tree = split '/', $topic->{'name'};
-
-            if ($#tree == 0) {
-                my $title = _load_topics_get_title($topic);
-                $list_of_topics{$robot}{$tree[0]}{'title'} = $title;
-                $list_of_topics{$robot}{$tree[0]}{'visibility'} =
-                    $topic->{'visibility'} || $default_topics_visibility;
-                $list_of_topics{$robot}{$tree[0]}{'order'} =
-                    $topic->{'order'};
-            } else {
-                my $subtopic = join('/', @tree[1 .. $#tree]);
-                my $title = _load_topics_get_title($topic);
-                my $visibility =
-                    $topic->{'visibility'} || $default_topics_visibility;
-                $list_of_topics{$robot}{$tree[0]}{'sub'}{$subtopic} =
-                    _add_topic($subtopic, $title, $visibility);
-            }
-        }
-
-        ## Set undefined Topic (defined via subtopic)
-        foreach my $t (keys %{$list_of_topics{$robot}}) {
-            unless (defined $list_of_topics{$robot}{$t}{'title'}) {
-                $list_of_topics{$robot}{$t}{'title'} = {'default' => $t};
-            }
+            _add_topic($topics, $topic);
         }
     }
 
-    ## Set the title in the current language
-    my $lang = $language->get_lang;
-    foreach my $top (keys %{$list_of_topics{$robot}}) {
-        my $topic = $list_of_topics{$robot}{$top};
-        foreach my $l (Sympa::Language::implicated_langs($lang)) {
-            if (exists $topic->{'title'}{$l}) {
-                $topic->{'current_title'} = $topic->{'title'}{$l};
-            }
-        }
-        unless (exists $topic->{'current_title'}) {
-            if (exists $topic->{'title'}{'gettext'}) {
-                $topic->{'current_title'} =
-                    $language->gettext($topic->{'title'}{'gettext'});
-            } else {
-                $topic->{'current_title'} = $topic->{'title'}{'default'}
-                    || $top;
-            }
-        }
-
-        foreach my $subtop (keys %{$topic->{'sub'}}) {
-            foreach my $l (Sympa::Language::implicated_langs($lang)) {
-                if (exists $topic->{'sub'}{$subtop}{'title'}{$l}) {
-                    $topic->{'sub'}{$subtop}{'current_title'} =
-                        $topic->{'sub'}{$subtop}{'title'}{$l};
-                }
-            }
-            unless (exists $topic->{'sub'}{$subtop}{'current_title'}) {
-                if (exists $topic->{'sub'}{$subtop}{'title'}{'gettext'}) {
-                    $topic->{'sub'}{$subtop}{'current_title'} =
-                        $language->gettext(
-                        $topic->{'sub'}{$subtop}{'title'}{'gettext'});
-                } else {
-                    $topic->{'sub'}{$subtop}{'current_title'} =
-                           $topic->{'sub'}{$subtop}{'title'}{'default'}
-                        || $subtop;
-                }
-            }
-        }
-    }
-
-    return %{$list_of_topics{$robot}};
+    return %$topics;
 }
 
 # Old name: _get_topic_titles().
-sub _load_topics_get_title {
-    my $topic = shift;
-
-    my $title;
-    foreach my $key (%{$topic}) {
-        if ($key =~ /^title\.gettext$/i) {
-            $title->{'gettext'} = $topic->{$key};
-        } elsif ($key =~ /^title\.(\S+)$/i) {
-            my $lang = $1;
-            # canonicalize lang if possible.
-            $lang = Sympa::Language::canonic_lang($lang) || $lang;
-            $title->{$lang} = $topic->{$key};
-        } elsif ($key =~ /^title$/i) {
-            $title->{'default'} = $topic->{$key};
-        }
-    }
-
-    return $title;
-}
+# No longer used.
+#sub _load_topics_get_title;
 
 ## Inner sub used by load_topics()
 sub _add_topic {
-    my ($name, $title, $visibility) = @_;
-    my $topic = {};
+    my $topics = shift;
+    my $topic  = shift;
+    my $names  = shift || [split m{/}, $topic->{name}];
 
-    my @tree = split '/', $name;
-    if ($#tree == 0) {
-        return {'title' => $title, 'visibility' => $visibility};
+    my $topname = shift @$names;
+
+    my $top = $topics->{$topname} //= {};
+    unless (scalar @$names) {
+        my $title;
+        foreach my $key (keys %$topic) {
+            if (lc $key eq 'title.gettext') {
+                $title->{gettext} = $topic->{$key};
+            } elsif ($key =~ /\Atitle[.](\S+)\z/i) {
+                my $lang = Sympa::Language::canonic_lang($1);
+                $title->{$lang} = $topic->{$key} if $lang;
+            } elsif (lc $key eq 'title') {
+                $title->{default} = $topic->{$key};
+            }
+        }
+        @{$top}{qw(title visibility order)} =
+            ($title, $topic->{visibility}, $topic->{order});
     } else {
-        $topic->{'sub'}{$name} =
-            _add_topic(join('/', @tree[1 .. $#tree]), $title, $visibility);
-        return $topic;
+        my $sub = $topics->{$topname}{sub} //= {};
+        _add_topic($sub, $topic, $names);
+
+        my $order = $topic->{order};
+        $top->{order} = $order
+            unless ($top->{order} // $order) < $order;
     }
+    $top->{title} //= {default => $topname};
+    $top->{visibility} ||= 'noconceal';
+
+    unshift @$names, $topname;
 }
 
 sub topic_keys {

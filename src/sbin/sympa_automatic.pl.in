@@ -197,7 +197,7 @@ exit(0);
 # Load configuration.
 sub _load {
     ## Load sympa.conf.
-    unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {    #Site and Robot
+    unless (Conf::load(Conf::get_sympa_conf())) {    #Site and Robot
         die sprintf
             "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
@@ -232,13 +232,6 @@ sub _load {
         die sprintf
             "Database %s defined in sympa.conf is unreachable. verify db_xxx parameters in sympa.conf\n",
             $Conf::Conf{'db_name'};
-    }
-
-    # Now trying to load full config (including database)
-    unless (Conf::load()) {    #FIXME: load Site, then robot cache
-        die sprintf
-            "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
-            Conf::get_sympa_conf();
     }
 
     ## Main program

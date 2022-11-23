@@ -100,7 +100,6 @@ sub _twist {
     my $auth_method =
           $message->{'smime_signed'} ? 'smime'
         : $message->{'md5_check'}    ? 'md5'
-        : $message->{'dkim_pass'}    ? 'dkim'
         :                              'smtp';
 
     $result =

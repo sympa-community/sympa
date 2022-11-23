@@ -239,7 +239,7 @@ sub arrange {
     # Moved from: _load() in sympa.pl.
     ## Load sympa.conf.
 
-    unless (Conf::load($options{config}, 'no_db')) {
+    unless (Conf::load($options{config})) {
         die sprintf
             "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
@@ -275,13 +275,6 @@ sub arrange {
         die sprintf
             "Database %s defined in sympa.conf is unreachable. verify db_xxx parameters in sympa.conf\n",
             $Conf::Conf{'db_name'};
-    }
-
-    # Now trying to load full config (including database)
-    unless (Conf::load()) {
-        die sprintf
-            "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
-            Conf::get_sympa_conf();
     }
 
     $language->set_lang($Conf::Conf{'lang'}) unless $options{lang};
@@ -414,14 +407,14 @@ $SIG{__WARN__} = sub {
 };
 
 my $arg_labels = {
-    list    => {gettext_id => 'list'},
-    list_id => {gettext_id => 'list'},
-    family  => {gettext_id => 'family'},
-    domain  => {gettext_id => 'domain'},
-    site    => {gettext_id => '"*"'},
-    command => {gettext_id => 'command'},
-    string  => {gettext_id => 'string'},
-    email   => {gettext_id => 'email address'},
+    list     => {gettext_id => 'list'},
+    list_id  => {gettext_id => 'list'},
+    family   => {gettext_id => 'family'},
+    domain   => {gettext_id => 'domain'},
+    site     => {gettext_id => '"*"'},
+    command  => {gettext_id => 'command'},
+    string   => {gettext_id => 'string'},
+    email    => {gettext_id => 'email address'},
     keyvalue => {gettext_id => '"key=value"'},
 };
 
