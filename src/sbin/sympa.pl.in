@@ -282,6 +282,10 @@ Sets Sympa log level.
 
 Enable SMTP logging.
 
+=item C<--noout>
+
+Skip output to the console except for fatal error messages.
+
 =back
 
 =head1 COMMANDS
@@ -930,5 +934,7 @@ F<sympa_msg.pl> daemon.
 
 As of Sympa 6.2.68, F<sympa.pl> was renamed to F<sympa>
 and the new form of command line arguments was introduced.
+
+The C<--noout> option was introduced on Sympa 6.2.71b.
 
 =cut

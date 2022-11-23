@@ -41,6 +41,7 @@ use Sympa::Template;
 use Sympa::Tools::Data;
 
 my $language = Sympa::Language->instance;
+my $noout;
 
 sub run {
     my $class   = shift;
@@ -113,7 +114,7 @@ sub run {
     } elsif (
         not Getopt::Long::GetOptionsFromArray(
             \@argv, \%options,
-            qw(config|f=s debug|d lang|l=s log_level=s mail|m),
+            qw(config|f=s debug|d lang|l=s log_level=s mail|m noout),
             $class->_options
         )
     ) {
@@ -123,6 +124,8 @@ sub run {
             . "\n";
         return undef;
     }
+
+    $noout = $options{noout};
 
     # Get privileges and load config if necessary.
     # Otherwise only setup language if specified.
@@ -399,7 +402,9 @@ sub _translate_warn {
     return $output;
 }
 
-$SIG{__WARN__} = sub { warn _translate_warn(shift) };
+$SIG{__WARN__} = sub {
+    warn _translate_warn(shift) unless $noout;
+};
 
 my $arg_labels = {
     list     => {gettext_id => 'list'},
