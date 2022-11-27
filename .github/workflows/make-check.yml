@@ -64,7 +64,7 @@ jobs:
             # Workaround to avoid reference to older libcrypto by perl binary
             export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
           fi
-          autoreconf -i
+          PERL5LIB= autoreconf -i
           ./configure --with-defaultdir=`pwd`/default
           cd src; make; cd ..
           #make check-local TEST_FILES='xt/perltidy.t' || true
