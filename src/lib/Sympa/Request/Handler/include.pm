@@ -202,10 +202,15 @@ sub _twist {
     my %result =
         (added => 0, deleted => 0, updated => 0, kept => 0, held => 0);
     my $succeeded = 0;
+    my $skipped   = 0;
     foreach my $ds (@{$dss || []}) {
         $lock_fh->extend;
 
-        next unless $ds->is_allowed_to_sync;
+        unless ($ds->is_allowed_to_sync) {
+            $skipped++;
+            next;
+        }
+
         my %res = _update_users($ds, $start_time);
         unless (%res) {
             $self->add_stash(
@@ -274,7 +279,7 @@ sub _twist {
         # Special treatment for Sympa::DataSource::List.
         _expire_inclusion_table($list, $role, $last_start_time);
     } else {
-        # Part(s) or entire data sources failed.
+        # Part(s) or entire data sources failed or simply skipped.
         $lock_fh->extend;
 
         # Estimate number of held users, i.e. users not decided to
@@ -334,8 +339,14 @@ sub _twist {
         $self->add_stash($request, 'notice', 'include_performed',
             {listname => $list->{'name'}, role => $role, result => {%result}}
         );
+    } elsif ($skipped == scalar @$dss) {
+        # All data sources skipped.
+        $log->syslog('info', '%s: Skipped');
+        $self->add_stash($request, 'notice', 'include_skip',
+            {listname => $list->{'name'}, role => $role, result => {%result}}
+        );
     } elsif ($succeeded) {
-        # Part(s) of data sources failed.
+        # Part(s) of data sources succeeded: The others failed or skipped.
         $log->syslog(
             'info',   '%s: Partial, %d added, %d held, %d updated',
             $request, @result{qw(added held updated)}

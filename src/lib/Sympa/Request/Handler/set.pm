@@ -37,7 +37,7 @@ use base qw(Sympa::Request::Handler);
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
 
-use constant _action_scenario => undef;           # Only list members allowed.
+use constant _action_scenario => undef;
 use constant _context_class   => 'Sympa::List';
 
 # Old name: (part of) Sympa::Commands::set().
@@ -45,60 +45,140 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    my $sender     = $request->{sender};
-    my $email      = $request->{email};
-    my $reception  = $request->{reception};
-    my $visibility = $request->{visibility};
+    my $list   = $request->{context};
+    my $sender = $request->{sender};
+    my $email  = $request->{email};
+    my $role   = $request->{role} || 'member';
 
-    my $list  = $request->{context};
-    my $which = $list->{'name'};
+    die 'bug in logic. Ask developer'
+        unless grep { $role eq $_ } qw(member owner editor);
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    # Check if we know this email on the list and remove it. Otherwise
-    # just reject the message.
-    unless ($list->is_list_member($email)) {
-        unless ($email eq $sender) {    # Request from owner?
-            $self->add_stash($request, 'user', 'user_not_subscriber');
-        } else {
-            $self->add_stash($request, 'user', 'not_subscriber');
-        }
-        $log->syslog('info', 'SET %s %s%s from %s refused, %s not on list',
-            $which, $reception, $visibility, $sender, $email);
-        return undef;
-    }
-
-    # May set to DIGEST.
-    if (    $reception
-        and grep { $reception eq $_ } qw(digest digestplain summary)
-        and not $list->is_digest) {
-        $self->add_stash($request, 'user', 'no_digest');
-        $log->syslog('info', 'SET %s %s from %s refused, no digest mode',
-            $which, $reception, $sender);
-        return undef;
-    }
-
-    # Verify that the mode is allowed.
-    if ($reception and not $list->is_available_reception_mode($reception)) {
-        $self->add_stash(
-            $request, 'user',
-            'not_available_reception_mode',
-            {   modes           => join(' ', $list->available_reception_mode),
-                reception_modes => [$list->available_reception_mode],
-                reception_mode  => $reception,
+    # Check if we know this email on the list. Otherwise just reject the
+    # message.
+    if ($role eq 'member') {
+        unless ($list->is_list_member($email)) {
+            unless ($email eq $sender) {    # Request from owner?
+                $self->add_stash($request, 'user', 'user_not_subscriber');
+            } else {
+                $self->add_stash($request, 'user', 'not_subscriber');
             }
-        );
-        $log->syslog('info', 'SET %s %s from %s refused, mode not available',
-            $which, $reception, $sender);
+            $log->syslog('info',
+                'SET %s from %s refused, %s (%s) not on list',
+                $list, $sender, $email, $role);
+            return undef;
+        }
+    } else {
+        unless ($list->is_admin($role, $email)) {
+            $self->add_stash($request, 'user', 'not_list_user',
+                {listname => $list->{'name'}, role => $role, email => $email}
+            );
+            $log->syslog('info',
+                'SET %s from %s refused, %s (%s) not on list',
+                $list, $sender, $email, $role);
+            return undef;
+        }
+    }
+
+    my $gecos      = $request->{gecos};
+    my $reception  = $request->{reception};
+    my $visibility = $request->{visibility};
+    # for editor and owner
+    my $info = $request->{info};
+    # for owner
+    my $profile = $request->{profile};
+
+    # Note that empty (or including spaces only) value makes the name unset.
+    if (defined $gecos) {
+        $gecos =~ s/\A\s+//;
+        $gecos =~ s/\s+\z//;
+    }
+    if (defined $info) {
+        $info =~ s/\A\s+//;
+        $info =~ s/\s+\z//;
+    }
+
+    if ($role eq 'member') {
+        #FIXME: this should be merged into is_available_reception_mode().
+        # May set to DIGEST.
+        if (    $reception
+            and grep { $reception eq $_ } qw(digest digestplain summary)
+            and not $list->is_digest) {
+            $self->add_stash($request, 'user', 'no_digest');
+            $log->syslog('info', 'SET %s %s from %s refused, no digest mode',
+                $list, $reception, $sender);
+            return undef;
+        }
+
+        # Verify that the mode is allowed.
+        if ($reception and not $list->is_available_reception_mode($reception))
+        {
+            $self->add_stash(
+                $request, 'user',
+                'not_available_reception_mode',
+                {   modes => join(' ', $list->available_reception_mode),
+                    reception_modes => [$list->available_reception_mode],
+                    reception_mode  => $reception,
+                }
+            );
+            $log->syslog('info',
+                'SET %s %s from %s refused, mode not available',
+                $list, $reception, $sender);
+            return undef;
+        }
+    } else {
+        if ($reception
+            and not grep { $reception eq $_ } qw(mail nomail)) {
+            $self->add_stash(
+                $request, 'user',
+                'not_available_reception_mode',
+                {reception_mode => $reception, role => $role}
+            );
+            $log->syslog('info',
+                'SET %s %s from %s refused, mode not availeble',
+                $list, $reception, $sender);
+            return undef;
+        }
+    }
+
+    if ($visibility
+        and not grep { $visibility eq $_ } qw(conceal noconceal)) {
+        $self->add_stash($request, 'user', 'not_available_visibility',
+            {visibility => $visibility, role => $role});
+        $log->syslog('info',
+            'SET %s %s from %s refused, visibility not availeble',
+            $list, $visibility, $sender);
         return undef;
     }
 
-    if ($reception or $visibility) {
+    if (    $role eq 'owner'
+        and $profile
+        and not grep { $profile eq $_ } qw(normal privileged)) {
+        $self->add_stash($request, 'user', 'not_available_profile',
+            {profile => $profile, role => $role});
+        $log->syslog('info',
+            'SET %s %s from %s refused, profile not availeble',
+            $list, $profile, $sender);
+        return undef;
+    }
+
+    if ($role eq 'member') {
+        unless (defined $gecos
+            or $reception
+            or $visibility) {
+            $log->syslog('info', 'No properties to be changed');
+            $self->add_stash($request, 'user', 'no_changed_properties',
+                {listname => $list->{'name'}, email => $email, role => $role}
+            );
+            return 1;
+        }
         unless (
             $list->update_list_member(
                 $email,
-                ($reception  ? (reception  => $reception)  : ()),
-                ($visibility ? (visibility => $visibility) : ()),
+                (defined $gecos ? (gecos      => $gecos)      : ()),
+                ($reception     ? (reception  => $reception)  : ()),
+                ($visibility    ? (visibility => $visibility) : ()),
                 update_date => time
             )
         ) {
@@ -116,14 +196,70 @@ sub _twist {
             );
             $self->add_stash($request, 'intern');
             $log->syslog('info', 'SET %s %s%s from %s refused, update failed',
-                $which, $reception, $visibility, $sender);
+                $list, $reception, $visibility, $sender);
+            return undef;
+        }
+    } elsif ($role eq 'editor') {
+        unless (defined $gecos
+            or $reception
+            or $visibility
+            or defined $info) {
+            $log->syslog('info', 'No properties to be changed');
+            $self->add_stash($request, 'user', 'no_changed_properties',
+                {listname => $list->{'name'}, email => $email, role => $role}
+            );
+            return 1;
+        }
+        unless (
+            $list->update_list_admin(
+                $email,
+                $role,
+                (defined $gecos ? (gecos      => $gecos)      : ()),
+                ($reception     ? (reception  => $reception)  : ()),
+                ($visibility    ? (visibility => $visibility) : ()),
+                (defined $info  ? (info       => $info)       : ()),
+                update_date => time
+            )
+        ) {
+            $self->add_stash($request, 'intern');
+            $log->syslog('info', 'SET %s %s%s from %s refused, update failed',
+                $list, $reception, $visibility, $sender);
+            return undef;
+        }
+    } else {
+        unless (defined $gecos
+            or $reception
+            or $visibility
+            or defined $info
+            or $profile) {
+            $log->syslog('info', 'No properties to be changed');
+            $self->add_stash($request, 'user', 'no_changed_properties',
+                {listname => $list->{'name'}, email => $email, role => $role}
+            );
+            return 1;
+        }
+        unless (
+            $list->update_list_admin(
+                $email,
+                $role,
+                (defined $gecos ? (gecos      => $gecos)      : ()),
+                ($reception     ? (reception  => $reception)  : ()),
+                ($visibility    ? (visibility => $visibility) : ()),
+                (defined $info  ? (info       => $info)       : ()),
+                ($profile       ? (profile    => $profile)    : ()),
+                update_date => time
+            )
+        ) {
+            $self->add_stash($request, 'intern');
+            $log->syslog('info', 'SET %s %s%s from %s refused, update failed',
+                $list, $reception, $visibility, $sender);
             return undef;
         }
     }
 
     $self->add_stash($request, 'notice', 'config_updated');
     $log->syslog('info', 'SET %s from %s accepted (%.2f seconds)',
-        $which, $sender, Time::HiRes::time() - $self->{start_time});
+        $list, $sender, Time::HiRes::time() - $self->{start_time});
     return 1;
 }
 

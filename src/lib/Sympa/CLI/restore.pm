@@ -65,10 +65,10 @@ sub _run {
         }
         foreach my $role (@roles) {
             unless ($list->restore_users($role)) {
-                printf STDERR "%s: Could not restore list users (%s)\n",
+                warn sprintf "%s: Could not restore list users (%s)\n",
                     $list->get_id, $role;
             } else {
-                printf STDERR "%s: Restored list users (%s)\n",
+                warn sprintf "%s: Restored list users (%s)\n",
                     $list->get_id, $role;
             }
         }

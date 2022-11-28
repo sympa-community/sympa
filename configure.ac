@@ -664,7 +664,6 @@ AC_CONFIG_FILES([
     po/web_help/Makefile.in
     service/Makefile
     src/Makefile
-    src/bin/Makefile
     src/cgi/Makefile
     src/lib/Makefile
     src/libexec/Makefile

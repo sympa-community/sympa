@@ -99,9 +99,9 @@ sub new {
         if ($list) {
             # FIXME: Don't overwrite date & update_date.  Format datetime on
             # the template.
-            my $subscriber =
-                Sympa::Tools::Data::dup_var($list->get_list_member($who));
-            if ($subscriber) {
+            if (my $subscriber = $list->get_list_member($who)) {
+                $data->{'subscriber'} =
+                    Sympa::Tools::Data::dup_var($subscriber);
                 $data->{'subscriber'}{'date'} =
                     $language->gettext_strftime("%d %b %Y",
                     localtime($subscriber->{'date'}));

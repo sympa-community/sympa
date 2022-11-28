@@ -26,17 +26,26 @@ Content-Disposition: inline
 [% ELSE -%]
 [% IF method == 'md5' && ! request_topic -%]
 [%|loc(list.name)%]To distribute the attached message in list %1:[%END%]
+[% IF conf.wwsympa_url -%]
+[% 'distribute' | url_abs([list.name,modkey]) %]
+[%- ELSE -%]
 [% "${conf.email}@${domain}" | mailtourl({subject => "DISTRIBUTE ${list.name} ${modkey}"}) %]
 
 [%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
 DISTRIBUTE [% list.name %] [% modkey %]
+[%- END %]
 
 [%|loc%]To reject it (it will be removed):[%END%]
+[% IF conf.wwsympa_url -%]
+[% 'reject' | url_abs([list.name,modkey]) %]
+[%- ELSE -%]
 [% "${conf.email}@${domain}" | mailtourl({subject => "REJECT ${list.name} ${modkey}"}) %]
 
 [%|loc(conf.email,domain)%]Or send a message to %1@%2 with the following subject:[%END%]
 REJECT [% list.name %] [% modkey %]
-[%END%]
+[%- END %]
+[%- END %]
+
 [%|loc%]The messages moderating documentation:[%END%] [% 'help' | url_abs(['admin-moderate.html']) %]
 [%- END%]
 [%- END%]

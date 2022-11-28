@@ -106,7 +106,7 @@ requires 'Locale::Messages', '>= 1.20';
 requires 'MHonArc::UTF8', '>= 2.6.24';
 
 # Required to compute digest for password and emails
-requires 'MIME::Base64', '>= 3.03';
+requires 'MIME::Base64', '>= 3.11';
 
 # Used to encode mail body using a different charset
 requires 'MIME::Charset', '>= 1.011.3';
@@ -274,7 +274,9 @@ feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both fo
 };
 
 feature 'Mail::DKIM::ARC::Signer', 'Required in order to use ARC features to add ARC seals.' => sub {
-    requires 'Mail::DKIM::ARC::Signer', '>= 0.55';
+    requires 'Mail::DKIM::ARC::Signer', '>= 0.57';
+    # Note: Mail::DKIM::ARC::Verifier is also included in Mail-DKIM.
+    # Note: Mail::AuthenticationResults::Parser is depended on Mail-DKIM.
 };
 
 feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_mode" which requires DNS verification.' => sub {

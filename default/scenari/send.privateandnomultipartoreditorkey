@@ -1,5 +1,5 @@
 title.gettext Moderated, for non subscribers sending multipart messages
 
-match([header->Content-Type][0],/multipart/)      smtp,dkim,smime,md5  -> editorkey
-is_subscriber([listname],[sender])             smtp,dkim,md5,smime  -> do_it
-true()                                         smtp,dkim,smime,md5  -> editorkey
+match([header->Content-Type][0],/multipart/)   smtp,md5,smime  -> editorkey
+is_subscriber([listname],[sender])             smtp,md5,smime  -> do_it
+true()                                         smtp,md5,smime  -> editorkey

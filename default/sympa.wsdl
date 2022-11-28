@@ -16,7 +16,11 @@
 	xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" 
 	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
 	xmlns="http://www.w3.org/2001/XMLSchema">
-	
+
+
+	<import namespace="http://schemas.xmlsoap.org/soap/encoding/"
+		schemaLocation="http://schemas.xmlsoap.org/soap/encoding/"/>
+
 	<complexType name="ArrayOfLists">
 		<complexContent>
 			<restriction base="SOAP-ENC:Array">

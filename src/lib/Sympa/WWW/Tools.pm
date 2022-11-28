@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2020, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -39,6 +39,7 @@ use Sympa;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
+use Sympa::DatabaseManager;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::LockedFile;
@@ -169,6 +170,104 @@ our %bounce_status = (
     '7.25' => 'Reverse DNS validation failed',
     '7.26' => 'Multiple authentication checks failed',
     '7.27' => 'Sender address has null MX',
+    '7.28' => 'Mail flood detected',
+    '7.29' => 'ARC validation failure',
+    '7.30' => 'REQUIRETLS support required',
+);
+
+our %css_colors = (
+    color_0 => {
+        order   => 0,
+        default => '#f7f7f7',    # very light grey use in tables,
+    },
+    color_1 => {
+        order   => 1,
+        default => '#222222',    # main menu button color,
+    },
+    color_2 => {
+        order   => 2,
+        default => '#004b94',    # font color,
+    },
+    color_3 => {
+        order   => 3,
+        default => '#5e5e5e',    # top boxe and footer box bacground color,
+    },
+    color_4 => {
+        order   => 4,
+        default => '#4c4c4c',    #  page backgound color,
+    },
+    color_5 => {
+        order   => 5,
+        default => '#0090e9',
+    },
+    color_6 => {
+        order   => 6,
+        default => '#005ab2',    # list menu current button,
+    },
+    color_7 => {
+        order   => 7,
+        default => '#ffffff',    # errorbackground color,
+    },
+    color_8 => {
+        order   => 8,
+        default => '#f2f6f9',
+    },
+    color_9 => {
+        order   => 9,
+        default => '#bfd2e1',
+    },
+    color_10 => {
+        order   => 10,
+        default => '#983222',    # inactive button,
+    },
+    color_11 => {
+        order   => 11,
+        default => '#66aaff',
+    },
+    color_12 => {
+        order   => 12,
+        default => '#ffe7e7',
+    },
+    color_13 => {
+        order   => 13,
+        default => '#f48a7b',    # input backgound  | transparent,
+    },
+    color_14 => {
+        order   => 14,
+        default => '#ffff99',
+    },
+    color_15 => {
+        order   => 15,
+        default => '#fe57a1',
+    },
+    dark_color => {
+        order   => 100,
+        default => '#c0c0c0',    # 'silver'
+    },
+    light_color => {
+        order   => 101,
+        default => '#aaddff',
+    },
+    text_color => {
+        order   => 102,
+        default => '#000000',
+    },
+    bg_color => {
+        order   => 103,
+        default => '#ffffcc',
+    },
+    error_color => {
+        order   => 104,
+        default => '#ff6666',
+    },
+    selected_color => {
+        order   => 105,
+        default => '#c0c0c0',    # 'silver'
+    },
+    shaded_color => {
+        order   => 106,
+        default => '#66cccc',
+    },
 );
 
 ## Load WWSympa configuration file
@@ -721,12 +820,16 @@ sub _get_css_url {
     # Get parameters for parsing.
     my $param = {};
     foreach my $p (
-        grep { /_color\z/ or /\Acolor_/ or /_url\z/ }
-        map { $_->{name} }
+        grep {/_url\z/}
+        map  { $_->{name} }
         grep { not $_->{obsolete} and $_->{name} } @Sympa::ConfDef::params
     ) {
         $param->{$p} = Conf::get_robot_conf($robot, $p);
     }
+    foreach my $cn (Sympa::WWW::Tools::css_colors()) {
+        $param->{$cn} = Sympa::WWW::Tools::get_color($robot, $cn);
+    }
+
     if (%colors) {
         # Override colors for parsing.
         my @keys =
@@ -945,6 +1048,132 @@ sub _get_css_url {
 # Old name: tools::unescape_html().
 # DEPRECATED.  No longer used.
 #sub unescape_html_minimum;
+
+my %color_values;
+
+sub css_colors {
+    return sort { $css_colors{$a}->{order} <=> $css_colors{$b}->{order} }
+        keys %css_colors;
+}
+
+# Fetch the color value for name $label of domain $robot from conf_table.
+# Old name: Conf::get_db_conf().
+sub get_color {
+    my $robot = shift;
+    my $label = shift;
+
+    my $value = $color_values{$robot}->{$label}
+        if $color_values{$robot};
+    return $value if length($value // '');
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT value_conf AS value
+              FROM conf_table
+              WHERE robot_conf = ? AND label_conf = ?},
+            $robot, $label
+        )
+    ) {
+        $log->syslog(
+            'err',
+            'Unable retrieve value of parameter %s for robot %s from the database',
+            $label,
+            $robot
+        );
+        return undef;
+    }
+    $value = $sth->fetchrow;
+    $sth->finish;
+
+    if (length($value // '')) {
+        $color_values{$robot} ||= {};
+        $color_values{$robot}->{$label} = $value;
+        return $value;
+    }
+    return $css_colors{$label}->{default};
+}
+
+# store the color value $label of robot $robot to conf_table
+# Old name: Conf::set_robot_conf().
+sub set_color {
+    $log->syslog('debug2', 'Set config for robot %s, %s="%s"', @_);
+    my $robot = shift;
+    my $label = shift;
+    my $value = shift;
+
+    return unless grep { $label eq $_ } Sympa::WWW::Tools::css_colors();
+
+    # set the current config before to update database.
+    $color_values{$robot} ||= {};
+    $color_values{$robot}->{$label} = $value;
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $sth;
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT COUNT(*)
+              FROM conf_table
+              WHERE robot_conf = ? AND label_conf = ?},
+            $robot, $label
+        )
+    ) {
+        $log->syslog(
+            'err',
+            'Unable to check presence of parameter %s for robot %s in database',
+            $label,
+            $robot
+        );
+        return undef;
+    }
+
+    my $count = $sth->fetchrow;
+    $sth->finish;
+
+    if ($count == 0) {
+        unless (
+            $sth = $sdm->do_prepared_query(
+                q{INSERT INTO conf_table
+                  (robot_conf, label_conf, value_conf)
+                  VALUES (?, ?, ?)},
+                $robot, $label, $value
+            )
+        ) {
+            $log->syslog(
+                'err',
+                'Unable add value %s for parameter %s in the robot %s DB conf',
+                $value,
+                $label,
+                $robot
+            );
+            return undef;
+        }
+    } else {
+        unless (
+            $sth = $sdm->do_prepared_query(
+                q{UPDATE conf_table
+                  SET robot_conf = ?, label_conf = ?, value_conf = ?
+                  WHERE robot_conf = ? AND label_conf = ?},
+                $robot, $label, $value,
+                $robot, $label
+            )
+        ) {
+            $log->syslog(
+                'err',
+                'Unable set parameter %s value to %s in the robot %s DB conf',
+                $label,
+                $value,
+                $robot
+            );
+            return undef;
+        }
+    }
+
+    return 1;
+}
 
 1;
 __END__

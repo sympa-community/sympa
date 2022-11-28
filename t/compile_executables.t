@@ -15,9 +15,7 @@ unless ($Test::Compile::Internal::VERSION) {
 } else {
     my $test  = Test::Compile::Internal->new;
     my @files = (
-        ##<po/*.pl>,
         <src/sbin/*.pl>,
-        <src/bin/*.pl>,
         <src/libexec/*.pl>,
         'src/cgi/wwsympa.fcgi',
         'src/cgi/sympa_soap_server.fcgi',

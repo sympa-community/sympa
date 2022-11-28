@@ -643,7 +643,7 @@ Arguments
 
 =item $list
 
-A List object corresponding to the list to chek.
+A List object corresponding to the list to check.
 
 =back
 
