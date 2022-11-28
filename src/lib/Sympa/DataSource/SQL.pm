@@ -75,8 +75,11 @@ sub _open {
                     my $email = delete $row->{$self->{email_entry}};
                     next unless defined $email and length $email;
                     $email =~ s/[\t\r\n]+/ /g;
-
-                    print $tmpfh "%s\t%s\n", $email,
+                    foreach my $k (keys %$row) {
+                        $row->{$k} = { value => $row->{$k} }
+                            unless ref $row->{$k} eq 'HASH' and defined $row->{$k}{value};
+                    }
+                    printf $tmpfh "%s\t%s\n", $email,
                         Sympa::Tools::Data::encode_custom_attribute($row);
                 }
             } else {
