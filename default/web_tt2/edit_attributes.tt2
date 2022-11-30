@@ -11,7 +11,7 @@
         <div class="small-9 large-10 columns">
             [% FOREACH k IN list_conf.custom_attribute ~%]
                 [% SET ca_id = "custom_attribute.${k.id}" ~%]
-                [% SET ca_value = subscriber.custom_attribute.item(k.id).value ~%]
+                [% SET ca_value = subscriber.attrib.item(k.id) ~%]
 
                 <label for="[% ca_id %]">
                     [%|loc(k.name)%]%1:[% END %]

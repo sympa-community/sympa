@@ -1358,12 +1358,12 @@ sub getDetails {
         $result{'subscribeDate'} = $subscriber->{'date'};
         $result{'updateDate'}    = $subscriber->{'update_date'};
         $result{'custom'}        = [];
-        if ($subscriber->{'custom_attribute'}) {
-            foreach my $k (keys %{$subscriber->{'custom_attribute'}}) {
+        if ($subscriber->{attrib}) {
+            foreach my $k (keys %{$subscriber->{attrib}}) {
                 push @{$result{'custom'}},
                     {
                     key   => $k,
-                    value => $subscriber->{'custom_attribute'}{$k}{value}
+                    value => $subscriber->{attrib}{$k}
                     }
                     if $k;
             }
@@ -1429,21 +1429,19 @@ sub setDetails {
         if $reception
         and $reception =~
         /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)$/;
-    if (@_) {    # do we have any custom attributes passed?
-        %newcustom = %{$subscriber->{custom_attribute} // {}};
-        while (@_) {
-            my $key = shift;
+    my %attrs = @_;
+    if (%attrs) {
+        # We have any custom attributes passed.
+        %newcustom = %{$subscriber->{attrib} // {}};
+        while (my ($key, $value) = each %attrs) {
             next unless $key;
-            my $value = shift;
-            if (!defined $value or $value eq '') {
-                undef $newcustom{$key};
+            unless (length($value // '')) {
+                delete $newcustom{$key};
             } else {
-                # $newcustom{$key} = $list->{'admin'}{'custom_attribute'}{$key}
-                #     if !defined $newcustom{$key};
-                $newcustom{$key}{value} = $value;
+                $newcustom{$key} = $value;
             }
         }
-        $user{'custom_attribute'} = \%newcustom;
+        $user{attrib} = \%newcustom;
     }
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user details')
@@ -1490,28 +1488,21 @@ sub setCustom {
             ->faultstring('Not a subscriber to this list')
             ->faultdetail('Use : <list> <key> <value> ');
     }
-    %newcustom = %{$subscriber->{custom_attribute} // {}};
-    #if(! defined $list->{'admin'}{'custom_attribute'}{$key} ) {
-    #	return SOAP::Data->name('result')->type('boolean')->value(0);
-    #}
+    %newcustom = %{$subscriber->{attrib} // {}};
 
     # Workaround for possible bug in SOAP::Lite.
     Encode::_utf8_off($key);
     Encode::_utf8_off($value);
 
-    if ($value eq '') {
-        undef $newcustom{$key};
+    unless (length($value // '')) {
+        delete $newcustom{$key};
     } else {
-        # $newcustom{$key} = $list->{'admin'}{'custom_attribute'}{$key}
-        #     if !defined $newcustom{$key}
-        #         and defined $list->{'admin'}{'custom_attribute'};
-        $newcustom{$key}{value} = $value;
+        $newcustom{$key} = $value;
     }
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user attributes')
         ->faultdetail("SOAP setCustom : update user failed")
-        unless $list->update_list_member($sender,
-        custom_attribute => \%newcustom);
+        unless $list->update_list_member($sender, attrib => \%newcustom);
 
     return SOAP::Data->name('result')->type('boolean')->value(1);
 }

@@ -2071,9 +2071,8 @@ sub get_parameters {
         } elsif ($pname =~ /^custom_attribute(.*)$/) {
             my $key = $tokens[1];
             $regexp = $in_regexp{'custom_attribute'};
-            # $log->syslog('debug2', '() (%s)(%s) %s %s %s', $p, $key, $name,
-            #     $in{$p}, $Conf::Conf{$key}->{type});
-            $custom_attribute->{$key} = {value => $in{$p}};
+            $custom_attribute ||= {};
+            $custom_attribute->{$key} = $in{$p};
             undef $in{$p};
         } elsif ($pname eq 'plugin' and $#tokens >= 2) {
             my $plugin_name = $tokens[1];
@@ -5307,7 +5306,7 @@ sub do_set {
     } else {
         $update->{'gecos'} = undef;
     }
-    $update->{'custom_attribute'} = $in{custom_attribute}
+    $update->{attrib} = $in{custom_attribute}
         if $in{custom_attribute};
 
     unless ($list->update_list_member($email, $update)) {
@@ -5345,7 +5344,7 @@ sub _check_custom_attribute {
     my $isOK              = 1;
 
     foreach my $ca (@custom_attributes) {
-        my $value = $custom_attribute->{$ca->{id}}{value};
+        my $value = $custom_attribute->{$ca->{id}};
         if (    $ca->{optional}
             and $ca->{optional} eq 'required'
             and not(defined $value and length $value)) {

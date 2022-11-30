@@ -52,8 +52,8 @@
                             [% FOREACH ca_k IN listconf.custom_attribute ~%]
                                 <p>
                                     <b>[% ca_k.name %][%|loc%]:[%END%] </b>
-                                    [% IF sub.value.custom_attribute.item(ca_k.id).value ~%]
-                                        [% sub.value.custom_attribute.item(ca_k.id).value %]
+                                    [% IF sub.value.attrib.item(ca_k.id) ~%]
+                                        [% sub.value.attrib.item(ca_k.id) %]
                                     [%~ ELSE ~%]
                                         -
                                     [%~ END %]
