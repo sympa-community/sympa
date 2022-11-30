@@ -39,9 +39,9 @@ Notes:
   * Currently, commits during steps 3 and 4 are automatically created
     and pushed to `translation` branch on the repository.
 
-  1. Checkout "main" branch.
+  1. Checkout main branch.
      ```
-     $ git checkout sympa-6.2
+     $ git checkout main
      ```
 
   2. Tidy all sources.
