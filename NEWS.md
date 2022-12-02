@@ -7,7 +7,7 @@
 **Incompatible changes:**
 
 - The `dkim` authentication method for scenarios was obsoleted.  Now it is a synonym of `smtp` method [\#1483](https://github.com/sympa-community/sympa/issues/1483).
-- The `antispam_feature` parameter was deprecated.  Instead, choose appropriate scenario with `spam_status` parameter [\#1470](https://github.com/sympa-community/sympa/pull/1470).
+- The `antispam_feature` parameter was deprecated.  Instead, choose appropriate scenario with `spam_status` parameter [\#1470](https://github.com/sympa-community/sympa/pull/1470).  In particular, if you wish to disable this feature, set "`spam_status none`".
 - The Command line tools under `$SCRIPTDIR` either were deprecated or were integrated into the `sympa` command line tool.  See [\#1386](https://github.com/sympa-community/sympa/issues/1386) for details.
 
 ## [6.2.70](https://github.com/sympa-community/sympa/tree/6.2.70) (2022-11-11)
