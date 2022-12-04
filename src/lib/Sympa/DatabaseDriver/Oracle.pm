@@ -572,6 +572,13 @@ sub AS_BLOB {
     return ();
 }
 
+sub md5_func {
+    shift;
+
+    return sprintf q{LOWER(RAWTOHEX(STANDARD_HASH(%s, 'MD5')))},
+        join ' || ', map { sprintf 'TO_CHAR(%s)', $_ } @_;
+}
+
 1;
 __END__
 

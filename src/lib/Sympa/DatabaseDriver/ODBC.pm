@@ -34,7 +34,7 @@ use base qw(Sympa::DatabaseDriver);
 
 use constant required_modules    => [qw(DBD::ODBC)];
 use constant required_parameters => [qw(db_name db_user db_passwd)];
-use constant optional_parameters => [];
+use constant optional_parameters => [qw(db_options)];
 
 sub build_connect_string {
     my $self = shift;
@@ -64,6 +64,20 @@ sub AS_DOUBLE {
     return ({'TYPE' => DBI::SQL_DOUBLE()} => $_[1])
         if scalar @_ > 1;
     return ();
+}
+
+sub md5_func {
+    my $self = shift;
+
+    if (0 <= index lc($self->{db_options} // ''), 'extension=sybase') {
+        # ASE 2008 or later.
+        return sprintf q{HASH(%s, 'MD5')}, join ' || ', @_;
+    } else {
+        # Microsoft SQL Server 2005 or later.
+        return
+            sprintf q{CONVERT(VARCHAR(32), HashBytes('MD5', CONCAT(%s)), 2)},
+            join ', ', map { sprintf q{IFNULL(%s, '')}, $_ } @_;
+    }
 }
 
 1;

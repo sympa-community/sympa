@@ -167,13 +167,11 @@ our %comm = (
     'signoff'        => 'do_signoff',
     'auto_signoff'   => 'do_auto_signoff',
     'family_signoff' => 'do_family_signoff',
-    #'family_signoff_request' => 'do_family_signoff_request',
-    #XXX'multiple_signoff'    => 'do_multiple_signoff',
-    #'sigrequest' => 'do_sigrequest',
-    'sigindex' => 'do_sigindex',
-    'decl_add' => 'do_decl_add',
-    'decl_del' => 'do_decl_del',
-    'my'       => 'do_my',
+    'oneclick'       => 'do_oneclick',
+    'sigindex'       => 'do_sigindex',
+    'decl_add'       => 'do_decl_add',
+    'decl_del'       => 'do_decl_del',
+    'my'             => 'do_my',
     #'which' => 'do_which',
     'lists'            => 'do_lists',
     'lists_categories' => 'do_lists_categories',
@@ -420,13 +418,12 @@ our %action_args = (
     'show_cert'     => [],
     'subscribe'     => ['list'],
     #'subrequest' => ['list','email'],
-    'subindex'       => ['list'],
-    'decl_add'       => ['list'],
-    'signoff'        => ['list'],
-    'auto_signoff'   => ['list'],
-    'family_signoff' => ['family'],
-    #'family_signoff_request' => ['family', 'email'],
-    #'sigrequest'             => ['list',   'email'],
+    'subindex'           => ['list'],
+    'decl_add'           => ['list'],
+    'signoff'            => ['list'],
+    'auto_signoff'       => ['list'],
+    'family_signoff'     => ['family'],
+    'oneclick'           => ['list', 'id'],
     'sigindex'           => ['list'],
     'decl_del'           => ['list'],
     'set'                => ['list', 'email', 'reception', 'gecos'],
@@ -592,6 +589,7 @@ our %required_args = (
         ['param.list', 'param.user.email', 'message_template', 'content'],
     'modindex'      => ['param.list',       'param.user.email'],
     'docindex'      => ['param.list',       'param.user.email'],
+    'oneclick'      => ['param.list',       'id'],
     'pref'          => ['param.user.email'],
     'purge_list'    => ['param.user.email', 'selected_lists'],
     'rebuildallarc' => ['param.user.email'],
@@ -1993,12 +1991,14 @@ sub get_parameters {
     if ($ENV{'REQUEST_METHOD'} eq 'GET') {
         _split_params($ENV{'PATH_INFO'});
     } elsif ($ENV{'REQUEST_METHOD'} eq 'POST') {
-        ## POST
-
         if ($in{'javascript_action'}) {
-            ## because of incompatibility javascript
+            #FIXME needed?
             $in{'action'} = $in{'javascript_action'};
         }
+        if (0 == index $ENV{PATH_INFO}, '/oneclick/') {
+            _split_params($ENV{PATH_INFO});
+        }
+
         foreach my $p (keys %in) {
             $log->syslog('debug2', 'POST key %s value %s', $p, $in{$p})
                 unless ($p =~ /passwd/);
@@ -5814,6 +5814,33 @@ sub do_signoff {
 
 #OBSOLETED: Now an alias of 'signoff'.
 #sub do_sigrequest;
+
+sub do_oneclick {
+    wwslog('info', '(%s)', $in{'id'});
+
+    unless ($ENV{REQUEST_METHOD} eq 'POST'
+        and ($in{'List-Unsubscribe'} // '') eq 'One-Click') {
+        # Not a One-Click request.  Redirect to normal signoff.
+        $param->{'redirect_to'} =
+            Sympa::get_url($list, 'signoff', authority => 'local');
+        return 1;
+    }
+
+    if (my $email = $list->get_oneclick_email($in{'id'})) {
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'signoff',
+            sender           => $email,
+            email            => $email,
+            scenario_context => {skip => 1},
+        );
+        unless ($spindle and $spindle->spin) {
+            wwslog('err', 'Failed to delete user');
+        }
+    }
+
+    return 'home';
+}
 
 ## Update of password
 sub do_setpasswd {

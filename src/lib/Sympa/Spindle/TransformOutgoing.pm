@@ -118,6 +118,13 @@ sub _twist {
     $list->add_list_header($message, 'id');
 
     ## Add RFC 2369 header fields
+    # At first, delete fields of parent list.  See RFC 2369, section 4.
+    foreach my $h (
+        qw(List-Help List-Subscribe List-Unsubscribe List-Owner
+        List-Unsubscribe-Post)
+    ) {
+        $message->delete_header($h);
+    }
     foreach my $field (
         @{  Sympa::Robot::list_params($list->{'domain'})
                 ->{'rfc2369_header_fields'}->{'format'}

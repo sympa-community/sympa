@@ -291,6 +291,15 @@ sub _twist {
                 $return_path = Sympa::get_address($robot, 'owner');
             }
 
+            # If message is personalized and DKIM signature is available,
+            # Add One-Click Unsubscribe header field.
+            if (    $new_message->{shelved}{merge}
+                and (%arc or $new_message->{shelved}{dkim_sign} and %dkim)
+                and grep { 'unsubscribe' eq $_ }
+                @{$list->{'admin'}{'rfc2369_header_fields'}}) {
+                $list->add_list_header($new_message, 'unsubscribe',
+                    oneclick => $rcpt);
+            }
             if (    $new_message->{shelved}{merge}
                 and $new_message->{shelved}{merge} ne 'footer') {
                 unless ($new_message->personalize($list, $rcpt)) {
