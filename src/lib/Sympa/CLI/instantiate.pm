@@ -36,7 +36,7 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(close_unknown input_file=s quiet);
+use constant _options => qw(close-unknown input-file=s quiet);
 use constant _args    => qw(family);
 
 my $log = Sympa::Log->instance;
@@ -606,7 +606,7 @@ sympa-instantiate - Instantiate the lists in a family
 
 =head1 SYNOPSIS
 
-C<sympa instantiate> C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ] I<family>C<@@>I<domain>
+C<sympa instantiate> C<--input-file=>I</path/to/file.xml> [ C<--close-unknown> ] [ C<--quiet> ] I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 

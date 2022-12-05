@@ -29,7 +29,7 @@ use Sympa::Spindle::ProcessDigest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(keep_digest);
+use constant _options => qw(keep-digest);
 use constant _args    => qw();
 
 sub _run {
@@ -54,11 +54,11 @@ sympa-send_digest - Send digest
 
 =head1 SYNOPSIS
 
-C<sympa send_digest> [ C<--keep_digest> ]
+C<sympa send_digest> [ C<--keep-digest> ]
 
 =head1 DESCRIPTION
 
 Send digest right now.
-If C<--keep_digest> is specified, stocked digest will not be removed.
+If C<--keep-digest> is specified, stocked digest will not be removed.
 
 =cut

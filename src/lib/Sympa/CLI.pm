@@ -113,9 +113,15 @@ sub run {
         ;
     } elsif (
         not Getopt::Long::GetOptionsFromArray(
-            \@argv, \%options,
-            qw(config|f=s debug|d lang|l=s log_level=s mail|m noout),
-            $class->_options
+            \@argv,
+            \%options,
+            map {
+                # If option name contains hyphen-minus, underscore is also
+                # allowed and the latter will be used for keys in the hash.
+                my ($keys, $val) = m/\A([-\w|]+)(.*)\z/;
+                $keys = join '|', map { (s/-/_/gr, $_) } split /[|]/, $keys;
+                $keys . $val
+            } (__PACKAGE__->_options, $class->_options)
         )
     ) {
         warn $language->gettext_sprintf('See \'%s help %s\'',
@@ -212,7 +218,7 @@ sub run {
     $class->_run(\%options, @parsed_argv, @argv);
 }
 
-sub _options       { () }
+sub _options       {qw(config|f=s debug|d lang|l=s log_level=s mail|m noout)}
 sub _args          { () }
 sub _need_priv     {1}
 sub _log_to_stderr {0}
@@ -482,7 +488,8 @@ I<Class method>, I<overridable>.
 Returns an array to define command line options.
 About the format see L<Getopt::Long/Summary of Option Specifications>.
 
-By default no options are defined.
+By default general options are defined and they always take precedence over
+the definition in subclass.
 
 =item _args ( )
 
