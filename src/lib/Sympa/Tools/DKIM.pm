@@ -58,6 +58,7 @@ sub get_dkim_parameters {
             d => (
                        $list->{'admin'}{'dkim_parameters'}{'signer_domain'}
                     || $list->{'admin'}{'arc_parameters'}{'signer_domain'}
+                    || $list->{'domain'}
             ),
             # "i=" tag is -request address by default.
             # See RFC 4871 (page 21).
@@ -79,9 +80,9 @@ sub get_dkim_parameters {
             d => (
                 Conf::get_robot_conf($robot_id,
                     'dkim_parameters.signer_domain')
-                    || Conf::get_robot_conf(
-                    $robot_id, 'arc_parameters.signer_domain'
-                    )
+                    || Conf::get_robot_conf($robot_id,
+                    'arc_parameters.signer_domain')
+                    || $robot_id
             ),
             # This is NOT derived by list config
             i => Conf::get_robot_conf($robot_id, 'dkim_signer_identity'),
@@ -130,6 +131,7 @@ sub get_arc_parameters {
             d => (
                        $list->{'admin'}{'arc_parameters'}{'signer_domain'}
                     || $list->{'admin'}{'dkim_parameters'}{'signer_domain'}
+                    || $list->{'domain'}
             ),
             s => (
                        $list->{'admin'}{'arc_parameters'}{'selector'}
@@ -145,9 +147,9 @@ sub get_arc_parameters {
             d => (
                 Conf::get_robot_conf($robot_id,
                     'arc_parameters.signer_domain')
-                    || Conf::get_robot_conf(
-                    $robot_id, 'dkim_parameters.signer_domain'
-                    )
+                    || Conf::get_robot_conf($robot_id,
+                    'dkim_parameters.signer_domain')
+                    || $robot_id
             ),
             s => (
                 Conf::get_robot_conf($robot_id, 'arc_parameters.selector')
@@ -178,13 +180,18 @@ sub get_arc_parameters {
     return %data;
 }
 
-# Mail::DKIM::Signer prior to 0.38 doesn't import this.
-BEGIN { eval 'use Mail::DKIM::PrivateKey'; }
+# Mail::DKIM::Privatekey <= 0.58 doesn't have $VERSION variable.
+my $has_Mail_DKIM_PrivateKey;
+
+BEGIN {
+    eval 'use Mail::DKIM::PrivateKey';
+    $has_Mail_DKIM_PrivateKey = !$EVAL_ERROR;
+}
 
 sub _load_dkim_private_key {
     my $keyfile = shift;
 
-    return undef unless $Mail::DKIM::PrivateKey::VERSION;
+    return undef unless $has_Mail_DKIM_PrivateKey;
 
     my $fh;
     unless (open $fh, '<', $keyfile) {
