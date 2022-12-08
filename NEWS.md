@@ -12,6 +12,8 @@
 
 **Implemented enhancements:**
 
+- RFC 8058 One Click Unsubscribe [\#1210](https://github.com/sympa-community/sympa/issues/1210)
+- SympaSOAP: List description with SOAP [\#1542](https://github.com/sympa-community/sympa/issues/1542)
 - WWSympa: Authentication mechanism that does not require login if the authentication module allows it [\#1497](https://github.com/sympa-community/sympa/issues/1497)
 - Easy way to get permalinks for messages in web archives [\#1441](https://github.com/sympa-community/sympa/issues/1441)
 - Deprecate conf\_2\_db feature [\#1424](https://github.com/sympa-community/sympa/issues/1424)
@@ -29,6 +31,8 @@
 
 **Fixed bugs:**
 
+- Some bugs with DKIM / ARC [\#1543](https://github.com/sympa-community/sympa/pull/1543)
+- Custom attributes synchronization fail [\#1535](https://github.com/sympa-community/sympa/issues/1535)
 - dmarc\_protection.phrase "From" format INCORRECT [\#1498](https://github.com/sympa-community/sympa/issues/1498)
 - accessing db\_additional\_subscriber\_fields fields in footer vs. tt2 templates [\#1494](https://github.com/sympa-community/sympa/issues/1494)
 - \[WWSympa\] Cannot allow owners to manage editors of a distribution list [\#1488](https://github.com/sympa-community/sympa/issues/1488)
