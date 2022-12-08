@@ -53,6 +53,7 @@ my %types = (
         'isOwner'      => 'boolean',
         'isEditor'     => 'boolean',
         'subject'      => 'string',
+        'info'         => 'string',
         'email'        => 'string',
         'gecos'        => 'string'
     }
@@ -521,6 +522,8 @@ sub info {
         $result_item->{'subject'} =
             SOAP::Data->name('subject')->type('string')
             ->value($list->{'admin'}{'subject'});
+        $result_item->{'info'} =
+            SOAP::Data->name('info')->type('string')->value($list->get_info);
         $result_item->{'homepage'} =
             SOAP::Data->name('homepage')->type('string')
             ->value(Sympa::get_url($list, 'info'));
