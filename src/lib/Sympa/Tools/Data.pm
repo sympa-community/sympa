@@ -311,6 +311,7 @@ sub sort_uniq {
 # Old name: Sympa::List::parseCustomAttribute().
 sub decode_custom_attribute {
     my $xmldoc = shift;
+
     return undef unless defined $xmldoc and length $xmldoc;
 
     my $parser = XML::LibXML->new();
@@ -332,31 +333,33 @@ sub decode_custom_attribute {
     foreach my $ca (@custom_attr) {
         my $id    = Encode::encode_utf8($ca->getAttribute('id'));
         my $value = Encode::encode_utf8($ca->getElementsByTagName('value'));
-        $ca{$id} = {value => $value};
+        $ca{$id} = $value;
     }
+
     return \%ca;
 }
 
 # Old name: Sympa::List::createXMLCustomAttribute().
 sub encode_custom_attribute {
-    my $custom_attr = shift;
+    my $ca = shift;
+
     return
         '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes></custom_attributes>'
-        if (not defined $custom_attr);
-    my $XMLstr = '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes>';
-    foreach my $k (sort keys %{$custom_attr}) {
-        my $value = $custom_attr->{$k}{value};
-        $value = '' unless defined $value;
+        unless $ca;
+    my $ret =
+        '<?xml version="1.0" encoding="UTF-8" ?><custom_attributes>' . join(
+        '',
+        map {
+            sprintf
+                '<custom_attribute id="%s"><value>%s</value></custom_attribute>',
+                $_,
+                Sympa::Tools::Text::encode_html($ca->{$_} // '', '\000-\037');
+            }
+            sort keys %$ca
+        ) . '</custom_attributes>';
+    $ret =~ s/\s*\n\s*/ /g;
 
-        $XMLstr .=
-              "<custom_attribute id=\"$k\"><value>"
-            . Sympa::Tools::Text::encode_html($value, '\000-\037')
-            . "</value></custom_attribute>";
-    }
-    $XMLstr .= "</custom_attributes>";
-    $XMLstr =~ s/\s*\n\s*/ /g;
-
-    return $XMLstr;
+    return $ret;
 }
 
 my $language = Sympa::Language->instance;

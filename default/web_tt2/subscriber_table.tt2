@@ -179,7 +179,7 @@
                     [% FOREACH ca_k IN listconf.custom_attribute %]
                         <td>
                             [% SET id = ca_k.id %]
-                            [% u.custom_attribute.$id.value %]
+                            [% u.attrib.$id %]
                         </td>
                     [% END %]
                 [% END %]

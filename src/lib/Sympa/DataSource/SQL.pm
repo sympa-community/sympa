@@ -76,7 +76,7 @@ sub _open {
                     next unless defined $email and length $email;
                     $email =~ s/[\t\r\n]+/ /g;
 
-                    print $tmpfh "%s\t%s\n", $email,
+                    printf $tmpfh "%s\t%s\n", $email,
                         Sympa::Tools::Data::encode_custom_attribute($row);
                 }
             } else {

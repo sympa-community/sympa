@@ -84,7 +84,7 @@ sub _twist {
 
     my @stash;
     $list->add_list_member(
-        {email => $email, gecos => $comment, custom_attribute => $ca},
+        {email => $email, gecos => $comment, ($ca ? (attrib => $ca) : ())},
         stash => \@stash);
     foreach my $report (@stash) {
         $self->add_stash($request, @$report);

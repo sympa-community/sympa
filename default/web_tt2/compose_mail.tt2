@@ -61,13 +61,12 @@
                 <br />
                 <ul>
                     <li> <b>[&#37; listname &#37;]</b>[%|loc%]: the list name; always available.[%END%]</li>
-                    <li> <b>[&#37; robot &#37;]</b>[%|loc%]: the name of the host the list is installed on; always available.[%END%]</li>
+                    <li> <b>[&#37; domain &#37;]</b>[%|loc%]: the name of the host the list is installed on; always available.[%END%]</li>
                     <li> <b>[&#37; user.email &#37;]</b>[%|loc%]: the user email; always available.[%END%]</li>
                     <li> <b>[&#37; user.gecos &#37;]</b>[%|loc%]: the user name associated to her email; always available.[%END%]</li>
-                    <li> <b>[&#37; user.friendly_date &#37;]</b>[%|loc%]: the - human readable - user's subscription date; always available.[%END%]</li>
-                    <li> <b>[&#37; user.custom_attribute.title.value &#37;]</b>[%|loc%]: can be anything you like; available if you defined a user custom attribute named "title" (see the list configuration, section "Miscellaneous").[%END%]</li>
-                    <li> <b>[&#37; user.custom_attribute.name.value &#37;]</b>[%|loc%]: can be anything you like; available if you defined a user custom attribute named "name".[%END%]</li>
-                    <li> <b>[&#37; user.custom_attribute.organization.value &#37;]</b>[%|loc%]: can be anything you like; available if you defined a user custom attribute named "organization".[%END%]</li>
+                    <li> <b>[&#37; user.attrib.title &#37;]</b>[%|loc%]: can be anything you like; available if you defined a user custom attribute named "title" (see the list configuration, section "Miscellaneous").[%END%]</li>
+                    <li> <b>[&#37; user.attrib.name &#37;]</b>[%|loc%]: can be anything you like; available if you defined a user custom attribute named "name".[%END%]</li>
+                    <li> <b>[&#37; user.attrib.organization &#37;]</b>[%|loc%]: can be anything you like; available if you defined a user custom attribute named "organization".[%END%]</li>
                 </ul>
             [% END %]
         [%  END %]

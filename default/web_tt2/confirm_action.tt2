@@ -543,7 +543,7 @@
         <input type="hidden" name="gecos" value="[% gecos %]" />
         [% FOREACH i = custom_attribute ~%]
             <input type="hidden" name="custom_attribute.[% i.key %]"
-             value="[% i.value.value.replace('\n', '&#10;') %]" />
+             value="[% i.value.replace('\n', '&#10;') %]" />
         [%~ END %]
     [%~ END %]
 

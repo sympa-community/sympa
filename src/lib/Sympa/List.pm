@@ -491,11 +491,13 @@ sub dump_users {
             $user = $self->get_next_list_member()
         ) {
             foreach my $k (sort keys %map_field) {
-                if ($k eq 'custom_attribute') {
+                if ($k eq 'attrib') {
                     next unless ref $user->{$k} eq 'HASH' and %{$user->{$k}};
                     my $encoded = Sympa::Tools::Data::encode_custom_attribute(
                         $user->{$k});
                     printf $lock_fh "%s %s\n", $k, $encoded;
+                    # Compat.<=6.2.70.
+                    printf $lock_fh "custom_attribute %s\n", $encoded;
                 } else {
                     next unless defined $user->{$k} and length $user->{$k};
                     printf $lock_fh "%s %s\n", $k, $user->{$k};
@@ -2026,6 +2028,7 @@ sub _map_list_member_cols {
         email       => 'user_subscriber',
         startdate   => 'suspend_start_date_subscriber',
         enddate     => 'suspend_end_date_subscriber',
+        attrib      => 'custom_attribute_subscriber',
     );
 
     my $fields =
@@ -2099,15 +2102,14 @@ sub get_list_member {
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
 
-        $log->syslog(
-            'debug2',
-            'Custom_attribute = (%s)',
-            $user->{custom_attribute}
-        );
-        if (defined $user->{custom_attribute}) {
-            $user->{'custom_attribute'} =
-                Sympa::Tools::Data::decode_custom_attribute(
-                $user->{'custom_attribute'});
+        $log->syslog('debug2', 'attrib = (%s)', $user->{attrib});
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2238,10 +2240,13 @@ sub get_first_list_member {
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
 
-        if (defined $user->{custom_attribute}) {
-            $user->{'custom_attribute'} =
-                Sympa::Tools::Data::decode_custom_attribute(
-                $user->{'custom_attribute'});
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2289,18 +2294,13 @@ sub get_next_list_member {
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
 
-        if (defined $user->{custom_attribute}) {
-            my $custom_attr = Sympa::Tools::Data::decode_custom_attribute(
-                $user->{'custom_attribute'});
-            unless (defined $custom_attr) {
-                $log->syslog(
-                    'err',
-                    "Failed to parse custom attributes for user %s, list %s",
-                    $user->{'email'},
-                    $self
-                );
-            }
-            $user->{'custom_attribute'} = $custom_attr;
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2519,7 +2519,16 @@ sub get_first_bouncing_list_member {
         $log->syslog('err',
             'Warning: Entry with empty email address in list %s',
             $self->{'name'})
-            unless defined $user->{'email'} and length $user->{'email'};
+            unless length($user->{email} // '');
+
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
+        }
 
         # Compat.<=6.2.44 FIXME: needed?
         $user->{'included'} = 1
@@ -2552,12 +2561,15 @@ sub get_next_bouncing_list_member {
         $log->syslog('err',
             'Warning: Entry with empty email address in list %s',
             $self->{'name'})
-            if (!$user->{'email'});
+            unless length($user->{email} // '');
 
-        if (defined $user->{custom_attribute}) {
-            $user->{'custom_attribute'} =
-                Sympa::Tools::Data::decode_custom_attribute(
-                $user->{'custom_attribute'});
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2688,18 +2700,13 @@ sub get_members {
         $user->{visibility}  ||= 'noconceal';
         $user->{update_date} ||= $user->{date};
 
-        if (defined $user->{custom_attribute}) {
-            my $custom_attr = Sympa::Tools::Data::decode_custom_attribute(
-                $user->{custom_attribute});
-            unless (defined $custom_attr) {
-                $log->syslog(
-                    'err',
-                    "Failed to parse custom attributes for user %s, list %s",
-                    $user->{email},
-                    $self
-                );
-            }
-            $user->{custom_attribute} = $custom_attr;
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2897,7 +2904,7 @@ sub update_list_member {
             unless $map_field{$field};
 
         push @set_list, $map_field{$field};
-        if ($field eq 'custom_attribute') {
+        if ($field eq 'attrib') {
             push @val_list,
                 Sympa::Tools::Data::encode_custom_attribute($value);
         } elsif ($numeric_field{$map_field{$field}}) {
@@ -3210,7 +3217,7 @@ sub add_list_member {
                 unless $map_field{$field};
 
             push @set_list, $map_field{$field};
-            if ($field eq 'custom_attribute') {
+            if ($field eq 'attrib') {
                 push @val_list,
                     Sympa::Tools::Data::encode_custom_attribute($value);
             } elsif ($numeric_field{$map_field{$field}}) {
@@ -3713,8 +3720,9 @@ sub restore_users {
                     if (/^\s*(suspend|subscribed|included)\s+(\S+)\s*$/) {
                         # Note: "included" is kept for comatibility.
                         ($1 => !!$2);
-                    } elsif (/^\s*(custom_attribute)\s+(.+)\s*$/) {
-                        my $k = $1;
+                    } elsif (/^\s*(attrib|custom_attribute)\s+(.+)\s*$/) {
+                        # 'custom_attribute' was obsoleted on 6.2.71b.1.
+                        my $k = 'attrib';
                         my $decoded =
                             Sympa::Tools::Data::decode_custom_attribute($2);
                         ($decoded and %$decoded) ? ($k => $decoded) : ();

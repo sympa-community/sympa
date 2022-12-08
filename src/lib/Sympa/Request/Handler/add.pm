@@ -73,9 +73,13 @@ sub _twist {
 
         $list->add_list_member(
             {   email => $email,
+                (   defined $request->{custom_attribute}
+                    ? (attrib => $request->{custom_attribute})
+                    : ()
+                ),
                 map { ($_ => $request->{$_}) }
                     grep { defined $request->{$_} }
-                    qw(gecos reception visibility custom_attribute)
+                    qw(gecos reception visibility)
             },
             stash => \@stash
         );

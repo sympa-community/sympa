@@ -722,7 +722,7 @@ sub _update_custom_attribute {
 
         my $member = $list->get_list_member($email);
         next unless $member;
-        my $ca = $member->{custom_attribute} || {};
+        my $ca = $member->{attrib} || {};
 
         my $changed;
         foreach my $key (sort keys %{$ca_update || {}}) {
@@ -737,7 +737,7 @@ sub _update_custom_attribute {
         }
         next unless $changed;
 
-        $list->update_list_member($email, custom_attribute => $ca_update);
+        $list->update_list_member($email, attrib => $ca_update);
         $updated++;
     }
 
