@@ -54,6 +54,13 @@ sub AS_BLOB {
     return ();
 }
 
+sub md5_func {
+    shift;
+
+    return sprintf q{MD5(CONCAT(%s))}, join ', ',
+        map { sprintf q{COALESCE(%s, '')}, $_ } @_;
+}
+
 1;
 __END__
 
@@ -625,6 +632,14 @@ value used by L</do_prepared_query>().
 Overridden by inherited classes.
 
 See L</AS_DOUBLE> for more details.
+
+=item md5_func ( $expression, ... )
+
+I<Required>.
+Given expressions, returns a SQL expression calculating MD5 digest of
+concatenated those expressions.  Among them, NULL values should be ignored
+and numeric values should be converted to textual type before concatenation.
+Value of the SQL expression should be lowercase 32 hexadigits.
 
 =back
 

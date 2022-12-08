@@ -30,6 +30,7 @@ package Sympa::DatabaseDriver::SQLite;
 use strict;
 use warnings;
 use DBI qw();
+use Digest::MD5;
 use English qw(-no_match_vars);
 use POSIX qw();
 
@@ -65,6 +66,15 @@ sub connect {
     }
     # Create a temoprarhy view "dual" for portable SQL statements.
     $self->__dbh->do(q{CREATE TEMPORARY VIEW dual AS SELECT 'X' AS dummy;});
+
+    # Create a function MD5().
+    $self->__dbh->func(
+        'md5', -1,
+        sub {
+            Digest::MD5::md5_hex(map { $_ // '' } @_);
+        },
+        'create_function'
+    );
 
     return 1;
 }
@@ -608,6 +618,12 @@ sub AS_BLOB {
     return ({TYPE => DBI::SQL_BLOB()} => $_[1])
         if scalar @_ > 1;
     return ();
+}
+
+sub md5_func {
+    shift;
+
+    return sprintf 'md5(%s)', join ', ', @_;
 }
 
 # Private methods

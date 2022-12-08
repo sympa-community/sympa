@@ -32,6 +32,7 @@ use warnings;
 use Digest::MD5 qw();
 use English qw(-no_match_vars);
 use IO::Scalar;
+use MIME::Base64;
 use POSIX qw();
 use Storable qw();
 
@@ -2769,6 +2770,52 @@ sub get_resembling_members {
 
 #DEPRECATED.  Merged into get_resembling_members().
 #sub find_list_member_by_pattern_no_object;
+
+my $oneclick_expiration = 7;
+
+sub get_oneclick_email {
+    my $self = shift;
+    my $id   = shift;
+
+    return undef unless $id;
+    my ($day, $hash) = $id =~ m{\A(\d*)-(.*)\z};
+    my $hex = unpack "H*", MIME::Base64::decode_base64url($hash);
+    my $today = int(time / 86400);
+    return undef
+        unless 32 == length $hex
+        and $day
+        and $day + 0 <= $today
+        and $today <= $day + $oneclick_expiration;
+
+    my %map_field = _map_list_member_cols();
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $cond = sprintf '%s = %s', $sdm->quote($hex),
+        $sdm->md5_func(@map_field{qw(date email)}, $sdm->quote($day));
+    my @u = grep { $_ and length($_->{email} // '') }
+        $self->get_members('member', othercondition => $cond);
+
+    unless (@u) {
+        $log->syslog('err', 'No user found. Illegal or expired request');
+        return undef;
+    } elsif (1 < scalar @u) {
+        $log->syslog('err', 'Multiple users found. Request ignored');
+        return undef;
+    }
+    return $u[0]->{email};
+}
+
+sub oneclick_id {
+    my $self  = shift;
+    my $email = shift;
+
+    my $user = $self->get_list_member($email) or return undef;
+
+    my $day = int(time / 86400);
+    return sprintf '%s-%s', $day,
+        MIME::Base64::encode_base64url(
+        Digest::MD5::md5($user->{date} // '', $user->{email}, $day));
+}
 
 sub get_info {
     my $self = shift;
@@ -5839,6 +5886,24 @@ sub add_list_header {
         );
         $message->add_header('List-Help',
             join ', ', map { sprintf '<%s>', $_ } @urls);
+    } elsif ($field eq 'unsubscribe' and $options{oneclick}) {
+        if ($wwsympa_url
+            and my $id = $self->oneclick_id($options{oneclick})) {
+            my @urls = (
+                Sympa::get_url($self, 'oneclick', paths => [$id]),
+                Sympa::Tools::Text::mailtourl(
+                    Sympa::get_address($self, 'sympa'),
+                    query => {subject => sprintf('SIG %s', $self->{'name'})}
+                )
+            );
+            # Overwrite existing fields to prevent forgery.
+            $message->delete_header('List-Unsubscribe-Post');
+            $message->delete_header('List-Unsubscribe');
+            $message->add_header('List-Unsubscribe-Post',
+                'List-Unsubscribe=One-Click');
+            $message->add_header('List-Unsubscribe',
+                join ', ', map { sprintf '<%s>', $_ } @urls);
+        }
     } elsif ($field eq 'unsubscribe') {
         my @urls = (
             ($wwsympa_url ? (Sympa::get_url($self, 'signoff')) : ()),
@@ -5877,6 +5942,8 @@ sub add_list_header {
         );
     } elsif ($field eq 'archive') {
         if ($wwsympa_url and $self->is_web_archived()) {
+            # Replace existing field(s).  See RFC 2369 section 4.
+            $message->delete_header('List-Archive');
             $message->add_header('List-Archive',
                 sprintf('<%s>', Sympa::get_url($self, 'arc')));
         } else {
@@ -5896,6 +5963,7 @@ sub add_list_header {
                 my @now = localtime time;
                 $arc = sprintf '%04d-%02d', 1900 + $now[5], $now[4] + 1;
             }
+            # Existing field(s) shouldn't be overwritten.  See RFC 5064, 2.2.
             $message->add_header(
                 'Archived-At',
                 sprintf(
