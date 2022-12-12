@@ -4280,7 +4280,7 @@ These are accessible as hash elements of objects.
 =item {checksum}
 
 No longer used.  It is kept for compatibility with Sympa 6.1.x or earlier.
-See also upgrade_send_spool(1).
+See also L<"sympa upgrade incoming"|sympa-upgrade-incoming(1)>.
 
 =item {envelope_sender}
 

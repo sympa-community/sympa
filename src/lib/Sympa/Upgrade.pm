@@ -183,15 +183,15 @@ sub upgrade {
     ## Migration to tt2
     if (lower_version($previous_version, '4.2b')) {
 
-        $log->syslog('notice', 'Migrating templates to TT2 format...');
-
-        my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
-        my $pipein;
-        unless (open $pipein, '-|', $tpl_script) {    #FIXME
-            $log->syslog('err', 'Unable to run %s', $tpl_script);
-            return undef;
-        }
-        close $pipein;
+        #$log->syslog('notice', 'Migrating templates to TT2 format...');
+        #
+        #my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
+        #my $pipein;
+        #unless (open $pipein, '-|', $tpl_script) {    #FIXME
+        #    $log->syslog('err', 'Unable to run %s', $tpl_script);
+        #    return undef;
+        #}
+        #close $pipein;
 
         $log->syslog('notice', 'Rebuilding web archives...');
         my $all_lists = Sympa::List::get_lists('*');
@@ -622,9 +622,8 @@ sub upgrade {
     ## encoding
     if (lower_version($previous_version, '5.3a.8')) {
         $log->syslog('notice', 'Q-Encoding web documents filenames...');
-        system Sympa::Constants::SCRIPTDIR()
-            . '/upgrade_shared_repository.pl',
-            '--all_lists';
+        system Sympa::Constants::SBINDIR() . '/sympa', 'upgrade', 'shared',
+            '*';
     }
 
     ## We now support UTF-8 only for custom templates, config files, headers
@@ -860,9 +859,8 @@ sub upgrade {
         ## We change encoding of shared documents according to new algorithm
         $log->syslog('notice',
             'Fixing Q-encoding of web document filenames...');
-        system Sympa::Constants::SCRIPTDIR()
-            . '/upgrade_shared_repository.pl',
-            '--all_lists', '--fix_qencode';
+        system Sympa::Constants::SBINDIR() . 'sympa', 'upgrade', 'shared',
+            '--fix_qencode', '*';
     }
     if (lower_version($previous_version, '6.1.11')) {
         ## Exclusion table was not robot-enabled.
@@ -1222,13 +1220,13 @@ sub upgrade {
     }
 
     # Create HTML view of pending messages
-    if (lower_version($previous_version, '6.2b.1')) {
-        $log->syslog('notice', 'Creating HTML view of moderation spool...');
-        my $status =
-            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
-        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
-            if $status;
-    }
+    #if (lower_version($previous_version, '6.2b.1')) {
+    #    $log->syslog('notice', 'Creating HTML view of moderation spool...');
+    #    my $status =
+    #        system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+    #    $log->syslog('err', 'mod2html.pl failed with status %s', $status)
+    #        if $status;
+    #}
 
     # Rename files in automatic spool with older format created by
     # sympa-milter 0.6 or earlier: <family_name>.<date>.<rand> to
@@ -1698,11 +1696,11 @@ sub upgrade {
             closedir $dh;
         }
 
-        $log->syslog('notice', 'Creating HTML view of moderation spool...');
-        my $status =
-            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
-        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
-            if $status;
+        #$log->syslog('notice', 'Creating HTML view of moderation spool...');
+        #my $status =
+        #    system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+        #$log->syslog('err', 'mod2html.pl failed with status %s', $status)
+        #    if $status;
     }
 
     # Upgrading moderation spool on subscription.
