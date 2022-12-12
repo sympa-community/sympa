@@ -35,9 +35,6 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Tools::Domains;
-use Sympa::Tools::Password;
-use Sympa::Tools::Text;
 use Sympa::User;
 
 use base qw(Sympa::Request::Handler);
@@ -54,51 +51,46 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    my $list    = $request->{context};
-    my $sender  = $request->{sender};
-    my $email   = $request->{email};
-    my $comment = $request->{gecos};
-    my $role    = $request->{role} || 'member';
-    my $ca      = $request->{custom_attribute};
+    my $list   = $request->{context};
+    my $sender = $request->{sender};
+    my $email  = $request->{email};
+    my $role   = $request->{role} || 'member';
 
     die 'bug in logic. Ask developer'
         unless grep { $role eq $_ } qw(member owner editor);
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    unless (Sympa::Tools::Text::valid_email($email)) {
-        $self->add_stash($request, 'user', 'incorrect_email',
-            {'email' => $email});
-        $log->syslog('err',
-            'request "add" rejected; incorrect email "%s"', $email);
-        return undef;
-    }
-
     my @stash;
     if ($role eq 'member') {
         unless ($request->{force} or $list->is_subscription_allowed) {
             $log->syslog('info', 'List %s not open', $list);
             $self->add_stash($request, 'user', 'list_not_open',
-                {'status' => $list->{'admin'}{'status'}});
+                {status => $list->{'admin'}{'status'}});
             $self->{finish} = 1;
-            return undef;
-        }
-        if (Sympa::Tools::Domains::is_blocklisted($email)) {
-            $self->add_stash($request, 'user', 'blocklisted_domain',
-                {'email' => $email});
-            $log->syslog('err',
-                'request "add" rejected; blocklisted domain for "%s"',
-                $email);
             return undef;
         }
 
         $list->add_list_member(
-            {email => $email, gecos => $comment, custom_attribute => $ca},
-            stash => \@stash);
+            {   email => $email,
+                (   defined $request->{custom_attribute}
+                    ? (attrib => $request->{custom_attribute})
+                    : ()
+                ),
+                map { ($_ => $request->{$_}) }
+                    grep { defined $request->{$_} }
+                    qw(gecos reception visibility)
+            },
+            stash => \@stash
+        );
     } else {
         $list->add_list_admin(
             $role,
-            {email => $email, gecos => $comment},
+            {   email => $email,
+                map { ($_ => $request->{$_}) }
+                    grep { defined $request->{$_} }
+                    qw(gecos profile reception visibility info)
+            },
             stash => \@stash
         );
     }
@@ -136,7 +128,7 @@ sub _report_member {
     my $comment = $request->{gecos};
 
     $self->add_stash($request, 'notice', 'now_subscriber',
-        {'email' => $email, listname => $list->{'name'}});
+        {email => $email, listname => $list->{'name'}});
 
     # FIXME: Required?
     my $user = Sympa::User->new($email);

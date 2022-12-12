@@ -37,6 +37,7 @@ use MIME::Base64 qw();
 use Time::Local qw();
 
 use Sympa;
+use Sympa::CLI;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -182,7 +183,7 @@ sub upgrade {
 
     ## Migration to tt2
     if (lower_version($previous_version, '4.2b')) {
-
+        # Orgranization of templates has been changed and migration is no use.
         #$log->syslog('notice', 'Migrating templates to TT2 format...');
         #
         #my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
@@ -622,8 +623,7 @@ sub upgrade {
     ## encoding
     if (lower_version($previous_version, '5.3a.8')) {
         $log->syslog('notice', 'Q-Encoding web documents filenames...');
-        system Sympa::Constants::SBINDIR() . '/sympa', 'upgrade', 'shared',
-            '*';
+        Sympa::CLI->run({}, 'upgrade', 'shared', '*');
     }
 
     ## We now support UTF-8 only for custom templates, config files, headers
@@ -859,8 +859,7 @@ sub upgrade {
         ## We change encoding of shared documents according to new algorithm
         $log->syslog('notice',
             'Fixing Q-encoding of web document filenames...');
-        system Sympa::Constants::SBINDIR() . 'sympa', 'upgrade', 'shared',
-            '--fix_qencode', '*';
+        Sympa::CLI->run({fix_qencode => 1}, 'upgrade', 'shared', '*');
     }
     if (lower_version($previous_version, '6.1.11')) {
         ## Exclusion table was not robot-enabled.
@@ -1219,7 +1218,8 @@ sub upgrade {
         }
     }
 
-    # Create HTML view of pending messages
+    # 6.2.70: Now HTML view of held messages will be created on demand.
+    ## Create HTML view of pending messages
     #if (lower_version($previous_version, '6.2b.1')) {
     #    $log->syslog('notice', 'Creating HTML view of moderation spool...');
     #    my $status =
@@ -1696,6 +1696,7 @@ sub upgrade {
             closedir $dh;
         }
 
+        # 6.2.70: Now HTML view of held messages will be created on demand.
         #$log->syslog('notice', 'Creating HTML view of moderation spool...');
         #my $status =
         #    system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;

@@ -1,6 +1,7 @@
 ---
 name: Question
 about: Ask community for help
+labels: question
 
 ---
 

@@ -643,7 +643,7 @@ Arguments
 
 =item $list
 
-A List object corresponding to the list to chek.
+A List object corresponding to the list to check.
 
 =back
 
@@ -798,7 +798,7 @@ L<Sympa::Request::Handler::update_automatic_list>.
 
 L<sympa_automatic(8)>.
 
-L<List families|https://sympa-community.github.io/manual/customize/basics-families.html>, I<Sympa Administration Manual>.
+L<List families|https://www.sympa.community/manual/customize/basics-families.html>, I<Sympa Administration Manual>.
 
 =head1 HISTORY
 

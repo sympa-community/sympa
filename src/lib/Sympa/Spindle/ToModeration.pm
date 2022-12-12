@@ -95,20 +95,9 @@ sub _twist {
         Time::HiRes::time() - $self->{start_time}
     );
 
-    # Do not report to the sender if the message was tagged as a spam.
-    unless ($self->{quiet} or $message->{'spam_status'} eq 'spam') {
-        # Ensure 1 second elapsed since last message.
-        Sympa::send_file(
-            $list,
-            'message_report',
-            $sender,
-            {   type           => 'success',              # Comapt. <=6.2.12.
-                entry          => 'moderating_message',
-                auto_submitted => 'auto-replied'
-            },
-            date => time + 1
-        );
-    }
+    Sympa::send_dsn($list, $message, {}, '4.3.0')
+        unless $self->{quiet}
+        or $message->{'spam_status'} eq 'spam';
     return 1;
 }
 
@@ -122,14 +111,10 @@ sub _send_confirm_to_editor {
     my $list = $message->{context};
     my $spool_mod = Sympa::Spool::Moderation->new(context => $list);
 
-    my $modkey;
     # Keeps a copy of the message.
     # Move message to mod spool.
-    # If crypted, store the crypted form of the message (keep decrypted
-    # form for HTML view).
-    if ($modkey = $spool_mod->store($message, original => 1)) {
-        $spool_mod->html_store($message, $modkey);
-    }
+    # If crypted, store the crypted form of the message.
+    my $modkey = $spool_mod->store($message, original => 1);
     unless ($modkey) {
         $log->syslog('err', 'Cannot create moderation key of %s for %s',
             $message, $list);

@@ -31,7 +31,7 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(input_file=s);
+use constant _options => qw(input-file=s);
 use constant _args    => qw(family|domain?);
 
 sub _run {
@@ -74,9 +74,9 @@ sympa-create - Create a list
 
 =head1 SYNOPSIS
 
-C<sympa create> C<--input_file=>I</path/to/file.xml> [ I<domain> ]
+C<sympa create> C<--input-file=>I</path/to/file.xml> [ I<domain> ]
 
-C<sympa create> C<--input_file=>I</path/to/file.xml> I<family>C<@@>I<domain>
+C<sympa create> C<--input-file=>I</path/to/file.xml> I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 

@@ -199,10 +199,8 @@ sub _twist {
 
     # Load spam status.
     $message->check_spam_status;
-    # Check DKIM signatures.
-    $message->check_dkim_signature;
-    # Check ARC seals
-    $message->check_arc_chain;
+    # Check Authentication-Results fields, DKIM signatures and/or ARC seals.
+    $message->aggregate_authentication_results;
     # Check S/MIME signature.
     $message->check_smime_signature;
     # Decrypt message.  On success, check nested S/MIME signature.

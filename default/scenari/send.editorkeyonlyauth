@@ -1,4 +1,4 @@
 title.gettext Moderated, need authentication from moderator
 
-is_editor([listname],[sender])                 smtp,dkim             -> request_auth
-true()                                         smtp,dkim,smime,md5   -> editorkey
+is_editor([listname],[sender])                 smtp             -> request_auth
+true()                                         smtp,md5,smime   -> editorkey

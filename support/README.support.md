@@ -31,9 +31,17 @@ processes updating translation catalog.
 How to prepare a new source tarball
 ===================================
 
-  1. Checkout "main" branch.
+Notes:
+
+  * In below, the username associated with the Git commits should be
+    "`Sympa authors <devel@sympa.community>`".
+
+  * Currently, commits during steps 3 and 4 are automatically created
+    and pushed to `translation` branch on the repository.
+
+  1. Checkout main branch.
      ```
-     $ git checkout sympa-6.2
+     $ git checkout main
      ```
 
   2. Tidy all sources.
@@ -41,9 +49,10 @@ How to prepare a new source tarball
      $ make tidyall
      ```
 
-     Then commit and push the changes.
+     Then commit the changes.
 
-  3. Commit latest translations from translate.sympa.org, for example:
+  3. Retrieve latest translations from translate.sympa.community.  Then
+     merge it into the source, for example:
      ```
      $ cd (top)/po/sympa
      $ msgcat -o LL.ponew --use-first UPDATED/LL.po LL.po
@@ -58,7 +67,7 @@ How to prepare a new source tarball
      $ support/correct_msgid --domain=web_help
      ```
 
-     Then commit and push the changes.
+     Then commit the changes.
 
   4. Update translation catalog.
      ```
@@ -66,15 +75,17 @@ How to prepare a new source tarball
      $ cd (top)/po/web_help; make clean web_help.pot-update update-po
      ```
 
-     Then commit and push the changes.
+     Then commit the changes.
 
   5. Prepare the new version on the repository.
 
-     Update configure.ac and NEWS.md.
+     Update configure.ac (update version number) and NEWS.md.
 
-     Then commit and push the changes.
+     Then commit the changes with message "[-release] Preparing version x.x.x".
 
-  6. Cleanup everything.
+  6. Push all of the commits described in above into remote repository.
+
+  7. Cleanup everything.
      ```
      $ cd (top)
      $ make distclean
@@ -87,17 +98,20 @@ How to prepare a new source tarball
      $ support/git-set-file-times
      ```
 
-  7. Configure, create and check distribution.
+  8. Configure, create and check distribution.
      ```
      $ autoreconf -i
      $ ./configure --enable-fhs --with-confdir=/etc/sympa
      $ make distcheck
      ```
 
-  8. Upload generated files:
+     If something went wrong, fix it, return to 6 above and try again.
+
+  9. Upload generated files to release section:
 
        - sympa-VERSION.tar.gz
        - sympa-VERSION.tar.gz.md5
        - sympa-VERSION.tar.gz.sha256
        - sympa-VERSION.tar.gz.sha512
  
+  10. Tag the remote repository with the new version number.

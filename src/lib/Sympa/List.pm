@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -32,6 +32,7 @@ use warnings;
 use Digest::MD5 qw();
 use English qw(-no_match_vars);
 use IO::Scalar;
+use MIME::Base64;
 use POSIX qw();
 use Storable qw();
 
@@ -491,11 +492,13 @@ sub dump_users {
             $user = $self->get_next_list_member()
         ) {
             foreach my $k (sort keys %map_field) {
-                if ($k eq 'custom_attribute') {
+                if ($k eq 'attrib') {
                     next unless ref $user->{$k} eq 'HASH' and %{$user->{$k}};
                     my $encoded = Sympa::Tools::Data::encode_custom_attribute(
                         $user->{$k});
                     printf $lock_fh "%s %s\n", $k, $encoded;
+                    # Compat.<=6.2.70.
+                    printf $lock_fh "custom_attribute %s\n", $encoded;
                 } else {
                     next unless defined $user->{$k} and length $user->{$k};
                     printf $lock_fh "%s %s\n", $k, $user->{$k};
@@ -1494,17 +1497,12 @@ sub send_probe_to_user {
     my $who  = shift;
 
     # Shelve VERP for welcome or remind message if necessary
-    my $tracking;
-    if (    $self->{'admin'}{'welcome_return_path'} eq 'unique'
-        and $type eq 'welcome') {
-        $tracking = 'w';
-    } elsif ($self->{'admin'}{'remind_return_path'} eq 'unique'
-        and $type eq 'remind') {
-        $tracking = 'r';
-    } else {
-        #FIXME? Return-Path for '*_return_path' parameter with 'owner'
-        # value is LIST-owner address.  It might be LIST-request address.
-    }
+    my $tracking =
+        ($self->{'admin'}{'verp_welcome'} eq 'on' and $type eq 'welcome')
+        ? 'w'
+        : ($self->{'admin'}{'verp_remind'} eq 'on' and $type eq 'remind')
+        ? 'r'
+        : undef;
 
     my $spindle = Sympa::Spindle::ProcessTemplate->new(
         context  => $self,
@@ -1550,8 +1548,6 @@ sub delete_list_member {
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
-
-    $sdm->begin;
 
     foreach my $who (@$users) {
         next unless defined $who and length $who;
@@ -1618,12 +1614,6 @@ sub delete_list_member {
         $total--;
     }
 
-    unless ($sdm->commit) {
-        $log->syslog('err', 'Error at delete member commit: %s', $sdm->error);
-        $sdm->rollback;
-        return 0;
-    }
-
     $self->_cache_publish_expiry('member');
 
     return (-1 * $total);
@@ -1643,8 +1633,6 @@ sub delete_list_admin {
 
     my $sdm = Sympa::DatabaseManager->instance;
     my $sth;
-
-    $sdm->begin;
 
     $users = [$users] unless ref $users;    # compat.
     foreach my $who (@$users) {
@@ -1681,12 +1669,6 @@ sub delete_list_admin {
         }
 
         $total--;
-    }
-
-    unless ($sdm->commit) {
-        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
-        $sdm->rollback;
-        return 0;
     }
 
     $self->_cache_publish_expiry('admin_user');
@@ -2047,6 +2029,7 @@ sub _map_list_member_cols {
         email       => 'user_subscriber',
         startdate   => 'suspend_start_date_subscriber',
         enddate     => 'suspend_end_date_subscriber',
+        attrib      => 'custom_attribute_subscriber',
     );
 
     my $fields =
@@ -2120,15 +2103,14 @@ sub get_list_member {
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
 
-        $log->syslog(
-            'debug2',
-            'Custom_attribute = (%s)',
-            $user->{custom_attribute}
-        );
-        if (defined $user->{custom_attribute}) {
-            $user->{'custom_attribute'} =
-                Sympa::Tools::Data::decode_custom_attribute(
-                $user->{'custom_attribute'});
+        $log->syslog('debug2', 'attrib = (%s)', $user->{attrib});
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2259,10 +2241,13 @@ sub get_first_list_member {
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
 
-        if (defined $user->{custom_attribute}) {
-            $user->{'custom_attribute'} =
-                Sympa::Tools::Data::decode_custom_attribute(
-                $user->{'custom_attribute'});
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2310,18 +2295,13 @@ sub get_next_list_member {
         $user->{'visibility'}  ||= 'noconceal';
         $user->{'update_date'} ||= $user->{'date'};
 
-        if (defined $user->{custom_attribute}) {
-            my $custom_attr = Sympa::Tools::Data::decode_custom_attribute(
-                $user->{'custom_attribute'});
-            unless (defined $custom_attr) {
-                $log->syslog(
-                    'err',
-                    "Failed to parse custom attributes for user %s, list %s",
-                    $user->{'email'},
-                    $self
-                );
-            }
-            $user->{'custom_attribute'} = $custom_attr;
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2540,7 +2520,16 @@ sub get_first_bouncing_list_member {
         $log->syslog('err',
             'Warning: Entry with empty email address in list %s',
             $self->{'name'})
-            unless defined $user->{'email'} and length $user->{'email'};
+            unless length($user->{email} // '');
+
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
+        }
 
         # Compat.<=6.2.44 FIXME: needed?
         $user->{'included'} = 1
@@ -2573,12 +2562,15 @@ sub get_next_bouncing_list_member {
         $log->syslog('err',
             'Warning: Entry with empty email address in list %s',
             $self->{'name'})
-            if (!$user->{'email'});
+            unless length($user->{email} // '');
 
-        if (defined $user->{custom_attribute}) {
-            $user->{'custom_attribute'} =
-                Sympa::Tools::Data::decode_custom_attribute(
-                $user->{'custom_attribute'});
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2709,18 +2701,13 @@ sub get_members {
         $user->{visibility}  ||= 'noconceal';
         $user->{update_date} ||= $user->{date};
 
-        if (defined $user->{custom_attribute}) {
-            my $custom_attr = Sympa::Tools::Data::decode_custom_attribute(
-                $user->{custom_attribute});
-            unless (defined $custom_attr) {
-                $log->syslog(
-                    'err',
-                    "Failed to parse custom attributes for user %s, list %s",
-                    $user->{email},
-                    $self
-                );
-            }
-            $user->{custom_attribute} = $custom_attr;
+        if (defined $user->{attrib}) {
+            my $ca =
+                Sympa::Tools::Data::decode_custom_attribute($user->{attrib});
+            $user->{attrib} = $ca;
+            # Compat.<=6.2.70.
+            $user->{custom_attribute} =
+                {map { ($_ => {value => $ca->{$_}}) } keys %$ca};
         }
 
         # Compat.<=6.2.44 FIXME: needed?
@@ -2783,6 +2770,52 @@ sub get_resembling_members {
 
 #DEPRECATED.  Merged into get_resembling_members().
 #sub find_list_member_by_pattern_no_object;
+
+my $oneclick_expiration = 7;
+
+sub get_oneclick_email {
+    my $self = shift;
+    my $id   = shift;
+
+    return undef unless $id;
+    my ($day, $hash) = $id =~ m{\A(\d*)-(.*)\z};
+    my $hex = unpack "H*", MIME::Base64::decode_base64url($hash);
+    my $today = int(time / 86400);
+    return undef
+        unless 32 == length $hex
+        and $day
+        and $day + 0 <= $today
+        and $today <= $day + $oneclick_expiration;
+
+    my %map_field = _map_list_member_cols();
+
+    my $sdm = Sympa::DatabaseManager->instance;
+    my $cond = sprintf '%s = %s', $sdm->quote($hex),
+        $sdm->md5_func(@map_field{qw(date email)}, $sdm->quote($day));
+    my @u = grep { $_ and length($_->{email} // '') }
+        $self->get_members('member', othercondition => $cond);
+
+    unless (@u) {
+        $log->syslog('err', 'No user found. Illegal or expired request');
+        return undef;
+    } elsif (1 < scalar @u) {
+        $log->syslog('err', 'Multiple users found. Request ignored');
+        return undef;
+    }
+    return $u[0]->{email};
+}
+
+sub oneclick_id {
+    my $self  = shift;
+    my $email = shift;
+
+    my $user = $self->get_list_member($email) or return undef;
+
+    my $day = int(time / 86400);
+    return sprintf '%s-%s', $day,
+        MIME::Base64::encode_base64url(
+        Digest::MD5::md5($user->{date} // '', $user->{email}, $day));
+}
 
 sub get_info {
     my $self = shift;
@@ -2918,7 +2951,7 @@ sub update_list_member {
             unless $map_field{$field};
 
         push @set_list, $map_field{$field};
-        if ($field eq 'custom_attribute') {
+        if ($field eq 'attrib') {
             push @val_list,
                 Sympa::Tools::Data::encode_custom_attribute($value);
         } elsif ($numeric_field{$map_field{$field}}) {
@@ -3111,19 +3144,30 @@ sub add_list_member {
     my %map_field = _map_list_member_cols();
 
     my $sdm = Sympa::DatabaseManager->instance;
-    $sdm->begin;
 
     foreach my $u (@users) {
         unless (Sympa::Tools::Text::valid_email($u->{email})) {
             $log->syslog('err', 'Ignoring %s which is not a valid email',
                 $u->{email});
+            push @$stash_ref,
+                [
+                'user', 'incorrect_email',
+                {email => $u->{email}, role => 'member'}
+                ];
             next;
         }
 
         my $who = Sympa::Tools::Text::canonic_email($u->{email});
         if (Sympa::Tools::Domains::is_blocklisted($who)) {
             $log->syslog('err', 'Ignoring %s which uses a blocklisted domain',
-                $u->{email});
+                $who);
+            push @$stash_ref, ['user', 'blocklisted_domain', {email => $who}];
+            next;
+        }
+        if ($who eq $self->get_id) {
+            $log->syslog('err',
+                'Ignoring %s which is the address of the list', $who);
+            push @$stash_ref, ['user', 'email_is_the_list', {email => $who}];
             next;
         }
         unless (
@@ -3158,7 +3202,15 @@ sub add_list_member {
 
         my $values = $self->get_default_user_options(role => 'member');
         while (my ($k, $v) = each %$u) {
-            $values->{$k} = $v if defined $v;
+            next unless defined $v;
+            # Check validity of restricted options.
+            # FIXME: Use @Sympa::Config::Schema::user_info.
+            if ($k eq 'reception') {
+                next unless $self->is_available_reception_mode($v);
+            } elsif ($k eq 'visibility') {
+                next unless grep { $v eq $_ } qw(conceal noconceal);
+            }
+            $values->{$k} = $v;
         }
         $values->{email} = $who;
 
@@ -3193,6 +3245,9 @@ sub add_list_member {
             }
         }
 
+        # For backward compat., this column is required and cannot be NULL.
+        $values->{number_messages} //= 0;
+
         #Log in stat_table to make statistics
         $log->add_stat(
             'robot'     => $self->{'domain'},
@@ -3209,7 +3264,7 @@ sub add_list_member {
                 unless $map_field{$field};
 
             push @set_list, $map_field{$field};
-            if ($field eq 'custom_attribute') {
+            if ($field eq 'attrib') {
                 push @val_list,
                     Sympa::Tools::Data::encode_custom_attribute($value);
             } elsif ($numeric_field{$map_field{$field}}) {
@@ -3228,9 +3283,8 @@ sub add_list_member {
             and $sth = $sdm->do_prepared_query(
                 sprintf(
                     q{INSERT INTO subscriber_table
-                      (%s, list_subscriber, robot_subscriber,
-                       number_messages_subscriber)
-                      SELECT %s, ?, ?, 0
+                      (%s, list_subscriber, robot_subscriber)
+                      SELECT %s, ?, ?
                       FROM dual
                       WHERE NOT EXISTS (
                         SELECT 1
@@ -3279,11 +3333,6 @@ sub add_list_member {
         $current_list_members_count++;
     }
 
-    unless ($sdm->commit) {
-        $log->syslog('err', 'Error at add member commit: %s', $sdm->error);
-        $sdm->rollback;
-    }
-
     $self->_cache_publish_expiry('member');
 
     push @$stash_ref, ['notice', 'add_performed', {total => $added_members}]
@@ -3309,18 +3358,8 @@ sub add_list_admin {
     my $stash_ref = $options{stash} || [];
 
     my $total = 0;
-
-    my $sdm = Sympa::DatabaseManager->instance;
-    $sdm->begin;
-
     foreach my $user (@users) {
-        $total++ if $self->_add_list_admin($role, $user, stash => $stash_ref);
-    }
-
-    unless ($sdm->commit) {
-        $log->syslog('err', 'Error at add admin commit: %s', $sdm->error);
-        $sdm->rollback;
-        return 0;
+        $total++ if $self->_add_list_admin($role, $user, %options);
     }
 
     $self->_cache_publish_expiry('admin_user') if $total;
@@ -3338,12 +3377,38 @@ sub _add_list_admin {
 
     my $stash_ref = $options{stash} || [];
 
-    return undef unless Sympa::Tools::Text::valid_email($u->{email});
+    unless (Sympa::Tools::Text::valid_email($u->{email})) {
+        $log->syslog('err', 'Ignoring %s which is not a valid email',
+            $u->{email});
+        push @$stash_ref,
+            ['user', 'incorrect_email',
+            {email => $u->{email}, role => $role}];
+        return undef;
+    }
     my $who = Sympa::Tools::Text::canonic_email($u->{email});
+
+    if ($who eq Sympa::get_address($self, $role)) {
+        $log->syslog('err',
+            'Ignoring %s which is the address for the list %s',
+            $who, $role);
+        push @$stash_ref,
+            ['user', 'email_is_the_list', {email => $who, role => $role}];
+        return undef;
+    }
 
     my $values = $self->get_default_user_options(role => $role);
     while (my ($k, $v) = each %$u) {
-        $values->{$k} = $v if defined $v;
+        next unless defined $v;
+        # Check validity of restricted options.
+        # FIXME: Use @Sympa::Config::Schema::user_info.
+        if ($k eq 'profile') {
+            next unless grep { $v eq $_ } qw(privileged normal);
+        } elsif ($k eq 'reception') {
+            next unless grep { $v eq $_ } qw(mail nomail);
+        } elsif ($k eq 'visibility') {
+            next unless grep { $v eq $_ } qw(conceal noconceal);
+        }
+        $values->{$k} = $v;
     }
     $values->{email} = $who;
 
@@ -3702,8 +3767,9 @@ sub restore_users {
                     if (/^\s*(suspend|subscribed|included)\s+(\S+)\s*$/) {
                         # Note: "included" is kept for comatibility.
                         ($1 => !!$2);
-                    } elsif (/^\s*(custom_attribute)\s+(.+)\s*$/) {
-                        my $k = $1;
+                    } elsif (/^\s*(attrib|custom_attribute)\s+(.+)\s*$/) {
+                        # 'custom_attribute' was obsoleted on 6.2.71b.1.
+                        my $k = 'attrib';
                         my $decoded =
                             Sympa::Tools::Data::decode_custom_attribute($2);
                         ($decoded and %$decoded) ? ($k => $decoded) : ();
@@ -5820,6 +5886,24 @@ sub add_list_header {
         );
         $message->add_header('List-Help',
             join ', ', map { sprintf '<%s>', $_ } @urls);
+    } elsif ($field eq 'unsubscribe' and $options{oneclick}) {
+        if ($wwsympa_url
+            and my $id = $self->oneclick_id($options{oneclick})) {
+            my @urls = (
+                Sympa::get_url($self, 'oneclick', paths => [$id]),
+                Sympa::Tools::Text::mailtourl(
+                    Sympa::get_address($self, 'sympa'),
+                    query => {subject => sprintf('SIG %s', $self->{'name'})}
+                )
+            );
+            # Overwrite existing fields to prevent forgery.
+            $message->delete_header('List-Unsubscribe-Post');
+            $message->delete_header('List-Unsubscribe');
+            $message->add_header('List-Unsubscribe-Post',
+                'List-Unsubscribe=One-Click');
+            $message->add_header('List-Unsubscribe',
+                join ', ', map { sprintf '<%s>', $_ } @urls);
+        }
     } elsif ($field eq 'unsubscribe') {
         my @urls = (
             ($wwsympa_url ? (Sympa::get_url($self, 'signoff')) : ()),
@@ -5858,6 +5942,8 @@ sub add_list_header {
         );
     } elsif ($field eq 'archive') {
         if ($wwsympa_url and $self->is_web_archived()) {
+            # Replace existing field(s).  See RFC 2369 section 4.
+            $message->delete_header('List-Archive');
             $message->add_header('List-Archive',
                 sprintf('<%s>', Sympa::get_url($self, 'arc')));
         } else {
@@ -5865,7 +5951,7 @@ sub add_list_header {
         }
     } elsif ($field eq 'archived_at') {
         if ($wwsympa_url and $self->is_web_archived()) {
-            # Use possiblly anonymized Message-Id: field instead of
+            # Use possibly anonymized Message-Id: field instead of
             # {message_id} attribute.
             my $message_id = Sympa::Tools::Text::canonic_message_id(
                 $message->get_header('Message-Id'));
@@ -5877,13 +5963,17 @@ sub add_list_header {
                 my @now = localtime time;
                 $arc = sprintf '%04d-%02d', 1900 + $now[5], $now[4] + 1;
             }
+            # Existing field(s) shouldn't be overwritten.  See RFC 5064, 2.2.
             $message->add_header(
                 'Archived-At',
                 sprintf(
                     '<%s>',
                     Sympa::get_url(
-                        $self, 'arcsearch_id',
-                        paths => [$arc, $message_id]
+                        $self, 'msg',
+                        paths => [
+                            $arc,
+                            Sympa::Tools::Text::permalink_id($message_id)
+                        ]
                     )
                 )
             );
@@ -6283,7 +6373,7 @@ Limit result to the user with their e-mail $email.
 
 Returns:
 
-In array context, returns (possiblly empty or single-item) array of users.
+In array context, returns (possibly empty or single-item) array of users.
 In scalar context, returns reference to it.
 In case of database error, returns empty array or undefined value.
 
@@ -6408,7 +6498,7 @@ TBD.
 
 Returns:
 
-In array context, returns (possiblly empty or single-item) array of users.
+In array context, returns (possibly empty or single-item) array of users.
 In scalar context, returns reference to it.
 In case of database error, returns empty array or undefined value.
 
@@ -6416,6 +6506,12 @@ In case of database error, returns empty array or undefined value.
 
 I<Instance method>.
 Returns the number of messages sent to the list.
+FIXME
+
+=item get_first_bouncing_list_member ( )
+
+I<Instance method>.
+Get first bouncing user.
 FIXME
 
 =item get_next_bouncing_list_member ( )
