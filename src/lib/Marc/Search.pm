@@ -244,6 +244,7 @@ sub search {
     my $body        = $self->body || 0;
 
     @MSGFILES = '';
+    $self->{res} = [];
 
     my @directories = split /\0/, $directories;
     foreach my $dir (@directories) {
