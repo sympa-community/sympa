@@ -31,6 +31,7 @@
 
 **Fixed bugs:**
 
+- WWSympa: `msg` (ex. `arcsearch_id`) crashes [\#1551](https://github.com/sympa-community/sympa/pull/1551)
 - Some bugs with DKIM / ARC [\#1543](https://github.com/sympa-community/sympa/pull/1543)
 - Custom attributes synchronization fail [\#1535](https://github.com/sympa-community/sympa/issues/1535)
 - dmarc\_protection.phrase "From" format INCORRECT [\#1498](https://github.com/sympa-community/sympa/issues/1498)
