@@ -86,6 +86,6 @@ TBD.
 
 F<testlogs.pl> appeared on Sympa 4.0a.2.
 
-Its function was moved to C<sympa test syslog> on Sympa 6.2.70.
+Its function was moved to C<sympa test syslog> on Sympa 6.2.71b.
 
 =cut

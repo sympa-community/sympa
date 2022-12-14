@@ -284,9 +284,6 @@ L<Sympa::Spool::Outgoing>.
 F<upgrade_bulk_spool.pl> appeared on Sympa 6.2.
 
 Its function was moved to C<sympa upgrade outgoing> command line
-on Sympa 6.2.70.
-
-Its function was moved to C<sympa upgrade outgoing> command line
-on Sympa 6.2.70.
+on Sympa 6.2.71b.
 
 =cut

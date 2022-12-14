@@ -96,6 +96,6 @@ Show subscribers of the list.
 
 =head1 HISTORY
 
-This option was added on Sympa 6.2.69b.
+This option was added on Sympa 6.2.70.
 
 =cut

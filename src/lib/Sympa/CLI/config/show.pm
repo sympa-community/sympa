@@ -99,4 +99,8 @@ Use an alternative configuration file.
 
 =back
 
+=head1 HISTORY
+
+See L<sympa config|sympa-config(1)>.
+
 =cut

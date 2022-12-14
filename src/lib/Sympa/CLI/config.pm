@@ -199,7 +199,7 @@ It was originally written by:
 
 C<--batch> and C<--display> options are added on Sympa 6.1.25 and 6.2.15.
 
-On Sympa 6.2.69b, the most of functions provided by this program was
+On Sympa 6.2.70, the most of functions provided by this program was
 reorganized and was integrated into C<sympa config> command line,
 therefore sympa_wizard.pl was deprecated.
 
