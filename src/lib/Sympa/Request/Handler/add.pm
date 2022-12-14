@@ -175,9 +175,17 @@ sub _report_user {
     my $role   = $request->{role};
     my $email  = $request->{email};
     my $sender = $request->{sender};
+    my $reception;
+
+    if (exists $request->{reception}) {
+        $reception = $request->{reception};
+    }
+    else {
+        $reception = $list->get_default_user_options(role => $role)->{reception};
+    }
 
     # Notify the new list owner/editor
-    unless ($request->{quiet} or $request->{reception} eq 'nomail') {
+    unless ($request->{quiet} or $reception eq 'nomail') {
         Sympa::send_notify_to_user($list, 'added_as_listadmin', $email,
             {admin_type => $role, delegator => $sender});
         $self->add_stash($request, 'notice', 'user_notified',
