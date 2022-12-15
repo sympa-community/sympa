@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2022-11-17 02:17:44+0000\n"
-"PO-Revision-Date: 2022-10-29 00:42+0000\n"
-"Last-Translator: admin <sympa-request@sympa.community>\n"
+"POT-Creation-Date: 2022-11-17 02:12:58+0000\n"
+"PO-Revision-Date: 2022-12-12 10:32+0000\n"
+"Last-Translator: Inledning <hans.ericson@bredband.net>\n"
 "Language-Team: Svenska\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
 "X-Rosetta-Version: 0.1\n"
-"X-POOTLE-MTIME: 1667004147.000000\n"
+"X-POOTLE-MTIME: 1670841152.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -128,7 +128,7 @@ msgstr "Ogiltigt argument '%s' (kommando förväntas)"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI.pm:120
-#, fuzzy, c-format
+#, c-format
 msgid "See '%s help %s'"
 msgstr "Se '%s hjälp %s'"
 
@@ -1016,9 +1016,9 @@ msgstr "Okänt kommando '%s'"
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/help.pm:78
-#, fuzzy, c-format
+#, c-format
 msgid "See '%s help' to know available commands"
-msgstr "Se '%s hjälp' att veta tillgängliga kommondon"
+msgstr "Se '%s hjälp' för att veta tillgängliga kommandon"
 
 #: src/lib/Sympa/Config/Schema.pm:47
 msgid "Service description"
@@ -2233,7 +2233,7 @@ msgstr ""
 msgid "Minimum size to be urlized"
 msgstr "Minimal storlek att urlizera."
 
-# "urlize" is not "utilize".
+# "urlize" not "utilize"
 #: src/lib/Sympa/Config/Schema.pm:1388
 msgid ""
 "When a subscriber chose \"urlize\" reception mode, attachments not smaller "
@@ -2806,26 +2806,24 @@ msgid "Remove bouncing new subscribers"
 msgstr "Ta bort studsande nya prenumeranter"
 
 #: src/lib/Sympa/Config/Schema.pm:2155
-#, fuzzy
 msgid ""
 "If enabled, the welcome message is sent using VERP in order to remove the "
 "subscriber immediately in the case of a bounce."
 msgstr ""
-"Om satt till unik, skickas välkomstmeddelandet med en unik återsökväg för "
-"att ta bort prenumeranten omedelbart vid en studs."
+"Om vald, skickas välkomstmeddelandet med VERP för att ta bort prenumeranten "
+"omedelbart vid en studs."
 
 #: src/lib/Sympa/Config/Schema.pm:2172
 msgid "Remove subscribers bouncing remind message"
 msgstr "Ta bort prenumeranters studsande påminnelsemeddelande"
 
 #: src/lib/Sympa/Config/Schema.pm:2174
-#, fuzzy
 msgid ""
 "If enabled, the remind message is sent using VERP in order to remove the "
 "subscriber immediately in the case of a bounce."
 msgstr ""
-"Om satt till unik, skickas välkomstmeddelandet med en unik återsökväg för "
-"att ta bort prenumeranten omedelbart vid en studs."
+"Om vald, skickas välkomstmeddelandet med VERP för att ta bort prenumeranten "
+"omedelbart vid en studs."
 
 #: src/lib/Sympa/Config/Schema.pm:2192
 msgid "Task for expiration of old bounces"
@@ -3081,22 +3079,18 @@ msgid "Global unsubscription"
 msgstr "Global avprenumeration"
 
 #: src/lib/Sympa/Config/Schema.pm:2456
-#, fuzzy
 msgid "Type of spam filter"
-msgstr "Taggbaserad filtrering"
+msgstr "Typ av spamfilter"
 
 #: src/lib/Sympa/Config/Schema.pm:2458
-#, fuzzy
 msgid ""
 "Messages are supposed to be filtered by an spam filter that adds them one or "
 "more headers. This parameter is used to select a special scenario in order "
 "to decide the message's spam status: ham, spam or unsure."
 msgstr ""
 "Meddelanden ska filtreras av ett spamfilter som lägger till dem en eller "
-"fler huvud. Denna paramter används för att välja ett specialscenario för att "
-"bedöma meddelandets spamstatus: ham, spam eller unsure. Denna parameter "
-"ersätter antispam_tag_header_name, antispam_tag_header_spam_regexp och "
-"antispam_tag_header_ham_regexp."
+"fler huvud. Denna parameter används för att välja ett specialscenario för "
+"att bedöma meddelandets spamstatus: ham, spam eller unsure."
 
 #: src/lib/Sympa/Config/Schema.pm:2470
 msgid "List home"
@@ -4132,8 +4126,8 @@ msgstr ""
 "Detta behövs om du kör Sympa på en värd men du hanterar alla dina email på "
 "en separat emailenhet.\n"
 "Standardvärdet är riktig FQDN på värden. Portnummer kan bli specificerat som "
-"\"email.exempel.org\" eller \"203.0.113.1:25\". Op porten inte specificeras "
-"används standardport (25)."
+"\"email.exempel.org:25\" eller \"203.0.113.1:25\". Om porten inte "
+"specificeras används standardport (25)."
 
 #: src/lib/Sympa/Config/Schema.pm:4797
 msgid "Address suffixes to verify"
@@ -4146,35 +4140,42 @@ msgid ""
 "This parameter is used with the \"list_check_smtp\" parameter. It is also "
 "used to check list names at list creation time."
 msgstr ""
+"Lista på suffix du använder för att lista adresser, dvs \"mylist-request\", "
+"\"mylist-owner\" och så vidare.\n"
+"Denna parameter används med \"list_check_smtp\" parametern.Den är också "
+"använd för att kontrollera listnamn vid skapandetid."
 
 #: src/lib/Sympa/Config/Schema.pm:4812
 msgid "Path to the antivirus scanner engine"
-msgstr ""
+msgstr "Sökväg till antivirusskannermotor"
 
 #: src/lib/Sympa/Config/Schema.pm:4814
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
 msgstr ""
+"Stödda antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
+"Fsecure/fsav, Sophos, AVP och Trend Micro/VirusWall"
 
 #: src/lib/Sympa/Config/Schema.pm:4822
 msgid "Antivirus plugin command line arguments"
-msgstr ""
+msgstr "Antivirus pluginkommandoradsargument"
 
 #: src/lib/Sympa/Config/Schema.pm:4830
 msgid "Notify sender if virus checker detects malicious content"
-msgstr ""
+msgstr "Notifiera sändare om viruskontrollerare detekterar elakt innehåll"
 
 #: src/lib/Sympa/Config/Schema.pm:4833
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
+"\"sender\" för att notifiera ursprung på meddelandet, \"delivery_status\" "
+"för att skicka leveransstatus, eller \"none\""
 
 #: src/lib/Sympa/Config/Schema.pm:4844
-#, fuzzy
 msgid "Local part of Sympa email address"
-msgstr "Lokal del av Sympa e-postadress, listnamnet,"
+msgstr "Lokal del av Sympa e-postadress"
 
 #: src/lib/Sympa/Config/Schema.pm:4846
 msgid ""
@@ -4182,6 +4183,9 @@ msgid ""
 "interface of Sympa accepts mail commands.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
+"Lokal del (delen före \"@\" tecknet) på addressen som emailinterfacet på "
+"Sympa accepterar emailkommandon.\n"
+"Om du ändrar standardvärdet, måste du också ändra mail aliases."
 
 #: src/lib/Sympa/Config/Schema.pm:4854
 msgid "Local part of listmaster email address"
@@ -4193,11 +4197,13 @@ msgid ""
 "listmasters receive messages.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
+"Lokal del (delen före \"@\" tecknet) på addressen som listmastrar får "
+"meddelanden.\n"
+"Om du ändrar standardvärdet, måste du också ändra ändra mail aliases."
 
 #: src/lib/Sympa/Config/Schema.pm:4863
-#, fuzzy
 msgid "Custom robot parameter"
-msgstr "anpassningsparametrar"
+msgstr "Anpassad robotparameter"
 
 #: src/lib/Sympa/Config/Schema.pm:4865
 msgid ""
@@ -4213,7 +4219,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:4876
 msgid "Prevent people to use some names for their lists names"
-msgstr ""
+msgstr "Förhindra människor från att använda vissa namn på sina listnamn"
 
 #: src/lib/Sympa/Config/Schema.pm:4878
 msgid ""
@@ -4221,11 +4227,16 @@ msgid ""
 "wildcard character. To use a regex for this, please use "
 "prohibited_listnames_regex setting."
 msgstr ""
+"Denna parameter är en komma-separarerad lista på namn. Du kan använda * som "
+"en wildcard tecken. För att använda en regex för detta, var god och använd "
+"prohibited_listnames_regex inställningen."
 
 #: src/lib/Sympa/Config/Schema.pm:4888
 msgid ""
 "Prevent people to use some names for their lists names, based on a regex"
 msgstr ""
+"Förhindra människor från att använda vissa namn på sina listnamn, baserat på "
+"en regex"
 
 #: src/lib/Sympa/Config/Schema.pm:4890
 msgid ""
@@ -4233,11 +4244,13 @@ msgid ""
 "prohibited_listnames_regex will both be applied if set, they are not "
 "exclusive."
 msgstr ""
+"Denna parameter är en regex. Var god och notera att prohibited_listnames och "
+"prohibited_listnames_regex kommer båda att användas om de är valda, de är "
+"inte exklusiva."
 
 #: src/lib/Sympa/Config/Schema.pm:4900
-#, fuzzy
 msgid "Use of binary cache of list configuration"
-msgstr "kopiera listkonfiguration"
+msgstr "Användning av binärcache för listkonfiguration"
 
 #: src/lib/Sympa/Config/Schema.pm:4902
 msgid ""
@@ -4246,10 +4259,15 @@ msgid ""
 "of lists (1000+), it should make the web interface startup faster.\n"
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
+"binary_file: Sympaprocesser kommer att behålla en binär version av "
+"listkonfigurationen, \"config.bin\" filen på en localdisk. Om du hanterar "
+"ett stort antal listor (1000+), bör detta göra webbinterfacets start "
+"snabbare.\n"
+"Du kan återskapa cachen genom att köra \"sympa.pl --reload_list_config\"."
 
 #: src/lib/Sympa/Config/Schema.pm:4910
 msgid "Use database cache to search lists"
-msgstr ""
+msgstr "Använd databascache för söklistor"
 
 #: src/lib/Sympa/Config/Schema.pm:4912
 msgid ""
@@ -4257,57 +4275,61 @@ msgid ""
 "by running:\n"
 "  # sympa.pl --sync_list_db"
 msgstr ""
+"Notera att \"list_table\" database tabellen bör fyllas första gångeb genom "
+"att köra:\n"
+"  # sympa.pl --sync_list_db"
 
 #: src/lib/Sympa/Config/Schema.pm:4919
 msgid "Task for expiring inactive users"
-msgstr ""
+msgstr "Uppgift för upphörande inaktiva användare"
 
 #: src/lib/Sympa/Config/Schema.pm:4921
 msgid ""
 "This task removes rows in the \"user_table\" table which have not "
 "corresponding entries in the \"subscriber_table\" table."
 msgstr ""
+"Denna åtgärd tar bort rader i \"user_table\" tabellen som inte har "
+"motsvarande inmatningar i \"subscriber_table\" tabellen."
 
 #: src/lib/Sympa/Config/Schema.pm:4931
 msgid "This task cleans old logs from \"logs_table\" table."
-msgstr ""
+msgstr "Denna uppgift rensar gamla loggar från \"logs_table\" tabellen."
 
 #: src/lib/Sympa/Config/Schema.pm:4939
-#, fuzzy
 msgid "Max age of logs in database"
-msgstr "Kunde inte uppdatera databasen."
+msgstr "Max ålder på loggar i databasen."
 
 #: src/lib/Sympa/Config/Schema.pm:4941
 msgid "Number of months that elapse before a log is expired"
-msgstr ""
+msgstr "Antal månader som går innan en logg går ut"
 
 #: src/lib/Sympa/Config/Schema.pm:4950
 msgid "Max age of statistics information in database"
-msgstr ""
+msgstr "Maxålder på statistikinformation i databas"
 
 #: src/lib/Sympa/Config/Schema.pm:4952
 msgid "Number of months that elapse before statistics information are expired"
-msgstr ""
+msgstr "Antal månader som går innan statistikinformation går ut"
 
 #: src/lib/Sympa/Config/Schema.pm:4964
-#, fuzzy
 msgid "Umask"
-msgstr "e-post"
+msgstr "Umask"
 
 #: src/lib/Sympa/Config/Schema.pm:4966
 msgid ""
 "Default mask for file creation (see umask(2)). Note that it will be "
 "interpreted as an octal value."
 msgstr ""
+"Standardmask för filskapande (se umask(2)). Notera att den tolkas som ett "
+"oktalt värde."
 
 #: src/lib/Sympa/Config/Schema.pm:4985
 msgid "Expiration of unmoderated messages"
 msgstr "Expirering av omodererade meddelanden"
 
 #: src/lib/Sympa/Config/Schema.pm:4986
-#, fuzzy
 msgid "Max age of moderated messages"
-msgstr "Expirering av omodererade meddelanden"
+msgstr "Maxålder på modererade meddelanden"
 
 #: src/lib/Sympa/Config/Schema.pm:4988
 msgid ""
@@ -4315,6 +4337,9 @@ msgid ""
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
 "processed are deleted."
 msgstr ""
+"Antal dagar som meddelanden hålls i modereringspool (som specifieras av "
+"\"queuemod\" parametern). Bortom denna deadline, kommer meddelanden som inte "
+"har processats att tas bort."
 
 #: src/lib/Sympa/Config/Schema.pm:5011
 msgid "Custom user attributes"
@@ -4361,20 +4386,20 @@ msgid "Regular expression applied to prevent loops with robots"
 msgstr "Reguljärt uttryck för att hindra snurror med robotar"
 
 #: src/lib/Sympa/Config/Schema.pm:5101
-#, fuzzy
 msgid "Regular expression to prevent loop"
-msgstr "Reguljärt uttryck för att hindra snurror med robotar"
+msgstr "Reguljärt uttryck för att hindra loopar"
 
 #: src/lib/Sympa/Config/Schema.pm:5103
 msgid ""
 "If the sender address matches the regular expression, then the message is "
 "rejected."
 msgstr ""
+"Om sändadressen matchar det reguljära uttrycket, kommer meddelandet att "
+"avslås."
 
 #: src/lib/Sympa/Config/Schema.pm:5115
-#, fuzzy
 msgid "Pictures"
-msgstr "Bild"
+msgstr "Bilder"
 
 #: src/lib/Sympa/Config/Schema.pm:5117
 msgid ""
@@ -4384,6 +4409,10 @@ msgid ""
 "Pictures are stored in a directory specified by the \"static_content_path\" "
 "parameter."
 msgstr ""
+"Väljer eller stänger av bildfunktionen som standard. Om vald, kan "
+"prenumeranter ladda upp sin bild (från \"Subscriber option\" sidan) för att "
+"använda som en avatar.\n"
+"Bilder lagras i en katalog specifierad av \"static_content_path\" parametern."
 
 #: src/lib/Sympa/Config/Schema.pm:5127
 msgid "Periodical subscription reminder task"
@@ -4395,6 +4424,9 @@ msgid ""
 "task regularly sends  subscribers a message which reminds them of their list "
 "subscriptions."
 msgstr ""
+"Denna paramter anger vilken modell som används för en påminnelseåtgärd. En "
+"påminnelseåtgärd skickar reguljärt  anvärdare ett meddelande som påminner "
+"dem om deras prenumerationer."
 
 #: src/lib/Sympa/Config/Schema.pm:5146
 msgid "Latest family instantiation"
@@ -4434,38 +4466,37 @@ msgid "Serial number of the config"
 msgstr "Konfigurationens serienummer"
 
 #: src/lib/Sympa/Config/Schema.pm:5272
-#, fuzzy
 msgid "URL prefix of web interface"
-msgstr "Webbgränssnitt"
+msgstr "URL prefix för Webbgränssnitt"
 
+# The protocol requieres either https:// or http:// .
 #: src/lib/Sympa/Config/Schema.pm:5274
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
 msgstr ""
+"Detta används för att skapa URLS för webbinterfacet. Protokollet kräver "
+"antingen https:// eller http:// ."
 
 #: src/lib/Sympa/Config/Schema.pm:5280
 msgid "URL prefix of WWSympa behind proxy"
-msgstr ""
+msgstr "URL prefix för WWSympa bakom proxy"
 
 #: src/lib/Sympa/Config/Schema.pm:5288
 msgid "URL for static contents"
-msgstr ""
+msgstr "URL för statiskt innehåll"
 
 #: src/lib/Sympa/Config/Schema.pm:5290
-#, fuzzy
 msgid "HTTP server have to map it with \"static_content_path\" directory."
-msgstr "URL mappad med static_content_path katalog definierad ovan"
+msgstr "HTTP server måste ange det med \"static_content_path\" katalog."
 
 #: src/lib/Sympa/Config/Schema.pm:5297
-#, fuzzy
 msgid "Directory for static contents"
-msgstr "listkatalog"
+msgstr "Katalog för statiskt innehåll"
 
 #: src/lib/Sympa/Config/Schema.pm:5304
-#, fuzzy
 msgid "Directory for static style sheets (CSS)"
-msgstr "listkatalog"
+msgstr "Katalog för statiska stilpapper (CSS)"
 
 #: src/lib/Sympa/Config/Schema.pm:5306
 msgid ""
@@ -4473,112 +4504,114 @@ msgid ""
 "\"css.tt2\" template. Therefore, this is not a good place to store "
 "customized CSS files."
 msgstr ""
+"Efter en uppgradering, uppgraderas statiska CSS-filer med det nya "
+"installerade \"css.tt2\" templatet. Därför, är detta inte en bra plats för "
+"att lagra anpassade CSS-filer."
 
 #: src/lib/Sympa/Config/Schema.pm:5313
 msgid "URL for style sheets (CSS)"
-msgstr ""
+msgstr "URL för stilpapper (CSS)"
 
 #: src/lib/Sympa/Config/Schema.pm:5315
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with "
 "\"css_path\"."
 msgstr ""
+"För att använda auto-generad CSS, måste HTTP-servern ange det med "
+"\"css_path\"."
 
 #: src/lib/Sympa/Config/Schema.pm:5322
 msgid "Directory for subscribers pictures"
 msgstr "Katalog för prenumeranters bilder"
 
 #: src/lib/Sympa/Config/Schema.pm:5330
-#, fuzzy
 msgid "URL for subscribers pictures"
-msgstr "Du är prenumerant sedan"
+msgstr "URL för prenumerantbilder"
 
 #: src/lib/Sympa/Config/Schema.pm:5332
-#, fuzzy
 msgid "HTTP server have to map it with \"pictures_path\" directory."
-msgstr "URL mappad med static_content_path katalog definierad ovan"
+msgstr "HTTP-servern måste ange det med \"pictures_path\"-katalog."
 
 #: src/lib/Sympa/Config/Schema.pm:5341
 msgid "Path to MHonArc mail-to-HTML converter"
-msgstr ""
+msgstr "Sökväg till MHonArc mail-to-HTML konverterare"
 
 #: src/lib/Sympa/Config/Schema.pm:5343
 msgid "This is required for HTML mail archiving."
-msgstr ""
+msgstr "Detta krävs för HTML mail sparande."
 
 #: src/lib/Sympa/Config/Schema.pm:5351
-#, fuzzy
 msgid "System log facility for web interface"
-msgstr "Syslog-möjlighet för Sympa"
+msgstr "Systemloggfacilitet för webbinterface"
 
 #: src/lib/Sympa/Config/Schema.pm:5353
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
+"Systemlofffacilitet för WWSympa, archived.pl och bounced.pl.Standard är att "
+"använda värdet på of \"syslog\"-parametern."
 
 #: src/lib/Sympa/Config/Schema.pm:5369
-#, fuzzy
 msgid "Custom logo"
-msgstr "Mallar"
+msgstr "Anpassad logga"
 
 #: src/lib/Sympa/Config/Schema.pm:5371
 msgid "HTML fragment to insert a logo in the page of web interface."
-msgstr ""
+msgstr "HTML-fragment för att infoga en logga på sidan för webbinterfacet."
 
 #: src/lib/Sympa/Config/Schema.pm:5379
-#, fuzzy
 msgid "Custom favicon"
-msgstr "Anpassning"
+msgstr "Anpassad favoritikon"
 
 #: src/lib/Sympa/Config/Schema.pm:5380
-#, fuzzy
 msgid "URL of favicon image"
-msgstr "URL för den huvudsakliga startsidan"
+msgstr "URL för favoritikonbilden"
 
 #: src/lib/Sympa/Config/Schema.pm:5527
-#, fuzzy
 msgid "Type of main web page"
-msgstr "URL för den huvudsakliga startsidan"
+msgstr "Typ av huvudwebbsida"
 
 #: src/lib/Sympa/Config/Schema.pm:5529
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
-msgstr ""
+msgstr "\"lists\" för sidan för listor. \"home\" för hemsida."
 
 #: src/lib/Sympa/Config/Schema.pm:5537
 msgid "Default index organization of web archive"
-msgstr ""
+msgstr "Standardindexorganisering av webbarkiv"
 
 #: src/lib/Sympa/Config/Schema.pm:5539
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
 msgstr ""
+"thrd: Trådat index.\n"
+"mail: Kronologiskt index."
 
 #: src/lib/Sympa/Config/Schema.pm:5547
-#, fuzzy
 msgid "Size of review page"
-msgstr "visas på listans informationssida"
+msgstr "Storlek på återvisningssida"
 
 #: src/lib/Sympa/Config/Schema.pm:5549
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
+"Standardantal för rader av rutnätet som visar användare i återvisningssidan"
 
 #: src/lib/Sympa/Config/Schema.pm:5557
 msgid "Size of viewlogs page"
-msgstr ""
+msgstr "Storlek på visningsloggssidan"
 
 #: src/lib/Sympa/Config/Schema.pm:5559
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
 msgstr ""
+"Standardantal rader på rutnätet som visar logginmatningar på loggsidan."
 
 #: src/lib/Sympa/Config/Schema.pm:5567
-#, fuzzy
 msgid "Custom menus"
-msgstr "Anpassa mallar"
+msgstr "Anpassade menyer"
 
 #: src/lib/Sympa/Config/Schema.pm:5569
 msgid ""
@@ -4587,10 +4620,14 @@ msgid ""
 "is defined by a title (the text in the button), an URL and, optionally, a "
 "target."
 msgstr ""
+"Du kan ändra huvudmenyns innehåll genom att ändra menu.tt2 filen, men du kan "
+"också ändra dessa parametrar för att lägga till upp till 3 knappar. Varje "
+"knapp definieras av en titel (texten i knappen), en URL och, optionellt, ett "
+"mål."
 
 #: src/lib/Sympa/Config/Schema.pm:5623
 msgid "HTTP cookies validity domain"
-msgstr ""
+msgstr "HTTP-kakors validitetsdomän"
 
 #: src/lib/Sympa/Config/Schema.pm:5625
 msgid ""
@@ -4599,33 +4636,38 @@ msgid ""
 "reason for replacing the default value would be where WWSympa's "
 "authentication process is shared with an application running on another host."
 msgstr ""
+"Omm den börjar med en punkt (\".\"), är kakan tillgänglig inom den "
+"specifiearade Internetdomänen. Annars, för den specifierade värden. Dewn "
+"enda anledningen för att ersätta standardvärdet är när WWSympa's "
+"authenticieringsprocess delas med en applikation som körs på en annan värd."
 
 #: src/lib/Sympa/Config/Schema.pm:5633
 msgid "HTTP cookies lifetime"
-msgstr ""
+msgstr "HTTP-kakors livslängd"
 
 #: src/lib/Sympa/Config/Schema.pm:5635
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
 msgstr ""
+"Detta är standardvärdet när det inte är angett explicit av användare. \"0\" "
+"betyder att kapan kan bli behållen under webbläsarsessioner."
 
 #: src/lib/Sympa/Config/Schema.pm:5643
 msgid "Average interval to refresh HTTP session ID."
-msgstr ""
+msgstr "Genomsnittsintervall för att uppdatera HTTP session ID."
 
 #: src/lib/Sympa/Config/Schema.pm:5650
 msgid "Task for cleaning old sessions"
-msgstr ""
+msgstr "Åtgärd för att rensa gamla sessioner"
 
 #: src/lib/Sympa/Config/Schema.pm:5652
 msgid "This task removes old entries in the \"session_table\" table."
-msgstr ""
+msgstr "Denna åtgärd tar bort gamla inmatningar i  \"session_table\"-tabellen."
 
 #: src/lib/Sympa/Config/Schema.pm:5660
-#, fuzzy
 msgid "Max age of sessions"
-msgstr "Hantera dina prenumerationer"
+msgstr "Maxålder på sessioner"
 
 #: src/lib/Sympa/Config/Schema.pm:5662
 msgid ""
@@ -4637,34 +4679,40 @@ msgid ""
 "for months, \"d\" for days, \"h\" for hours, \"min\" for minutes and \"sec\" "
 "for seconds."
 msgstr ""
+"Sessionslängd hanteras av \"sympa_session\"-kakans valideringsattribut. Men, "
+"av säkerhetsskäl, måste detta också hanteras av serversidan. Denna åtgärd "
+"tar bort gamla inmatningar i \"session_table\"-tabellen.\n"
+"Format på värden är en sträng utan mellanslag inkluderande \"y\" för år, "
+"\"m\" för månader, \"d\" för dagar, \"h\" för timmar, \"min\" för minuter "
+"och \"sec\" för sekunder."
 
 #: src/lib/Sympa/Config/Schema.pm:5669
-#, fuzzy
 msgid "Max age of sessions for anonymous users"
-msgstr "Hantera dina prenumerationer"
+msgstr "Maxåler för sessioner för anonyma användare"
 
 #: src/lib/Sympa/Config/Schema.pm:5680
-#, fuzzy
 msgid "Enable shared repository"
-msgstr "Kan inte byta katalog."
+msgstr "Möjliggör delat arkiv"
 
 #: src/lib/Sympa/Config/Schema.pm:5682
 msgid "If set to \"on\", list owners can open shared repository."
-msgstr ""
+msgstr "Om valt till \"on\", kan listägare öppna delat arkiv."
 
 #: src/lib/Sympa/Config/Schema.pm:5700
 msgid "Use HTML editor"
-msgstr ""
+msgstr "Använd HTML-editor"
 
 #: src/lib/Sympa/Config/Schema.pm:5702
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
 msgstr ""
+"Om valt till \"on\" kan användare posta meddelanden i HTML med en javascript "
+"WYSIWYG-editor."
 
 #: src/lib/Sympa/Config/Schema.pm:5714
 msgid "URL of HTML editor"
-msgstr ""
+msgstr "URL för HTML-editor"
 
 #: src/lib/Sympa/Config/Schema.pm:5716
 msgid ""
@@ -4672,19 +4720,22 @@ msgid ""
 "Relative path under <static_content_url> or absolute path.\n"
 "Example is for TinyMCE 4 installed under <static_content_path>/js/tinymce/."
 msgstr ""
+"URL sökväg till javascript-fil som gör WYSIWYG HTML-editorn tillgänglig.  "
+"Relativ sökväg i <static_content_url> eller absolut sökväg.\n"
+"Exempel är för TinyMCE 4 installerat i <static_content_path>/js/tinymce/."
 
 #: src/lib/Sympa/Config/Schema.pm:5724
-#, fuzzy
 msgid "HTML editor initialization"
-msgstr "Internetdomän"
+msgstr "HTML-editor initialisering"
 
 #: src/lib/Sympa/Config/Schema.pm:5726
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
+"Javascript-utdrag som väljer och konfigurerar the WYSIWYG HTML-editorn."
 
 #: src/lib/Sympa/Config/Schema.pm:5741
 msgid "Count limit of wrong password submission"
-msgstr ""
+msgstr "Antalsbegränsning på felaktigt lösenordsinmatning"
 
 #: src/lib/Sympa/Config/Schema.pm:5743
 msgid ""
@@ -15274,32 +15325,6 @@ msgstr "Web-forum ML"
 msgid "Mailing list for intranets"
 msgstr "E-postlista för intranät"
 
-#~ msgid ""
-#~ "If set to unique, the welcome message is sent using a unique return path "
-#~ "in order to remove the subscriber immediately in the case of a bounce."
-#~ msgstr ""
-#~ "Om satt till unik, skickas välkomstmeddelandet med en unik återsökväg för "
-#~ "att ta bort prenumeranten omedelbart vid en studs."
-
-#~ msgid ""
-#~ "Messages are supposed to be filtered by an spam filter that adds them one "
-#~ "or more headers. This parameter is used to select a special scenario in "
-#~ "order to decide the message's spam status: ham, spam or unsure. This "
-#~ "parameter replaces antispam_tag_header_name, "
-#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
-#~ msgstr ""
-#~ "Meddelanden ska filtreras av ett spamfilter som lägger till dem en eller "
-#~ "fler huvud. Denna paramter används för att välja ett specialscenario för "
-#~ "att bedöma meddelandets spamstatus: ham, spam eller unsure. Denna "
-#~ "parameter ersätter antispam_tag_header_name, "
-#~ "antispam_tag_header_spam_regexp och antispam_tag_header_ham_regexp."
-
-#~ msgid "The following virtual robots are running on this server:"
-#~ msgstr "Följande virtuella robotar körs på denna server:"
-
-#~ msgid "No Virtual Robot defined on this server"
-#~ msgstr "Det finns ingen Virtuell Robot definerad för denna server"
-
 #~ msgid "bounce management"
 #~ msgstr "Studshantering"
 
@@ -20164,3 +20189,29 @@ msgstr "E-postlista för intranät"
 #, fuzzy
 #~ msgid "This parameter is used in mail_tt2 files"
 #~ msgstr "css_path-parametern är definerad med värdet "
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "Om satt till unik, skickas välkomstmeddelandet med en unik återsökväg för "
+#~ "att ta bort prenumeranten omedelbart vid en studs."
+
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an spam filter that adds them one "
+#~ "or more headers. This parameter is used to select a special scenario in "
+#~ "order to decide the message's spam status: ham, spam or unsure. This "
+#~ "parameter replaces antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Meddelanden ska filtreras av ett spamfilter som lägger till dem en eller "
+#~ "fler huvud. Denna paramter används för att välja ett specialscenario för "
+#~ "att bedöma meddelandets spamstatus: ham, spam eller unsure. Denna "
+#~ "parameter ersätter antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp och antispam_tag_header_ham_regexp."
+
+#~ msgid "The following virtual robots are running on this server:"
+#~ msgstr "Följande virtuella robotar körs på denna server:"
+
+#~ msgid "No Virtual Robot defined on this server"
+#~ msgstr "Det finns ingen Virtuell Robot definerad för denna server"

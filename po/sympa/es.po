@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa-es\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2022-11-17 02:17:44+0000\n"
-"PO-Revision-Date: 2022-11-16 19:11+0000\n"
+"POT-Creation-Date: 2022-11-17 02:12:58+0000\n"
+"PO-Revision-Date: 2022-11-19 18:55+0000\n"
 "Last-Translator: LM <luis.a.martinez@gmail.com>\n"
 "Language-Team: Español\n"
 "Language: es\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1668625872.000000\n"
+"X-POOTLE-MTIME: 1668884138.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -2838,28 +2838,24 @@ msgid "Remove bouncing new subscribers"
 msgstr "Eliminar los nuevos usuarios en rechazo"
 
 #: src/lib/Sympa/Config/Schema.pm:2155
-#, fuzzy
 msgid ""
 "If enabled, the welcome message is sent using VERP in order to remove the "
 "subscriber immediately in the case of a bounce."
 msgstr ""
-"Si lo ajustas a unique, el mensaje de bienvenida se envía usando una "
-"dirección de retorno única para eliminar inmediatamente a los suscriptores "
-"en rechazo."
+"Si lo habiltas, el mensaje de bienvenida se envía usando VERT para eliminar "
+"inmediatamente al suscriptor en caso de rechazo."
 
 #: src/lib/Sympa/Config/Schema.pm:2172
 msgid "Remove subscribers bouncing remind message"
 msgstr "Mensaje recordatorio de eliminación de usuarios en rechazo"
 
 #: src/lib/Sympa/Config/Schema.pm:2174
-#, fuzzy
 msgid ""
 "If enabled, the remind message is sent using VERP in order to remove the "
 "subscriber immediately in the case of a bounce."
 msgstr ""
-"Si lo ajustas a unique, el mensaje de bienvenida se envía usando una "
-"dirección de retorno única para eliminar inmediatamente a los suscriptores "
-"en rechazo."
+"Si lo habiltas, el mensaje recordatorio se envía usando VERT para eliminar "
+"inmediatamente al suscriptor en caso de rechazo."
 
 #: src/lib/Sympa/Config/Schema.pm:2192
 msgid "Task for expiration of old bounces"
@@ -3118,22 +3114,19 @@ msgid "Global unsubscription"
 msgstr "Baja global"
 
 #: src/lib/Sympa/Config/Schema.pm:2456
-#, fuzzy
 msgid "Type of spam filter"
-msgstr "Filtrado de spam basado en marcas"
+msgstr "Tipo de filtro de spam"
 
 #: src/lib/Sympa/Config/Schema.pm:2458
-#, fuzzy
 msgid ""
 "Messages are supposed to be filtered by an spam filter that adds them one or "
 "more headers. This parameter is used to select a special scenario in order "
 "to decide the message's spam status: ham, spam or unsure."
 msgstr ""
-"Si supone que los mensajes se pasan por un filtro de spam que les añade una "
+"Se supone que los mensajes se pasan por un filtro de spam que les añade una "
 "o más cabeceras. Este parámetro se usa para seleccionar un escenario "
-"especial para decidir la calidad de spam del mensaje: ham, spam o no seguro. "
-"Este parámetro substituye a antispam_tag_header_name, "
-"antispam_tag_header_spam_regexp y antispam_tag_header_ham_regexp."
+"especial para establecer la calidad de spam del mensaje: ham, spam o no "
+"seguro."
 
 #: src/lib/Sympa/Config/Schema.pm:2470
 msgid "List home"
@@ -7136,9 +7129,8 @@ msgid "%1:"
 msgstr "%1:"
 
 #: default/web_tt2/edit_config.tt2:4 default/web_tt2/nav.tt2:122
-#, fuzzy
 msgid "View domain config"
-msgstr "Ver la configuración principal"
+msgstr "Ver la configuración del dominio"
 
 #: default/web_tt2/edit_config.tt2:24 default/web_tt2/serveradmin.tt2:254
 msgid "parameter name"
@@ -7553,11 +7545,11 @@ msgstr "Cerrar"
 
 #: default/web_tt2/head_javascript.tt2:17
 msgid "Copied!"
-msgstr ""
+msgstr "¡Copiado!"
 
 #: default/web_tt2/head_javascript.tt2:18
 msgid "Copy permalink"
-msgstr ""
+msgstr "Copiar enlace permanente"
 
 #: default/web_tt2/head_javascript.tt2:20
 msgid "Su:Mo:Tu:We:Th:Fr:Sa"
@@ -8344,9 +8336,8 @@ msgid "Skins, CSS and colors"
 msgstr "Skins, CSS y colores"
 
 #: default/web_tt2/nav.tt2:110 default/web_tt2/serveradmin.tt2:17
-#, fuzzy
 msgid "Domains"
-msgstr "Dominio"
+msgstr "Dominios"
 
 #: default/web_tt2/nav.tt2:133 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
@@ -9181,10 +9172,8 @@ msgid "Information"
 msgstr "Información"
 
 #: default/web_tt2/serveradmin.tt2:20
-#, fuzzy
 msgid "The following mail domains are running on this server:"
-msgstr ""
-"Los siguientes robots virtuales están en funcionamiento en este servidor:"
+msgstr "En este servidor están definidos los siguientes dominios de correo:"
 
 #: default/web_tt2/serveradmin.tt2:34
 msgid "Mail domain:"
@@ -9204,9 +9193,8 @@ msgid ", and "
 msgstr ", y "
 
 #: default/web_tt2/serveradmin.tt2:59
-#, fuzzy
 msgid "No additional mail domains defined on this server."
-msgstr "No hay ningún Robot Virtual definido en este servidor"
+msgstr "No hay dominios de correo adicionales definidos en este servidor."
 
 #: default/web_tt2/serveradmin.tt2:74
 msgid "Review lists from this family"
@@ -10609,9 +10597,8 @@ msgid "Your document %1 for list %2@%3 has been rejected by %4 list moderator."
 msgstr "Tu documento %1 para la lista %2@%3 fue rechazado por el moderador %4."
 
 #: default/mail_tt2/delivery_status_notification.tt2:5
-#, fuzzy
 msgid "Message distribution: Forwarded"
-msgstr "Distribución del mensaje"
+msgstr "Distribución del mensaje: Redirigido"
 
 #: default/mail_tt2/delivery_status_notification.tt2:7
 msgid "List could not be created"
@@ -13581,15 +13568,17 @@ msgstr "No se encontró la dirección de correo %1 en la lista %2."
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:544
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "E-mail address %1 was not found in the owners of list %2."
-msgstr "No se encontró la dirección de correo %1 en la lista %2."
+msgstr ""
+"No se encontró la dirección de correo %1 en los propietarios de la lista %2."
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:546
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "E-mail address %1 was not found in the moderators of list %2."
-msgstr "No se encontró la dirección de correo %1 en la lista %2."
+msgstr ""
+"No se encontró la dirección de correo %1 en los moderadores de la lista %2."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:550
@@ -13613,15 +13602,15 @@ msgstr "La lista %1 permite estos modos de recepción: "
 
 #. (report_param.visibility)
 #: default/mail_tt2/report.tt2:569
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "%1 is not an available visibility"
-msgstr "%1 no es un modo de recepción disponible"
+msgstr "%1 no es una visibilidad disponible"
 
 #. (report_param.profile)
 #: default/mail_tt2/report.tt2:572
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "%1 is not an available owner profile"
-msgstr "%1 no es un modo de recepción disponible"
+msgstr "%1 no es un perfil de propietario disponible"
 
 #: default/mail_tt2/report.tt2:575
 #, fuzzy
@@ -15451,34 +15440,6 @@ msgstr "Lista de un foro web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista para intranets"
-
-#~ msgid ""
-#~ "If set to unique, the welcome message is sent using a unique return path "
-#~ "in order to remove the subscriber immediately in the case of a bounce."
-#~ msgstr ""
-#~ "Si lo ajustas a unique, el mensaje de bienvenida se envía usando una "
-#~ "dirección de retorno única para eliminar inmediatamente a los "
-#~ "suscriptores en rechazo."
-
-#~ msgid ""
-#~ "Messages are supposed to be filtered by an spam filter that adds them one "
-#~ "or more headers. This parameter is used to select a special scenario in "
-#~ "order to decide the message's spam status: ham, spam or unsure. This "
-#~ "parameter replaces antispam_tag_header_name, "
-#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
-#~ msgstr ""
-#~ "Si supone que los mensajes se pasan por un filtro de spam que les añade "
-#~ "una o más cabeceras. Este parámetro se usa para seleccionar un escenario "
-#~ "especial para decidir la calidad de spam del mensaje: ham, spam o no "
-#~ "seguro. Este parámetro substituye a antispam_tag_header_name, "
-#~ "antispam_tag_header_spam_regexp y antispam_tag_header_ham_regexp."
-
-#~ msgid "The following virtual robots are running on this server:"
-#~ msgstr ""
-#~ "Los siguientes robots virtuales están en funcionamiento en este servidor:"
-
-#~ msgid "No Virtual Robot defined on this server"
-#~ msgstr "No hay ningún Robot Virtual definido en este servidor"
 
 #~ msgid "bounce management"
 #~ msgstr "gestión de rechazos"
@@ -22159,3 +22120,31 @@ msgstr "Lista para intranets"
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "Borrado por rebote (bounce): "
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "Si lo ajustas a unique, el mensaje de bienvenida se envía usando una "
+#~ "dirección de retorno única para eliminar inmediatamente a los "
+#~ "suscriptores en rechazo."
+
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an spam filter that adds them one "
+#~ "or more headers. This parameter is used to select a special scenario in "
+#~ "order to decide the message's spam status: ham, spam or unsure. This "
+#~ "parameter replaces antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Si supone que los mensajes se pasan por un filtro de spam que les añade "
+#~ "una o más cabeceras. Este parámetro se usa para seleccionar un escenario "
+#~ "especial para decidir la calidad de spam del mensaje: ham, spam o no "
+#~ "seguro. Este parámetro substituye a antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp y antispam_tag_header_ham_regexp."
+
+#~ msgid "The following virtual robots are running on this server:"
+#~ msgstr ""
+#~ "Los siguientes robots virtuales están en funcionamiento en este servidor:"
+
+#~ msgid "No Virtual Robot defined on this server"
+#~ msgstr "No hay ningún Robot Virtual definido en este servidor"

@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa-6.2\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2022-11-17 02:17:44+0000\n"
-"PO-Revision-Date: 2022-11-04 13:28+0000\n"
-"Last-Translator: BenoitMarchal <Benoit.Marchal@univ-lorraine.fr>\n"
+"POT-Creation-Date: 2022-11-17 02:12:58+0000\n"
+"PO-Revision-Date: 2022-12-13 08:19+0000\n"
+"Last-Translator: IKEDA Soji <ikeda@conversion.co.jp>\n"
 "Language-Team: Français\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1667568480.000000\n"
+"X-POOTLE-MTIME: 1670919559.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -127,7 +127,7 @@ msgstr "argument invalide '%s' (une commande est attendue)"
 #: src/lib/Sympa/CLI.pm:120
 #, c-format
 msgid "See '%s help %s'"
-msgstr "Regardez '%s help %s'"
+msgstr "Voir '%s help %s'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -1309,7 +1309,7 @@ msgid ""
 "All supported languages for the user interface. Languages proper locale "
 "information not installed are ignored."
 msgstr ""
-"Toutes les langues supportées par l'interface utilisateur. Les langues dont "
+"Toutes les langues utilisables par l'interface utilisateur. Les langues dont "
 "les informations spécifiques de localisation ne sont pas installées sont "
 "ignorées."
 
@@ -2945,14 +2945,14 @@ msgid "Remove bouncing new subscribers"
 msgstr "Désabonner les nouveaux abonnés en erreur"
 
 #: src/lib/Sympa/Config/Schema.pm:2155
-#, fuzzy
 msgid ""
 "If enabled, the welcome message is sent using VERP in order to remove the "
 "subscriber immediately in the case of a bounce."
 msgstr ""
-"S'il est positionné à \"unique\", le message de bienvenue comprend une "
-"adresse de retour unique, permettant de supprimer immédiatement un nouvel "
-"abonné en erreur."
+"Si ce paramètre a la valeur \"on\", le message de bienvenue comprend une "
+"adresse de retour unique. De cette manière, si le message de bienvenue "
+"envoyé à un nouvel abonné revient en erreur, celui-ci sera automatiquement "
+"désabonné."
 
 # nlsref 16,88
 #: src/lib/Sympa/Config/Schema.pm:2172
@@ -2960,14 +2960,14 @@ msgid "Remove subscribers bouncing remind message"
 msgstr "Supprimer le message de rappel d'abonnés en erreur"
 
 #: src/lib/Sympa/Config/Schema.pm:2174
-#, fuzzy
 msgid ""
 "If enabled, the remind message is sent using VERP in order to remove the "
 "subscriber immediately in the case of a bounce."
 msgstr ""
-"S'il est positionné à \"unique\", le message de bienvenue comprend une "
-"adresse de retour unique, permettant de supprimer immédiatement un nouvel "
-"abonné en erreur."
+"Si ce paramètre a la valeur \"on\", le message de rappel d'abonnement "
+"comprend une adresse de retour unique. De cette manière, si le message de "
+"rappel d'abonnement revient en erreur, l'abonné sera automatiquement "
+"désabonné."
 
 #: src/lib/Sympa/Config/Schema.pm:2192
 msgid "Task for expiration of old bounces"
@@ -3230,22 +3230,19 @@ msgid "Global unsubscription"
 msgstr "Désabonnement global"
 
 #: src/lib/Sympa/Config/Schema.pm:2456
-#, fuzzy
 msgid "Type of spam filter"
-msgstr "Filtrage du spam fondé sur des tags."
+msgstr "Nom du scénario 'spam_status'"
 
 #: src/lib/Sympa/Config/Schema.pm:2458
-#, fuzzy
 msgid ""
 "Messages are supposed to be filtered by an spam filter that adds them one or "
 "more headers. This parameter is used to select a special scenario in order "
 "to decide the message's spam status: ham, spam or unsure."
 msgstr ""
-"Les messages sont supposés être filtrés par un moteur antispam qui ajoute un "
+"Les messages sont censés être filtrés par un moteur antispam qui ajoute un "
 "ou plusieurs entêtes aux messages. Ce paramètre est utilisé pour "
 "sélectionner un scenario particulier dans le but de décider du status : ham, "
-"spam ou unsure. Ce paramètre remplace antispam_tag_header_name, "
-"antispam_tag_header_spam_regexp et antispam_tag_header_ham_regexp."
+"spam ou unsure."
 
 #: src/lib/Sympa/Config/Schema.pm:2470
 msgid "List home"
@@ -7377,9 +7374,8 @@ msgid "%1:"
 msgstr "%1 :"
 
 #: default/web_tt2/edit_config.tt2:4 default/web_tt2/nav.tt2:122
-#, fuzzy
 msgid "View domain config"
-msgstr "Voir la configuration principale"
+msgstr "Configuration du domaine"
 
 #: default/web_tt2/edit_config.tt2:24 default/web_tt2/serveradmin.tt2:254
 msgid "parameter name"
@@ -7800,11 +7796,11 @@ msgstr "Fermer"
 
 #: default/web_tt2/head_javascript.tt2:17
 msgid "Copied!"
-msgstr ""
+msgstr "Copié !"
 
 #: default/web_tt2/head_javascript.tt2:18
 msgid "Copy permalink"
-msgstr ""
+msgstr "Copier le permalien"
 
 #: default/web_tt2/head_javascript.tt2:20
 msgid "Su:Mo:Tu:We:Th:Fr:Sa"
@@ -8623,9 +8619,8 @@ msgid "Skins, CSS and colors"
 msgstr "Skins, feuilles de style et couleurs"
 
 #: default/web_tt2/nav.tt2:110 default/web_tt2/serveradmin.tt2:17
-#, fuzzy
 msgid "Domains"
-msgstr "Domaine"
+msgstr "Domaines"
 
 # nlsref 8,7
 #: default/web_tt2/nav.tt2:133 default/web_tt2/serveradmin.tt2:66
@@ -9488,9 +9483,8 @@ msgid "Information"
 msgstr "Information"
 
 #: default/web_tt2/serveradmin.tt2:20
-#, fuzzy
 msgid "The following mail domains are running on this server:"
-msgstr "Ci-dessous la liste des robots virtuels gérés sur ce serveur :"
+msgstr "Ci-dessous la liste des domaines hébergés par ce serveur :"
 
 #: default/web_tt2/serveradmin.tt2:34
 msgid "Mail domain:"
@@ -9510,9 +9504,8 @@ msgid ", and "
 msgstr ", et "
 
 #: default/web_tt2/serveradmin.tt2:59
-#, fuzzy
 msgid "No additional mail domains defined on this server."
-msgstr "Aucun robot virtuel défini sur ce serveur"
+msgstr "Pas de domaine supplémentaire hébergé par ce serveur."
 
 #: default/web_tt2/serveradmin.tt2:74
 msgid "Review lists from this family"
@@ -10959,9 +10952,8 @@ msgstr ""
 
 # nlsref 15,4
 #: default/mail_tt2/delivery_status_notification.tt2:5
-#, fuzzy
 msgid "Message distribution: Forwarded"
-msgstr "Diffusion des messages"
+msgstr "Diffusion ddu message : le message a été transmis"
 
 #: default/mail_tt2/delivery_status_notification.tt2:7
 msgid "List could not be created"
@@ -12233,9 +12225,9 @@ msgstr ""
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:345
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "Listmaster: list %1@%2 at 100 percents error"
-msgstr "Listmaster : la liste %1@%2 est à 100% d'erreur"
+msgstr "Listmaster : la liste %1@%2 est à 100%% d'erreur"
 
 #. (list.name,domain)
 #: default/mail_tt2/listmaster_notification.tt2:347
@@ -14008,16 +14000,19 @@ msgstr "L'adresse email %1 n'a pas été trouvée dans la liste %2."
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:544
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "E-mail address %1 was not found in the owners of list %2."
-msgstr "L'adresse email %1 n'a pas été trouvée dans la liste %2."
+msgstr ""
+"L'adresse email %1 n'a pas été trouvée parmi les propriétaires de la liste "
+"%2."
 
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:546
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "E-mail address %1 was not found in the moderators of list %2."
-msgstr "L'adresse email %1 n'a pas été trouvée dans la liste %2."
+msgstr ""
+"L'adresse email %1 n'a pas été trouvée parmi les modérateurs de la liste %2."
 
 # nlsref 6,45
 #. (report_param.listname)
@@ -14045,20 +14040,19 @@ msgstr "La liste %1 autorise uniquement les modes de réception suivants :"
 
 #. (report_param.visibility)
 #: default/mail_tt2/report.tt2:569
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "%1 is not an available visibility"
-msgstr "Le mode de réception %1 n'est pas disponible"
+msgstr "La visibilité %1 n'est pas disponible"
 
 #. (report_param.profile)
 #: default/mail_tt2/report.tt2:572
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "%1 is not an available owner profile"
-msgstr "Le mode de réception %1 n'est pas disponible"
+msgstr "Le profil de propriétaire %1 n'est pas disponible"
 
 #: default/mail_tt2/report.tt2:575
-#, fuzzy
 msgid "no changed properties"
-msgstr "propriétés"
+msgstr "Aucune propriété modifiée"
 
 #: default/mail_tt2/report.tt2:578
 msgid "Archives are empty for this list"
@@ -15923,33 +15917,6 @@ msgstr "Liste de type forum web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Liste pour l'Intranet"
-
-#~ msgid ""
-#~ "If set to unique, the welcome message is sent using a unique return path "
-#~ "in order to remove the subscriber immediately in the case of a bounce."
-#~ msgstr ""
-#~ "S'il est positionné à \"unique\", le message de bienvenue comprend une "
-#~ "adresse de retour unique, permettant de supprimer immédiatement un nouvel "
-#~ "abonné en erreur."
-
-#~ msgid ""
-#~ "Messages are supposed to be filtered by an spam filter that adds them one "
-#~ "or more headers. This parameter is used to select a special scenario in "
-#~ "order to decide the message's spam status: ham, spam or unsure. This "
-#~ "parameter replaces antispam_tag_header_name, "
-#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
-#~ msgstr ""
-#~ "Les messages sont supposés être filtrés par un moteur antispam qui ajoute "
-#~ "un ou plusieurs entêtes aux messages. Ce paramètre est utilisé pour "
-#~ "sélectionner un scenario particulier dans le but de décider du status : "
-#~ "ham, spam ou unsure. Ce paramètre remplace antispam_tag_header_name, "
-#~ "antispam_tag_header_spam_regexp et antispam_tag_header_ham_regexp."
-
-#~ msgid "The following virtual robots are running on this server:"
-#~ msgstr "Ci-dessous la liste des robots virtuels gérés sur ce serveur :"
-
-#~ msgid "No Virtual Robot defined on this server"
-#~ msgstr "Aucun robot virtuel défini sur ce serveur"
 
 # nlsref 16,7
 #~ msgid "bounce management"
@@ -22554,3 +22521,30 @@ msgstr "Liste pour l'Intranet"
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "Supprimé(s) pour cause d'erreur&nbsp;:"
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "S'il est positionné à \"unique\", le message de bienvenue comprend une "
+#~ "adresse de retour unique, permettant de supprimer immédiatement un nouvel "
+#~ "abonné en erreur."
+
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an spam filter that adds them one "
+#~ "or more headers. This parameter is used to select a special scenario in "
+#~ "order to decide the message's spam status: ham, spam or unsure. This "
+#~ "parameter replaces antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Les messages sont supposés être filtrés par un moteur antispam qui ajoute "
+#~ "un ou plusieurs entêtes aux messages. Ce paramètre est utilisé pour "
+#~ "sélectionner un scenario particulier dans le but de décider du status : "
+#~ "ham, spam ou unsure. Ce paramètre remplace antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp et antispam_tag_header_ham_regexp."
+
+#~ msgid "The following virtual robots are running on this server:"
+#~ msgstr "Ci-dessous la liste des robots virtuels gérés sur ce serveur :"
+
+#~ msgid "No Virtual Robot defined on this server"
+#~ msgstr "Aucun robot virtuel défini sur ce serveur"

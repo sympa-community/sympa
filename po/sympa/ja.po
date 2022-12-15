@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sympa-6.1.20+, 6.2.16+\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2022-11-17 02:17:44+0000\n"
-"PO-Revision-Date: 2022-10-11 01:04+0000\n"
+"POT-Creation-Date: 2022-11-17 02:12:58+0000\n"
+"PO-Revision-Date: 2022-11-17 02:38+0000\n"
 "Last-Translator: IKEDA Soji <ikeda@conversion.co.jp>\n"
 "Language-Team: 日本語\n"
 "Language: ja\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1665450271.000000\n"
+"X-POOTLE-MTIME: 1668652724.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -2792,26 +2792,24 @@ msgid "Remove bouncing new subscribers"
 msgstr "エラーを起こした新規登録読者を削除"
 
 #: src/lib/Sympa/Config/Schema.pm:2155
-#, fuzzy
 msgid ""
 "If enabled, the welcome message is sent using VERP in order to remove the "
 "subscriber immediately in the case of a bounce."
 msgstr ""
-"ここを「配送エラー処理 (unique)」に設定した場合、歓迎メッセージの送信元を読者"
-"ごとに変えて送信します。そして、配送エラーがおきた場合には読者を削除します。"
+"有効にすると、歓迎メッセージの送信元を読者ごとに変えて送信します。そして、配"
+"送エラーがおきた場合にはすぐにその読者を削除します。"
 
 #: src/lib/Sympa/Config/Schema.pm:2172
 msgid "Remove subscribers bouncing remind message"
 msgstr "読者登録確認がエラーを起こした読者を削除"
 
 #: src/lib/Sympa/Config/Schema.pm:2174
-#, fuzzy
 msgid ""
 "If enabled, the remind message is sent using VERP in order to remove the "
 "subscriber immediately in the case of a bounce."
 msgstr ""
-"ここを「配送エラー処理 (unique)」に設定した場合、歓迎メッセージの送信元を読者"
-"ごとに変えて送信します。そして、配送エラーがおきた場合には読者を削除します。"
+"有効にすると、読者登録確認メッセージの送信元を読者ごとに変えて送信します。そ"
+"して、配送エラーがおきた場合にはすぐにその読者を削除します。"
 
 #: src/lib/Sympa/Config/Schema.pm:2192
 msgid "Task for expiration of old bounces"
@@ -3061,12 +3059,10 @@ msgid "Global unsubscription"
 msgstr "すべて登録解除"
 
 #: src/lib/Sympa/Config/Schema.pm:2456
-#, fuzzy
 msgid "Type of spam filter"
-msgstr "タグ付けによるスパム排除"
+msgstr "スパム排除ソフトウェアの種類"
 
 #: src/lib/Sympa/Config/Schema.pm:2458
-#, fuzzy
 msgid ""
 "Messages are supposed to be filtered by an spam filter that adds them one or "
 "more headers. This parameter is used to select a special scenario in order "
@@ -3075,8 +3071,6 @@ msgstr ""
 "メッセージがスパム排除ソフトウェアで処理されており、そのソフトウェアがある"
 "ヘッダを追加するとします。このパラメータを使って、メッセージがスパムかどうか"
 "の状態 (「ham」、「spam」、「unsure」) を決定する特別なシナリオを選択します。"
-"このパラメータは次のパラメータを置き換えます。antispam_tag_header_name、"
-"antispam_tag_header_spam_regexp、antispam_tag_header_ham_regexp。"
 
 #: src/lib/Sympa/Config/Schema.pm:2470
 msgid "List home"
@@ -6977,9 +6971,8 @@ msgid "%1:"
 msgstr "%1:"
 
 #: default/web_tt2/edit_config.tt2:4 default/web_tt2/nav.tt2:122
-#, fuzzy
 msgid "View domain config"
-msgstr "基本設定を見る"
+msgstr "ドメインの設定を見る"
 
 #: default/web_tt2/edit_config.tt2:24 default/web_tt2/serveradmin.tt2:254
 msgid "parameter name"
@@ -7395,11 +7388,11 @@ msgstr "閉じる"
 
 #: default/web_tt2/head_javascript.tt2:17
 msgid "Copied!"
-msgstr ""
+msgstr "コピーしました"
 
 #: default/web_tt2/head_javascript.tt2:18
 msgid "Copy permalink"
-msgstr ""
+msgstr "パーマリンクをコピー"
 
 #: default/web_tt2/head_javascript.tt2:20
 msgid "Su:Mo:Tu:We:Th:Fr:Sa"
@@ -8188,7 +8181,6 @@ msgid "Skins, CSS and colors"
 msgstr "スキン、CSS、色"
 
 #: default/web_tt2/nav.tt2:110 default/web_tt2/serveradmin.tt2:17
-#, fuzzy
 msgid "Domains"
 msgstr "ドメイン"
 
@@ -9017,9 +9009,8 @@ msgid "Information"
 msgstr "情報"
 
 #: default/web_tt2/serveradmin.tt2:20
-#, fuzzy
 msgid "The following mail domains are running on this server:"
-msgstr "このサーバでは以下の仮想ロボットが稼働しています。"
+msgstr "このサーバでは以下のメール ドメインが稼働しています。"
 
 #: default/web_tt2/serveradmin.tt2:34
 msgid "Mail domain:"
@@ -9039,9 +9030,8 @@ msgid ", and "
 msgstr "、"
 
 #: default/web_tt2/serveradmin.tt2:59
-#, fuzzy
 msgid "No additional mail domains defined on this server."
-msgstr "このサーバでは仮想ロボットを決めていません"
+msgstr "このサーバでは追加のメール ドメインを決めていません。"
 
 #: default/web_tt2/serveradmin.tt2:74
 msgid "Review lists from this family"
@@ -10430,10 +10420,10 @@ msgstr "文書の登録を拒否しました。"
 msgid "Your document %1 for list %2@%3 has been rejected by %4 list moderator."
 msgstr "リスト %2@%3 の文書「%1」を、リストのモデレータ %4 が拒否しました。"
 
+# DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:5
-#, fuzzy
 msgid "Message distribution: Forwarded"
-msgstr "メッセージのゆくえ"
+msgstr "Message distribution: Forwarded / メッセージのゆくえ: 回送"
 
 # DSNのため英語併記
 #: default/mail_tt2/delivery_status_notification.tt2:7
@@ -13461,15 +13451,18 @@ msgstr "%1 というメール アドレスは、%2 メーリングリストに�
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:544
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "E-mail address %1 was not found in the owners of list %2."
-msgstr "%1 というメール アドレスは、%2 メーリングリストにありませんでした。"
+msgstr ""
+"%1 というメール アドレスは、%2 メーリングリストのオーナーにはいませんでした。"
 
 #. (report_param.email,report_param.listname)
 #: default/mail_tt2/report.tt2:546
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "E-mail address %1 was not found in the moderators of list %2."
-msgstr "%1 というメール アドレスは、%2 メーリングリストにありませんでした。"
+msgstr ""
+"%1 というメール アドレスは、%2 メーリングリストのモデレータにはいませんでし"
+"た。"
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:550
@@ -13495,20 +13488,19 @@ msgstr "リスト %1 では次の受け取りモードだけを選べます。"
 
 #. (report_param.visibility)
 #: default/mail_tt2/report.tt2:569
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "%1 is not an available visibility"
-msgstr "%1 という受け取りモードにはできません"
+msgstr "%1 という見えかたにはできません"
 
 #. (report_param.profile)
 #: default/mail_tt2/report.tt2:572
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "%1 is not an available owner profile"
-msgstr "%1 という受け取りモードにはできません"
+msgstr "%1 というオーナー権限にはできません"
 
 #: default/mail_tt2/report.tt2:575
-#, fuzzy
 msgid "no changed properties"
-msgstr "プロパティ"
+msgstr "変更されたプロパティはありません"
 
 #: default/mail_tt2/report.tt2:578
 msgid "Archives are empty for this list"
@@ -15324,34 +15316,6 @@ msgstr "ウェブ上のフォーラム"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "イントラネット用"
-
-#~ msgid ""
-#~ "If set to unique, the welcome message is sent using a unique return path "
-#~ "in order to remove the subscriber immediately in the case of a bounce."
-#~ msgstr ""
-#~ "ここを「配送エラー処理 (unique)」に設定した場合、歓迎メッセージの送信元を"
-#~ "読者ごとに変えて送信します。そして、配送エラーがおきた場合には読者を削除し"
-#~ "ます。"
-
-#~ msgid ""
-#~ "Messages are supposed to be filtered by an spam filter that adds them one "
-#~ "or more headers. This parameter is used to select a special scenario in "
-#~ "order to decide the message's spam status: ham, spam or unsure. This "
-#~ "parameter replaces antispam_tag_header_name, "
-#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
-#~ msgstr ""
-#~ "メッセージがスパム排除ソフトウェアで処理されており、そのソフトウェアがある"
-#~ "ヘッダを追加するとします。このパラメータを使って、メッセージがスパムかどう"
-#~ "かの状態 (「ham」、「spam」、「unsure」) を決定する特別なシナリオを選択し"
-#~ "ます。このパラメータは次のパラメータを置き換えます。"
-#~ "antispam_tag_header_name、antispam_tag_header_spam_regexp、"
-#~ "antispam_tag_header_ham_regexp。"
-
-#~ msgid "The following virtual robots are running on this server:"
-#~ msgstr "このサーバでは以下の仮想ロボットが稼働しています。"
-
-#~ msgid "No Virtual Robot defined on this server"
-#~ msgstr "このサーバでは仮想ロボットを決めていません"
 
 #~ msgid "bounce management"
 #~ msgstr "配送エラー処理"
@@ -21535,3 +21499,31 @@ msgstr "イントラネット用"
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "配送エラーのため削除された人"
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "ここを「配送エラー処理 (unique)」に設定した場合、歓迎メッセージの送信元を"
+#~ "読者ごとに変えて送信します。そして、配送エラーがおきた場合には読者を削除し"
+#~ "ます。"
+
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an spam filter that adds them one "
+#~ "or more headers. This parameter is used to select a special scenario in "
+#~ "order to decide the message's spam status: ham, spam or unsure. This "
+#~ "parameter replaces antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "メッセージがスパム排除ソフトウェアで処理されており、そのソフトウェアがある"
+#~ "ヘッダを追加するとします。このパラメータを使って、メッセージがスパムかどう"
+#~ "かの状態 (「ham」、「spam」、「unsure」) を決定する特別なシナリオを選択し"
+#~ "ます。このパラメータは次のパラメータを置き換えます。"
+#~ "antispam_tag_header_name、antispam_tag_header_spam_regexp、"
+#~ "antispam_tag_header_ham_regexp。"
+
+#~ msgid "The following virtual robots are running on this server:"
+#~ msgstr "このサーバでは以下の仮想ロボットが稼働しています。"
+
+#~ msgid "No Virtual Robot defined on this server"
+#~ msgstr "このサーバでは仮想ロボットを決めていません"

@@ -4,9 +4,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sympa 6.0b\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2022-11-17 02:17:44+0000\n"
-"PO-Revision-Date: 2022-11-10 15:48+0000\n"
-"Last-Translator: 1resu <user1@systemausfall.org>\n"
+"POT-Creation-Date: 2022-11-17 02:12:58+0000\n"
+"PO-Revision-Date: 2022-12-10 10:45+0000\n"
+"Last-Translator: peterfromearth <coder@peterfromearth.de>\n"
 "Language-Team: Deutsch\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1668095305.000000\n"
+"X-POOTLE-MTIME: 1670669124.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -90,9 +90,8 @@ msgid "\"*\""
 msgstr "\"*\""
 
 #: src/lib/Sympa/CLI.pm:410
-#, fuzzy
 msgid "command"
-msgstr "bei Bedarf"
+msgstr "Befehl"
 
 #: src/lib/Sympa/CLI.pm:411 src/lib/Sympa/ListOpt.pm:166
 msgid "string"
@@ -104,9 +103,8 @@ msgid "email address"
 msgstr "E-Mail-Adresse"
 
 #: src/lib/Sympa/CLI.pm:413
-#, fuzzy
 msgid "\"key=value\""
-msgstr "Wert"
+msgstr "\"Schlüssel=Wert\""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -1004,7 +1002,7 @@ msgstr ""
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
 #: src/lib/Sympa/CLI/help.pm:74
-#, fuzzy, c-format
+#, c-format
 msgid "Unknown command '%s'"
 msgstr "Ungültiger Befehl '%s'"
 
@@ -2417,15 +2415,16 @@ msgstr "Wer die Mail-Adresse von Nutzern ändern kann"
 
 #: src/lib/Sympa/Config/Schema.pm:1553
 msgid "Use blocklist"
-msgstr "Schwarze Liste verwenden"
+msgstr "Blockierungsliste verwenden"
 
 #: src/lib/Sympa/Config/Schema.pm:1557
 msgid ""
 "List of operations separated by comma for which blocklist filter is "
 "applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
-"Kommagetrennte Liste der Operationen, für die die Schwarze Liste angewendet "
-"wird. Das Setzen dieses Wertes auf \"none\" versteckt die Schwarze Liste."
+"Kommagetrennte Liste der Operationen, die für die Blockierungsliste "
+"angewendet wird. Das Setzen dieses Wertes auf \"none\" versteckt die "
+"Blockierungsliste."
 
 #: src/lib/Sympa/Config/Schema.pm:1574
 msgid "Who can view list information"
@@ -5539,7 +5538,7 @@ msgstr ""
 
 #: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
-msgstr "Schwarze Liste:"
+msgstr "Blockierungsliste:"
 
 #: default/web_tt2/admin.tt2:18
 msgid "Handles the set of black-listed mail addresses for this list."
@@ -5908,13 +5907,13 @@ msgstr "Blacklist verwalten"
 
 #: default/web_tt2/blocklist.tt2:7
 msgid "The current blocklist is empty"
-msgstr "Die schwarze Liste ist derzeit leer"
+msgstr "Die Blockierungsliste ist derzeit leer"
 
 #. (rows)
 #: default/web_tt2/blocklist.tt2:9
 #, smalltalk-format
 msgid "The current blocklist contains %1 line(s)"
-msgstr "Die schwarze Liste enthält derzeit %1 Zeile(n)"
+msgstr "Die Blockierungsliste enthält derzeit %1 Zeile(n)"
 
 #. (conf.use_blocklist)
 #: default/web_tt2/blocklist.tt2:12
@@ -5924,8 +5923,8 @@ msgid ""
 "rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
 "Aktionen, die von Benutzern angefordert werden, deren E-Mail-Adresse in der "
-"schwarzen Liste aufgeführt sind, werden zurückgewiesen. Die schwarze Liste "
-"gilt für die folgende Aktion: %1."
+"Blockierungsliste aufgeführt sind, werden zurückgewiesen. Die "
+"Blockierungsliste gilt für die folgende Aktion: %1."
 
 #: default/web_tt2/blocklist.tt2:15
 msgid "Syntax:"
@@ -8247,7 +8246,7 @@ msgstr "Vorgegebene Ablehnungsnachricht des Servers"
 
 #: default/web_tt2/modindex.tt2:131 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
-msgstr "Zur schwarzen Liste hinzufügen"
+msgstr "Zur Blockierungsliste hinzufügen"
 
 #: default/web_tt2/modindex.tt2:140
 msgid "No messages to moderate"
@@ -8259,7 +8258,7 @@ msgstr "Moderationsverwaltung"
 
 #: default/web_tt2/modindex.tt2:156
 msgid "edit blocklist"
-msgstr "Schwarze Liste bearbeiten"
+msgstr "Blockierungsliste bearbeiten"
 
 #: default/web_tt2/modindex.tt2:158
 msgid "Manage rejection messages"
@@ -8385,7 +8384,7 @@ msgstr "Nachrichtenvorlagen"
 
 #: default/web_tt2/nav.tt2:380 default/web_tt2/review.tt2:35
 msgid "Blocklist"
-msgstr "Schwarze Liste"
+msgstr "Blockierungsliste"
 
 #: default/web_tt2/nav.tt2:392
 msgid "Manage Archives"
@@ -15518,34 +15517,6 @@ msgstr "Mailingliste mit Web-Forum"
 msgid "Mailing list for intranets"
 msgstr "Mailinglisten für Intranets"
 
-#~ msgid ""
-#~ "If set to unique, the welcome message is sent using a unique return path "
-#~ "in order to remove the subscriber immediately in the case of a bounce."
-#~ msgstr ""
-#~ "Wird dies auf \"eindeutig\" (\"unique\") gesetzt, wird die "
-#~ "Begrüßungsnachricht mit einem eindeutigen Rückpfad gesendet, sodass der "
-#~ "Abonnent sofort entfernt werden kann, falls es zu einer Fehlzustellung "
-#~ "kommt."
-
-#~ msgid ""
-#~ "Messages are supposed to be filtered by an spam filter that adds them one "
-#~ "or more headers. This parameter is used to select a special scenario in "
-#~ "order to decide the message's spam status: ham, spam or unsure. This "
-#~ "parameter replaces antispam_tag_header_name, "
-#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
-#~ msgstr ""
-#~ "Nachrichten sollten einen Spamfilter durchlaufen, der eine oder mehrere "
-#~ "Kopfzeilen anfügt. Dieser Parameter definiert ein besonderes Szenario, um "
-#~ "den Spam-Status festzulegen: Ham, Spam oder unklar. Dieser Parameter "
-#~ "ersetzt antispam_tag_header_name, antispam_tag_header_spam_regexp und "
-#~ "antispam_tag_header_ham_regexp."
-
-#~ msgid "The following virtual robots are running on this server:"
-#~ msgstr "Die folgenden virtuellen Roboter laufen auf diesem Server:"
-
-#~ msgid "No Virtual Robot defined on this server"
-#~ msgstr "Kein virtueller Roboter für diesen Server definiert"
-
 #~ msgid "bounce management"
 #~ msgstr "Zustellfehler Verwaltung"
 
@@ -22027,3 +21998,31 @@ msgstr "Mailinglisten für Intranets"
 
 #~ msgid "Deleted by bounce: "
 #~ msgstr "Gelöscht durch bounce:"
+
+#~ msgid ""
+#~ "If set to unique, the welcome message is sent using a unique return path "
+#~ "in order to remove the subscriber immediately in the case of a bounce."
+#~ msgstr ""
+#~ "Wird dies auf \"eindeutig\" (\"unique\") gesetzt, wird die "
+#~ "Begrüßungsnachricht mit einem eindeutigen Rückpfad gesendet, sodass der "
+#~ "Abonnent sofort entfernt werden kann, falls es zu einer Fehlzustellung "
+#~ "kommt."
+
+#~ msgid ""
+#~ "Messages are supposed to be filtered by an spam filter that adds them one "
+#~ "or more headers. This parameter is used to select a special scenario in "
+#~ "order to decide the message's spam status: ham, spam or unsure. This "
+#~ "parameter replaces antispam_tag_header_name, "
+#~ "antispam_tag_header_spam_regexp and antispam_tag_header_ham_regexp."
+#~ msgstr ""
+#~ "Nachrichten sollten einen Spamfilter durchlaufen, der eine oder mehrere "
+#~ "Kopfzeilen anfügt. Dieser Parameter definiert ein besonderes Szenario, um "
+#~ "den Spam-Status festzulegen: Ham, Spam oder unklar. Dieser Parameter "
+#~ "ersetzt antispam_tag_header_name, antispam_tag_header_spam_regexp und "
+#~ "antispam_tag_header_ham_regexp."
+
+#~ msgid "The following virtual robots are running on this server:"
+#~ msgstr "Die folgenden virtuellen Roboter laufen auf diesem Server:"
+
+#~ msgid "No Virtual Robot defined on this server"
+#~ msgstr "Kein virtueller Roboter für diesen Server definiert"
