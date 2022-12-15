@@ -23,6 +23,24 @@ make POD2MAN="POD2MDOUTPUT=directory pod2md"
 ```
 then, generated texts will be saved in _directory_.
 
+### sync_translation.sh
+
+This runs on the translation server so that it synchronize between Pootle
+store and Git repository.  Requirements:
+
+  - Pootle is installed with virtualenv onto ~pootle/env.
+  - GitHib Access Token is setup.
+
+```
+git clone --depth 50 \
+    git@github.com-sympa-community-sympa:sympa-community/sympa.git
+cd sympa
+support/sync_translation.sh $POOTLE_TRANSLATION_DIRECTORY
+```
+Updates of translations are pushed into `translation` branch in the Git
+repository.  Updates of translation templates in the source (`*.pot`) are
+applied into Pootle store.
+
 ### xgettext.pl
 
 The xgettext(1) utility specific to Sympa. Typically invoked by automated
