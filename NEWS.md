@@ -1,5 +1,72 @@
 # Change Log
 
+## [6.2.71b.1](https://github.com/sympa-community/sympa/tree/6.2.71b.1) (2022-12-15)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.70...6.2.71b.1)
+
+**Incompatible changes:**
+
+- The `dkim` authentication method for scenarios was obsoleted.  Now it is a synonym of `smtp` method [\#1483](https://github.com/sympa-community/sympa/issues/1483).
+- The `antispam_feature` parameter was deprecated.  Instead, choose appropriate scenario with `spam_status` parameter [\#1470](https://github.com/sympa-community/sympa/pull/1470).  In particular, if you wish to disable this feature, set "`spam_status none`".
+- The Command line tools under `$SCRIPTDIR` either were deprecated or were integrated into the `sympa` command line tool.  See [\#1386](https://github.com/sympa-community/sympa/issues/1386) for details.
+
+**Implemented enhancements:**
+
+- RFC 8058 One Click Unsubscribe [\#1210](https://github.com/sympa-community/sympa/issues/1210)
+- SympaSOAP: List description with SOAP [\#1542](https://github.com/sympa-community/sympa/issues/1542)
+- WWSympa: Authentication mechanism that does not require login if the authentication module allows it [\#1497](https://github.com/sympa-community/sympa/issues/1497)
+- Easy way to get permalinks for messages in web archives [\#1441](https://github.com/sympa-community/sympa/issues/1441)
+- Deprecate conf\_2\_db feature [\#1424](https://github.com/sympa-community/sympa/issues/1424)
+- Deprecate scripts under bin/ [\#1386](https://github.com/sympa-community/sympa/issues/1386)
+- CLI: Allow hyphens in options [\#1533](https://github.com/sympa-community/sympa/pull/1533)
+- Add --noout option to sympa command line \(see \#1518\) [\#1527](https://github.com/sympa-community/sympa/pull/1527)
+- Update `support/xgettext.pl` [\#1511](https://github.com/sympa-community/sympa/pull/1511)
+- Use DSN for the message to notify moderation [\#1508](https://github.com/sympa-community/sympa/pull/1508)
+- Improve "set" request handler [\#1503](https://github.com/sympa-community/sympa/pull/1503)
+- Update default of anonymous\_header\_fields parameter [\#1502](https://github.com/sympa-community/sympa/pull/1502)
+- Update SMTP status codes [\#1467](https://github.com/sympa-community/sympa/pull/1467)
+- Forwarded messages should also be ARC sealed if possible [\#1457](https://github.com/sympa-community/sympa/pull/1457)
+- ARC: Add Authentication-Results: field \(AR\), if useful one is not found [\#1453](https://github.com/sympa-community/sympa/pull/1453)
+- ARC: When ARC seal was added, DKIM signing should be forced [\#1450](https://github.com/sympa-community/sympa/pull/1450)
+
+**Fixed bugs:**
+
+- WWSympa: `msg` (ex. `arcsearch_id`) crashes [\#1551](https://github.com/sympa-community/sympa/pull/1551)
+- Some bugs with DKIM / ARC [\#1543](https://github.com/sympa-community/sympa/pull/1543)
+- Custom attributes synchronization fail [\#1535](https://github.com/sympa-community/sympa/issues/1535)
+- dmarc\_protection.phrase "From" format INCORRECT [\#1498](https://github.com/sympa-community/sympa/issues/1498)
+- accessing db\_additional\_subscriber\_fields fields in footer vs. tt2 templates [\#1494](https://github.com/sympa-community/sympa/issues/1494)
+- \[WWSympa\] Cannot allow owners to manage editors of a distribution list [\#1488](https://github.com/sympa-community/sympa/issues/1488)
+- Deprecate "dkim" authentication method for scenarios [\#1483](https://github.com/sympa-community/sympa/issues/1483)
+- Options for welcome\_return\_path & remind\_return\_path do not describe their function [\#1475](https://github.com/sympa-community/sympa/issues/1475)
+- Template error parsing not detected [\#1474](https://github.com/sympa-community/sympa/issues/1474)
+- Excess header fields are shown in the web archives [\#1447](https://github.com/sympa-community/sympa/issues/1447)
+- include\_sql\_query requests unuseful parameters for CSV database driver [\#1437](https://github.com/sympa-community/sympa/issues/1437)
+- include\_sql\_query broken for CSV database driver [\#1434](https://github.com/sympa-community/sympa/issues/1434)
+- Logs reflect Failure when include from SQL is carried out during nosync\_time\_ranges [\#1429](https://github.com/sympa-community/sympa/issues/1429)
+- Exim: Failed to get envelope sender in "Return-path:" field [\#1354](https://github.com/sympa-community/sympa/issues/1354)
+- WWSympa crashes by topics.conf with inappropriate format [\#1242](https://github.com/sympa-community/sympa/issues/1242)
+- `mailto:` link cannot be detected by some MUAs [\#1124](https://github.com/sympa-community/sympa/issues/1124)
+- Shared document configuration in edit list even if feature turned off [\#872](https://github.com/sympa-community/sympa/issues/872)
+- Fix 'sympa config' command return code to be 0 when there are no changes [\#1518](https://github.com/sympa-community/sympa/pull/1518)
+- Fix various typos in source comments [\#1517](https://github.com/sympa-community/sympa/pull/1517)
+- Fix SQLite upgrade with lowercase types [\#1516](https://github.com/sympa-community/sympa/pull/1516)
+- Let some obsoleted parameters be retired and add convenient spam\_status scenarios [\#1470](https://github.com/sympa-community/sympa/pull/1470)
+- WWSyjmpa: Page size cannot be changed on review and reviewbouncing [\#1466](https://github.com/sympa-community/sympa/pull/1466)
+- Import SOAP encoding schema in WSDL [\#1456](https://github.com/sympa-community/sympa/pull/1456)
+
+**Closed issues:**
+
+- New Sympa Logo [\#665](https://github.com/sympa-community/sympa/issues/665)
+
+**Merged pull requests:**
+
+- Update translations [\#1525](https://github.com/sympa-community/sympa/pull/1525)
+- Adjust branch in support README [\#1530](https://github.com/sympa-community/sympa/pull/1530)
+- Adding translation catalogs for Latvian \(lv\) by request [\#1520](https://github.com/sympa-community/sympa/pull/1520)
+- Adding GH workflow to submit the PR for translation [\#1515](https://github.com/sympa-community/sympa/pull/1515)
+- Remove OChangeLog [\#1471](https://github.com/sympa-community/sympa/pull/1471)
+
 ## [6.2.70](https://github.com/sympa-community/sympa/tree/6.2.70) (2022-11-11)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.68...6.2.70)
