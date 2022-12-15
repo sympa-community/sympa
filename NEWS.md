@@ -1,6 +1,6 @@
 # Change Log
 
-## [6.2.71b.1](https://github.com/sympa-community/sympa/tree/6.2.71b.1) (202X-XX-XX)
+## [6.2.71b.1](https://github.com/sympa-community/sympa/tree/6.2.71b.1) (2022-12-15)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.70...6.2.71b.1)
 
@@ -61,6 +61,7 @@
 
 **Merged pull requests:**
 
+- Update translations [\#1525](https://github.com/sympa-community/sympa/pull/1525)
 - Adjust branch in support README [\#1530](https://github.com/sympa-community/sympa/pull/1530)
 - Adding translation catalogs for Latvian \(lv\) by request [\#1520](https://github.com/sympa-community/sympa/pull/1520)
 - Adding GH workflow to submit the PR for translation [\#1515](https://github.com/sympa-community/sympa/pull/1515)
