@@ -5,6 +5,7 @@ Support scripts for maintenance of Sympa package
 
 Corrects texts to be translated in source code according to changes in en_US
 translation catalog (en_US.po).
+Typically used in `sync_translation.sh` below.
 
 ### git-set-file-times
 
@@ -25,18 +26,21 @@ then, generated texts will be saved in _directory_.
 
 ### sync_translation.sh
 
-This runs on the translation server so that it synchronize between Pootle
+This runs on the translation server so that it synchronizes between Pootle
 store and Git repository.  Requirements:
 
-  - Pootle is installed with virtualenv onto ~pootle/env.
-  - GitHib Access Token is setup.
+  - Pootle is installed with virtualenv onto `~pootle/env`.
+  - GitHub Access Token is setup.
 
+Then run (replace `$POOTLE_TRANSLATION_DIRECTORY` with the value in
+`pootle.conf`):
 ```
 git clone --depth 50 \
     git@github.com-sympa-community-sympa:sympa-community/sympa.git
 cd sympa
 support/sync_translation.sh $POOTLE_TRANSLATION_DIRECTORY
 ```
+
 Updates of translations are pushed into `translation` branch in the Git
 repository.  Updates of translation templates in the source (`*.pot`) are
 applied into Pootle store.
@@ -54,8 +58,9 @@ Notes:
   * In below, the username associated with the Git commits should be
     "`Sympa authors <devel@sympa.community>`".
 
-  * Currently, commits during steps 3 and 4 are automatically created
-    and pushed to `translation` branch on the repository.
+  * Currently, `sync_translation.sh` described in above creates the commits
+    during steps 3 and 4 automatically and pushs them to `translation`
+    branch on the repository.
 
   1. Checkout main branch.
      ```
