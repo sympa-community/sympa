@@ -68,7 +68,7 @@ Subject: [%"Upgrade procedures failed"|loc|qencode%]
 [% ELSIF type == 'password_encrypted' -%]
 Subject: [%"Password should be rehashed"|loc|qencode%]
 
-[%|loc%]Password in database seems encrypted. Run upgrade_sympa_password.pl to rehash passwords.[%END%]
+[%|loc%]Password in database seems encrypted. Run 'sympa upgrade password' to rehash passwords.[%END%]
 
 [% ELSIF type == 'db_struct_updated' -%]
 Subject: [%"Database structure updated"|loc|qencode%]
