@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 set -Ceu
 SET_X="$(set +o | grep xtrace)"
 
@@ -56,9 +56,11 @@ test -r "$TRANS_DIRECTORY"
 test -w "$TRANS_DIRECTORY"
 
 # Confirm that remote repository has been cloned using the Deploy Key.
-# Checkout "main" branch.
+# Confirm that any branches in remote origin may be fetched.
 
 git config --get remote.origin.url
+git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+git fetch --quiet --depth 50
 
 # Export recent translations under TRANS_DIRECTORY.
 # "pootle sync_stores" is the command to export them.
@@ -134,12 +136,15 @@ for project in $TRANS_PROJECTS; do
     cd ../..
 done
 
-if git diff --quiet HEAD; then
+if git diff HEAD \
+    | grep -E -v '^(---|\+\+\+|[-+]"POT-Creation-Date:)' \
+    | grep -q '^[-+]'; then
+    git commit -a \
+        -m '[-feature] Committing latest translations from translate.sympa.community'
+else
     echo 'Nothing to update.'
     exit 0
 fi
-git commit -a \
-    -m '[-feature] Committing latest translations from translate.sympa.community'
 
 # Typo fixes: If en_US.po is updated, update translated messages in
 # po files and source code.  "correct_msgid" will do it.
@@ -192,7 +197,21 @@ fi
 
 # Push the changes
 #XXXexit 0
-git push -q -f origin "$SYMPA_PUSH_BRANCH"
 
-# Clenaup
+if git branch -r | grep -q ' origin/'"$SYMPA_PUSH_BRANCH"'$'; then
+    if git diff origin/"$SYMPA_PUSH_BRANCH" -- po \
+        | grep -E -v '^(---|\+\+\+|[-+]"POT-Creation-Date:)' \
+        | grep -q '^[-+]'; then
+        do_push="yes"
+    else
+        do_push="no"
+    fi
+else
+    do_push="yes"
+fi
+if [ "$do_push" = "yes" ]; then
+    git push -f origin "$SYMPA_PUSH_BRANCH"
+else
+    echo 'Nothing to push.'
+fi
 
