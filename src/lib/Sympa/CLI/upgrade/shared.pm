@@ -245,7 +245,7 @@ Otherwise, applies Q-encoding introduced by Sympa 5.3a.8.
 
 upgrade_shared_repository.pl appeared as separate executable on Sympa 6.2.17.
 
-Its function was moved to C<sympa upgrade shared> on Sympa 6.2.70.
+Its function was moved to C<sympa upgrade shared> on Sympa 6.2.71b.
 
 =cut
 

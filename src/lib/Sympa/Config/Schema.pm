@@ -6733,7 +6733,7 @@ Importance of the parameter. The value C<100> means "minimal",
 i.e. included in a set of parameters explicitly described
 in the installation instruction.
 C<0> (default) means no importance.
-This was introduced on 6.2.69b.
+This was introduced on 6.2.70.
 
 =back
 

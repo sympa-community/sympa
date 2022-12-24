@@ -623,7 +623,7 @@ Returns:
 
 Formatted string.
 
-This was introduced on Sympa 6.2.69b.
+This was introduced on Sympa 6.2.70.
 
 =item get_array_from_splitted_string ($string)
 

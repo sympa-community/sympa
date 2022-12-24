@@ -185,6 +185,6 @@ L<sympa.conf(5)>, L<Sympa::Message>.
 upgrade_send_spool.pl appeared on Sympa 6.2.
 
 Its function was moved to C<sympa upgrade incoming> command line on
-Sympa 6.2.70.
+Sympa 6.2.71b.
 
 =cut

@@ -113,4 +113,8 @@ installation manual, are written in the configuration file.
 
 =back
 
+=head1 HISTORY
+
+See L<sympa config|sympa-config(1)>.
+
 =cut

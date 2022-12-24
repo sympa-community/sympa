@@ -448,6 +448,6 @@ C<sympa.pl --md5_encode_password> appeared on Sympa 6.0.
 It was obsoleted by F<upgrade_sympa_password.pl> on Sympa 6.2.
 
 Its function was moved to C<sympa upgrade password> command line
-on Sympa 6.2.70.
+on Sympa 6.2.71b.
 
 =cut

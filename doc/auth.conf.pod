@@ -13,7 +13,7 @@ interface of Sympa.
 =head2 F<auth.conf> structure
 
 Each paragraph starts with one of the names C<user_table>, C<ldap>,
-C<generic_sso> or C<cas>.
+C<generic_sso>, C<cas> or C<cgi>.
 
 The F<auth.conf> file contains directives in the following format:
 
@@ -563,6 +563,37 @@ The time out for the search.
 To support LDAPS (LDAP over SSL/TLS), corresponding parameters in ldap 
 paragraph may also be used for cas.
 
+=head2 C<cgi> paragraph
+
+This paragraph allows Sympa to receive authentication information from
+the external authentication mechanism through Common Gateway Interface (CGI).
+By this, Sympa may use authentication methods not supported by Sympa itself.
+
+=over
+
+=item C<regexp>
+
+=item C<negative_regexp>
+
+See L<C<user_table> paragraph|/user_table paragraph>.
+
+=item C<remote_user_variable>
+
+The name of the CGI environment variable that contains the e-mail address
+of the authenticated user.
+Note that the name of CGI variable is case-sensitive.
+
+=item C<auth_scheme>
+
+Optional.
+If set, authentication is considered successful only if it matches the
+name of authentication scheme, i.e. value of the C<AUTH_TYPE> CGI
+environment variable.
+
+The value of this parameter is case-insensitive.
+
+=back
+
 =head1 FILES
 
 =over
@@ -592,6 +623,8 @@ Descriptions of parameters were originally taken from the chapter
 "Authentication" in
 I<Sympa, Mailing List Management Software - Reference manual>, written by
 Serge Aumont, Soji Ikeda, Olivier SalaE<252>n and David Verdin.
+
+C<cgi> paragraph was introduced on Sympa 6.2.71b.
 
 =cut
 

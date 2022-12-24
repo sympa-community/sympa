@@ -160,6 +160,6 @@ testldap.pl was renamed to sympa_test_ldap.pl on Sympa 6.2.
 C<--use_ssl> and C<--use_start_tls> options were obsoleted by Sympa 6.2.15.
 C<--use_tls> option would be used instead.
 
-This function was moved to C<sympa test ldap> command line on Sympa 6.2.70.
+This function was moved to C<sympa test ldap> command line on Sympa 6.2.71b.
 
 =cut
