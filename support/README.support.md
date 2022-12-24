@@ -58,8 +58,8 @@ Notes:
   * In below, the username associated with the Git commits should be
     "`Sympa authors <devel@sympa.community>`".
 
-  * Currently, `sync_translation.sh` described in above creates the commits
-    during steps 3 and 4 automatically and pushs them to `translation`
+  * Currently, `sync_translation.sh` described above creates the commits
+    for steps 3 and 4 automatically and pushes them to `translation`
     branch on the repository.
 
   1. Checkout main branch.
