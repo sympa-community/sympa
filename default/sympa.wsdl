@@ -78,6 +78,31 @@
 			<element name="isEditor" minOccurs="0" type="boolean"/>
 		</all>
 	</complexType>
+	
+	<complexType name="customType">
+		<all>
+			<element name="key" minOccurs="1" type="string"/>
+			<element name="value" minOccurs="0" type="string"/>
+		</all>
+	</complexType>
+		
+	<complexType name="ArrayOfCustom">
+		<complexContent>
+			<restriction base="SOAP-ENC:Array">
+				<attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:customType[]"/>
+			</restriction>
+		</complexContent>
+	</complexType>
+	
+	<complexType name="detailsType">
+		<all>
+			<element name="gecos" minOccurs="0" type="string"/>
+			<element name="reception" minOccurs="0" type="string"/>
+			<element name="subscribeDate" minOccurs="0" type="string"/>
+			<element name="updateDate" minOccurs="0" type="string"/>
+			<element name="custom" minOccurs="0" type="ArrayOfCustom"/>
+		</all>
+	</complexType>
 </schema>
 </types>
 
@@ -263,6 +288,35 @@
 	<part name="email" type="xsd:string"/>
 </message>
 
+<message name="getDetailsRequest">
+	<part name="list" type="xsd:string"/>
+</message>
+
+<message name="getDetailsResponse">
+	<part name="return" type="xsd:detailsType"/>
+</message>
+
+<message name="setDetailsRequest">
+	<part name="list" type="xsd:string"/>
+	<part name="gecos" type="xsd:string"/>
+	<part name="reception" type="xsd:string" xsd:minOccurs="0"/>
+	<part name="custom" type="xsd:ArrayOfCustom" xsd:minOccurs="0"/>
+</message>
+
+<message name="setDetailsResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
+<message name="setCustom">
+	<part name="list" type="xsd:string"/>
+	<part name="key" type="xsd:string"/>
+	<part name="value" type="xsd:string" xsd:minOccurs="0"/>
+</message>
+
+<message name="setCustom">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
 <!-- portType part -->
 
 <portType name="SympaPort">
@@ -345,6 +399,18 @@
 	<operation name="checkCookie">
 		<input message="tns:checkCookieRequest" />
 		<output message="tns:checkCookieResponse" />
+	</operation>
+	<operation name="getDetails">
+		<input message="tns:getDetailsRequest" />
+		<output message="tns:getDetailsResponse" />
+	</operation>
+	<operation name="setDetails">
+		<input message="tns:setDetailsRequest" />
+		<output message="tns:setDetailsResponse" />
+	</operation>
+	<operation name="setCustom">
+		<input message="tns:setCustomRequest" />
+		<output message="tns:setCustomResponse" />
 	</operation>
 </portType>
 
@@ -601,6 +667,45 @@
 	</operation>
 	<operation name="checkCookie">
 		<soap:operation soapAction="urn:sympasoap#checkCookie"/>
+			<input>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="getDetails">
+		<soap:operation soapAction="urn:sympasoap#getDetails"/>
+			<input>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="setDetails">
+		<soap:operation soapAction="urn:sympasoap#setDetails"/>
+			<input>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="setCustom">
+		<soap:operation soapAction="urn:sympasoap#setCustom"/>
 			<input>
 				<soap:body use="encoded"
 					namespace="urn:sympasoap"
