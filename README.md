@@ -39,9 +39,9 @@ Projects related to Sympa
 
     Sympa, Mailing List Management Software
 
-  - [Ansible role for Sympa](https://github.com/racke/ansible-role-sympa)
+  - [Ansible role for Sympa](https://github.com/sympa-community/ansible-role-sympa)
 
-    Generic install of Sympa with Ansible
+    Automating Sympa installation with Ansible
 
   - [sympa-community.github.io](https://github.com/sympa-community/sympa-community.github.io)
 
