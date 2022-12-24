@@ -1,5 +1,17 @@
 # Change Log
 
+## [6.2.XX](https://github.com/sympa-community/sympa/tree/6.2.XX) (202X-XX-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.71b.1...6.2.XX)
+
+**Incompatible changes:**
+
+**Implemented enhancements:**
+
+**Fixed bugs:**
+
+- `sympa.wsdl` is incomplete [\#1548](https://github.com/sympa-community/sympa/issues/1548)
+
 ## [6.2.71b.1](https://github.com/sympa-community/sympa/tree/6.2.71b.1) (2022-12-15)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.70...6.2.71b.1)
