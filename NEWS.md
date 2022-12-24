@@ -12,6 +12,10 @@
 
 - `sympa.wsdl` is incomplete [\#1548](https://github.com/sympa-community/sympa/issues/1548)
 
+**Merged pull requests:**
+
+- Update copyright notices, add documentation and correct some typos [\#1552](https://github.com/sympa-community/sympa/pull/1552)
+
 ## [6.2.71b.1](https://github.com/sympa-community/sympa/tree/6.2.71b.1) (2022-12-15)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.70...6.2.71b.1)
