@@ -14,6 +14,7 @@
 
 **Merged pull requests:**
 
+- Improve wording in README.support document [\#1553](https://github.com/sympa-community/sympa/pull/1553)
 - Update copyright notices, add documentation and correct some typos [\#1552](https://github.com/sympa-community/sympa/pull/1552)
 
 ## [6.2.71b.1](https://github.com/sympa-community/sympa/tree/6.2.71b.1) (2022-12-15)
