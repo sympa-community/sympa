@@ -27,7 +27,6 @@ check_SCRIPTS = \
 	t/01_Conf.t \
 	t/Config_XML.t \
 	t/DataSource_LDAP2.t \
-	t/DatabaseManager.t \
 	t/Database_LDAP.t \
 	t/Database_SQLite.t \
 	t/Language.t \
@@ -54,7 +53,6 @@ check_DATA = \
 	src/lib/Sympa/Test/MockLDAP.pm \
 	t/data/list_data/test/config \
 	t/data/sympa.conf \
-	t/data/sympa.sqlite \
 	t/data/etc/auth.conf \
 	t/locale/cs/LC_MESSAGES/sympa.mo \
 	t/locale/cs/LC_MESSAGES/web_help.mo \
