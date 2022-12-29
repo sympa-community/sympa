@@ -317,7 +317,6 @@ sub drop_field {
     my $table = shift;
     my $field = shift;
 
-    return '' if $field eq 'temporary';
     # SQLite prior to 3.35 does not support removal of columns.
     # (Additionally, the versions prior to 3.35.5 looks buggy.)
     unless (3035005 <= $DBD::SQLite::sqlite_version_number) {
