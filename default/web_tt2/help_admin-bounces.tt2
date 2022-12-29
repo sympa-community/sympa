@@ -1,0 +1,18 @@
+<!-- help_admin-bounces.tt2 -->
+<h2><a name="manage_bounces"></a>[%|helploc%]Managing bounces[%END%]</h2>
+<p>
+    [%|helploc%]When there is a <strong>problem with subscribers' email addresses</strong> (obsolete email addresses, addresses temporarily unavailable when messages were sent, inbox quota exceeded, etc.), the percentage of bouncing addresses displays in the left menu under the text '<strong>Error rate</strong>'. To check the bouncing addresses, go to the '<strong>Bounces</strong>' page of the list administration module.[%END%]
+</p>
+<p>
+    [%|helploc%]The Sympa software automatically manages bouncing subscribers: according to the number of errors and to the traffic on the list, bouncing subscribers are either notified, unsubscribed, or their score is reset to zero when their address stops bouncing.[%END%]
+</p>
+<p>
+    [%|helploc%]To <strong>make addresses stop being reported as bouncing</strong>, select them by ticking their boxes and click on the '<strong>Reset errors for selected users</strong>' button. If the error remains, the addresses will be reported as bouncing again as soon as a message is posted on the list.[%END%]
+</p>
+<p>
+    [%|helploc%]You can also <strong>unsubscribe subscribers whose addresses are still bouncing</strong>: too many bouncing addresses cause a considerable load on the mailing list server. To unsubscribe subscribers, select them by ticking the boxes in front of their names and click on the '<strong>Delete selected email addresses</strong>' button.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]Tip: to select all subscribers at once, first make sure that they are all displayed on the page, and then click on the 'Toggle selection' button: all subscribers will be selected in a single click![%END%]
+</p>
+<!-- end help_admin-bounces.tt2 -->

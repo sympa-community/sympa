@@ -1,154 +1,90 @@
-<!-- $Id$ -->
+<!-- help_shared.tt2 -->
 
-	<h3 class="block"><a name="shared"></a>[%|helploc%]Using the shared document web space[%END%]</h3>
-	<p>[%|helploc%]Some lists have a <strong>shared document web space where subscribers can download and upload documents</strong>: this space is available through the <strong>'Shared documents' section</strong>.[%END%]</p>
+<h2 class="block"><a name="shared"></a>[%|helploc%]Using the shared document web space[%END%]</h2>
 
-	<h4>[%|helploc%]Presentation of the documents in the shared document web space[%END%]</h4>
-	<p>[%|helploc%]To access the 'Shared documents' section of a list, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc(path_cgi)%]Go to the list environment <strong><a href="%1/home">homepage</a></strong> and <strong>log on</strong>.[%END%]</li>
-		<li>[%|helploc%]Go to <strong>the information page of the list</strong> of your interest.[%END%]</li>
-		<li>[%|helploc%]In the left menu, <strong>click on the 'Shared documents' link</strong>.[%END%]</li>
-	</ol>
+<p>
+    [%|helploc%]Some lists have a <strong>shared document web space where subscribers can download and upload documents</strong>: this space is available through the <strong>'Shared documents' section</strong>.[%END%]
+</p>
 
-	<p><strong>[%|helploc%]The 'Shared documents' section can contain three types of resources</strong>: <strong>folders</strong>, <strong>files</strong> and <strong>bookmarks</strong>.[%END%]</p>
-	<ul>
-		<li>[%|helploc(icons_url)%]<strong>Folders</strong> are preceded by the icon <img src="%1/folder.png" style="border: 0px;" title="Icon of folder" />.[%END%]
-		<ul>
-			<li>[%|helploc%]<strong>To browse a folder, click on its name</strong>.[%END%]</li>
-			<li>[%|helploc%]<strong>To go back up a level, click on the 'Up to higher level directory' link</strong> in the upper right corner of your screen.[%END%]</li>
-		</ul></li>
-		<li>[%|helploc%]<strong>Files</strong> are preceded by icons related to each type of file. You can <a href="#shared_read">download</a> and <a href="#shared_upload">upload</a> some.[%END%]</li>
-		<li>[%|helploc(icons_url)%]<strong>Bookmarks</strong> are preceded by the icon <img src="%1/link.png" style="border: 0px;" title="Icon of bookmark" />. They consist of <strong>shortcuts providing a single-click access to a particular website</strong>. If you click on a bookmark label, the website linked will open in a new window.[%END%]</li>
-	</ul>
+<h3>[%|helploc%]Presentation of the documents in the shared document web space[%END%]</h3>
 
-	<p>[%|helploc%]The functions of editing and creation of documents, when they are available to you, are accessible through the <strong>Expert mode</strong>. To switch to expert mode, click on the <a class="actionMenuLinks">Expert mode</a> button on top of page.[%END%]</p>
+<p>
+    [%|helploc%]To access the 'Shared documents' section of a list, do as follows:[%END%]
+</p>
+<ol>
+    <li>
+        [%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]
+    </li>
+    <li>
+        [%|helploc%]Go to <strong>the information page of the list</strong> of your interest.[%END%]
+    </li>
+    <li>
+        [%|helploc%]In the left menu, <strong>click on the 'Shared documents' link</strong>.[%END%]
+    </li>
+</ol>
 
-	<p>[%|helploc%]<strong>The list owner or the documents authors can choose to restrict the access rights to some files/folders</strong>. Both the reading and writing rights can be restricted:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]<strong>When a folder is not writable</strong>, you can neither upload nor create documents in it.[%END%]</li>
-		<li>[%|helploc%]<strong>When a folder is not readable</strong>, you can not browse it (you get an error message).[%END%]</li>
-	</ul>
-	<p>[%|helploc%]<strong>Folders are sorted separately</strong> from files and bookmarks, and display before them. <strong>By default, documents are sorted ascendingly according to the 'Document' column</strong>.[%END%]</p>
-	<p class="retraitita">[%|helploc%]Be careful: alphanumeric sort distinguishes uppercase from lowercase, thus all documents which have a name starting with an uppercase character display first, sorted in alphabetical order, and then, all documents which have a name starting with a lowercase character, sorted in alphabetical order. It is the same for folders.[%END%]</p>
-	<p><strong>[%|helploc%]You can sort documents and folders according to criteria</strong> other than the name of the document/folder: they can also be sorted according to their <strong>author</strong>, their <strong>size</strong> and their <strong>last update date</strong>. To sort documents according to the criterion of your choice, click on the name of the corresponding column.[%END%]</p>
-	
+<p>
+    [%|helploc%]<strong>The 'Shared documents' section can contain three types of resources</strong>: <strong>folders</strong>, <strong>files</strong> and <strong>bookmarks</strong>.[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>Folders</strong> are preceded by the icon <i class="fa fa-folder" title="Icon of folder"> </i>.[%END%]
+        <ul>
+            <li>
+                [%|helploc%]<strong>To browse a folder, click on its name</strong>.[%END%]
+            </li>
+            <li>
+                [%|helploc%]<strong>To go back up a level, click on the 'Up to higher level directory' link</strong> in the upper right corner of your screen.[%END%]
+            </li>
+        </ul>
+    </li>
+    <li>
+        [%|helploc%]<strong>Files</strong> are preceded by icons related to each type of file. You can <a href="shared-read.html">download</a> and <a href="shared-upload.html">upload</a> some.[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>Bookmarks</strong> are preceded by the icon <i class="fa fa-link" title="Icon of bookmark"> </i>. They consist of <strong>shortcuts providing a single-click access to a particular website</strong>. If you click on a bookmark label, the website linked will open in a new window.[%END%]
+    </li>
+</ul>
 
-	<h4><a name="shared_read"></a>[%|helploc%]Downloading documents from the shared document web space[%END%]</h4>
-	<p>[%|helploc%]To download a document from a list, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc%]<strong>Go to the 'Shared documents' section</strong> of the list of your interest.[%END%]</li>
-		<li>[%|helploc%]<strong>Browse the folder containing the file you want to download</strong>.[%END%]</li>
-		<li>[%|helploc%]<strong>Select the 'expert mode'</strong>.[%END%]</li>
-		<li>[%|helploc%]<strong>Click on the name of the file to save it on your hard disk</strong>.[%END%]<br />
-		<p class="retraitita">[%|helploc%]Be careful: files available in formats likely to open in a web browser will. To download this type of files, you had rather make a right click on their names and choose 'Save target as...', 'Save link as...', etc., according to your browser. This can affect, among others, files of formats .HTM/HTML, .PDF, .PNG, .TXT, .SWF, etc. (this behavior varies according to your browser and settings).[%END%]</p></li>
-	</ol>
+<p>
+    [%|helploc%]The functions of editing and creation of documents, when they are available to you, are accessible through the <strong>Expert mode</strong>. To switch to expert mode, click on the <a class="actionMenuLinks">Expert mode</a> button on top of page.[%END%]
+</p>
 
-	<h4><a name="shared_upload"></a>[%|helploc%]Uploading documents in the shared document web space[%END%]</h4>
+<p>
+    [%|helploc%]<strong>The list owner or the documents authors can choose to restrict the access rights to some files/folders</strong>. Both the reading and writing rights can be restricted:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>When a folder is not writable</strong>, you can neither upload nor create documents in it.[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>When a folder is not readable</strong>, you can not browse it (you get an error message).[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]<strong>Folders are sorted separately</strong> from files and bookmarks, and display before them. <strong>By default, documents are sorted ascendingly according to the 'Document' column</strong>.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]Be careful: alphanumeric sort distinguishes uppercase from lowercase, thus all documents which have a name starting with an uppercase character display first, sorted in alphabetical order, and then, all documents which have a name starting with a lowercase character, sorted in alphabetical order. It is the same for folders.[%END%]
+</p>
+<p>
+    [%|helploc%]<strong>You can sort documents and folders according to criteria</strong> other than the name of the document/folder: they can also be sorted according to their <strong>author</strong>, their <strong>size</strong> and their <strong>last update date</strong>. To sort documents according to the criterion of your choice, click on the name of the corresponding column.[%END%]
+</p>
 
-	<h5>[%|helploc%]Creating a folder on a list[%END%]</h5>
-	<p><strong>[%|helploc%]To create a folder on a list</strong>, do as follows:[%END%]</p>
-	<ol>
-		<li><strong>[%|helploc%]Go to the 'Shared documents' section</strong> of the list of your interest.[%END%]</li>
-		<li><strong>[%|helploc%]Browse the folder in which you want to create a folder</strong>.[%END%]</li>
-	        <li><strong>[%|helploc%]Switch to expert mode</strong>.[%END%]</li>
-		<li><strong>[%|helploc%]Enter the folder name</strong> in the text field close to the 'Create a new folder inside [name of the current folder]' label.[%END%]</li>
-		<li><strong>[%|helploc%]Click on the 'Create' button</strong>.[%END%]</li>
-	</ol>
 
-	<h5>[%|helploc%]Uploading a file on a list[%END%]</h5>
-	<p>[%|helploc%]<strong>To upload a file on a list</strong>, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc%]<strong>Go to the 'Shared documents' section</strong> of the list of your interest.[%END%]</li>
-		<li>[%|helploc%]<strong>Browse the folder in which you want to upload your file</strong>. Create a new folder if necessary.[%END%]</li>
-	        <li>[%|helploc%]<strong>Switch to expert mode</strong>.[%END%]</li>
-		<li>[%|helploc%]<strong>Click on the 'Browse' button</strong> below the 'Upload a file inside the folder [name of the current folder]' label and <strong>choose the file</strong> you want to upload; after selecting it, click on the 'Open' button. Your file path then displays in the input box close to the 'Browse' button.[%END%]</li>
-		<li>[%|helploc%]<strong>Click on the 'Publish' button</strong>.[%END%]</li>
-	</ol>
-	<p>[%|helploc%]Be careful: list owners may define quotas, that is to say a <strong>maximum size not to be exceeded for the shared document web space</strong>. If you try to upload or create a too large document with regard to the space left, you will get the following error message: "The document repository exceed disk quota".[%END%]</p>
-
-	<p>[%|helploc%]In order to avoid any list overload, try and <strong>delete useless files as you go along</strong>. A good <a href="#organize">organization</a> of the list will allow you to manage the shared document web space more easily. To save some space, you can also publish your files in <strong>compressed formats</strong>.[%END%]</p>
-
-	<h5>[%|helploc%]Publishing a bookmark on a list[%END%]</h5>
-	<p>[%|helploc%]<strong>To publish a bookmark on a list</strong>, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc%]<strong>Go to the 'Shared documents' section</strong> of the list of your interest.[%END%]</li>
-		<li>[%|helploc%]<strong>Browse the folder in which you want to publish your bookmark</strong>. Create a new folder if necessary.[%END%]</li>
-	        <li>[%|helploc%]<strong>Switch to expert mode</strong>.[%END%]</li>
-		<li>[%|helploc%]In the <strong>'title' field</strong>, enter a <strong>descriptive name</strong> for the website to be linked through the bookmark.[%END%]</li>
-		<li>[%|helploc%]In the <strong>'<acronym title="Uniform Resource Locator" lang="en" xml:lang="en">URL</acronym>' field</strong>, enter or paste the website's <strong><acronym title="Uniform Resource Locator" lang="en" xml:lang="en">URL</acronym></strong>.[%END%]</li>
-		<li>[%|helploc%]Click on the <strong>'Add'</strong> button.[%END%]</li>
-	</ol>
-
-	<h5>[%|helploc%]Creating a file on a list[%END%]</h5>
-
-	<p><strong>[%|helploc%]To create a file on a list</strong>, do as follows:[%END%]</p>
-	<ol>
-		<li>[%|helploc%]<strong>Go to the 'Shared documents' section</strong> of the list of your interest.[%END%]</li>
-		<li>[%|helploc%]<strong>Browse the folder in which you want to create your file</strong>. Create a new folder if necessary.[%END%]</li>
-	        <li>[%|helploc%]<strong>Switch to expert mode</strong>.[%END%]</li>
-		<li>[%|helploc%]<strong>Enter a file name</strong> in the input box close to the 'Create a new file' label.[%END%]</li>
-		<li>[%|helploc%]<strong>Click on the 'Create' button</strong>.[%END%]</li>
-	</ol>
-	<p>[%|helploc%]You are brought to the file creation page.[%END%]</p>
-
-	<p>[%|helploc%]<strong>Enter or paste the text</strong> you want to put in your file in the 'Edit the file /nameofthefile' text area, and then <strong>click on the 'Publish' button</strong>.[%END%]</p>
-	<p class="retraitita">[%|helploc%]<strong>Important: the only files that can be created online on the lists are plain text files. On the other hand, it is impossible to create office documents (.DOC, .XLS, .PPT, .RTF, .ODT, etc.), .PDF, images, etc.</strong>[%END%]</p>
-	<p>[%|helploc%]You can also <strong>replace the file, describe it or rename it</strong>. To know more about these features, refer to the <a href="#editsuppr">'Editing or deleting documents in the shared document web space'</a> section.[%END%]</p>
-	
-	<h4><a name="editsuppr"></a>[%|helploc%]Editing or deleting documents in the shared document web space[%END%]</h4>
-	<p>[%|helploc%]In addition to uploading and downloading documents, you can also act on files and folders that are already online:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]by changing their access rights (read and write);[%END%]</li>
-		<li>[%|helploc%]by editing them;[%END%]</li>
-		<li>[%|helploc%]by deleting them.[%END%]</li>
-	</ul>
-	
-	<h5><a name="acces"></a>[%|helploc%]Changing access rights[%END%]</h5>
-	<p>[%|helploc%]<strong>You can change read and/or write access rights to folders and files</strong>. This has <strong>several advantages</strong>:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]<strong>Denying write access to a folder</strong> avoids proliferation of files published by unauthorized persons. To keep control of the list, sometimes it is more sensible to deny write access to the root folder of the shared document web space. It is also possible to offer a writable folder and to lock it at a given date or time, for example to control delivery of works by students.[%END%]</li>
-		<li>[%|helploc%]<strong>Denying write access to a file</strong> ensures that no one will be able to modify it. For example, this is the most suitable option for teachers willing to put at their students' disposal a set of documents, such as exam questions.[%END%]</li>
-		<li>[%|helploc%]<strong>Denying read access to a folder</strong> makes it possible to store several confidential documents without having to change read access rights individually for each of them.[%END%]</li>
-		<li>[%|helploc%]<strong>Denying read access to a file</strong> ensures its confidentiality. For example, a teacher can ask his/her students to upload their "exam copies" on a list and to restrict read access to their files in order to prevent other students from looking at them.[%END%]</li>
-	</ul>
-	<p>[%|helploc%]<strong>You are allowed to change access rights only to documents you uploaded or created yourself</strong> on the lists (one exception: list owners can change access rights to any document published on the lists; this does not concern moderators).[%END%]</p>
-	<p>[%|helploc%]<strong>To change access rights for a document, click on the 'Access' text</strong> in front of the document's name, in the 'Access' column. You are brought to the access rights editing page.[%END%]</p>
-
-	<p>[%|helploc%]<strong>Choose options from the drop-down lists 'Read access' and 'Edit access'</strong>.[%END%]</p>
-	<p class="retraitita">[%|helploc%]Though it isn't mentionned in any of the options, note that the document owner (most of the time the person that published it) keeps the write and read rights on this document whatever happens (unless the list owner changes the document owner).[%END%]</p>
-	<p>[%|helploc%]<strong>You can also change the document's owner</strong>, for example to allow another person to edit it online, or to indicate the actual author of a document if it has been published by someone else.[%END%]</p>
-
-	<h5>[%|helploc%]Editing folders, files or bookmarks[%END%]</h5>
-	<p>[%|helploc%]<strong>To edit a document, click on the 'Edit' text</strong> in front of the document's name in the 'Edit' column.[%END%]</p>
-
-	<p>[%|helploc%]According to the type of document you edit, you have different possibilities:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]If the document is a <strong>folder</strong>, you can only <strong>describe</strong> it or <strong>rename</strong> it.[%END%]<br />
-		<p class="retraitita">[%|helploc%]The description of a document is visible in the upper left corner when editing it. The description of folders is also visible there when browsing the folder.[%END%]</p></li>
-		<li>[%|helploc%]If the document is a <strong>bookmark</strong>, you can also <strong>change the <acronym title="Uniform Resource Locator" lang="en" xml:lang="en">URL</acronym> specified</strong>.[%END%]</li>
-		<li>[%|helploc%]If the document is a <strong>file</strong>, you can also <strong>replace the existing file with a file of your choice</strong>. To do that, <strong>click on the 'Browse' button</strong> below the 'Replace the file nameofthefile with your file' text and <strong>choose the file</strong> you want to publish; after selecting it, click on the 'Open' button. Your file path then displays in the input box close to the 'Browse' button. <strong>Click on the 'Publish' button</strong>.[%END%]<br />
-		<p class="retraitita">[%|helploc%]Whatever the name of the new file, the file published on the list will keep its original name. If you want the file replacement to be followed by a change of name, you will also have to rename the file published on the list.[%END%]</p></li>
-		<li>[%|helploc%]Last, if the document is a <strong>plain text file</strong>, you can <strong>change its content online</strong>: <strong>enter or paste the text</strong> you want to put in your file in the 'Edit the file /nameofthefile' text area, and then <strong>click on the 'Publish' button</strong>.[%END%]</li>
-	</ul>
-	<p>[%|helploc%]Any click on a button related to an input box only validates the changes specified in that box. <strong>To make several changes, you need to click on each button corresponding to your choices</strong>.[%END%]</p>
-	<p>[%|helploc%]Some buttons immediately bring you back to the page of the folder containing the document, while others perform the update without bringing you to another page. <strong>To go back to the folder page without changing anything, click on the 'Up to higher level directory' button</strong>.[%END%]</p>
-
-	<h5>[%|helploc%]Deleting folders, files or bookmarks[%END%]</h5>
-	<p>[%|helploc%]<strong>To delete any type of document, click on the 'Delete'</strong> text in front of the document's name in the 'Delete' column. A confirmation message displays in order to let you go back on your decision: <strong>once deleted, the document will not be retrievable anymore</strong>.[%END%]</p>
-		<p class="retraitita">[%|helploc%]If there is no 'Delete' text in front of the document's name, you do not have write access rights to the document.[%END%]</p>
-	<p>[%|helploc%]<strong>It is impossible to delete a folder which still contains documents</strong>: before deleting a folder, you need to empty it entirely first.[%END%]</p>
-
-	<h4><a name="organize"></a>[%|helploc%]A few tips to organize the shared document web space[%END%]</h4>
-	<p>[%|helploc%]If you are one of the people likely to organize the list and create files and folders, <strong>be far-sighted: think that the list will maybe develop in a considerable manner and that it will maybe be used for several years</strong>.[%END%]</p>
-	<p>[%|helploc%]Here are <strong>a few suggestions to prevent a list from developing in an anarchic manner</strong>:[%END%]</p>
-	<ul>
-		<li>[%|helploc%]If the list is to contain the same kinds of resources at regular intervals, choose an <strong>organization by month or by year</strong> (or any other duration according to your needs).[%END%]<br />
-		<p class="retraitita">[%|helploc%]Example: if the list is meant to collect student works, those students will attend the same lessons and make the same works from a year to another. Thus, it might be interesting to create a folder for each academic year at the root of the shared document web space: this will allow students to take a look at the previous year's works and lessons (provided that teachers <a href="#acces">restrict access</a> to sensitive resources). This can be completed by subfolders for each lesson or each teacher within each year folder.[%END%]</p></li>
-		<li>[%|helploc%]If the list is a collaborative list destined to all members of a department, you had better choose a <strong>project-based organization</strong>.[%END%]</li>
-		<li>[%|helploc%]If the list aims at exchanging information, choose a <strong>topic-based organization</strong>.[%END%]</li>
-		<li>[%|helploc%]You can also choose an <strong>organization by person, by team, etc.</strong>, and even <strong>combine all those solutions</strong>![%END%]</li>
-	</ul>
-	<p>[%|helploc%]In order to avoid problems, <strong>choose carefully the names of files and folders</strong> you publish on lists: give them <strong>explicit yet short names</strong> and <strong>avoid spaces, accents, hyphens and special characters</strong>.[%END%]</p>
-	
+<hr />
+<ul>
+    <li>
+        <a href="shared-read.html">[%|helploc%]Downloading documents from the shared document web space[%END%]</a>
+    </li>
+    <li>
+        <a href="shared-upload.html">[%|helploc%]Uploading documents in the shared document web space[%END%]</a>
+    </li>
+    <li>
+        <a href="shared-edit.html">[%|helploc%]Editing or deleting documents in the shared document web space[%END%]</a>
+    </li>
+    <li>
+        <a href="shared-hint.html">[%|helploc%]A few tips to organize the shared document web space[%END%]</a>
+    </li>
+</ul>
 <!-- end help_shared.tt2 -->

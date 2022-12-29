@@ -1,14 +1,72 @@
-[% IF custom_css || session.custom_css -%]
-[% FOREACH color  IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] -%]
-[% IF session.$color %][% SET $color = session.$color %][% END -%]
-/* [% color %]: [% $color %] */
-[% END -%]
+[%# css.tt2 ~%]
+@charset "UTF-8";
+
+[% IF 0 ~%]
+Overview of document tree
+-------------------------
+```
+html
+  head
+  body
+    div#top
+    noscript                            // notice to users without js
+    header
+      div.title-bar
+        a.menu-text
+          (logo_html_definition)        // logo for mobile mode
+        div.title-bar-right
+      nav#sympa-top-bar
+        ul.top-bar-left
+          li
+            span.menu-text
+              (logo_html_definition)    // logo for desktop mode
+        menu.top-bar-right
+          ul
+            (sympa_menu.tt2)
+            (user_menu.tt2 or login_menu.tt2)
+    div#loading
+    aside
+      div.title-bar
+        div.title-bar-right
+      nav#sympa-sub-bar
+        menu.top-bar-left
+          ul
+            (list_menu.tt2)
+    main#content-inner
+      h1
+      div.title-bar
+        div.title-bar-right
+      nav#sympa-nav-bar
+        menu.top-bar-left
+          ul
+            (see nav.tt2)
+      (${action}.tt2)
+    div.displayNone                     // link to #top
+    div.scroll-top-wrapper
+    footer
+```
+
+  * If template variable top_menu is false, there is no header, and
+    #sympa-sub-bar also contains div#logo, sympa_menu.tt2 and user_menu.tt2 /
+    login_menu.tt2.
+    Otherwise, #sympa-sub-bar is shown only in list context.
+  * div.title-bar is title bar launching menu used only on mobile mode.
+
+[%~ END # IF 0 ~%]
+
+[% IF custom_css -%]
+    [% FOREACH color  IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] -%]
+        /* [% color %]: [% $color %] */
+    [% END -%]
 [% END -%]
 
-/**
- * CSS Reset (extended)
- * Base : http://meyerweb.com/eric/tools/css/reset/ | v2.0 | 20110126
- */
+[% top_menu = 1 ~%]
+
+[%# CSS Reset: Don't edit this section. ~%]
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -19,42 +77,66 @@ b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	-webkit-text-size-adjust: 100%;
-	-ms-text-size-adjust: 100%;
-	font: inherit;
-	vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
 }
-
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, nav, section {
-	display: block;
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
 }
-
 body {
-	line-height: 1;
+    line-height: 1;
 }
-
 ol, ul {
-	list-style: none;
+    list-style: none;
 }
-
 blockquote, q {
-	quotes: none;
+    quotes: none;
 }
-
 blockquote:before, blockquote:after,
 q:before, q:after {
-	content: '';
-	content: none;
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+[%~# End of CSS Reset %]
+
+/***
+  * Foundation 6: Expand width of tooltip (See GH issue #1262)
+  */
+
+.tooltip {
+    max-width: 20rem;
+}
+
+/***
+  * Foundation 6: Preventing FOUC.
+  */
+
+.no-js .top-bar {
+  display: none;
+}
+
+@media screen and (min-width: 40em) {
+  .no-js .top-bar {
+    display: block;
+  }
+
+  .no-js .title-bar {
+    display: none;
+  }
 }
 
 /**
@@ -66,19 +148,20 @@ q:before, q:after {
     font-family: "Raleway";
     font-style: normal;
     font-weight: normal;
-    src: url("[% static_content_url %]/fonts/Raleway/Raleway-Regular.ttf") format("truetype");
+    src: url("[% static_content_url %]/fonts/Raleway/Raleway-Regular.otf") format("opentype");
 }
 
 /****/
 
 
-* {		/* Proportional fonts */
-    font-family: 'Raleway', sans-serif;
+/* Proportional fonts */
+* {
+    font-family: sans-serif;
     font-size: 1em;
 }
 
 body {
-    font-family: 'Raleway', sans-serif;
+    font-family: sans-serif;
     font-size: 0.85em;
     -webkit-text-size-adjust:100%;
     line-height: 1.4;
@@ -93,145 +176,156 @@ body {
 /* Selection */
 
 ::-moz-selection {
-	background: [% color_15 %];
-	color: [% color_7 %];
-	text-shadow: none;
+    background: [% color_15 %];
+    color: [% color_7 %];
+    text-shadow: none;
 }
 
 ::selection {
-	background: [% color_15 %];
-	color: [% color_7 %];
-	text-shadow: none;
+    background: [% color_15 %];
+    color: [% color_7 %];
+    text-shadow: none;
 }
 
 /* Links */
 
 a {
-	color: [% color_5 %];
-	text-decoration: none;
+    color: [% color_5 %];
+    text-decoration: none;
         transition: background-color 300ms ease-out;
 }
 
 a:visited {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 a:focus {
-	outline: 0;
-	text-decoration: none;
+    outline: 0;
+    text-decoration: none;
 }
 
 a:hover, a:active {
-	color: [% color_6 %];
-	outline: 0;
-	text-decoration: none;
+    color: [% color_6 %];
+    outline: 0;
+    text-decoration: none;
 }
 
 /* Misc */
 
 abbr[title] {
-	border-bottom: 1px dotted;
+    border-bottom: 1px dotted;
 }
 
 b, strong {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 blockquote {
-	margin: 1em 40px;
+    margin: 1em 40px;
 }
 
 dfn {
-	font-style: italic;
+    font-style: italic;
+}
+
+em {
+    font-style: italic;
 }
 
 hr {
-	display: block;
-	height: 1px;
-	border-top: 1px solid [% color_9 %];
-	margin: 1em 0;
+    display: block;
+    height: 1px;
+    border-bottom: 1px solid [% color_9 %];
+    margin: 1em 0;
 }
 
 ins {
-	background: [% color_14 %];
-	color: [% color_1 %];
-	text-decoration: none;
+    background: [% color_14 %];
+    color: [% color_1 %];
+    text-decoration: none;
 }
 
 mark {
-	background: [% color_14 %];
-	color: [% color_1 %];
-	font-style: italic;
-	font-weight: bold;
+    background: [% color_14 %];
+    color: [% color_1 %];
+    font-style: italic;
+    font-weight: bold;
 }
 
 pre, code, kbd, samp {
-	font-family: monospace, serif;
-	_font-family: 'courier new', monospace;
-	font-size: 1em;
+    color: inherit;
+    [%# Workaround for size of monospace font.
+        cf. https://github.com/necolas/normalize.css/issues/519 ~%]
+    font-family: monospace, monospace;
+    font-size: 1em;
+    font-weight: inherit;
 }
 
 pre {
-	white-space: pre;
-	white-space: pre-wrap;
-	word-wrap: break-word;
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 q {
-	quotes: none;
+    quotes: none;
 }
 
 q:before, q:after {
-	content: "";
-	content: none;
+    content: "";
+    content: none;
 }
 
 small {
-	font-size: 85%;
+    font-size: 85%;
 }
 
 sub, sup {
-	font-size: 75%;
-	line-height: 0;
-	position: relative;
-	vertical-align: baseline;
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
 }
 
 sup {
-	top: -0.5em;
+    top: -0.5em;
 }
 
 sub {
-	bottom: -0.25em;
+    bottom: -0.25em;
 }
 
 ul, ol, dl {
-	margin: 1em 0;
-	padding: 0 0 0 1rem;
-	font-size: 13px;
-	color: [% color_3 %];
-	list-style-position: outside;
+    margin: 1em 0;
+    padding: 0 0 0 1rem;
+    color: [% color_3 %];
+    list-style-position: outside;
 }
 
 nav ul, nav ol {
-	list-style: none;
-	list-style-image: none;
+    font-size: 13px;
+    list-style: none;
+    list-style-image: none;
+}
+
+ul.styled-list {
+    list-style: disc;
 }
 
 img {
-	-ms-interpolation-mode: bicubic;
-	vertical-align: middle;
+    -ms-interpolation-mode: bicubic;
+    vertical-align: middle;
 }
 
 address {
-	font-style:normal;
+    font-style:normal;
 }
 
 p {
-	color: [% color_3 %];
-	line-height: 1.6em;
-	margin: 0.5em 0px 1em;
-	padding: 0.2em 0 0;
+    color: [% color_3 %];
+    line-height: 1.6em;
+    margin: 0.5em 0px 1em;
+    padding: 0.2em 0 0;
 }
 
 /* Forms */
@@ -250,186 +344,178 @@ main form form{
 }
 
 label {
-	color: [% color_4 %];
-	margin-top:0.5rem;
-	/*display: inline-block;*/    padding-left:0!important;
-	font-weight:700;
-	cursor: pointer;
+    color: [% color_4 %];
+    margin-top:0.5rem;
+    padding-left:0!important;
+    font-weight:700;
+    cursor: pointer;
 }
 
 label.inlineLabel {
-	display: inline !important;
-	font: inherit;
-	padding: 0;
-	line-height: normal;
-	width: auto !important;
-	float: none !important;
+    display: inline !important;
+    font: inherit;
+    padding: 0;
+    line-height: normal;
+    width: auto !important;
+    float: none !important;
 }
 label[for="connected_only"] {
-	display: inline;
-}
- 
-input {
-	/*border: 1px solid [% color_12 %];
-	border-radius: 3px;
-	font-size: 16px;
-	padding: 10px 9px;
-	margin-right: 10px;
-	outline:none;*/
+    display: inline;
 }
 
 input[type="checkbox"], input[type="radio"] {
-	border: none;
-	box-sizing: border-box;
-	*width: 13px;
-	*height: 13px;
+    border: none;
+    box-sizing: border-box;
+    *width: 13px;
+    *height: 13px;
 }
 table input[type="checkbox"], table input[type="radio"] {
     margin-bottom:0
 }
 input[type="file"]{
-	display: block;
+    display: block;
         margin-top:0.5rem;
 }
-select {
-	/*border: 1px solid [% color_12 %];
-	border-radius: 3px;
-	font-size: 16px;
-	padding: 6px 4px;
-	margin-right: 10px;
-	outline:none;*/
-}
-select, input {
-   max-width: 550px;
+
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
+    select, input {
+        max-width: 550px;
+    }
 }
 select[name="size"] {
    max-width: 60px;
 }
-textarea {
-	/*font-size: 13px;
-	color: [% color_4 %];
-	min-height: 60px;
-	padding: 6px 9px;
-	border: 1px solid [% color_12 %];
-	border-radius: 3px;
-	width: 94%;
-	line-height: 20px;
-	outline:none;*/
-}
 
 legend {
-	*margin-left: -7px;
-	white-space: normal;
+    *margin-left: -7px;
+    white-space: normal;
 }
 
 button, input, select, textarea {
-	font-size: 100%;
-	vertical-align: baseline;
-	*vertical-align: middle;
+    font-size: 100%;
+    vertical-align: baseline;
+    *vertical-align: middle;
 }
 
 button, input {
-	line-height: normal;
+    line-height: normal;
 }
 
-button, input[type="button"], input[type="reset"], input[type="submit"], a.button{
-	cursor: pointer;
-	*overflow: visible;
-	display: inline-block;
-	color: [% color_7 %];
-	border-radius: 4px;
-	background: [% color_6 %] none no-repeat scroll top left;
-	font-size: 12px;
-	font-weight: 200;
-	padding: 5px 9px;
-	border: 0;
-	margin: 0.25em;
+button[type="button"],
+button[type="reset"],
+button[type="submit"],
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+a.button {
+    cursor: pointer;
+    *overflow: visible;
+    display: inline-block;
+    color: [% color_7 %];
+    border-radius: 4px;
+    background: [% color_6 %] none no-repeat scroll top left;
+    font-size: 12px;
+    font-weight: 200;
+    padding: 5px 9px;
+    border: 0;
+    margin: 0.25em;
         transition: background-color 300ms ease-out;
 }
 
-button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover, a.button:hover {
-	background: [% color_5 %] none no-repeat scroll bottom left;
+button[type="button"]:hover,
+button[type="submit"]:hover,
+button[type="reset"]:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+a.button:hover {
+    background: [% color_5 %] none no-repeat scroll bottom left;
 }
 
 input[type="button"]:disabled, input[type="submit"]:disabled, input[type="reset"]:disabled {
-	background: none repeat scroll 0 0 [% color_12 %];
+    background: none repeat scroll 0 0 [% color_12 %];
 }
 
 button[disabled], input[disabled] {
-	cursor: default;
+    cursor: default;
 }
 
 input[type="search"] {
-	-webkit-appearance: textfield;
-	-moz-box-sizing: content-box;
-	-webkit-box-sizing: content-box;
-	box-sizing: content-box;
+    -webkit-appearance: textfield;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
 }
 
 input[type="search"]::-webkit-search-decoration,
 input[type="search"]::-webkit-search-cancel-button {
-	-webkit-appearance: none;
+    -webkit-appearance: none;
 }
 
 textarea {
-	overflow: auto;
-	vertical-align: top;
-	resize: vertical;
+    overflow: auto;
+    vertical-align: top;
+    resize: vertical;
 }
 
 input:invalid, textarea:invalid {
-	background-color: [% color_13 %];
-	opacity:0.5;
+    background-color: [% color_13 %];
+    opacity:0.5;
 }
 
-/* to align buttons in messages moderate form in reveal modal */ 
-div.reveal-modal form[id*="moderate_"]{
-	display: inline-block;
+[%# To align buttons in messages moderate form in reveal modal. ~%]
+div.reveal form[id*="moderate_"] {
+    display: inline-block;
 }
 
+div.columns {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 /* Titles */
 h1,h2,h3,h4,h5,h6{
     font-family: 'Raleway', sans-serif;
 }
 h1 {
-	color: [% color_2 %];
-	font-weight: 100;
-	font-size: 1.9em;
-	margin: 0px 0px 0.6em;
+    color: [% color_2 %];
+    font-weight: 100;
+    font-size: 1.9em;
+    margin: 0px 0px 0.6em;
 }
 h2 {
-	color: [% color_2 %];
-	font-size: 1.6em;
-	font-weight: 100;
-	margin: 1rem 0px 0.2rem;
+    color: [% color_2 %];
+    font-size: 1.6em;
+    font-weight: 100;
+    margin: 1rem 0px 0.2rem;
 }
 h3 {
-	margin: 0px 0px 0.6em;
-	color: [% color_2 %];
-	font-weight: 100;
-	font-size: 1.3em;
+    margin: 0px 0px 0.6em;
+    color: [% color_2 %];
+    font-weight: 100;
+    font-size: 1.3em;
 }
 h4 {
-	color: [% color_2 %];
-	font-size: 1.2em;
-	margin: 1em 0px 0px;
-	font-weight: 100;
+    color: [% color_2 %];
+    font-size: 1.2em;
+    margin: 1em 0px 0px;
+    font-weight: 100;
 }
 h5 {
-	color: [% color_3 %];
-	font-size: 1.1em;
-	margin: 2em 0px 0.2em;
-	font-weight: 100;
+    color: [% color_3 %];
+    font-size: 1.1em;
+    margin: 2em 0px 0.2em;
+    font-weight: 100;
 }
 h6 {
     font-size: 1em;
 }
 h1 a, h2 a, h3 a {
-	color:[% color_2 %];
+    color:[% color_2 %];
 }
 main h1, main h2, main h3, main h4, main h5, main h6, main article, main p, main form {
-    padding:0 1rem!important;
+    padding:0 1rem;
 }
 main form[name="myform"] {
     padding:0!important;
@@ -494,6 +580,11 @@ section.home-submenu a:hover span i.fa-envelope, section.home-submenu a:hover sp
     color: [% color_7 %];
 }
 
+[%# Compat. with Fooundation 5. ~%]
+ul.row {
+    width: 100%;
+}
+
 /* Tables */
 table {
     background-color: [% color_7 %];
@@ -503,10 +594,10 @@ table {
     border-spacing: 0;
     box-shadow: 0 1px 1px #ccc;
 }
-table.listOfItems tr { 
+table.listOfItems tr {
     height:2rem;
 }
-table.listOfItems td{ 
+table.listOfItems td{
     vertical-align:middle;
     text-align:center;
 }
@@ -516,25 +607,25 @@ table.listOfItems td form, table.listOfItems td form fieldset{
     padding:0!important;
 }
 table.listOfItems td form fieldset button.action, table.listOfItems td button.action {
-	display: inline-block;
-	color: [% color_5 %];
-	border: none;
-	background: none;
-	font-size: inherit;
-	font-weight: inherit;
-	padding: 0;
-	margin: 0;
+    display: inline-block;
+    color: [% color_5 %];
+    border: none;
+    background: none;
+    font-size: inherit;
+    font-weight: inherit;
+    padding: 0;
+    margin: 0;
 }
 table.listOfItems td form fieldset button.action:hover, table.listOfItems td button.action:hover {
-	color: [% color_6 %];
+    color: [% color_6 %];
 }
-table.ls_template th{ 
+table.ls_template th{
     border-right: 1px solid [% color_7 %];
 }
-table.ls_template th[colspan]{ 
+table.ls_template th[colspan]{
     border-bottom: 1px solid [% color_7 %];
 }
-table.ls_template td{ 
+table.ls_template td{
     border-right: 1px solid [% color_9 %];
 }
 
@@ -563,66 +654,41 @@ table tr th, table tr td {
 }
 
 #loading {
+    position: absolute;
+    top: 0;
+    left: 0;
     width:100%;
     height:100%;
-    background-color:[% color_7 %];
+    background-color: rgba(255, 255, 255, 0.75);
     overflow: hidden;
     display: none;
+    z-index: 1;
 }
 
 #loadingText {
     width: 100%;
     text-align: center;
-    padding-top: 10rem;
+    line-height: 100vh;
+    vertical-align: middle;
     color: rgb(0, 75, 148);
     font-weight: 100;
     font-size: 2rem;
     margin: 0;
 }
 
+[%# Used only when top_menu is false ~%]
 #logo {
     display: block;
     margin: 1rem auto;
     width: 50%;
     text-align: center;
 }
-
 #logo img{
-	max-width: 100%;
-}
-
-#nav {
-	position:relative;
-	top:-1px;
-}
-
-#nav li {
-	list-style: none;
-	float:left;
-	height:32px;
-	margin-right:5px;
-   background-image:none; /*overrides Massey default */
-}
-
-#nav a span {
-	display:block;
-	font-weight:bold;
-	padding:7px 15px 2px 15px;
-}
-
-#nav a {
-	display:block;
-	height:32px;
-    background-image:none;
-    background-color: transparent;
-	border:1px solid [% color_9 %];
-    color: [% color_7 %];
-    border: none;
-	border-radius: 3px 3px 0px 0px;
+    max-width: 100%;
 }
 
 p {
-	word-wrap:break-word;
+    word-wrap:break-word;
 }
 
 /* header */
@@ -631,155 +697,177 @@ header h1{
     text-align:center;
     padding:0.5rem 0 2rem 0;
     margin:0;
-    background-color:[% color_7 %];
+    background-color:[% color_7 %];     [%~# FIXME %]
 }
 
 /* main element */
 main{
-    background-color:[% color_7 %];
+    background-color:[% color_7 %];     [%~# FIXME %]
     padding-bottom:2rem;
     [% IF top_menu %]
     min-height:450px;
     [% ELSE %]
     min-height:550px;
     [% END %]
-}  
+}
 main.home{
     min-height:inherit;
     text-align: justify;
     padding-bottom:0;
 }
 
-main h1.robot_name{
+[%# Used only when top_menu is false ~%]
+main h1.robot_name {
     width:100%;
     margin:0;
-    background-color:[% color_7 %];
+    background-color:[% color_7 %];     [%~# FIXME %]
     letter-spacing: 0.1rem;
     text-align: center;
     z-index:10;
 }
 
 
-/* aside menu */
-aside {
-    font-size: 0.9em;
-    word-wrap: break-word;
-}
-aside li {
-    border: none;
-    line-height: 1.7em;
-    list-style-type:none;
-}
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
+    /* aside menu */
+    aside {
+        font-size: 0.9em;
+        word-wrap: break-word;
+    }
+    aside li {
+        border: none;
+        line-height: 1.7em;
+        list-style-type:none;
+    }
 
-aside li a {
-    padding-bottom: 0.5em;
-    padding-top: 0.5em;
-    display: inline;
-}
+    #sympa-sub-bar li a {
+        padding-bottom: 0.5em;
+        padding-top: 0.5em;
+    }
+    [%# To include link to review page, <a> would be inline,
+      but to align accordion icons, parents of submenus would be block. ~%]
+    #sympa-sub-bar li:not(.is-accordion-submenu-parent) a {
+        display: inline;
+    }
 
-aside menu.connect{
-    border: 1px solid [% color_9 %];
-    background-color: [% color_7 %]!important;
-}
+    aside nav menu.connect {
+        border: 1px solid [% color_9 %];
+        background-color: [% color_7 %]!important;
+    }
 
-aside menu.connect li{
-    background-color: transparent!important;
-}
+    aside nav menu.connect li {
+        background-color: transparent!important;
+    }
 
-aside menu.connect ul li.has-dropdown ul{
-    margin: 0;
-    padding: 0;
-    width:90%;
-}
-aside menu.connect ul li.has-dropdown ul li{
-    margin: 0;
-    padding: 0;
-    line-height:1;
-}
-aside menu.connect ul li.has-dropdown ul li label{
-    padding: 0;
-    font-size: inherit;
-}
-aside menu.connect ul li.has-dropdown ul li input{
-    height:1.5rem;
-}
-aside menu li.divider, aside menu [role="separator"] {
-    display:block;
-    margin:0!important;
-    border-bottom: 1px solid [% color_5 %];
-}
-aside menu{
-    width:98%;
-    max-width:250px;
-    margin: 0 auto 1rem auto ;
-    border-radius: 5px;
-}
+    aside nav menu.connect ul li > ul.menu {
+        margin: 0;
+        padding: 0;
+        width:90%;
+    }
+    aside nav menu.connect ul li > ul.menu li{
+        margin: 0;
+        padding: 0;
+        line-height:1;
+    }
+    aside nav menu.connect ul li > ul.menu li label{
+        padding: 0;
+        font-size: inherit;
+    }
+    aside nav menu.connect ul li > ul.menu li input{
+        height:1.5rem;
+    }
+    #sympa-sub-bar menu {
+        width:98%;
+        max-width:250px;
+        margin: 0 auto 1rem auto ;
+        border-radius: 5px;
+    }
 
-aside menu.user,aside menu.list,aside menu.sympa{
-    background-color:[% color_8 %];
-    border:1px solid [% color_6 %];
-}
+    aside nav menu.user, aside nav menu.list, aside nav menu.sympa {
+        background-color:[% color_8 %];
+        border:1px solid [% color_6 %];
+    }
+    #sympa-sub-bar menu.user li.divider,
+    #sympa-sub-bar menu.user [role="separator"],
+    #sympa-sub-bar menu.list li.divider,
+    #sympa-sub-bar menu.list [role="separator"],
+    #sympa-sub-bar menu.sympa li.divider,
+    #sympa-sub-bar menu.sympa [role="separator"] {
+        border-top: 1px solid [% color_6 %];
+        margin: 0.5rem 0;
+    }
 
-aside menu a{
-    color:[% color_6 %];
-}
-aside menu a:hover{
-    color:[% color_5 %];
-}
+    aside nav menu a {
+        color:[% color_6 %];
+    }
+    aside nav menu a:hover {
+        color:[% color_5 %];
+    }
 
-aside menu ul {
-    padding-left:0;
-}
+    aside nav menu ul {
+        padding-left:0;
+    }
 
-aside menu ul li {
-    padding-left:10px;
-}
+    aside nav menu ul li {
+        padding-left:10px;
+    }
 
-aside menu ul li:nth-child(even){
-    background-color:[% color_7%];
-}
-aside menu ul li ul li{
-    background-color:inherit!important;
-}
-aside menu ul li ul{
-    margin-top: 0;
-    padding-left: 0.5rem;
-}
+    aside nav menu ul li:nth-child(even) {
+        background-color:[% color_7%];
+    }
+    aside nav menu ul li ul li {
+        background-color:inherit!important;
+    }
+    aside nav menu ul li ul {
+        margin-top: 0;
+        padding-left: 0.5rem;
+    }
 
-aside menu ul#MainMenuLinks li ul li.menuLinks{
-    line-height: 1.2rem;
-}
+    aside nav menu ul#MainMenuLinks li ul li.menuLinks {
+        line-height: 1.2rem;
+    }
 
-aside menu ul li label{
-    margin-top:0;
-    padding-left: 0;
-    padding-bottom: 0.5rem;
-    font-size:110%;
+    aside nav menu ul li label {
+        margin-top:0;
+        padding-left: 0;
+        padding-bottom: 0.5rem;
+        font-size:110%;
+    }
+    aside nav menu ul li.menu_title label {
+        padding-bottom: 0.1rem;
+        padding-top: 0.1rem;
+        margin-bottom: 0.2rem;
+        color:[% color_7 %];
+        cursor: default;
+    }
+    aside nav menu ul li.menu_title, aside nav menu ul li.menu_title:hover {
+        background-color:[% color_6 %]!important;
+    }
+    aside nav menu ul li.active, aside nav menu ul li ul li.active {
+        background-color:[% color_5%]!important;
+    }
+    aside nav menu ul li.active a {
+        color:[% color_7 %];
+    }
+    aside ul li.role{
+        line-height:1rem;
+        margin-bottom:0.5rem;
+    }
+    dd {
+        margin: 0 0 0 40px;
+    }
+
+    [%# Compat. with Foundation 5 ~%]
+    #sympa-sub-bar menu > ul {
+        background-color: transparent;
+        margin: 1em 0;
+    }
+    #sympa-sub-bar menu ul li a {
+        background-color: transparent;
+        padding: 0;
+    }
+    /* end aside */
 }
-aside menu ul li.menu_title label {
-    padding-bottom: 0.1rem;
-    padding-top: 0.1rem;
-    margin-bottom: 0.2rem;
-    color:[% color_7 %];
-    cursor: default;
-}
-aside menu ul li.menu_title, aside menu ul li.menu_title:hover{
-    background-color:[% color_6 %]!important;
-}
-aside menu ul li.active, aside menu ul li ul li.active{
-    background-color:[% color_5%]!important;
-}
-aside menu ul li.active a{
-    color:[% color_7 %];
-}
-aside ul li.role{
-    line-height:1rem;
-    margin-bottom:0.5rem;
-}
-dd {
-	margin: 0 0 0 40px;
-}
-/* end aside */
 
 /*shared menu*/
 menu.shared{
@@ -794,49 +882,45 @@ menu.shared li{
 /*Top Button*/
 .scroll-top-wrapper {
     position: fixed;
-	opacity: 0;
-	visibility: hidden;
-	overflow: hidden;
-	text-align: center;
-	z-index: 99999999;
+    opacity: 0;
+    visibility: hidden;
+    overflow: hidden;
+    text-align: center;
+    z-index: 99999999;
     background-color: [% color_6 %];
-	color: #eeeeee;
-	width: 50px;
-	height: 48px;
-	line-height: 48px;
-	right: 30px;
-	bottom: 30px;
-	padding-top: 2px;
-	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
-	border-bottom-left-radius: 10px;
-	-webkit-transition: all 0.5s ease-in-out;
-	-moz-transition: all 0.5s ease-in-out;
-	-ms-transition: all 0.5s ease-in-out;
-	-o-transition: all 0.5s ease-in-out;
-	transition: all 0.5s ease-in-out;
+    color: #eeeeee;
+    width: 50px;
+    height: 48px;
+    line-height: 48px;
+    right: 30px;
+    bottom: 30px;
+    padding-top: 2px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
 }
 .scroll-top-wrapper:hover {
-	background-color: [% color_11 %];
+    background-color: [% color_11 %];
 }
 .scroll-top-wrapper.show {
     visibility:visible;
     cursor:pointer;
-	opacity: 1.0;
+    opacity: 1.0;
 }
 .scroll-top-wrapper i.fa {
-	line-height: inherit;
+    line-height: inherit;
 }
 /****End Top button***/
 
-.remember{
-   line-height: 2em;
-}
-
 /* Initials in list of lists */
-main .top-bar-section li.letter,
-main .top-bar-section li.letter a,
+main nav menu ul li.letter,
+main nav menu ul li.letter a,
 h4.letter {
     text-transform: capitalize;
 }
@@ -846,7 +930,7 @@ h4.letter {
 }
 
 .highlighted {
-	color: red;
+    color: red;
 }
 
 .item_list .item {
@@ -886,12 +970,13 @@ h4.letter {
     padding-left: 0;
 }
 
-.item_list .item .item_content ul.my li{
+.item_list .item .item_content ul.my li {
     display:inline;
+    padding-left: 1.5rem;
 }
 
-.item_list .item .item_content ul.my li:nth-child(2){
-    padding-left: 1.5rem;
+.item_list .item .item_content ul.my li:first-child {
+    padding-left: 0;
 }
 
 .item_list .item .item_content p {
@@ -908,25 +993,6 @@ h4.letter {
     padding:0;
     margin:0.5rem 0;
 }
-
-.prefs {
-    line-height: 2em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-}
-
-/*.form_row {
-    margin-top: 1em;
-    float: left;
-    clear: left;
-    width: 100%;
-}
-
-.form_row label {
-    display: block;
-    float: left;
-    width: 150px;
-}*/
 
 #list_create form label[for="owner"]{
 
@@ -947,10 +1013,6 @@ h4.letter {
     margin: 0;
 }
 
-.navBar li {
-    line-height: 2em;
-}
-
 #bold_label label {
    display: inline-block;
    width: 100px;
@@ -960,358 +1022,146 @@ h4.letter {
    font-style: normal;
 }
 
-form#logs_form label,
-form.bold_label label { 
-}
-#Canvas {
-	min-height: 95%;
-	width: 98%;
-	margin: 0 0.8em -5em 0.8em;
-	overflow: hidden;
-}
-
-#Menus {
-	float:left;
-	width: 23.5em;
-	border: 0px solid;
-	margin-top:1em;
-	padding-top: 0px;
-	text-align: left;
-}
-
-#Paint {
-	vertical-align:top;
-	text-align: center;
-}
-
-#Title {
-	text-align: left;
-	font-size:1.8em; 
-	font-weight: bold;
-	padding:1em 0 0 0;
-	z-index:520;
-}
-
 .menuInactive2 {
-	font-size: 1em;
-	line-height:1.4em;
-	text-decoration: none;
-	font-weight:normal;
+    font-size: 1em;
+    line-height:1.4em;
+    text-decoration: none;
+    font-weight:normal;
 }
 
 ul#MainMenuLinks li {
    line-height: 1.7em;
 }
 
-#toggleMenu {
-	float: right;
-	padding-right: 3px;
-}
-
-td.adminmenu { 
-	text-align: center;
-}
-
-.text_left { 
-	text-align: left;
-}
-
-.text_right { 
-	text-align: right!important;
-}
-
-td.text_right { 
-	text-align: right;
-}
-
-.text_justify { 
-	text-align: justify;
-}
-
-.without_padding {
-	padding:0!important;
-}
-
-.list_panel li {
-   list-style-type: none;
-}
-
 #list_type {
-	list-style-type: none;
+    list-style-type: none;
 }
 
 #list_type dd {
-	margin-left: 1em;
+    margin-left: 1em;
 }
 
-.smaller { 
-	font-size: smaller;
+.smaller {
+    font-size: smaller;
 }
 
-.larger { 
-	font-size: larger;
+.larger {
+    font-size: larger;
 }
 
-span.center { 
-	text-align: center;
+table td.review_cels {
+    text-align: center;
+    padding:0 0.2em;
 }
 
-table td.review_cels { 
-	text-align: center;
-	padding:0 0.2em;
+table td.review_cels_mail {
+    text-align: left;
+    padding:0 0 0 0.2em;
 }
 
-table td.review_cels_mail { 
-	text-align: left;
-	padding:0 0 0 0.2em;
+.mailing_lists_menu {
+    padding: 10px;
+    margin: 5px 25px 5px 25px;
+    float: left;
+    font-size: 1.1em;
+    text-align: left;
 }
 
-#home_rss_news {
-	float: right;
+ul.no_style {
+    list-style: none;
+    margin: 0;
 }
 
-#home_rss_news input {
-	border: 1px solid; 
-	padding:0.05em 1em;
-	text-decoration: none;
-	font-size: 0.9em;
-	font-weight: 600;
-	letter-spacing:0.1em;
-	/* if IE zoom:1;*/
-	zoom: 1;
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	-KHTML-border-radius:10px;
-	-icab-border-radius:10px;
-	border-radius:10px;
+.align_top {
+    vertical-align: top;
 }
 
-#home_search_list { 
-	clear: both;
-}
-
-#home_search_list form fieldset { 
-	display: inline;
-	vertical-align: top;
-}
-
-#home_container { 
-	padding: 10px;
-	border: 1px dashed;
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	-KHTML-border-radius:4px;
-	-icab-border-radius:4px;
-	border-radius:4px;
-}
-
-.home_page_list{
-    width:100%;
-}
-.home_page_list li{
-    padding-bottom: 1rem;
-    line-height:2.5rem;
-}
-.home_page_list li a span:nth-of-type(2){
-    padding:0 0.5rem;
-    font-size:1.5rem;
-}
-.home_page_list li > span:nth-of-type(1){
-    display: block;
-    margin-top: -1rem;
-    font-size:1rem;
-}
-
-.edit_list_request_enum{ 
-	margin: 0 0 1rem;
-	padding-left: 1em;
-	text-align: left;
-	font-size: 1em;
-}
-
-.edit_list_request_enum span.divider:first-child { 
-	display:none;
-}
-
- /*.edit_list_request_enum label{
-	display: block;
-	float: left;
-	width: 150px;
-}
-*/
-                         
-.list_admin { 
-	font-size: 1em;
-}
-
-.mailing_lists_menu { 
-	padding: 10px;
-	margin: 5px 25px 5px 25px;
-	float: left;
-	font-size: 1.1em;
-	text-align: left;
-}
-
-ul.no_style { 
-	list-style: none;
-	margin: 0;
-}
-
-.align_top { 
-	vertical-align: top;
-}
-
-#template_editor { 
-	margin-top: 10px;
+#template_editor {
+    margin-top: 10px;
 }
 
 #template_editor ul {
-	padding-left: 5px;
+    padding-left: 5px;
 }
 
 #template_editor li {
-	margin: 2px;
+    margin: 2px;
 }
 
 
-#color_table tr { 
+#color_table tr {
     background-color: [% color_7 %]!important;
 }
 
-#help {
-	padding-left: 10px;
-	padding-top: 5px;
-	margin-bottom: 20px;
-}
-
-#help li { 
-	padding: 1px;
-}
-
-#help_editfile, #blaklist { 
-	margin: 1em;
-}
-
-#help_editfile ul, #blacklist ul {
-	padding-left: 1em;
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
-}
-
-ul#set_pending_radio { 
-	display: inline;
-	list-style-type: none;
+ul#set_pending_radio {
+    display: inline;
+    list-style-type: none;
 }
 
 ul#set_pending_radio li {
-	display: inline; 
-	margin-right: 1em; 
-	margin-left: 1em;
-} 
+    display: inline;
+    margin-right: 1em;
+    margin-left: 1em;
+}
 
-form#bold_label input { 
-	margin-left: 5px;
-	margin-top: 5px;
+form#bold_label input {
+    margin-left: 5px;
+    margin-top: 5px;
 }
 
 form input[type="radio"],
 form input[type="checkbox"] {
-	vertical-align: inherit;
-	border:none;
+    vertical-align: inherit;
+    border:none;
 }
 
-#global_mailing_lists { 
-	text-align: center;
+#cp_template {
+    border: 1px solid;
+    padding: 3px;
+    width: 410px;
 }
 
-#show_cert { 
-	border: 1px solid;
-}
-
-#show_cert ul { 
-	list-style-type: none;
-	padding-top: 5px;
-	margin-bottom: 5px;
-}
-
-#show_cert ul li { 
-	line-height: 1em;
-	padding-left: 3px;
-}
-
-#cp_template { 
-	border: 1px solid;
-	padding: 3px;
-	width: 410px;
-}
-
-#cp_template fieldset { 
-	display: inline;
-	border: 1px solid;
-	vertical-align: top;
-	margin-left: 3px;
+#cp_template fieldset {
+    display: inline;
+    border: 1px solid;
+    vertical-align: top;
+    margin-left: 3px;
 }
 
 #cp_template legend,
-#cp_template label { 
-	padding-left: 3px;
+#cp_template label {
+    padding-left: 3px;
 }
 
-pre.code { 
-	font-family: monospace;
-	border: 1px dotted;
-	padding: 0.5em;
+pre.code {
+    font-family: monospace;
+    border: 1px dotted;
+    padding: 0.5em;
 }
 
 footer {
-	border-top: 1px solid [% color_9 %];
-	width:100%;
-	height:1.5em;
-	margin: 0;
-	font-size: 1.1em;
-	text-align: center;
-	padding-top:0.5rem;
-	padding-bottom:2.5rem;
+    border-top: 1px solid [% color_9 %];
+    width:100%;
+    height:1.5em;
+    margin: 0;
+    font-size: x-small;
+    text-align: center;
+    padding-top:0.5rem;
+    padding-bottom:2.5rem;
         clear:both;
 }
 
-footer a {
-	font-weight: normal;
-	font-size: 11px;
-}
-
 footer img {
-	margin:0 0.5em 0 0;
-	vertical-align:middle;
-}
-
-#Identity {
-	text-align: left;
-	padding-top: 1em;
-}
-
-.Help {
-	display: none;
-	position: absolute;
-	border: 1px dotted;
-	z-index: 1000;
-}
-
-#rows_nb {
-	font-size: 0.8em;
+    margin:0 0.5em 0 0;
+    vertical-align:middle;
 }
 
 #page_size {
-	margin: 2rem 0;
-	padding-bottom: 20px;
+    margin: 2rem 0;
+    padding-bottom: 20px;
 }
 #page_size select{
-	width:100px;
-}
-
-.ContentBlock {
-    margin-top:1rem; 
-    text-align: left;
+    width:100px;
 }
 
 .nomenu{
@@ -1319,113 +1169,41 @@ footer img {
     padding:0.5rem;
 }
 
-.nomenu .ContentBlock {
-	margin: 1em auto;
-	float:none;
-	width: 90%;
-}
-
-.ContentBlock h2 {
-	margin-top:0;
-}
-
-.ContentBlock > * {
-
-}
-
-.ContentBlock * a {
-	text-align: left;
-}
-
 a img.Pictures {
-	height:30px;
+    height:30px;
 }
 
-#pictures_block { 
-	text-align: center;
-	height: 120px ;
+#pictures_block {
+    text-align: center;
+    height: 120px ;
 }
 
 #pictures_block div {
-	margin: 1em;
-	float: left;
+    margin: 1em;
+    float: left;
 }
 
-#large_picture { 
-	height: 80px;
+#large_picture {
+    height: 80px;
 }
 
 #pictures_block #large img{
-	height: 80px;
+    height: 80px;
 }
 
 #pictures_block #small img{
-	height: 30px;
-	margin-top: 50px;
+    height: 30px;
+    margin-top: 50px;
 }
 
 .displayNone {
-	display: none;
-	height:0px;
-	width:0px;
+    display: none;
+    height:0px;
+    width:0px;
 }
 
-/*
-.title {
-	position: absolute;
-	top: 60px;
-	font-size: 1.6em;
-	text-indent: 30px;
-}
-*/
-
-.customMenu {
-	text-indent: 0px;
-}
-
-a.dingbat {
-	text-align: center;
-}
-
-.dingbat {
-	text-indent: 0px;
-	text-align: center;
-	font-weight: 100;
-}
-
-.smalltext {
-	font-size: 0.8em;
-}
-
-.smalltext a {
-	font-size: 0.8em;
-}
-
-.smallblacktext {
-	font-size: 1.2em;
-}
-
-.mediumtext {
-	font-size: 1.2em;
-}
-
-.largetext {
-	font-size: 1.6em;
-}
-
-a.actionMenuLinksCurrentPage {
-    border: none;
-    text-decoration: none;
-    padding: 5px;
-    margin: 0 0.5em 0 0;
-    cursor:pointer;
-    background-color: [% color_10 %];
-    color: [% color_7 %];
-    font-size: 0.9em;
-    border-radius:2px;
-}
-
-a.actionMenuLinks {
+a.actionMenuLinks,
+span.actionMenuLinksInactive {
     border: 1px solid;
     font-size: 0.9em;
     text-decoration: none;
@@ -1439,144 +1217,120 @@ a.actionMenuLinks:hover {
     border-radius:2px;
 }
 
-a.actionMenuLinksInactive {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
+.sharedMenu {
+    display: inline-block;
+    max-width: 20%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: keep-all;
 }
 
-#actionnuLinksInactive {
-	text-decoration: none;
-	padding-left: 3px;
-}
-
+/* menu links for archive */
 a.ArcMenuLinks,
 a.ArcMenuLinks:visited,
 a.ArcMenuLinks:link {
-	border: 1px solid;
-	font-weight:bold;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    font-weight:bold;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
+[%# No longer used, but may be included in archives created in the past. ~%]
 a.ArcMenuLinksCurrentPage {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
 a.ArcMenuLinksInactive,
 a.ArcMenuLinksInactive:hover {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
 a.ArcMenuLinksSortActive,
 a.ArcMenuLinksSortActive:hover,
 a.ArcMenuLinksSortInactive:hover  {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
 a.ArcMenuLinksSortInactive {
-	border: 1px solid;
-	text-decoration: none;
-	padding: 0px 10px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	-KHTML-border-radius:5px;
-	-icab-border-radius:5px;
-	border-radius:5px;
+    border: 1px solid;
+    text-decoration: none;
+    padding: 0px 10px;
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    -KHTML-border-radius:5px;
+    -icab-border-radius:5px;
+    border-radius:5px;
 }
 
 #ArcMenuLinksInactive {
-	border: 0px solid;
-	text-decoration: none;
-	padding-left: 3px;
+    border: 0px solid;
+    text-decoration: none;
+    padding-left: 3px;
 }
+/* end menu links for archive */
 
 h7 {
-	font-size: 0.8em;
-	font-style: italic;
+    font-size: 0.8em;
+    font-style: italic;
 }
 
 h7 strong {
-	font-size: 1em;
-}
-	
-.listTitle {
-	font-size: 1.6em;
-	padding-bottom: 0.5em;
+    font-size: 1em;
 }
 
-.listTitle.description  {
-	font-size:1em;
-	font-weight:bold;
-	margin-top:0em;
-	margin-bottom:1.3em;
-	border:none;
-}
-
-#ErrorBlock {
-	position:absolute;
-	left:0;
-	top:0;
-	z-index:600;
-	opacity:0.4;
-	width:100%;
-	height:100%;
-	background: none repeat scroll 0 0 [% color_1 %]
-}
-
-#ErrorMsg { 
+#ErrorMsg {
     position:absolute;
     width:60%;
     margin:20% 19%;
     padding:0;
-    z-index:610!important;
     font-size: 1.4em;
     font-weight: bold;
     text-align:center;
     background-color:[% color_7 %];
     border-radius: 5px;
 }
-#ErrorMsg .alert-box, #ephemeralMsg .alert-box { 
+#ErrorMsg .alert-box, #ephemeralMsg .alert-box {
     margin-bottom:0;
     padding-top:1.5rem!important;
     padding-bottom:1.5rem!important;
 }
-#ErrorMsg .alert-box form{ 
+#ErrorMsg .alert-box form{
     margin-bottom:0;
 }
 #ErrorMsg input[type="button"]{
-	background: #D91E18 none no-repeat scroll top left;
-	font-size: 0.9em;
+    background: #D91E18 none no-repeat scroll top left;
+    font-size: 0.9em;
 }
 
 #ErrorMsg input[type="button"]:hover {
-	background: [% color_13 %] none no-repeat scroll bottom left;
+    background: [% color_13 %] none no-repeat scroll bottom left;
         color:[% color_7 %];
 }
 
@@ -1649,31 +1403,12 @@ h7 strong {
 }
 
 
-/* Test_home */
-#home_modal.reveal-modal, #home_modal dialog {
-    border: none;
-    padding: 0;
-    border-radius: 4px;
-}
-#home_modal.reveal-modal .alert-box{
-    margin-bottom:0
-}
-#home_modal.reveal-modal li {
-    list-style:none;
-}
-#home_modal.reveal-modal .alert-box button i {
-    border: none;
-    padding: 0;
-    margin-right: 0.2rem;
-}
-
-
 p.listenum {
-	margin-top: 0;
-	padding-top: 0;
-	margin-bottom: 0;
-	padding-bottom: 0;
-	font-size:0.9em;
+    margin-top: 0;
+    padding-top: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    font-size:0.9em;
 }
 
 ul.listenum {
@@ -1695,116 +1430,84 @@ span.divider{
     padding-bottom:0.5rem;
 }
 
-div.admin_cmd {
-	float:left;
-	margin: 0em 0.3em 0.1em 0;
-	padding: 0 0.3em;
-	border: 1px solid;
-	-moz-border-radius:6px;
-	-webkit-border-radius:6px;
-	-KHTML-border-radius:6px;
-	-icab-border-radius:6px;
-	border-radius:6px;
-}
-
-div.admin_cmd a {
-	font-size:0.7em!important;
-	font-weight:bold;
-}
-
+/* Calendar in mhonarc_rc.tt2 */
 ul.calendar {
-	margin-left:0!important;	
-	padding-left:0!important;
+    margin-left:0!important;
+    padding-left:0!important;
 }
 
 ul.calendar a {
-	font-size: 1em;
+    font-size: 1em;
 }
 
 ul.calendar li {
-	list-style: none; 
-	display: inline;
-	padding: 0px 1px 0px 2px;
-	line-height: 2em;
-	font-size: 1em;
-	text-decoration: none;
-	border: 1px solid;
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px;
-	-KHTML-border-radius:4px;
-	-icab-border-radius:4px;
-	border-radius:4px;
+    list-style: none;
+    display: inline;
+    padding: 0px 1px 0px 2px;
+    line-height: 2em;
+    font-size: 1em;
+    text-decoration: none;
+    border: 1px solid;
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    -KHTML-border-radius:4px;
+    -icab-border-radius:4px;
+    border-radius:4px;
 }
 
 ul li.calendarLinks {
-	border: 1px solid [% color_5 %];
+    border: 1px solid [% color_5 %];
 }
 
 ul li.calendarLinksCurrentPage,
 ul li.calendarLinksCurrentPage:hover {
-	border: 1px solid !important;
+    border: 1px solid !important;
 }
 
 ul li.calendarLinksCurrentPage,
 ul li.calendarLinksCurrentPage a {
-	border-bottom:1px solid !important;
+    border-bottom:1px solid !important;
 }
 
 ul li.calendarLinksInactive {
-	border: 1px solid [% color_3 %];
+    border: 1px solid [% color_3 %];
 }
 
 ul li.calendarYear {
-	border: 1px solid;
+    border: 1px solid;
 }
+/* end calendar in mhonarc_rc.tt2 */
 
 abbr,
 acronym,
 .info {
-	border-bottom: 1px dotted;
-	cursor: help;
+    border-bottom: 1px dotted;
+    cursor: help;
 }
 
 p {
-	text-indent: 0px;
+    text-indent: 0px;
 }
 
-p.spacer { 
-	clear: both;
-}
-
-code {
-	font-weight: bold;
-}
-
-.retraitita {
-	border: 1px dashed;
-	padding: 2px;
-	margin: 5px;
-}
-
-span.retraitita {
-	border: 1px dashed;
-	padding: 5px 10px;
-	margin: 5px;
-	display: block;
+p.spacer {
+    clear: both;
 }
 
 a.input {
-	border: 1px solid; 
-	padding: 0.2em 0.3em;
-	margin-left:0.2em;
-	text-decoration: none;
-	vertical-align: middle;
-	font-size: 0.7em;
-	font-weight:bold;
-	font-variant:small-caps;
-	/* if IE zoom:1;*/
-	zoom: 1;
+    border: 1px solid;
+    padding: 0.2em 0.3em;
+    margin-left:0.2em;
+    text-decoration: none;
+    vertical-align: middle;
+    font-size: 0.7em;
+    font-weight:bold;
+    font-variant:small-caps;
+    /* if IE zoom:1;*/
+    zoom: 1;
 }
 
 h2 a.input {
-	font-size: 0.7em;
+    font-size: 0.7em;
 }
 
 textarea {
@@ -1817,172 +1520,138 @@ textarea.desc {
 }
 
 textarea.textbox {
-	border: 1px solid;
-	padding: 3px;
+    border: 1px solid;
+    padding: 3px;
 }
 
 input.textbox {
-	border: 1px solid;
-	padding: 3px;
+    border: 1px solid;
+    padding: 3px;
 }
 
-input.button { 
-	border: 1px solid;
-	padding: 0px 2px;
-	margin:2px; 
+input.button {
+    border: 1px solid;
+    padding: 0px 2px;
+    margin:2px;
 }
 
-#subnav {
-	float:left;
-	width:99.9%;
-	z-index:400!important;
-}
-
-#subnav ul {
-	font-size:0.9em;
-	margin:1em 0 0;
-	list-style:none;
-}
-
-#subnav ul li {
-	float:left;
-	display:inline;
-	margin:0 0.5em 0.2em 0.2em;
-}
-
-#subnav ul li.MainMenuLinks{
-	background-color: [% color_10 %];
-	padding: 0.2em 0.5em;
-}
-
-#subnav ul li.MainMenuLinks a {
-	color: [% color_7 %];
-}
-
-#subnav ul li.MainMenuLinksCurrentPage {
-	background-color: [% color_13 %];
-	padding: 0.2em 0.5em;
-}
-
-#subnav ul li.MainMenuLinksCurrentPage a {
-	color: [% color_7 %];
-}
-
-span.bottom_page, p.bottom_page{ 
+span.bottom_page, p.bottom_page{
     font-size: 0.8em;
     font-weight:bold;
 }
 
-.top { 
-	float:right;
-	margin:0.5em 1em 1.5em 1em;
+.top {
+    float:right;
+    margin:0.5em 1em 1.5em 1em;
 }
 
-.noborder { 
-	border: none!important;
-}
-
-.divCal {
-    position:absolute;
-    border:1px;
-    z-index:500;
-}
-
-.divCal a{
-    text-decoration:none;
-    width:100%;
-}
-
-.divCal table {
-    font-size:12px;
-    font-family:Tahoma;
-    text-align:center;
-    max-width:500px;
-}
-
-.divCal table tr td.zoneTitre {
-    text-align:center;
-    font-weight:bold;
-}
-
-.divCal .zoneNav {
-    text-align:center;
-    font-size:10px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.divCal .zoneMois {
-    text-align:center;
-    font-weight:bold;
-}
-
-.divCal .zoneAnnee {
-    font-weight:bold;
-    text-align:right;
-    width:100%;
-}
-
-.divCal .nSemaine {
-    text-align:center;
-    font-family:Tahoma;
-    width:30px;
-}
-
-.divCal .tdx .enMois {
-    text-align:center;
-}
-
-.divCal .tdx .aujourdhui {
-    border:2px solid;
-    text-align:center;
-    font-weight:bold;
-}
-
-.divCal .tdxNow {
-    text-align:center;
-    font-weight:bold;
-}
-
-.divCal .tdx:hover .enMois {
-    text-align:center;
+.noborder {
+    border: none!important;
 }
 
 .viewmod {
-	display: none;
-	position: absolute;
-	z-index: 10;
-	background-color: [% color_0 %];
-	border: 1px solid [% color_1 %];
-	padding: 1em;
-	width: 80%;
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background-color: [% color_0 %];
+    border: 1px solid [% color_1 %];
+    padding: 1em;
+    width: 80%;
 }
 
 /* Font family to cover languages as much as possible rather than quality */
 .neutral,
 .neutral option {
-	font-family: arial, sans-serif;
+    font-family: arial, sans-serif;
 }
 
 
 /*top-bar*/
-.top-bar form{
+nav menu form{
     margin:0;
     padding:0;
 }
-.top-bar ul li{
+#sympa-top-bar menu ul li,
+#sympa-top-bar menu ul li a,
+#sympa-top-bar menu ul li a:hover,
+#sympa-nav-bar menu ul li:not(.nolink),
+#sympa-nav-bar menu ul li a,
+#sympa-nav-bar menu ul li a:hover {
     font-family: 'Helvetica Neue', Helvetica, Helvetica, Arial, sans-serif;
     font-size:13px;
-    color:#fff;
+    color:#fff;                 [%~# FIXME:color_7? %]
+}
+[%# Compat. with Foundation 5 ~%]
+.top-bar {
+    padding: 0;
+}
+.top-bar, .top-bar ul {
+    background-color: transparent;
+}
+.is-dropdown-submenu {
+    border: 0;
+}
+[%# Bug with IE (at least 11 or earlier): menu items may be off to bottom. ~%]
+.top-bar menu ul li {
+    vertical-align: top;
 }
 
-.top-bar, .top-bar-section ul li, .top-bar-section li:not(.has-form) a:not(.button){
+[%# Color of submenu icons ~%]
+.drilldown .is-drilldown-submenu-parent > a:after,
+.drilldown.align-left .is-drilldown-submenu-parent > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.drilldown.align-right .is-drilldown-submenu-parent > a:after,
+.drilldown .js-drilldown-back > a:before {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu > li.is-dropdown-submenu-parent > a:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.vertical > li.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.vertical > li.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.dropdown.menu.medium-horizontal > li.is-dropdown-submenu-parent > a:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.medium-vertical > li.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.medium-vertical > li.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.dropdown.menu.large-horizontal > li.is-dropdown-submenu-parent > a:after {
+    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.large-vertical > li.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.dropdown.menu.large-vertical > li.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+.is-dropdown-submenu .is-dropdown-submenu-parent.opens-left > a:after {
+    border-color: transparent rgba(255, 255, 255, 0.4) transparent transparent;
+}
+.is-dropdown-submenu .is-dropdown-submenu-parent.opens-right > a:after {
+    border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
+}
+
+#sympa-top-bar,
+#sympa-top-bar menu ul li,
+#sympa-top-bar menu ul li a:not(.button) {
     background-color: [% color_6 %];
 }
-.top-bar .top-bar-section li:not(.has-form) a:not(.button):hover{
+[%# properly set active list item color when not hovered ~%]
+#sympa-top-bar menu ul li.active > a:not(.button) {
     background-color: [% color_5%];
 }
-.top-bar button{
+#sympa-top-bar menu ul li a:not(.button):hover {
+    background-color: [% color_5%];
+}
+.top-bar button {
     top:0;
     background-color:[% color_7 %];
     color:[% color_6 %];
@@ -1990,115 +1659,123 @@ span.bottom_page, p.bottom_page{
     font-size:13px;
 }
 
-.top-bar-section ul li > a {
-  padding: 0;
-  padding-left: 15px;
-}
-.top-bar ul.right li label {
-    margin-top:0;
-    display:inline;
-    color:[% color_7 %];
-    font-weight:normal;
-}
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
+    /* top-bar */
+    [%# FIXME:seems not used ~%]
+    .top-bar-section ul li > a {
+      padding: 0;
+      padding-left: 15px;
+    }
 
-.top-bar .top-bar-section ul.right li.has-dropdown ul.dropdown li label {
-    display:block;
-    color:[% color_7 %];
-    background-color: transparent;
-    margin:0;
-    padding-top: 0.5rem;
-    padding-bottom: 1rem;
-    padding-left: 10px !important;
-    line-height:1.2;
-}
+    #sympa-top-bar menu ul li > span,
+    #sympa-top-bar menu ul li form fieldset > span {
+        padding: 0 1rem;
+    }
 
-.top-bar .top-bar-section ul.right li.has-dropdown ul.dropdown li input{
-    height:1.5rem;
-    margin: 0;
-    padding-top: 0;
-    padding-bottom: 0;
-    width:15rem;
-}
-
-.top-bar .top-bar-section ul.right li.has-dropdown ul.dropdown li.role{
-    line-height:1rem;
-}
-
-.top-bar .title-area {
-    text-align:right;
-}
-
-.top-bar .dropdown form fieldset {
-    display:block;
-}
-
-/*
-.top-bar form#use-sso fieldset {
-    height: 45px;
-    padding-top: 0.3rem;
-}
-*/
-
-.top-bar form#use-sso fieldset label[for="auth_service_name"] {
-        display: inline-block;
-        line-height: normal;
-        vertical-align: top;
-        max-width: 290px;
-}
-
-.top-bar form#use-sso fieldset select#auth_service_name {
-        max-width: 150px;
+    [%# Compat. with Founation 5 ~%]
+    .top-bar {
+        height: 45px;
+        line-height: 45px;
         padding: 0;
-        color: [% color_5 %];
-        height: 2rem;
+    }
+    .top-bar menu ul li a {
+        line-height: inherit;
+    }
+    [%# Bug: .top-bar-left is always 100% even if in desktop mode. ~%]
+    .top-bar .medium-2 {
+        width: 16.66667%;
+    }
+    [%#
+      Prevent spacing between items of top bar with inline-block rendering.
+      Foundation 5 used list-item so that such spaces were not rendered.
+    ~%]
+    #sympa-top-bar > menu > ul,
+    #sympa-nav-bar > menu > ul {
+        font-size: 0;
+    }
 }
 
-.top-bar form#use-sso fieldset button[name="action_sso_login"] {
-        padding: 0.3rem;
-/*        vertical-align: top;*/
-}
+    [%#
+      Foundation for Sites 6 stacks top-bar-left on top-bar-right by default.
+      To prevent this behavior, rebuilding SCSS is required.
+      As a workaround, make top-bar-left a zero-height block and top-bar-right
+      be overlying.
+      Note: this block is kept global to prevent fluttering in transition to
+      small mode.
+    ~%]
+    #sympa-top-bar .top-bar-left {
+        height: 0;
+        margin: 0;
+        overflow: visible;
+        [%# Show logo in the front ~%]
+        position: relative;
+        z-index: 2;
+    }
+
+/* end top-bar */
 
 /* main top-bar*/
- main .top-bar, main .top-bar .title-area, main .top-bar .active{
+#sympa-nav-bar,
+main .top-bar .active{
     height:30px;
+    line-height: 30px;
 }
- main .top-bar .title-area{
+main .top-bar {
     padding:0;
 }
-main .top-bar-section li.active:not(.has-form) a:not(.button){
+
+[%# Compat. with Foundation 5 ~%]
+#sympa-nav-bar menu ul li a {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+main nav menu ul li.active a:not(.button) {
     line-height:30px;
     background-color: [% color_13 %];
 }
-main .top-bar-section ul li, main .top-bar-section li:not(.has-form) a:not(.button){
+main nav menu ul li,
+main nav menu ul li a:not(.button) {
     background-color: [% color_10%];
     line-height: 30px;
     font-size:0.8rem;
 }
-main .top-bar-section li:not(.has-form) a:not(.button):hover{
+main nav menu ul li a:not(.button):hover {
     background-color: [% color_13%]!important;
 }
 
-main .top-bar-section > ul > .divider, main .top-bar-section > ul > [role="separator"] {
+[%# Divider for vertical menu. ~%]
+nav menu ul .divider,
+nav menu ul [role="separator"] {
+    border-top: solid 1px #1a1a1a;      [%~# FIXME %]
+}
+[%# Divider for top bar. ~%]
+header nav menu > ul > .divider,
+header nav menu > ul > [role="separator"],
+aside nav menu > ul > .divider,
+aside nav menu > ul > [role="separator"] {
     border-right: solid 1px [% color_5%];
 }
-
-main .top-bar-section .has-dropdown > a:after {
-    top: 18px;
-}
-
-main .top-bar-section > ul > .divider, main .top-bar-section > ul > [role="separator"] {
+main nav menu > ul > .divider,
+main nav menu > ul > [role="separator"] {
     border-right: solid 1px [% color_13 %];
     height: 30px;
 }
 
-main .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
+[%# FIXME:is this used? ~%]
+main nav menu .has-dropdown > a:after {
+    top: 18px;
+}
+
+main nav menu ul.menu li:not(.active) > a:not(.button) {
     background-color: [% color_10 %];
 }
-main .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button):hover {
+main nav menu ul.menu li:not(.active) > a:not(.button):hover {
     background-color: [% color_13 %];
 }
 
-main .top-bar-section li.nolink{
+main nav menu ul li.nolink{
     padding: 0 10px;
     color: [% color_3 %];
     background-color: [% color_8 %];
@@ -2170,14 +1847,95 @@ span.fa-stack i.fa-plus-circle {
     color:[% color_15 %];
 }
 
+[%# jQuery minicolors ~%]
+[%# Reassign metrics by Foundation, and apply monospace font. ~%]
+.minicolors-theme-default .minicolors-input {
+    height: 2.4375rem;
+    padding-left: 2.5rem; /* LTR */
+    font-family: 'courier new', monospace, serif;
+}
+[dir=rtl] .minicolors-theme-default .minicolors-input {
+    padding-left: 1px;
+    padding-right: 2.5rem;
+}
+.minicolors-theme-default .minicolors-swatch {
+    top: 0.5rem;
+    left: 0.5rem; /* LTR */
+    height: 1.5rem;
+    width: 1.5rem;
+}
+[dir=rtl] .minicolors-theme-default .minicolors-swatch {
+    right: 0.5rem;
+}
+[%# end jQuery minicolors ~%]
 
-@media screen and (min-width: 0px) and (max-width: 419px) {
+[%# Sympa help & list homepage ~%]
+.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6,
+.doc p, .doc ul, .doc menu, .doc dir, .doc ol, .doc dl, .doc dt, .doc dd {
+    display: block;
+}
+.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6,
+.doc p, .doc ul, .doc menu, .doc dir, .doc ol, .doc dl, .doc dt, .doc dd,
+.doc li {
+    padding: 0;
+}
+.doc p, .doc ul, .doc menu, .doc dir, .doc ol, .doc dl {
+    margin: 1em 0;
+}
+.doc ul, .doc menu, .doc dir, .doc ol {
+    list-style-image: none;
+    list-style-position: outside;
+    padding-left: 40px; /* LTR */
+}
+[dir=rtl] .doc ul, [dir=rtl] .doc menu, [dir=rtl] .doc dir, [dir=rtl] .doc ol {
+    padding-left: 0;
+    padding-right: 40px;
+}
+.doc ul, .doc menu, .doc dir {
+    list-style-type: disc;
+}
+.doc ol {
+    list-style-type: decimal;
+}
+.doc ol ul, .doc ul ol, .doc ul ul, .doc ol ol {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.doc ul ul, .doc ol ul {
+    list-style-type: circle;
+}
+.doc dt {
+    margin: 0;
+}
+.doc dd {
+    margin: 0;
+    margin-left: 40px; /* LTR */
+}
+[dir=rtl] .doc dd {
+    margin-left: 0;
+    margin-right: 40px;
+}
+.doc li {
+    display: list-item;
+    margin: 0;
+}
+
+p.retraitita, span.retraitita {
+    display: block;
+    margin: 1em 0;
+    padding: 1em;
+    border: 1px dashed;
+}
+[%# end Sympa help & list homepage ~%]
+
+
+[%~# 419px %]
+@media screen and (min-width: 0px) and (max-width: 26.125em) {
     h1 {
             font-size: 1.6em;
     }
     h2 {
             font-size: 1.3em;
-            margin-top: 0;
     }
     h3 {
             font-size: 1.1em;
@@ -2195,19 +1953,17 @@ span.fa-stack i.fa-plus-circle {
     }
     .item_list .item .item_content ul.my li{
         display:block;
-    }
-    .item_list .item .item_content ul.my li:nth-child(2){
         padding-left:0;
     }
 }
 
-@media screen and (min-width: 420px) and (max-width: 779px) {
+[%# 420px - 779px ~%]
+@media screen and (min-width: 26.1875em) and (max-width: 48.625em) {
     h1 {
             font-size: 1.6em;
     }
     h2 {
             font-size: 1.3em;
-            margin-top: 0;
     }
     h3 {
             font-size: 1.1em;
@@ -2225,54 +1981,106 @@ span.fa-stack i.fa-plus-circle {
     }
 }
 
-@media only screen and (min-width: 641px){
-    .top-bar-section li:not(.has-form) a:not(.button) {
-      padding: 0 10px;
+[%# 641px ~%]
+@media only screen and (min-width: 40em) {
+    #sympa-top-bar menu ul li a:not(.button) {
+        padding-top: 0;
+        padding-bottom: 0;
     }
-    .top-bar-section ul.dropdown li > span {
-      display: block;
-      padding-left: 10px;
-    }
-    .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button) {
+    #sympa-top-bar menu .menu li:not(.active) > a:not(.button) {
         background-color: [% color_6 %];
     }
-    .top-bar-section .dropdown li:not(.has-form):not(.active) > a:not(.button):hover {
+    #sympa-top-bar menu .menu li:not(.active) > a:not(.button):hover {
         background-color: [% color_5 %];
     }
     main .top-bar{
         background-color:[% color_10 %];
     }
+
+    [%# Compat. with Foundation 5 ~%]
+    .top-bar menu ul.menu li a {
+        white-space: nowrap;
+    }
 }
-@media only screen and (max-width: 640px){
+[%# 640px ~%]
+@media only screen and (max-width: 39.9375em) {
+    /* title bar */
+    .title-bar {
+        height: 45px;
+        line-height: 45px;
+        padding: 0 1rem;
+    }
+    .title-bar .menu-text {
+        font-size: 13px;
+    }
+    .title-bar img {
+      height: 45px;
+    }
+    header .title-bar {
+        background-color: [% color_6 %];
+    }
+    aside .title-bar {
+        background-color: [% color_6 %];
+    }
+    main .title-bar {
+        background-color: [% color_10 %];
+    }
+
+    /* aside menu, mobile version */
+    #sympa-sub-bar,
+    #sympa-sub-bar menu ul li,
+    #sympa-sub-bar menu ul li a:not(.button) {
+        background-color: [% color_6 %];
+    }
+    [%# properly set active list item color when not hovered ~%]
+    #sympa-sub-bar ul li.active > a:not(.button) {
+        background-color: [% color_5%];
+    }
+    #sympa-sub-bar ul li a:not(.button):hover {
+        background-color: [% color_5%];
+    }
+    /* Hide some items. */
+    #sympa-sub-bar menu ul li.nolink {
+      display: none;
+    }
+
     main .top-bar{
         background-color: [% color_10%];
     }
-    .top-bar ul.right li > span {
+    nav menu ul li > span,
+    nav menu ul li form fieldset > span {
       display: block;
       padding-left: 15px;
     }
-    .top-bar ul.right li label {
+    nav menu ul li label {
       padding-left: 10px;
       color:[% color_6%];
       background-color:[% color_7%];
     }
-    .top-bar-section ul li a {
+    nav menu ul li a,
+    nav menu ul li a:hover {
       color: [% color_7%];
     }
     /* Nonexisting item in list of lists. */
-    .top-bar-section ul li.nolink {
+    #sympa-nav-bar menu ul li.nolink {
       display: none;
     }
+
+    [%# Compat. with Foundation 5 ~%]
+    aside.columns {
+        padding: 0;
+    }
 }
-@media only screen and (max-width: 768px){
+[%# 768px ~%]
+@media only screen and (max-width: 47.9375em) {
     table caption {
     display: none;
     }
-    aside menu ul li ul {
+    aside nav menu ul li ul {
     margin-left: 0;
     padding-left: 0;
     }
-    table.listOfItems tr:nth-of-type(1) { 
+    table.listOfItems tr:nth-of-type(1) {
         height:2rem!important;
     }
     .table-wrapper table th, .table-wrapper table td{
@@ -2282,16 +2090,9 @@ span.fa-stack i.fa-plus-circle {
         font-size:1em;
     }
 }
-@media only screen and (max-width: 1025px){
-    .top-bar .title-area img {
-      height: 45px;
-    }
-    .top-bar .title-area {
-        text-align:left;
-    }
-}
 
 a, li {
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+[%# end css.tt2 %]

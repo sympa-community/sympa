@@ -187,7 +187,7 @@ sub initialize_mysql {
             "DBI:mysql:dbname=$mysql_base;host=$mysql_host", $mysql_user,
             $mysql_pass
         )
-        ) {
+    ) {
         print "Can't connect to Database :", $DBI::errstr;
         return 0;
     }

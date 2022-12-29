@@ -1,0 +1,51 @@
+<!-- help_admin-moderate.tt2 -->
+<h2><a name="moderate"></a>[%|helploc%]Moderating messages sent to the list[%END%]</h2>
+<p>
+    [%|helploc%]When a list is moderated, <strong>all messages have to be approved of by one of the moderators before being distributed to the list</strong>. After sending a message to a list, subscribers are automatically notified by email that their message will be moderated. As for moderators, they also receive a notice message from Sympa, which includes the message to moderate.[%END%]
+</p>
+
+<p>
+    [%|helploc%]You can <strong>perform moderating tasks</strong> either <strong>by email</strong>, by answering the messages received from Sympa, or <strong>through the mailing list web interface</strong>. To do that, click on the '<strong>Message</strong>' link in the 'Moderate' submenu: you are brought to a page that displays all messages to be moderated (the most recent messages are on top of page). <strong>To read a message, click on its subject</strong>.[%END%]
+</p>
+
+<p>
+    [%|helploc%]You have <strong>two options</strong>:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>authorize the message distribution</strong> on the list;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>reject the message and notify sender</strong>: when you reject a message, it is better to notify its sender...[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]All moderators can decide to distribute a message or not. However, <strong>the first moderator to process the message will carry the day</strong>. You will be notified by Sympa if you try to process a message that has already been moderated. When there are several moderators, it is <strong>easier to moderate messages from the mailing list web interface</strong>: thus, you will be able to view all messages remaining to be moderated.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]<strong>Whatever the date and time of moderation, the date and time of sending of the message do not change</strong>. Thus, if the distribution of the message is allowed with a lot of delay, it is possible to receive a message dated January 1st on December 31st![%END%]
+</p>
+<p>
+    [%|helploc%]In case the message was rejected with a notice, the subscriber who had sent it is notified by email. You can <a href="admin-editfile.html">customize the message he/she gets</a>.[%END%]
+</p>
+
+<p>
+    [%|helploc%]Checking the '<strong>Reject without notification</strong>' checkbox allows you to prevent the message author from receiving a notification.[%END%]
+</p>
+
+<p>
+    [%|helploc%]Checking the '<strong>Add to blocklist</strong>' checkbox both skip the rejection notification and adds the message author to the list own blocklist. You can manage the blocklist via the '<strong>edit blocklist</strong>' button at the bottom of the page.[%END%]
+</p>
+
+<p>
+    [%|helploc%]If you wish to customize the rejection message that is sent to a message author, you can do so via the '<strong>Manage rejection messages</strong>' button. The message management page will let define a set of rejection messages and define the default one.[%END%]
+</p>
+
+<p>
+    [%|helploc%]<strong>Reminder</strong>: you can <a href="admin-editlist-description.html">add or remove moderators</a> through the list administration module. To do that, from the list information page, click on '<strong>Admin</strong>', on '<strong>Edit list config</strong>', and then on '<strong>List definition</strong>'.[%END%]
+</p>
+<p>
+    [%|helploc%]It is also possible to <strong>process messages after their distribution on the list</strong>; this can be useful when a list is not moderated. If you want to <strong>delete a message</strong>, <a href="arc-search.html">search for it in the online message archive</a> and click on the '<strong>Tag this mail for deletion</strong>' button in the upper right corner of the message. A confirmation message displays; click on 'OK'. The message will be deleted after a few seconds. <strong>Be careful: this operation is irreversible!!! If you delete a message, you will not be able to retrieve it.</strong>[%END%]
+</p>
+
+<!-- end help_admin-moderate.tt2 -->

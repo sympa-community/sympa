@@ -1,9 +1,8 @@
-[%# $Id$ ~%]
+[%# sendssopasswd.tt2 ~%]
 To: [% newuser.email %]
-Subject: [% FILTER qencode %][%|loc(conf.title)%]%1 / your environment[%END%][%END%]
+Subject: [%"%1 / your environment"|loc(conf.title)|qencode%]
 
-[%|loc%]To complete your account setup actions you need to confirm that you have 
-supplied a working email address.  Please follow the link below to complete your account configuration.[%END%]
+[%|loc%]To complete your account setup actions, you need to confirm that you have supplied a working email address. Please follow the link below to complete your account configuration.[%END%]
 
    [% 'sso_login' | url_abs([server.key,'confirmemail',init_email,one_time_ticket]) %]
 

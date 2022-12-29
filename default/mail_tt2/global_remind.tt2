@@ -1,4 +1,5 @@
-Subject: [% FILTER qencode %][%|loc%]Subscription summary[%END%][%END%]
+[%# global_remind.tt2 ~%]
+Subject: [%"Subscription summary"|loc|qencode%]
 X-Sympa-NoWrap: yes
 
 [%|wrap -%]
@@ -10,8 +11,12 @@ X-Sympa-NoWrap: yes
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [% FOREACH l = lists -%]
-[% l %]	[% | mailtourl({subject => "sig ${l} ${user.email}"}) ~%]
-  [% conf.email %]@[% conf.host %]
-[%~ END %]
+[% IF conf.wwsympa_url -%]
+[% l %] [% 'signoff' | url_abs([l],{email => user.email}) %]
+[%- ELSE -%]
+[% l %]	[% "${conf.email}@${domain}" | mailtourl({subject => "sig ${l} ${user.email}"}) %]
+[%- END %]
 [% END -%]
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+[%# end global_remind.tt2 ~%]

@@ -10,6 +10,7 @@ foreach my $pm (sort { lc $a cmp lc $b } @ARGV) {
     next
         unless $pm eq 'Sympa.pm'
         or $pm =~ m{\ASympa/(?:[^/]+/)*[A-Z]\w*[.]pm(?:[.]in)?\z};
+    next if $pm =~ m{\ASympa/CLI/(?:[a-z]\w*/)*[a-z]\w*[.]pm(?:\.in)?\z};
 
     my $fh;
     next unless open $fh, '<', $pm;
@@ -65,7 +66,7 @@ See L<Sympa::Internals::Workflow>.
 
 L<sympa_toc(1)>.
 
-I<Sympa, Mailing List Management Software - Reference Manual>.
-L<https://www.sympa.org/manual/>.
+I<Sympa Administration Manual>.
+L<https://www.sympa.community/manual/>.
 
 =cut

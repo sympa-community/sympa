@@ -1,14 +1,16 @@
 #!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,7 +33,6 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
-use Sympa::Alarm;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
@@ -40,6 +41,7 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Process;
 use Sympa::Spindle::ProcessArchive;
+use Sympa::Spool::Listmaster;
 
 my $process = Sympa::Process->instance;
 $process->init(pidname => 'archived');
@@ -51,7 +53,7 @@ unless (
         \%main::options, 'config|f=s',  'debug|d', 'help|h',
         'foreground|F',  'log_level=s', 'version|v'
     )
-    ) {
+) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($main::options{'help'}) {
@@ -164,7 +166,7 @@ while (not $spindle->{finish}) {
 }
 
 # Purge grouped notifications.
-Sympa::Alarm->instance->flush(purge => 1);
+Sympa::Spool::Listmaster->instance->flush(purge => 1);
 
 ## Free zombie sendmail processes.
 #Sympa::Process->instance->reap_child;
@@ -233,7 +235,7 @@ archived, archived.pl - Mailing List Archiving Daemon for Sympa
 
 =head1 SYNOPSIS
 
-S<B<archived.pl> [ B<--foreground> ] [ B<--debug> ]>
+C<archived.pl> S<[ C<--foreground> ]> S<[ C<--debug> ]>
 
 =head1 DESCRIPTION
 
@@ -244,7 +246,7 @@ later rebuilding of archives.
 
 The HTML conversion is achieved by the means of the B<MHonArc> program.
 
-Archives are accessed via B<wwsympa.fcgi> and B<sympa.pl>,
+Archives are accessed via B<wwsympa.fcgi> and B<sympa_msg.pl>,
 which proposes access control;
 therefore archives should not be located in a public web directory.
 
@@ -256,20 +258,20 @@ options is included below.
 
 =over 5
 
-=item B<-F>, B<--foreground>
+=item C<-F>, C<--foreground>
 
 Do not detach TTY.
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force archived to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Run the program in a debug mode.
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Print this help message.
 
@@ -277,22 +279,31 @@ Print this help message.
 
 =head1 FILES
 
-F<--spooldir--/outgoing/> outgoing Sympa directory.
+F<$SPOOLDIR/outgoing/> outgoing Sympa directory.
 
-F<--defaultdir--/mhonarc-ressources.tt2> template of MHonArc resource file.
+F<$DEFAULTDIR/mhonarc_rc.tt2> template of MHonArc resource file.
+
+=over
+
+=item *
+
+F<mhonarc-ressources.tt2> was replaced with F<mhonarc_rc.tt2>
+on Sympa 6.2.61b.1.
+
+=back
 
 F<--CONFIG--> Sympa configuration file.
 
-F<--piddir--/archived.pid> this file contains the process ID
+F<$PIDDIR/archived.pid> this file contains the process ID
 of F<archived.pl>.
 
 =head1 MORE DOCUMENTATION
 
-The full documentation in HTML and PDF formats can be found in
-L<http://www.sympa.org/manual/>.
+The full documentation in HTML format can be found in
+L<https://www.sympa.community/manual/>.
 
 The mailing lists (with web archives) can be accessed at
-L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+L<https://www.sympa.community/community/lists.html>.
 
 =head1 HISTORY
 
@@ -329,7 +340,7 @@ L<http://www.gnu.org/licenses/fdl.html>.
 =head1 BUGS
 
 Report bugs to Sympa bug tracker.
-See L<http://www.sympa.org/tracking>.
+See L<https://github.com/sympa-community/sympa/issues>.
 
 =head1 SEE ALSO
 

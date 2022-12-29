@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,11 +32,11 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
-use Sympa::Bulk;
 use Conf;
 use Sympa::Log;
+use Sympa::Spool::Outgoing;
+use Sympa::Spool::Topic;
 use Sympa::Tools::Data;
-use Sympa::Topic;
 use Sympa::Tracking;
 
 use base qw(Sympa::Spindle);
@@ -120,6 +123,17 @@ sub _twist {
         $messageid,
         $message->{'size'}
     );
+    $log->db_log(
+        'robot'        => $list->{'domain'},
+        'list'         => $list->{'name'},
+        'action'       => 'DoMessage',
+        'parameters'   => $message->get_id,
+        'target_email' => '',
+        'msg_id'       => $messageid,
+        'status'       => 'success',
+        'error_type'   => '',
+        'user_email'   => $sender
+    );
 
     return 1;
 }
@@ -179,12 +193,11 @@ sub _send_msg {
     unless ($resent_by) {    # Not in ResendArchive spindle.
         # Synchronize list members, required if list uses include sources
         # unless sync_include has been performed recently.
-        if ($list->has_include_data_sources()) {
-            unless (defined $list->on_the_fly_sync_include(use_ttl => 1)) {
-                $log->syslog('notice', 'Unable to synchronize list %s',
-                    $list);
-                #FIXME: Might be better to abort if synchronization failed.
-            }
+        my $delay = $list->{'admin'}{'distribution_ttl'}
+            // $list->{'admin'}{'ttl'};
+        unless (defined $list->sync_include('member', delay => $delay)) {
+            $log->syslog('notice', 'Unable to synchronize list %s', $list);
+            #FIXME: Might be better to abort if synchronization failed.
         }
 
         # Blindly send the message to all users.
@@ -192,7 +205,6 @@ sub _send_msg {
         my $total = $list->get_total('nocache');
         unless ($total and 0 < $total) {
             $log->syslog('info', 'No subscriber in list %s', $list);
-            $list->savestats;
             return 0;
         }
 
@@ -236,7 +248,6 @@ sub _send_msg {
         unless ($available_recipients) {
             $log->syslog('info', 'No subscriber for sending msg in list %s',
                 $list);
-            $list->savestats;
             return 0;
         }
     } else {
@@ -261,8 +272,8 @@ sub _send_msg {
         my @possible_verptabrcpt;
         if (not $resent_by    # Not in ResendArchive spindle.
             and $list->is_there_msg_topic
-            ) {
-            my $topic = Sympa::Topic->load($message);
+        ) {
+            my $topic = Sympa::Spool::Topic->load($message);
             my $topic_list = $topic ? $topic->{topic} : '';
 
             @selected_tabrcpt =
@@ -303,9 +314,7 @@ sub _send_msg {
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @selected_tabrcpt;
             my $bytes   = length $new_message->as_string;
-            $list->{'stats'}->[1] += $numsent;
-            $list->{'stats'}->[2] += $bytes;
-            $list->{'stats'}->[3] += $bytes * $numsent;
+            $list->update_stats(0, $numsent, $bytes, $bytes * $numsent);
         } else {
             $log->syslog(
                 'notice',
@@ -326,9 +335,9 @@ sub _send_msg {
         # Ignore those reception option where mail must not ne sent.
         next
             if $mode eq 'digest'
-                or $mode eq 'digestplain'
-                or $mode eq 'summary'
-                or $mode eq 'nomail';
+            or $mode eq 'digestplain'
+            or $mode eq 'summary'
+            or $mode eq 'nomail';
 
         ## prepare VERP sending.
         if (@verp_selected_tabrcpt) {
@@ -349,9 +358,7 @@ sub _send_msg {
             # Add number and size of messages sent to total in stats file.
             my $numsent = scalar @verp_selected_tabrcpt;
             my $bytes   = length $new_message->as_string;
-            $list->{'stats'}->[1] += $numsent;
-            $list->{'stats'}->[2] += $bytes;
-            $list->{'stats'}->[3] += $bytes * $numsent;
+            $list->update_stats(0, $numsent, $bytes, $bytes * $numsent);
         } else {
             $log->syslog('notice',
                 'No VERP subscribers left to distribute message to list %s',
@@ -373,7 +380,6 @@ sub _send_msg {
             );
         }
     }
-    $list->savestats;
     return $numstored;
 }
 
@@ -397,21 +403,22 @@ sub _mail_message {
     # Shelve DMARC protection, unless anonymization feature is enabled.
     $message->{shelved}{dmarc_protect} = 1
         if $list->{'admin'}{'dmarc_protection'}
-            and $list->{'admin'}{'dmarc_protection'}{'mode'}
-            and not $list->{'admin'}{'anonymous_sender'};
+        and $list->{'admin'}{'dmarc_protection'}{'mode'}
+        and not $list->{'admin'}{'anonymous_sender'};
 
-    # Shelve personalization.
-    $message->{shelved}{merge} = 1
-        if Sympa::Tools::Data::smart_eq($list->{'admin'}{'merge_feature'},
-        'on');
+    # Shelve personalization if not yet shelved.
+    # Note that only 'footer' mode will be allowed unless otherwise requested.
+    $message->shelve_personalization(type => 'mail')
+        unless $message->{shelved}{merge};
+
     # Shelve re-encryption with S/MIME.
     $message->{shelved}{smime_encrypt} = 1
         if $message->{'smime_crypted'};
 
     # Overwrite original envelope sender.  It is REQUIRED for delivery.
-    $message->{envelope_sender} = $list->get_list_address('return_path');
+    $message->{envelope_sender} = Sympa::get_address($list, 'return_path');
 
-    return Sympa::Bulk->new->store($message, $rcpt, tag => $tag)
+    return Sympa::Spool::Outgoing->new->store($message, $rcpt, tag => $tag)
         || undef;
 }
 
@@ -426,14 +433,53 @@ Sympa::Spindle::ToList - Process to distribute messages to list members
 
 =head1 DESCRIPTION
 
-TBD.
+This class executes the last stage of message transformation to be sent
+through the list.
+Transformation processes by this class are done in the following order:
+
+=over
+
+=item *
+
+Classifies recipients for whom message is delivered by each reception mode,
+filters recipients by topics (see also L<Sympa::Spool::Topic>), and choose
+message tracking modes if necessary.
+
+=item *
+
+Transforms message by each reception mode.
+
+=item *
+
+Enables DMARC protection (according to
+L<C<dmarc_protection>|list_config(5)/dmarc_protection>
+list configuration parameter),
+message personalization (according to
+L<C<merge_feature>|list_config(5)/merge_feature>
+list configuration parameter) and/or
+re-encryption by S/MIME (if original message was encrypted).
+
+=item *
+
+Alters envelope sender of the message to I<list>C<-owner> address.
+
+=back
+
+Then stores message into outgoing spool (see L<Sympa::Spool::Outgoing>)
+with classified packets of recipients.
+
+This cass updates statistics information of the list (with digest delivery,
+L<Sympa::Spindle::ToOutgoing> will update it).
+
 
 =head1 SEE ALSO
 
-L<Sympa::Bulk>,
+L<Sympa::Internals::Workflow>.
+
 L<Sympa::Message>,
 L<Sympa::Spindle>, L<Sympa::Spindle::DistributeMessage>,
-L<Sympa::Topic>, L<Sympa::Tracking>.
+L<Sympa::Spool::Outgoing>,
+L<Sympa::Spool::Topic>, L<Sympa::Tracking>.
 
 =head1 HISTORY
 

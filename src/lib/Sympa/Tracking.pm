@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -76,7 +79,7 @@ sub _create_spool {
                     user  => Sympa::Constants::USER(),
                     group => Sympa::Constants::GROUP()
                 )
-                ) {
+            ) {
                 die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
             }
         }
@@ -112,7 +115,8 @@ sub get_recipients_status {
     unless (
         $sdm
         and $sth = $sdm->do_prepared_query(
-            q{SELECT recipient_notification AS recipient,
+            q{SELECT message_id_notification AS message_id,
+                     recipient_notification AS recipient,
                      reception_option_notification AS reception_option,
                      status_notification AS status,
                      arrival_date_notification AS arrival_date,
@@ -127,7 +131,7 @@ sub get_recipients_status {
             $msgid,
             '<' . $msgid . '>'
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to retrieve tracking information for message %s, list %s@%s',
@@ -144,6 +148,51 @@ sub get_recipients_status {
     $sth->finish;
 
     return \@pk_notifs;
+}
+
+sub db_fetch {
+    my $self    = shift;
+    my %options = @_;
+
+    my $list = $self->{context};
+
+    my $recipient = $options{recipient};
+    my $envid     = $options{envid};
+    return undef unless $recipient and $envid;
+
+    my $sth;
+    my $sdm = Sympa::DatabaseManager->instance;
+
+    unless (
+        $sdm
+        and $sth = $sdm->do_prepared_query(
+            q{SELECT message_id_notification AS message_id,
+                     recipient_notification AS recipient,
+                     reception_option_notification AS reception_option,
+                     status_notification AS status,
+                     arrival_date_notification AS arrival_date,
+                     arrival_epoch_notification AS arrival_epoch,
+                     type_notification AS "type",
+                     pk_notification AS envid
+              FROM notification_table
+              WHERE list_notification = ? AND robot_notification = ? AND
+                    recipient_notification = ? AND pk_notification = ?},
+            $list->{'name'}, $list->{'domain'},
+            $recipient,      $envid
+        )
+    ) {
+        $log->syslog(
+            'err',
+            'Unable to retrieve tracking information for message %s, list %s',
+            $recipient,
+            $list
+        );
+        return undef;
+    }
+    my $pk_notif = $sth->fetchrow_hashref;
+    $sth->finish;
+
+    return $pk_notif;
 }
 
 # Old name: Sympa::Tracking::db_init_notification_table()
@@ -181,7 +230,7 @@ sub register {
                   VALUES (?, ?, ?, ?, ?, ?)},
                 $msgid, $email, $reception_option, $listname, $robot, $time
             )
-            ) {
+        ) {
             $log->syslog(
                 'err',
                 'Unable to prepare notification table for user %s, message %s, list %s@%s',
@@ -215,8 +264,8 @@ sub store {
         unless (_db_insert_notification($rcpt, %options)) {
             return undef;
         }
-        $filename = sprintf '%s_%08s',
-            Sympa::Tools::Text::escape_chars($rcpt),
+        $filename = sprintf '%s__%08s',
+            Sympa::Tools::Text::encode_filesystem_safe($rcpt),
             $options{envid};
     } else {
         unless (
@@ -226,7 +275,7 @@ sub store {
                 $rcpt, $self->{context});
             return undef;
         }
-        $filename = Sympa::Tools::Text::escape_chars($rcpt);
+        $filename = Sympa::Tools::Text::encode_filesystem_safe($rcpt);
     }
     unless (open $ofh, '>', $bounce_dir . '/' . $filename) {
         $log->syslog('err', 'Unable to write %s/%s', $bounce_dir, $filename);
@@ -301,7 +350,7 @@ sub _db_insert_notification {
             $arrival_epoch,
             $rcpt, $notification_id
         )
-        ) {
+    ) {
         $log->syslog('err', 'Unable to update notification <%s> in database',
             $notification_id);
         return undef;
@@ -358,7 +407,7 @@ sub _update_subscriber_bounce_history {
 #   find_notification_id_by_message
 ##############################################
 # return the tracking_id find by recipeint,message-id,listname and robot
-# tracking_id areinitialized by sympa.pl by Sympa::List::distribute_msg
+# tracking_id are initialized by sympa_msg.pl by Sympa::List::distribute_msg
 #
 # used by bulk.pl in order to set return_path when tracking is required.
 #
@@ -392,7 +441,7 @@ sub find_notification_id_by_message {
             $msgid,
             '<' . $msgid . '>'
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to retrieve the tracking information for user %s, message %s, list %s@%s',
@@ -419,6 +468,28 @@ sub find_notification_id_by_message {
         # we should return undef...
     }
     return $pk_notifications[0];
+}
+
+sub remove_message_by_email {
+    $log->syslog('debug2', '(%s, %s)', @_);
+    my $self  = shift;
+    my $email = shift;
+
+    $email = Sympa::Tools::Text::canonic_email($email);
+    return undef unless $email;
+
+    my $bounce_dir    = $self->{directory};
+    my $escaped_email = Sympa::Tools::Text::encode_filesystem_safe($email);
+    my $ret           = unlink sprintf('%s/%s', $bounce_dir, $escaped_email);
+
+    # Remove HTML view.
+    Sympa::Tools::File::remove_dir(
+        join('/',
+            $Conf::Conf{'viewmail_dir'}, 'bounce',
+            $self->{context}->get_id,    $escaped_email)
+    );
+
+    return $ret;
 }
 
 ##############################################
@@ -456,7 +527,7 @@ sub remove_message_by_id {
             $msgid,
             $listname, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to search tracking information for message %s, list %s@%s',
@@ -469,9 +540,9 @@ sub remove_message_by_id {
     while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
         my $bounce_dir = $self->{directory};
         my $escaped_email =
-            Sympa::Tools::Text::escape_chars($info->{'recipient'});
+            Sympa::Tools::Text::encode_filesystem_safe($info->{'recipient'});
         my $envid = $info->{'envid'};
-        unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
+        unlink sprintf('%s/%s__%08s', $bounce_dir, $escaped_email, $envid);
     }
     $sth->finish;
 
@@ -484,7 +555,7 @@ sub remove_message_by_id {
             $msgid,
             $listname, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to remove the tracking information for message %s, list %s@%s',
@@ -535,7 +606,7 @@ sub remove_message_by_period {
             $limit,
             $listname, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to search tracking information for older than %s days for list %s@%s',
@@ -548,9 +619,9 @@ sub remove_message_by_period {
     while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
         my $bounce_dir = $self->{directory};
         my $escaped_email =
-            Sympa::Tools::Text::escape_chars($info->{'recipient'});
+            Sympa::Tools::Text::encode_filesystem_safe($info->{'recipient'});
         my $envid = $info->{'envid'};
-        unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
+        unlink sprintf('%s/%s__%08s', $bounce_dir, $escaped_email, $envid);
     }
     $sth->finish;
 
@@ -563,7 +634,7 @@ sub remove_message_by_period {
             $limit,
             $listname, $robot
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to remove the tracking information older than %s days for list %s@%s',
@@ -625,6 +696,10 @@ Returns:
 
 New L<Sympa::Tracking> object or C<undef>.
 If unrecoverable error occurred, this method will die.
+
+=item db_fetch ( recipient =E<gt> $email, envid =E<gt> $envid )
+
+TBD.
 
 =item get_recipients_status
 
@@ -691,6 +766,11 @@ True value if storing succeed.  Otherwise false.
 =item find_notification_id_by_message
 
 TBD.
+
+=item remove_message_by_email
+
+TBD.
+Introduced on Sympa 6.2.19b.
 
 =item remove_message_by_id
 

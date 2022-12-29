@@ -8,23 +8,23 @@ use warnings;
 use English qw(-no_match_vars);
 use Test::More;
 
-eval {
-    require Test::Compile;
-    Test::Compile->import();
-};
-if ($EVAL_ERROR) {
+BEGIN { eval 'use Test::Compile::Internal'; }
+unless ($Test::Compile::Internal::VERSION) {
     my $msg = 'Test::Compile required';
     plan(skip_all => $msg);
-}
-
-#$ENV{PERL5LIB} = $ENV{PERL5LIB} ? "$ENV{PERL5LIB}:src/lib" : "src/lib";
-
-all_pl_files_ok(
-	'important_changes.pl',
-	##<po/*.pl>,
+} else {
+    my $test  = Test::Compile::Internal->new;
+    my @files = (
         <src/sbin/*.pl>,
-        <src/bin/*.pl>,
         <src/libexec/*.pl>,
         'src/cgi/wwsympa.fcgi',
         'src/cgi/sympa_soap_server.fcgi',
-);
+    );
+    $test->plan(tests => scalar @files);
+    foreach my $file (@files) {
+        my $ok = $test->pl_file_compiles($file);
+        $test->ok($ok, $file);
+        $test->diag("$file does not compile") unless $ok;
+    }
+}
+

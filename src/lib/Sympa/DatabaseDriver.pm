@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,10 +32,10 @@ use warnings;
 use base qw(Sympa::Database);
 
 use constant required_modules    => [];
-use constant required_parameters => [qw(db_host db_name db_user)];
+use constant required_parameters => [qw(db_name)];
 use constant optional_modules    => [];
 use constant optional_parameters =>
-    [qw(db_port db_passwd db_timeout db_options db_env)];
+    [qw(db_host db_port db_user db_passwd db_options db_env)];
 
 sub translate_type {
     return $_[1];
@@ -70,6 +72,13 @@ sub delete_field {
     return $self->drop_field($table, $field);
 }
 
+sub md5_func {
+    shift;
+
+    return sprintf q{MD5(CONCAT(%s))}, join ', ',
+        map { sprintf q{COALESCE(%s, '')}, $_ } @_;
+}
+
 1;
 __END__
 
@@ -103,7 +112,13 @@ By default, no packages are required.
 
 I<Overridable>.
 Returns an arrayref including names of required (not optional) parameters.
-By default, returns C<['db_host', 'db_name', 'db_user']>.
+By default, returns C<['db_name']>.
+
+I<Note>:
+On Sympa prior to 6.2.71b, it by default returned
+C<['db_name', 'db_user']>.
+On Sympa prior to 6.2.37b.2, it by default returned
+C<['db_host', 'db_name', 'db_user']>.
 
 =item optional_modules ( )
 
@@ -163,6 +178,8 @@ This method was deprecated.
 
 =item get_formatted_date ( { mode => $mode, target => $target } )
 
+B<Deprecated> as of Sympa 6.2.25b.3.
+
 I<Mandatory for SQL driver>.
 Returns a character string corresponding to the expression to use in a query
 involving a date.
@@ -219,6 +236,32 @@ The name of the table to add
 Returns:
 
 True if the field is an auto-increment field, false otherwise
+
+=item is_sufficient_field_type ( $required, $actual )
+
+I<Overridable>, I<only for SQL driver>.
+Checks if database field type is sufficient.
+
+Parameters:
+
+=over
+
+=item $required
+
+Required field type.
+
+=item $actual
+
+Actual field type.
+
+=back
+
+Returns:
+
+The true value if actual field type is appropriate AND size is equal to or
+greater than required size.
+
+This method was added on Sympa 6.2.67b.1.
 
 =item set_autoinc ( { table => $table, field => $field } )
 
@@ -616,6 +659,14 @@ value used by L</do_prepared_query>().
 Overridden by inherited classes.
 
 See L</AS_DOUBLE> for more details.
+
+=item md5_func ( $expression, ... )
+
+I<Required>.
+Given expressions, returns a SQL expression calculating MD5 digest of
+concatenated those expressions.  Among them, NULL values should be ignored
+and numeric values should be converted to textual type before concatenation.
+Value of the SQL expression should be lowercase 32 hexadigits.
 
 =back
 

@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2020, 2022 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,7 +34,6 @@ use Sympa;
 use Sympa::Log;
 use Sympa::Message::Template;
 use Sympa::Spool::Moderation;
-use Sympa::Ticket;
 
 use base qw(Sympa::Spindle);
 
@@ -93,20 +94,9 @@ sub _twist {
         Time::HiRes::time() - $self->{start_time}
     );
 
-    # Do not report to the sender if the message was tagged as a spam.
-    unless ($self->{quiet} or $message->{'spam_status'} eq 'spam') {
-        # Ensure 1 second elapsed since last message.
-        Sympa::send_file(
-            $list,
-            'message_report',
-            $sender,
-            {   type           => 'success',              # Comapt. <=6.2.12.
-                entry          => 'moderating_message',
-                auto_submitted => 'auto-replied'
-            },
-            date => time + 1
-        );
-    }
+    Sympa::send_dsn($list, $message, {}, '4.3.0')
+        unless $self->{quiet}
+        or $message->{'spam_status'} eq 'spam';
     return 1;
 }
 
@@ -120,37 +110,27 @@ sub _send_confirm_to_editor {
     my $list = $message->{context};
     my $spool_mod = Sympa::Spool::Moderation->new(context => $list);
 
-    my $modkey;
     # Keeps a copy of the message.
-    #XXXif ($method eq 'md5') {
     # Move message to mod spool.
-    # If crypted, store the crypted form of the message (keep decrypted
-    # form for HTML view).
-    if ($modkey = $spool_mod->store($message, original => 1)) {
-        $spool_mod->html_store($message, $modkey);
-    }
+    # If crypted, store the crypted form of the message.
+    my $modkey = $spool_mod->store($message, original => 1);
     unless ($modkey) {
         $log->syslog('err', 'Cannot create moderation key of %s for %s',
             $message, $list);
         return undef;
     }
-    #XXX}
 
     @rcpt = $list->get_admins_email('receptive_editor');
     @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
-    $log->syslog('notice',
-        'Warning: No owner and editor defined at all in list %s', $list)
-        unless @rcpt;
-
-    # Did we find a recipient?
     unless (@rcpt) {
+        # Since message has already been stored into moderation spool,
+        # notification to editors should not fail. Fallback to listmasters.
         $log->syslog(
-            'err',
-            'Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',
-            $message,
+            'notice',
+            'No editor and owner defined at all in list %s; notification is sent to listmasters',
             $list
         );
-        return undef;
+        @rcpt = Sympa::get_listmasters_email($list);
     }
 
     my $param = {
@@ -185,33 +165,12 @@ sub _send_confirm_to_editor {
         }
         $param->{'msg'} = $new_message;
 
-        # create a one time ticket that will be used as un md5 URL credential
-        unless (
-            $param->{'one_time_ticket'} = Sympa::Ticket::create(
-                $recipient,                    $list->{'domain'},
-                'modindex/' . $list->{'name'}, 'mail'
-            )
-            ) {
-            $log->syslog(
-                'notice',
-                'Unable to create one_time_ticket for %s, service modindex/%s',
-                $recipient,
-                $list->{'name'}
-            );
-        } else {
-            $log->syslog(
-                'debug',
-                'Ticket %s created',
-                $param->{'one_time_ticket'}
-            );
-        }
-
         # Ensure 1 second elapsed since last message.
         unless (
             Sympa::send_file(
                 $list, 'moderate', $recipient, $param, date => time + 1
             )
-            ) {
+        ) {
             return undef;
         }
     }

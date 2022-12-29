@@ -1,174 +1,72 @@
-<!-- $Id$ -->
+<!-- error.tt2 -->
+<div id="ErrorMsg" class="reveal medium" data-reveal
+     aria-labelledby="[%|loc%]Error[%END%]" aria-hidden="true" role="dialog">
+    <div class="alert-box alert radius">
+        <i class="fi-x"></i>
 
-<div id="ErrorBlock"></div>
-<div id="ErrorMsg">
-<div class="alert-box alert radius">
-<i class="fi-x"></i>
-[%###################-%]
-[%#### INTERN  ERROR -%]
-[%###################-%]
-[% FOREACH i_err = intern_errors %]
-  [%|loc(i_err.action)%]INTERNAL SERVER ERROR (%1)[%END-%] - 
-  [% IF i_err.msg == 'month_not_found' %][%|loc(i_err.month)%]Unable to find month '%1'[%END%]
-  [% ELSIF i_err.msg == 'inaccessible_archive' %][%|loc(i_err.year_month)%]Archives from %1 are not accessible[%END%]
-  [% ELSIF i_err.msg == 'unable_to_load_list_of_topics' %][%|loc%]Unable to load list topics.[%END%]
-  [% ELSIF i_err.msg == 'unable_to_load_create_list_templates' %][%|loc%]Unable to load create_list templates.[%END%]
-  [% ELSIF i_err.msg == 'sync_include_failed' %][%|loc%]Failed to include members[%END%] 
-  [% ELSIF i_err.msg == 'sync_include_admin_failed' %][%|loc%]Failed to include list admins[%END%] 
-  [% ELSIF i_err.msg == 'no_owner_defined' %][%|loc%]No owner is defined for the list[%END%] 
-  [% ELSIF i_err.msg == 'exportation_failed' %][%|loc(i_err.listname)%]The exportation failed for list '%1'[%END%] 
-  [% ELSIF i_err.msg == 'cannot_unzip' %][%|loc(name)%]Cannot unzip file '%1'.[%END%] 
-  [% ELSIF i_err.msg == 'auth_msg_failed' %][%|loc(i_err.key)%]Unable to access the message authenticated with key %1[%END%]
-  [% ELSIF i_err.msg == 'no_identified_user' %][%|loc%]Failed to get your email address from the authentication service.[%END%]
-  [% ELSIF i_err.msg == 'err_404' %][%|loc(i_err.key)%]File not found.[%END%]
-  [% ELSIF i_err.msg == 'db_error' %][%|loc%]Database error.[%END%]
-  [% ELSIF i_err.msg == 'db_update_failed' %][%|loc(i_err.key)%]Failed to update database.[%END%]
-  [% ELSIF i_err.msg == 'file_update_failed' %][%|loc(i_err.key)%]Failed to update a file.[%END%]
-  [% ELSIF i_err.msg == 'create_list' %][%|loc(i_err.listname)%]Failed creating list '%1'. The list might already exist or listname might include forbidden characters.[%END%]
-  [% ELSIF i_err.msg == 'unable_to_rename_list' %][%|loc(i_err.listname,i_err.new_listname)%]Unable to rename list '%1' to '%2'.[%END%]
+        [%###################-%]
+        [%#### INTERN    ERROR -%]
+        [%###################-%]
+        [% FOREACH i_err = intern_errors %]
+            [%|loc(i_err.action)%]INTERNAL SERVER ERROR (%1)[%END-%] -
+            [% PROCESS report.tt2
+                 report_type='intern'
+                 report_entry=i_err.msg
+                 report_param=i_err
+            %]
+            </br>
+        [% END %]
 
-[% END %]
-<br />
-	
-[% END %]
+        [%###################-%]
+        [%#### USER    ERROR     -%]
+        [%###################-%]
+        [% FOREACH u_err = user_errors %]
+            [%|loc(u_err.action)%]ERROR (%1) [%END-%] -
 
-[%###################-%]
-[%#### SYSTEM  ERROR -%]
-[%###################-%]
-[% FOREACH s_err = system_errors %]
-  [%|loc(s_err.action)%]SYSTEM ERROR (%1)[%END-%]   
-  [% IF s_err.msg == 'a' %][% END %]
-  <br />
-[% END %]
+            [% error_msg = BLOCK ~%]
+                [% PROCESS report.tt2
+                     report_type  = 'user'
+                     report_entry = u_err.msg
+                     report_param = u_err
+                %]
+            [%~ END ~%]
+            [% IF error_msg.match('\S') ~%]
+                [% error_msg %]
+            [%~ ELSE ~%]
+                [% TRY ~%]
+                    [% INCLUDE "${u_err.msg}" %]
+                [%~ CATCH ~%]
+                    [% u_err.msg %]
+                [%~ END %]
+            [%~ END %]
+            <br />
+        [% END %]
 
-[%###################-%]
-[%#### USER  ERROR   -%]
-[%###################-%]
-[% FOREACH u_err = user_errors %]
-  [%|loc(u_err.action)%]ERROR (%1) [%END-%] -    
-  [% IF u_err.msg == 'wrong_param' %][%|loc()%]Wrong parameters[%END%]
-  [% ELSIF u_err.msg == 'unknown_action' %][%|loc()%]Unknown action[%END%]
-  [% ELSIF u_err.msg == 'syntax_errors' %][%|loc(u_err.params)%]Syntax errors with the following parameters: %1[%END%]
-  [% ELSIF u_err.msg == 'authorization_reject' %][%|loc()%]Authorization rejected. Maybe you forgot to log in?[%END%]
-  [% ELSIF u_err.msg == 'unknown_list' %][%|loc(u_err.list)%]%1: unknown list[%END%]
-  [% ELSIF u_err.msg == 'unknown_robot' %][%|loc(u_err.new_robot)%]%1: unknown robot[%END%]
-  [% ELSIF u_err.msg == 'unknown_family' %][%|loc(u_err.family)%]%1: unknown family[%END%]
-  [% ELSIF u_err.msg == 'already_login' %][%|loc(u_err.email)%]You are already logged in as %1[%END%]
-  [% ELSIF u_err.msg == 'passwd_reminder_not_allowed' %][%|loc%]You can not get a password reminder; probably because your password is managed outside Sympa (Single Sign-On system or LDAP directory).[%END%]
-  [% ELSIF u_err.msg == 'no_email' %][%|loc%]Please provide email address[%END%]
-  [% ELSIF u_err.msg == 'missing_arg' %][%|loc(u_err.argument)%]Missing argument %1[%END%]
-  [% ELSIF u_err.msg == 'missing_post_source' %][%|loc()%]You didn't define the web page you want to use to create your newsletter. Please specify either an URL or a file to upload.[%END%]
-  [% ELSIF u_err.msg == 'two_post_sources_defined' %][%|loc()%]You specified both an URL and a file to upload. Sympa can't choose which one to send. Please fill the form with one of them only. A web page OR a file to upload.[%END%]
-  [% ELSIF u_err.msg == 'unable_to_parse' %][%|loc()%]You specified both an URL and a file to upload. Sympa can't choose which one to send. Please fill the form with one of them only. A web page OR a file to upload.[%END%]
-  [% ELSIF u_err.msg == 'wrong_value' %][%|loc(u_err.argument)%]Wrong value for parameter %1[%END%]
-  [% ELSIF u_err.msg == 'no_user' %][%|loc%]You need to login[%END%]
-  [% ELSIF u_err.msg == 'incorrect_email' %][%|loc(u_err.email)%]Address "%1" is incorrect[%END%]
-  [% ELSIF u_err.msg == 'incorrect_passwd' %][%|loc%]Provided password is incorrect[%END%]
-  [% ELSIF u_err.msg == 'init_passwd' %][%|loc%]You did not choose a password, request a reminder of the initial password[%END%]
-  [% ELSIF u_err.msg == 'ldap_user' %][%|loc%]Your password is stored in an LDAP directory, therefore Sympa cannot post you a reminder[%END%]
-  [% ELSIF u_err.msg == 'nb_days_to_much' %][%|loc(u_err.nb_days)%]The period is too long (%1 days)[%END%]
-  [% ELSIF u_err.msg == 'no_subscriber' %][%|loc%]List has no subscribers[%END%]
-  [% ELSIF u_err.msg == 'no_page' %][%|loc(u_err.page)%]No page %1[%END%]
-  [% ELSIF u_err.msg == 'no_filter' %][%|loc%]Missing filter[%END%]
-  [% ELSIF u_err.msg == 'user_not_subscriber' ~%]
-    [%|loc(u_err.email)%]Not subscribed: %1[%END%]
-  [% ELSIF u_err.msg == 'not_subscriber' ~%]
-    [%|loc(u_err.list)%]You are not subscribed to list %1[%END%]
-  [% ELSIF u_err.msg == 'custom_attribute' %][%|loc%]Check the additional information[%END%]
-  [% ELSIF u_err.msg == 'not_available_reception_mode' %][%|loc(u_err.reception_mode)%]%1 is not an available reception mode[%END%]
-  [% ELSIF u_err.msg == 'file_not_editable' %][%|loc(u_err.file)%]%1: file not editable[%END%]
-  [% ELSIF u_err.msg == 'already_subscriber' %][%|loc(u_err.list)%]You are already subscribed to the list %1[%END%]
-  [% ELSIF u_err.msg == 'user_already_subscriber' %][%|loc(u_err.email,u_err.list)%]%1 is already subscribed to the list %2[%END%] 
-  [% ELSIF u_err.msg == 'max_list_members_exceeded' %][%|loc(u_err.sub,u_err.list)%]Unable to add user %1 in list %2: [%END%][%|loc(u_err.max_list_members)%]Attempt to exceed the max number of members (%1) for this list[%END%]
-  [% ELSIF u_err.msg == 'no_passwd' %][%|loc%]Please provide your password[%END%]
-  [% ELSIF u_err.msg == 'diff_passwd' %][%|loc%]The passwords you typed do not match[%END%]
-  [% ELSIF u_err.msg == 'passwd_validation' %][%|loc(u_err.reason)%]The password you typed does not match this sites standards of strength: %1. Please pick a stronger password.[%END%]
-  [% ELSIF u_err.msg == 'wrong_input_path' %][%|loc(u_err.tpl)%]Provided path is incorrect for template '%1'[%END%]
-  [% ELSIF u_err.msg == 'cannot_open_file' %][%|loc(u_err.path)%]Cannot open file '%1'[%END%]
-  [% ELSIF u_err.msg == 'listname_needed' %][%|loc%]You need to provide list name[%END%]
-  [% ELSIF u_err.msg == 'already_confirmed' %][%|loc%]Failed to get the held message; it has probably been confirmed[%END%]
-  [% ELSIF u_err.msg == 'already_moderated' %][%|loc%]Failed to moderate a message; it was probably moderated by another moderator[%END%]
-  [% ELSIF u_err.msg == 'msg_topic_missing' %][%|loc%]Tagging message is required for this list[%END%]
-  [% ELSIF u_err.msg == 'empty_archives' %][%|loc%]Archives are empty for this list[%END%]
-  [% ELSIF u_err.msg == 'didnt_change_anything' %][%|loc%]You did not select an action to perform[%END%]
-  [% ELSIF u_err.msg == 'no_bounce_user' %][%|loc(u_err.email)%]No bounce for user  %1[%END%]
-  [% ELSIF u_err.msg == 'no_bounce_subscriber' %][%|loc%]List has no bouncing subscribers[%END%]
-  [% ELSIF u_err.msg == 'no_parameter_edited' %][%|loc%]No parameter was edited[%END%]
-  [% ELSIF u_err.msg == 'config_changed' %][%|loc(u_err.email)%]Config file has been modified by %1. Cannot apply your changes[%END%]
-  [% ELSIF u_err.msg == 'topic_other' %][%|loc%]Topic "other" is a reserved word[%END%]
-  [% ELSIF u_err.msg == 'mandatory_parameter' %][%|loc(u_err.p_name)%]Parameter '%1' is mandatory. Ignoring deletion.[%END%]
-  [% ELSIF u_err.msg == 'p_family_controlled' %][%|loc(u_err.param)%]Parameter '%1' must have values[%END%]
-  [% ELSIF u_err.msg == 'p_family_wrong' %][%|loc(u_err.param,u_err.val)%]Parameter '%1' has got wrong value: '%2'[%END%]
-  [% ELSIF u_err.msg == 'already_closed' %][%|loc(u_err.listname)%]The list '%1' is already closed[%END%]
-  [% ELSIF u_err.msg == 'not_closed' %][%|loc(u_err.listname)%]The list '%1' is not closed[%END%]
-  [% ELSIF u_err.msg == 'incorrect_listname' %][%|loc(u_err.bad_listname)%]'%1': bad listname[%END%]
-  [% ELSIF u_err.msg == 'list_already_exists' %][%|loc(u_err.new_listname)%]'%1' list already exists[%END%]
-  [% ELSIF u_err.msg == 'listname_matches_aliases' %][%|loc(u_err.new_listname)%]Incorrect listname '%1': matches one of service aliases[%END%]
-  [% ELSIF u_err.msg == 'failed_to_install_aliases' %][%|loc(u_err.listname)%]Failed to remove list aliases for list %1[%END%] 
-  [% ELSIF u_err.msg == 'no_such_document' %][%|loc(u_err.path)%]%1: No such file or directory[%END%] 
-  [% ELSIF u_err.msg == 'empty_document' %] [%|loc(u_err.path)%]Unable to read %1: empty document[%END%]
-  [% ELSIF u_err.msg == 'no_shared' %] [%|loc%]There is no shared documents[%END%]
-  [% ELSIF u_err.msg == 'shared_empty' %] [%|loc%]The shared document space is empty[%END%]
-  [% ELSIF u_err.msg == 'cannot_describe_shared_directory'%][%|loc%]The shared directory cannot have any description[%END%]
-  [% ELSIF u_err.msg == 'no_description' %] [%|loc%]No description specified[%END%]
-  [% ELSIF u_err.msg == 'no_doc_to_describe' %] [%|loc(u_err.path)%]Unable to describe, the document '%1' does not exist[%END%]
-  [% ELSIF u_err.msg == 'synchro_failed' %][%|loc%]Data has changed on disk. Cannot apply your changes[%END%] 
-  [% ELSIF u_err.msg == 'incorrect_name' %][%|loc(u_err.name)%]%1: incorrect name[%END%][%IF u_err.reason%][%|loc%]:[%END%] [% u_err.reason %][%END%]
-  [% ELSIF u_err.msg == 'no_content' %][%|loc%]Failed: your content is empty[%END%]  
-  [% ELSIF u_err.msg == 'cannot_overwrite' %] [%|loc(u_err.path)%]Cannot overwrite file %1:[%END%] [% u_err.reason %]
-  [% ELSIF u_err.msg == 'doc_already_a_dir' %] [%|loc(u_err.path)%]A directory named '%1' already exists:[%END%] [% u_err.reason %]
-  [% ELSIF u_err.msg == 'doc_already_exist' %] [%|loc(u_err.name)%]This is an already existing document: '%1'[%END%]
-  [% ELSIF u_err.msg == 'no_name' %][%|loc%]No name specified[%END%] 
-  [% ELSIF u_err.msg == 'shared_full' %][%|loc%]The document repository exceed disk quota.[%END%]
-  [% ELSIF u_err.msg == 'cannot_upload' %] [%|loc(u_err.path)%]Cannot upload file %1:[%END%] [% u_err.reason %]
-  [% ELSIF u_err.msg == 'index_html' %][%|loc(u_err.dir)%]You're not authorized to upload an INDEX.HTML in %1[%END%] 
-  [% ELSIF u_err.msg == 'no_uploaded_file' %][%|loc%]The upload failed, try it again[%END%] 
-  [% ELSIF u_err.msg == 'directory_no_copied' %][%|loc(u_err.name,u_err.reason)%]Directory %1 and its contents could not be copied: %2[%END%]
-  [% ELSIF u_err.msg == 'file_no_copied' %][%|loc(u_err.name,u_err.reason)%]File %1 was not copied: %2 [%END%]
-  [% ELSIF u_err.msg == 'full_directory' %][%|loc(u_err.directory)%]Failed: %1 not empty[%END%] 
-  [% ELSIF u_err.msg == 'missing_cert' %][%|loc%]No certificate for this list[%END%]
-  [% ELSIF u_err.msg == 'no_topic' %][%|loc%]This list has no message topic[%END%]
-  [% ELSIF u_err.msg == 'msg_topic_missing' %][%|loc%]Tag message with topic is required for this list[%END%]
-  [% ELSIF u_err.msg == 'no_entry' %][%|loc(u_err.email)%]No entry for user '%1'[%END%]
-  [% ELSIF u_err.msg == 'select_month' %][%|loc%]Please select archive months[%END%]
-  [% ELSIF u_err.msg == 'no_soap_service' %][%|loc%]No SOAP service[%END%]
-  [% ELSIF u_err.msg == 'auth_failed' %][%|loc%]Authentication failed[%END%]
-  [% ELSIF u_err.msg == 'list_not_open' %][%|loc(u_err.status)%]Service unavailable because list status is '%1'[%END%]
-  [% ELSIF u_err.msg == 'template_exists' %][%|loc(u_err.argument)%]This Template '%1' already exists[%END%]
-  [% ELSIF u_err.msg == 'cannot_delete' %][%|loc(u_err.file_del)%]Cannot delete this file '%1'[%END%]
-  [% ELSIF u_err.msg == 'invalid_filename' %][%|loc(u_err.filename)%]Invalid filename: '%1'[%END%]
-  [% ELSIF u_err.msg == 'change_member_email_failed_included' %][%|loc(u_err.listname)%]Failed to update member email in list '%1', list owner has been notified.[%END%]
-  [% ELSIF u_err.msg == 'change_admin_email_failed_included' %][%|loc(u_err.listname)%]Failed to update admin email in list '%1', list owner has been notified.[%END%]
-  [% ELSIF u_err.msg == 'merge_failed' %][%|loc(u_err.error)%]Your message cannot be personalized due to error: %1.  Please check template syntax.[%END%]
-  [% ELSE %]
-    [% TRY %][% INCLUDE $u_err.msg %]
-    [% CATCH %][% u_err.msg %]
-    [%END%]
-  [%END%]
-  <br />
-[% END %]
+        [%#####################-%]
+        [%# AUTHORIZATION ERROR-%]
+        [%#####################-%]
+        [% FOREACH auth = auth_rejects %]
+            [%|loc(auth.action)%]AUTHORIZATION REJECT (%1)[%END-%]
+            [% IF auth.change_email_failed %]
+                [%|loc(auth.listname)%]Could not change your subscription address for the list '%1' because your new address is not allowed to subscribe/unsubscribe:[%END%]
+            [% END %]
+            [% SET reason = auth.msg -%]
+            [% IF reason == 'edit_right' %]
+                [% SET role  = auth.role -%]
+                [% SET right = auth.right -%]
+            [% END -%]
+            [% PROCESS report.tt2
+                 report_type  = 'auth'
+                 report_entry = auth.msg
+            %]
+            [%~ IF auth.login %]
+                <br />
+                [%|loc%]You need to login[%END%]
+            [% END %]
+            <br />
+        [% END %]
 
-[%#####################-%]
-[%# AUTHORIZATION ERROR-%]
-[%#####################-%]
-[% FOREACH auth = auth_rejects %]
-  [%|loc(auth.action)%]AUTHORIZATION REJECT (%1)[%END-%]   
-  [% IF auth.change_email_failed %][%|loc(auth.listname)%]Could not change your subscription address for the list '%1' 
-     because your new address is not allowed to subscribe/unsubscribe:[%END%][% END %]
-  [% SET reason = auth.msg -%] 
-  [% IF reason == 'edit_right' %][% SET role = auth.role -%][% SET right = auth.right -%][% END -%] 	 
-  [% PROCESS authorization_reject.tt2 -%]	
-  [% IF auth.login %]<br />[%|loc%]You need to login[%END%][% END %]
-  <br />
-[% END %]
-
-<form >
-<fieldset>
-<input  class="MainMenuLinks" type="button" value="OK" onclick="hideError();">
-
-</fieldset>
-</form>
-
-</div>
+        [%# Close button will be inserted here. ~%]
+    </div>
 </div>
 <!-- end error.tt2 -->

@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,8 +31,10 @@ use warnings;
 use Time::HiRes qw();
 
 use Sympa;
+use Conf;
 use Sympa::Language;
 use Sympa::Log;
+use Sympa::Tracking;
 
 use base qw(Sympa::Request::Handler);
 
@@ -51,40 +55,66 @@ sub _twist {
     my $robot  = $list->{'domain'};
     my $sender = $request->{sender};
     my $who    = $request->{email};
+    my $role   = $request->{role} || 'member';
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    # Check if we know this email on the list and remove it. Otherwise
-    # just reject the message.
-    my $user_entry = $list->get_list_member($who);
+    my @stash;
+    if ($role eq 'member') {
+        unless ($request->{force} or $list->is_subscription_allowed) {
+            $log->syslog('info', 'List %s not open', $list);
+            $self->add_stash($request, 'user', 'list_not_open',
+                {status => $list->{'admin'}{'status'}});
+            $self->{finish} = 1;
+            return undef;
+        }
 
-    unless (defined $user_entry) {
-        $self->add_stash($request, 'user', 'user_not_subscriber');
-        $log->syslog('info', 'DEL %s %s from %s refused, not on list',
-            $which, $who, $sender);
-        return undef;
+        $list->delete_list_member(
+            [$who],
+            exclude   => 1,
+            operation => 'del',
+            stash     => \@stash
+        );
+    } else {
+        $list->delete_list_admin($role, [$who], stash => \@stash);
+    }
+    foreach my $report (@stash) {
+        $self->add_stash($request, @$report);
+        if ($report->[0] eq 'intern') {
+            Sympa::send_notify_to_listmaster(
+                $list,
+                'mail_intern_error',
+                {   error  => $report->[1],      #FIXME: Update listmaster tt2
+                    who    => $sender,
+                    action => 'Command process',
+                }
+            );
+        }
+    }
+    return undef if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' } @stash;
+
+    if ($role eq 'member') {
+        _report_member($self, $request);
+    } else {
+        _report_user($self, $request);
     }
 
-    # Really delete and rewrite to disk.
-    unless (
-        $list->delete_list_member(
-            'users'     => [$who],
-            'exclude'   => ' 1',
-            'operation' => 'del'
-        )
-        ) {
-        my $error =
-            "Unable to delete user $who from list $which for command 'del'";
-        Sympa::send_notify_to_listmaster(
-            $list,
-            'mail_intern_error',
-            {   error  => $error,
-                who    => $sender,
-                action => 'Command process',
-            }
-        );
-        $self->add_stash($request, 'intern');
-        return undef;
+    return 1;
+}
+
+sub _report_member {
+    my $self    = shift;
+    my $request = shift;
+
+    my $list   = $request->{context};
+    my $who    = $request->{email};
+    my $sender = $request->{sender};
+
+    # Only when deletion was done by request, bounce information will be
+    # cleared.  Note that tracking information will be kept.
+    my $tracking = Sympa::Tracking->new(context => $list);
+    if ($tracking) {
+        $tracking->remove_message_by_email($who);
     }
 
     ## Send a notice to the removed user, unless the owner indicated
@@ -95,11 +125,12 @@ sub _twist {
                 $who);
         }
     }
-    $self->add_stash($request, 'notice', 'removed', {'email' => $who});
+    $self->add_stash($request, 'notice', 'removed',
+        {'email' => $who, 'listname' => $list->get_id});
     $log->syslog(
         'info',
         'DEL %s %s from %s accepted (%.2f seconds, %d subscribers)',
-        $which,
+        $list->{'name'},
         $who,
         $sender,
         Time::HiRes::time() - $self->{start_time},
@@ -115,7 +146,28 @@ sub _twist {
             }
         );
     }
-    return 1;
+}
+
+sub _report_user {
+    my $self    = shift;
+    my $request = shift;
+
+    my $list = $request->{context};
+    my $role = $request->{role};
+    my $who  = $request->{email};
+
+    $self->add_stash($request, 'notice', 'removed',
+        {role => $role, email => $who});
+
+    $log->syslog(
+        'info',
+        'request "del" %s %s from %s from %s accepted (%.2f seconds)',
+        $role,
+        $who,
+        $list,
+        $request->{sender},
+        Time::HiRes::time() - $self->{start_time}
+    );
 }
 
 1;
@@ -132,6 +184,43 @@ Sympa::Request::Handler::del - del request handler
 Removes a user from a list (requested by another user).
 Verifies the authorization and sends acknowledgements
 unless quiet is specified.
+
++B<Note>:
+The autharization secenario C<del.*> is applicable only when the {role}
+attribute is C<'member'> (default).
+In the other cases the scenario processing should be skipped.
+
+=head2 Attributes
+
+See also L<Sympa::Request::Handler/"Attributes">.
+
+=over
+
+=item {email}
+
+I<Mandatory>.
+E-mail of the user to be deleted.
+
+=item {force}
+
+I<Optional>.
+If true value is specified,
+users will be deleted even if the list is closed.
+
+=item {role}
+
+I<Optional>.
+Role of the user to be deleted: C<'member'>, C<'owner'> or C<'editor'>.
+Default value is C<'member'>.
+
+This attribute was introduced on Sympa 6.2.67b.2.
+
+=item {quiet}
+
+I<Optional>.
+Don't notify addition to the user.
+
+=back
 
 =head1 SEE ALSO
 

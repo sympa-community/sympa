@@ -1,41 +1,28 @@
-<!-- $Id$ -->
-<!-- Jquery-ui -->
-<link rel="stylesheet" href="[% static_content_url %]/external/jquery-ui.css" />
-
-<!-- Jqplot -->
-<link rel="stylesheet" href="[% static_content_url %]/external/jquery.jqplot.css" />
-
-<!-- Font css -->
-<link rel="stylesheet" href="[% static_content_url %]/external/font-awesome/css/font-awesome.css" />
-<link rel="stylesheet" href="[% static_content_url %]/fonts/foundation-icons/foundation-icons.css" />
-
-<!-- Foundation -->
-<link rel="stylesheet" href="[% static_content_url %]/external/foundation/css/foundation.css" />
-<link rel="stylesheet" href="[% static_content_url %]/external/foundation/css/normalize.css" />
-<link rel="stylesheet" href="[% static_content_url %]/external/foundation/css/responsive-tables.css" />
+<!-- head_ui.tt2 -->
+[%# Jquery-ui ~%]
+<link rel="stylesheet" href="[% static_content_url %]/js/jquery-ui/jquery-ui.css?v1.12.1" />
+[%# JqPlot ~%]
+<link rel="stylesheet" href="[% static_content_url %]/js/jqplot/jquery.jqplot.css?v1.0.8" />
+[%# Color picker ~%]
+<link rel="stylesheet" href="[% static_content_url %]/js/jquery-minicolors/jquery.minicolors.css?v2.3.1">
+[%# Font CSS ~%]
+<link rel="stylesheet" href="[% static_content_url %]/fonts/font-awesome/css/font-awesome.css?v4.3.0" />
+<link rel="stylesheet" href="[% static_content_url %]/fonts/foundation-icons/foundation-icons.css?v3.0" />
+[%# Foundation ~%]
+<link rel="stylesheet" href="[% static_content_url %]/js/foundation/css/foundation-float.css?v6.4.2" />
 [%# Workaround for select size bug of Foundation. #%]
 <style>
   select[multiple], select[size] { height: auto; background-image: none; }
 </style>
-
-[% IF custom_css %]
-<style>
-[% custom_css %]
-</style>
-[% ELSE %]
-<link rel="stylesheet" href="[% css_url %]/style.css?version=[% version %]" media="screen" title="Sympa CSS" />
-[% END %]
-
-[% IF locale_css %]
-<style>
-[% locale_css %]
-</style>
-[% END %]
-
-[% IF conf.favicon_url %]
-<link rel="shortcut icon" href="[% conf.favicon_url %]" />
-[% ELSE %]
-<link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
-[% END %]
-
+[% IF main_css ~%]
+    <link rel="stylesheet" href="[% main_css %]" title="Sympa CSS" />
+[%~ END %]
+[% IF lang_css ~%]
+    <link rel="stylesheet" href="[% lang_css %]" />
+[%~ END %]
+[% IF conf.favicon_url ~%]
+    <link rel="shortcut icon" href="[% conf.favicon_url %]" />
+[%~ ELSE ~%]
+    <link rel="shortcut icon" href="[% icons_url %]/favicon_sympa.png" />
+[%~ END %]
 <!-- end head_ui.tt2 -->

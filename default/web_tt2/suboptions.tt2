@@ -1,115 +1,141 @@
-<!-- $Id$ -->
-<h2>[%|loc%]Your list options[%END%]</h2>
+<!-- suboptions.tt2 -->
+<h2>
+    [%|loc%]Your list options[%END%]
+    <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['user-suboptions.html']) %]" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+    </a>
+</h2>
 
 <form action="[% path_cgi %]" method="post">
-  <label for="gecos">[%|loc%]Name:[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" />
-  [% PROCESS edit_attributes.tt2 %]
+    <label for="gecos">[%|loc%]Name:[%END%]</label> <input type="text" name="gecos" id="gecos" value="[% subscriber.gecos %]" size="25" />
+    [% PROCESS edit_attributes.tt2 %]
 
-  <label> [%|loc%]Member since:[%END%] </label> [% subscriber.date %]
-  <label> [%|loc%]Last update:[%END%] </label> [% subscriber.update_date %]
-  <label for="reception"> [%|loc%]Receiving mode:[%END%] </label>
-  <div>
-  <select name="reception" id="reception">
-  [% FOREACH r = reception %]
-    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
-  [% END %]
-  </select>
-  <a href="[% 'nomenu/help/user_options' | url_rel %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help">
-  <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
-  </div>
+    <label> [%|loc%]Member since:[%END%] </label>
+    [%|locdt(subscriber.date)%]%d %b %Y[%END%]
+    <label> [%|loc%]Last update:[%END%] </label>
+    [%|locdt(subscriber.update_date)%]%d %b %Y[%END%]
+    <label for="reception"> [%|loc%]Receiving mode:[%END%] </label>
+    <div>
+        <select name="reception" id="reception">
+            [% FOREACH r = reception ~%]
+                <option value="[% r.key %]"
+                        [%~ IF r.value.selected %] selected="selected"[% END %]>
+                    [%~ r.key | optdesc('reception') ~%]
+                </option>
+            [% END %]
+        </select>
+        <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['user-suboptions.html']) %]" target="wws_help">
+            <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+        </a>
+    </div>
 
-<br /><br />
+    <br /><br />
 
-  [%IF available_topics %]	
-    [%|loc%]Topic subscription:[%END%]		
-    [%IF possible_topic %]
-      <BLOCKQUOTE>	
-      [% FOREACH t = available_topics %]
-        [%IF topic_checked.${t.name} %]	
-          <input type="checkbox" name="topic_[%t.name%]" value="1" checked="1"> [% t.title %] </input>
+    [%IF available_topics %]
+        [%|loc%]Topic subscription:[%END%]
+        [%IF possible_topic %]
+            <blockquote>
+                [% FOREACH t = available_topics %]
+                    [%IF topic_checked.${t.name} %]
+                        <input type="checkbox" name="topic_[%t.name%]" value="1" checked="1"> [% t.title %] </input>
+                    [%ELSE%]
+                        <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
+                    [%END%]
+                    <br />
+                [% END %]
+                [%IF topic_checked.other %]
+                    <input type="checkbox" name="topic_other" value="1"  checked="1"/> [%|loc%]Other (messages not tagged) [%END%]
+                [%ELSE%]
+                    <input type="checkbox" name="topic_other" value="1" /> [%|loc%]Other (messages not tagged) [%END%]
+                [%END%]
+                <br />
+            </blockquote>
+            [%IF sub_user_topic %]
+                <br />
+                <input type="checkbox" name="no_topic" value="1"> [%|loc%]Disable topics subscription[%END%]</input>
+                <br />
+            [%END%]
         [%ELSE%]
-          <input type="checkbox" name="topic_[%t.name%]" value="1"> [% t.title %] </input>
-        [%END%] 	
-        <br />
-      [% END %]
-      [%IF topic_checked.other %]
-        <input type="checkbox" name="topic_other" value="1"  checked="1"/> [%|loc%]Other (messages not tagged) [%END%]
-      [%ELSE%]	
-        <input type="checkbox" name="topic_other" value="1" /> [%|loc%]Other (messages not tagged) [%END%]
-      [%END%] 
-      <br />
-      </BLOCKQUOTE>
-  
-      [%IF sub_user_topic %]
-        <br />	
-        <input type="checkbox" name="no_topic" value="1"> [%|loc%]Disable topics subscription[%END%]</input>
-        <br />
-      [%END%]
-       	
-    [%ELSE%]
-      <BLOCKQUOTE><i>[%|loc%]Only possible for direct reception modes.[%END%]</i></BLOCKQUOTE>
+            <blockquote>
+                <i>[%|loc%]Only possible for direct reception modes.[%END%]</i>
+            </blockquote>
+        [%END%]
     [%END%]
-  [%END%]	
- 	 
-  <label for="visibility"> [%|loc%]Visibility:[%END%] </label>
-  <div>
-  <select id="visibility" name="visibility">
-  [% FOREACH r = visibility %]
-    <option value="[% r.key %]" [% r.value.selected %]>[% r.value.description %]</option>
-  [% END %]
-  </select>
-  </div>
 
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="previous_action" value="[% action %]" />
-  <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Update[%END%]" />
+    <label for="visibility"> [%|loc%]Visibility:[%END%] </label>
+    <div>
+        <select id="visibility" name="visibility">
+            [% FOREACH r = visibility ~%]
+                <option value="[% r.key %]"
+                        [%~ IF r.value.selected %] selected="selected"[% END %]>
+                    [%~ r.key | optdesc('visibility') ~%]
+                </option>
+            [% END %]
+        </select>
+    </div>
+
+    <input type="hidden" name="list" value="[% list %]" />
+    <input type="hidden" name="previous_action" value="[% action %]" />
+    <input class="MainMenuLinks" type="submit" name="action_set" value="[%|loc%]Apply modifications[%END%]" />
 
 </form>
 
-
 <form action="[%path_cgi%]" method="POST">
-[% IF subscriber.suspend %]
-  <h3>[%|loc%]Restore subscription[%END%]
-    <a href="[% 'help/suspend' | url_rel %]"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
-  </h3>
-  <p>[%|loc%]Your subscription is suspended.[%END%]</p>
+    [% IF subscriber.suspend %]
+        <h3>
+            [%|loc%]Restore subscription[%END%]
+            <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['user-suspend.html']) %]" target="wws_help">
+                <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+            </a>
+        </h3>
+        <p>[%|loc%]Your subscription is suspended.[%END%]</p>
 
-  <label>[%|loc%]From:[%END%] </label>
-  [% subscriber.startdate %]
+        <label>[%|loc%]From:[%END%] </label>
+        [%|locdt(subscriber.startdate)%]%d %b %Y[%END%]
 
-  <label>[%|loc%]To:[%END%] </label>
-  [% IF subscriber.enddate %]
-    [% subscriber.enddate %]
-  [% ELSE %]
-    [%|loc%]Indefinite end date[% END %]
-  [% END %]
+        <label>[%|loc%]To:[%END%] </label>
+        [% IF subscriber.enddate %]
+            [%|locdt(subscriber.enddate)%]%d %b %Y[%END%]
+        [% ELSE %]
+            [%|loc%]Indefinite end date[% END %]
+        [% END %]
 
-  <input type="hidden" name="listname" value="[% list %]" />
-  <input type="hidden" name="action" value="suspend_request_action" />
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="previous_action" value="[% action %]" />
-  <input class="MainMenuLinks" type="submit" name="sub_action_suspendstop" value="[%|loc%]Resume my subscription[%END%]" />
-[% ELSE %]
-  <h3>[%|loc%]Suspend subscription[%END%]
-    <a href="[% 'help/suspend' | url_rel %]"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a>
-  </h3>
-  <p>[%|loc%]You can suspend your membership by using the button below. The suspend option prevents delivery of emails, this can be useful if you are out of the office for some time.[%END%]</p>
+        <input type="hidden" name="listname" value="[% list %]" />
+        <input type="hidden" name="action" value="suspend_request_action" />
+        <input type="hidden" name="list" value="[% list %]" />
+        <input type="hidden" name="previous_action" value="[% action %]" />
+        <input class="MainMenuLinks" type="submit" name="sub_action_suspendstop" value="[%|loc%]Resume my subscription[%END%]" />
+    [% ELSE %]
+        <h3>
+            [%|loc%]Suspend subscription[%END%]
+            <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['user-suspend.html']) %]" target="wws_help">
+                <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+            </a>
+        </h3>
+        <p>
+            [%|loc%]You can suspend your membership by using the button below. The suspend option prevents delivery of emails, this can be useful if you are out of the office for some time.[%END%]
+        </p>
 
-  <label for="date_deb">[%|loc%]From:[%END%] </label>
-  <input type="text" id="date_deb" name="date_deb" maxlength="10" size="10" value="[% d_day %]" onfocus="visuCal(this,param_ddeb);" onblur="masqueCal(this);" />
-  <noscript>(dd-mm-yyyy)</noscript>
+        <div>
+            <label for="date_deb">[%|loc%]From:[%END%] </label>
+            <input type="text" id="date_deb" name="date_deb" maxlength="10" size="10" style="display: inline-block; max-width: 40%"
+                   value="[% d_day %]" placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
+            <label for="date_fin">[%|loc%]To:[%END%] </label>
+            <input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" style="display: inline-block; max-width: 40%"
+                   placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
+            <noscript>
+                ([%|loc%]dd-mm-yyyy[%END%])
+            </noscript>
+            <input type="checkbox" name="indefinite" />
+            [%|loc%]Suspend my membership indefinitely[%END%]
+        </div>
 
-  <label for="date_fin">[%|loc%]To:[%END%] </label>
-  <input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" onfocus="visuCal(this,param_dfin)" onblur="masqueCal(this)" />
-  <noscript>(dd-mm-yyyy)</noscript>
-  <input type="checkbox" name="indefinite" />[%|loc%]Suspend my membership indefinitely[%END%]
-
-  <input type="hidden" name="listname" value="[% list %]" />
-  <input type="hidden" name="action" value="suspend_request_action"/>
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="previous_action" value="[% action %]" />
-  <input class="MainMenuLinks" type="submit" name="sub_action_suspendsave" value="[%|loc%]Suspend my subscriptions[%END%]" />
-[% END %]
+        <input type="hidden" name="listname" value="[% list %]" />
+        <input type="hidden" name="action" value="suspend_request_action"/>
+        <input type="hidden" name="list" value="[% list %]" />
+        <input type="hidden" name="previous_action" value="[% action %]" />
+        <input class="MainMenuLinks" type="submit" name="sub_action_suspendsave" value="[%|loc%]Suspend my subscriptions[%END%]" />
+    [% END %]
 </form>
 
 [% PROCESS picture_upload.tt2 %]

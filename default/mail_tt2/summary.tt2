@@ -1,6 +1,6 @@
-[%# $Id$ ~%]
+[%# summary.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name,date)%]%1 Summary %2[%END%][%END%]
+Subject: [%"%1 Summary %2"|loc(list.name,date)|qencode%]
 X-Sympa-NoWrap: yes
 
 [%|loc(list.name,date)%]%1 summary %2[%END%]
@@ -8,6 +8,6 @@ X-Sympa-NoWrap: yes
 [% FOREACH m = msg_list -%]
 [%|wrap(0,2)%]* [% m.id %] - [% m.subject %] - [% m.from %][%END#wrap%]
 [% IF conf.wwsympa_url -%]
-  [% 'arcsearch_id' | url_abs([list.name,m.month,m.message_id]) %]
+  [% 'msg' | url_abs([list.name,m.month,m.permalink_id]) %]
 [% END %]
 [% END -%]

@@ -1,131 +1,58 @@
-<!-- $Id$ -->
+<!-- head_javascript.tt2 -->
 [%#
 ## DEVELOPMENT WARNING
 ## Don't add javascript to this file, except if you need to initialize
 ## variables using TT2 parsing.
-## Use the src/etc/script/js/sympa.js file instead to write your scripts.
+## Use the js/sympa.js file instead of writing your scripts.
+## This script only contains variable initializations.
 #%]
 <script>
 <!--
-// this script only contains variable initializations.
-
-// Miscellaneous vars
-var path_cgi = '[% path_cgi %]/';
+[%# A few configuration settings and miscellaneous vars. ~%]
+var sympa = {
+    backText:           '[%"Back"|loc|escape_cstr%]',
+    calendarButtonText: '[%"Calendar"|loc|escape_cstr%]',
+    calendarFirstDay:   0,
+    closeText:          '[%"Close"|loc|escape_cstr%]',
+    copiedText:         '[%"Copied!"|loc|escape_cstr%]',
+    copyPermalinkText:  '[%"Copy permalink"|loc|escape_cstr%]',
+    dayNames:           '[%"Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"|loc|escape_cstr%]'.split(":"),
+    dayNamesMin:        '[%"Su:Mo:Tu:We:Th:Fr:Sa"|loc|escape_cstr%]'.split(":"),
+    home_url:           '[% path_cgi | escape_cstr %]/',
+    icons_url:          '[% icons_url | escape_cstr %]',
+    lang:               '[% lang | escape_cstr %]',
+    loadingText:        '[%"Please Wait..."|loc|escape_cstr%]',
+    monthNamesShort:    '[%"Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"|loc|escape_cstr%]'.split(":"),
+    openInNewWinText:   '[%"Open in a new window"|loc|escape_cstr%]',
+    resetText:          '[%"Reset"|loc|escape_cstr%]'
+};
+[%# Variable for backward compatibility. ~%]
 var lang = '[% lang %]';
 //-->
 </script>
 
-<script>
-<!--
-// A few configuration settings
-var CROSSHAIRS_LOCATION = '[% icons_url %]/crosshairs.png';
-var HUE_SLIDER_LOCATION = '[% icons_url %]/h.png';
-var HUE_SLIDER_ARROWS_LOCATION = '[% icons_url %]/position.png';
-var SAT_VAL_SQUARE_LOCATION = '[% icons_url %]/sv.png';
+[%# Now retrieving the javascript files ~%]
+<script src="[% static_content_url %]/js/jquery.js?v3.6.0"></script>
+<script src="[% static_content_url %]/js/jquery-migrate.js?v1.4.1"></script>
+<script src="[% static_content_url %]/js/jquery-ui/jquery-ui.js?v1.12.1"></script>
+[%# jqPlot ~%]
+<script src="[% static_content_url %]/js/jqplot/jquery.jqplot.min.js?v1.0.8"></script>
+<script src="[% static_content_url %]/js/jqplot/jqplot.categoryAxisRenderer.min.js?v1.0.8"></script>
+<script src="[% static_content_url %]/js/jqplot/jqplot.barRenderer.min.js?v1.0.8"></script>
+<script src="[% static_content_url %]/js/jqplot/jqplot.canvasAxisTickRenderer.min.js?v1.0.8"></script>
+<script src="[% static_content_url %]/js/jqplot/jqplot.canvasTextRenderer.min.js?v1.0.8"></script>
+[%# Color picker ~%]
+<script src="[% static_content_url %]/js/jquery-minicolors/jquery.minicolors.min.js?v2.3.1"></script>
+[%# Sympa ~%]
+<script src="[% static_content_url %]/js/sympa.js?v[% version %]"></script>
 
-// Variables used by the calendar js.
-var pDefaut = { 
-	"mois" : "[%|loc%]January:February:March:April:May:June:July:August:September:October:November:December[%END%]".split(":"),
-	"jour" : "[%|loc%]Sun:Mon:Tue:Wed:Thu:Fri:Sat[%END%]".split(":"),
-	"jLib" : "[%|loc%]Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday[%END%]".split(":"),
-	"titre" : "[%|loc%]Calendar[%END%]",
-	"aujourdhui" : "[%|loc%]today[%END%]",
-	"debutSemaine" : 0,                      /*debut de la semaine 0=lun,1=mar,...*/
-	"jPause" : {6:true,0:true},              /*jour de pause de la semaine (samedi & dimanche)*/
-	"jFeriee": {"1-1":"Jour de l'an","1-5":"Fête du travail","8-5":"Armistice 39-45","14-7":"Fête nationale","15-8":"Ascension","1-11":"Armistice 14-18","11-11":"Toussaint","25-12":"Noël"} ,
-	"moisMoins" : "<", "moisPlus" : ">",     /*navigation par mois*/ 
-	"anneeMoins" : "<<", "anneePlus" : ">>", /*navigation par annee*/
-	"format" : "%j-%m-%a",                   /*format de sortie : %j = jour, %m = mois, %a =année*/ 
-	"date" : null, "ddeb" : "", "dfin" : "",
-	"dateMin" : null, "dateMax" : null
-}
-
-
-var param_ddeb = {"dfin" : "date_fin", "titre" : "[%|loc%]Start date[%END%]" };
-var param_dfin = {"ddeb" : "date_deb", "titre" : "[%|loc%]End date[%END%]"  };
-
-var tempo = new Array(); /*gestion de la fermeture des calendriers quand on perd le focus*/
-var nomove={"TR":0,"CENTER":0,"B":0,"P":0,"U":0,"I":0,"DIV":0,"A":0,"FONT":0,"LI":0,"PRE":0,"SPAN":0,"SUB":0,"SUP":0,"FORM":0};
-//var nomove={"TD":0,"TABLE":0};
-
-//-->
-</script>
-
-<!-- Now retrieving the javascript files -->
-
-<script src="[% static_content_url %]/external/jquery.js"></script>
-
-<script src="[% static_content_url %]/external/jquery-ui.js"></script>
-
-<script src="[% static_content_url %]/external/jquery.jqplot.min.js"></script>
-<script src="[% static_content_url %]/external/jqplot.categoryAxisRenderer.min.js"></script>
-<script src="[% static_content_url %]/external/jqplot.barRenderer.min.js"></script>
-<script src="[% static_content_url %]/external/jqplot.canvasAxisTickRenderer.min.js"></script>
-<script src="[% static_content_url %]/external/jqplot.canvasTextRenderer.min.js"></script>
-
-<script src="[% static_content_url %]/js/sympa.js"></script>
-
-<!-- Foundation and other ui adaptation -->
+[%# Foundation and other ui adaptation ~%]
 <!--[if lt IE 9]>
-<script type="text/javascript" src="[% static_content_url %]/external/html5shiv/html5shiv.js"></script>
+    <script type="text/javascript" src="[% static_content_url %]/js/html5shiv/html5shiv.js?v3.7.2"></script>
 <![endif]-->
-<script type="text/javascript" src="[% static_content_url %]/external/respondjs/respond.min.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/vendor/modernizr.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/vendor/fastclick.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/vendor/placeholder.js"></script>
-<!--<script src="[% static_content_url %]/external/foundation/js/vendor/jquery.js"></script>-->
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.topbar.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.reveal.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.tooltip.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/foundation.accordion.js"></script>
-<script src="[% static_content_url %]/external/foundation/js/foundation/responsive-tables.js"></script>
-<script>
-$(
-function () {
-// Loading foundation
-$(document).foundation({
-    topbar: {
-        back_text: '<i class="fa fa-undo"></i> [%|loc%]Back[%END%]'
-    }
-});
-
-    /*Top Button*/ 
-    $(document).on( 'scroll', function(){
-
-            if ($(window).scrollTop() > 100) {
-                    $('.scroll-top-wrapper').addClass('show');
-            } else {
-                    $('.scroll-top-wrapper').removeClass('show');
-        }
-    });
-
-    $('.scroll-top-wrapper').on('click', scrollToTop);
-
-    /* Correction of disapeared top-bar-dropdown menu on input lost focus */
-    $('#login-dropdown').removeClass('not-click').on('mouseover', function () {
-        $(this).addClass('hover');
-    }).on('mouseout', function (e) {
-        if (e.relatedTarget && !$('#login-dropdown').has(e.relatedTarget).length) {
-            if($(e.target).is(':input'))
-                $(e.target).blur();
-            
-            $(this).removeClass('hover');
-        }
-    });
-
-    });
-
-
-function scrollToTop() {
-	verticalOffset = typeof(verticalOffset) != 'undefined' ? verticalOffset : 0;
-	element = $('body');
-	offset = element.offset();
-	offsetTop = offset.top;
-	$('html, body').animate({scrollTop: offsetTop}, 500, 'linear');
-}
-</script>
-
+<script type="text/javascript" src="[% static_content_url %]/js/respondjs/respond.min.js?v1.4.2"></script>
+<script src="[% static_content_url %]/js/foundation/js/vendor/what-input.js?v4.2.0"></script>
+<script src="[% static_content_url %]/js/foundation/js/foundation.min.js?v6.4.2"></script>
 
 [% IF use_html_editor -%]
 <script src="[% html_editor_url %]"></script>

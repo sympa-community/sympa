@@ -1,14 +1,16 @@
 #!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,7 +39,6 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
-use Sympa::Alarm;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
@@ -45,6 +46,7 @@ use Sympa::DatabaseManager;
 use Sympa::Log;
 use Sympa::Process;
 use Sympa::Spindle::ProcessBounce;
+use Sympa::Spool::Listmaster;
 
 my $process = Sympa::Process->instance;
 $process->init(pidname => 'bounced');
@@ -56,7 +58,7 @@ unless (
         \%main::options, 'config|f=s',   'debug|d', 'help|h',
         'log_level=s',   'foreground|F', 'version|v',
     )
-    ) {
+) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($main::options{'help'}) {
@@ -162,7 +164,7 @@ while (not $spindle->{finish}) {
 }
 
 # Purge grouped notifications
-Sympa::Alarm->instance->flush(purge => 1);
+Sympa::Spool::Listmaster->instance->flush(purge => 1);
 
 $log->syslog('notice', 'Bounced exited normally due to signal');
 $process->remove_pid(final => 1);
@@ -229,7 +231,7 @@ bounced, bounced.pl - Mailing List Bounce Processing Daemon for Sympa
 
 =head1 SYNOPSIS
 
-S<B<bounced> [ B<--foreground> ] [ B<--debug> ]>
+C<bounced.pl> S<[ C<--foreground> ]> S<[ C<--debug> ]>
 
 =head1 DESCRIPTION
 
@@ -238,7 +240,8 @@ processes bounces (non-delivery messages), looking or bad addresses.
 Bouncing addresses are tagged in database ; last bounce is kept for
 each bouncing address.
 
-List owners will latter access bounces information via WWSympa.
+List owners will be able to access information about the bounces
+via WWSympa after they have been processed by bounced.
 
 =head1 OPTIONS
 
@@ -248,24 +251,24 @@ options is included below.
 
 =over 5
 
-=item B<-F>, B<--foreground>
+=item C<-F>, C<--foreground>
 
 Do not detach TTY.
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force bounced to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Run the program in a debug mode.
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Print this help message.
 
-=item B<--log_level=>I<level>
+=item C<--log_level=>I<level>
 
 Sets daemon log level.
 
@@ -275,20 +278,20 @@ Sets daemon log level.
 
 F<--CONFIG--> Sympa configuration file.
 
-F<--libexecdir--/bouncequeue> bounce spooler, referenced from sendmail alias file
+F<$LIBEXECDIR/bouncequeue> bounce spooler, referenced from sendmail alias file
 
-F<--spooldir--/bounce> incoming bounces directory
+F<$SPOOLDIR/bounce> incoming bounces directory
 
-F<--piddir--/bounced.pid> this file contains the process ID
+F<$PIDDIR/bounced.pid> this file contains the process ID
 of F<bounced.pl>.
 
 =head1 MORE DOCUMENTATION
 
 The full documentation can be
-found in L<http://www.sympa.org/manual/>.
+found in L<https://www.sympa.community/manual/>.
 
 The mailing lists (with web archives) can be accessed at
-L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+L<https://www.sympa.community/community/lists.html>.
 
 =head1 HISTORY
 
@@ -325,7 +328,7 @@ L<http://www.gnu.org/licenses/fdl.html>.
 =head1 BUGS
 
 Report bugs to Sympa bug tracker.
-See L<http://www.sympa.org/tracking>.
+See L<https://github.com/sympa-community/sympa/issues>.
 
 =head1 SEE ALSO
 

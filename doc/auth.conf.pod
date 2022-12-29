@@ -1,0 +1,630 @@
+=encoding utf-8
+
+=head1 NAME
+
+auth.conf -
+Configuration of authentication mechanisms for web interface of Sympa
+
+=head1 DESCRIPTION
+
+The F<auth.conf> configuration file defines authentication mechanisms for web
+interface of Sympa.
+
+=head2 F<auth.conf> structure
+
+Each paragraph starts with one of the names C<user_table>, C<ldap>,
+C<generic_sso>, C<cas> or C<cgi>.
+
+The F<auth.conf> file contains directives in the following format:
+
+  name
+  keyword value
+  keyword value
+  ...
+  
+  name
+  keyword value
+  keyword value
+  ...
+
+Comments start with the C<#> character at the beginning of a line.
+
+Empty lines are also considered as comments and are ignored at the beginning. 
+After the first paragraph, they are considered as paragraph separators. There 
+should only be one directive per line, but their order in the paragraph is of 
+no importance.
+
+Succeeding subsections describe available parameters in each paragraph.
+
+=head2 C<user_table> paragraph
+
+This paragraph is related to Sympa internal authentication by email and
+password.  Information of users are stored in C<user_table> database table.
+This is the simplest one.
+
+=over
+
+=item C<regexp> I<regexp>
+
+=item C<negative_regexp>
+
+Perl regular expressions applied on an email address provided, to select or
+block this authentication mechanism for a subset of email addresses.
+
+=back
+
+=head2 C<ldap> paragraph
+
+This paragraph allows one to login to Sympa using data taken from an LDAP 
+directory. Login is done in two steps:
+
+=over
+
+=item *
+
+User provide a user ID or an email address, with a password. These are used 
+to retrieve their distinguished name (DN) in the LDAP directory.
+
+=item *
+
+The email attribute is extracted from the directory entry corresponding to 
+the found DN.
+
+=back
+
+Here is how to configure the LDAP authentication:
+
+=over
+
+=item C<regexp>
+
+=item C<negative_regexp>
+
+Same as in the C<user_table> paragraph: If an email address is provided (this 
+does I<not> apply to the user ID), then the regular expression will be applied 
+to find out if the LDAP directory can be used to authenticate a subset of 
+users.
+
+=item C<host>
+
+This keyword is B<mandatory>. It is the domain name used in order to bind to 
+the directory and then to extract information. You must mention the port 
+number after the server name. Server replication is supported by listing 
+several servers separated by commas (C<,>).
+
+Example:
+
+  host ldap.univ-rennes1.fr:389
+
+  host ldap0.university.com:389,ldap1.university.com:389,ldap2.university.com:389
+
+=item C<timeout>
+
+It corresponds to the time limit in the search operation. A C<timelimit> that 
+restricts the maximum time (in seconds) allowed for a search. A value of C<0> 
+(the default) means that no time limit will be requested.
+
+=item C<suffix>
+
+The root of the DIT (directory information tree). The DN that is the base 
+object entry relative to which the search is to be performed.
+
+Example:
+
+  dc=university,dc=fr
+
+=item C<bind_dn>
+
+If anonymous bind is not allowed on the LDAP server, a DN and password can be 
+used.
+
+=item C<bind_password>
+
+This password is used, combined with the C<bind_dn> above.
+
+=item C<get_dn_by_uid_filter>
+
+Defines the search filter corresponding to the C<ldap_uid>. (RFC 2254 
+compliant). If you want to apply the filter on the user, use the variable 
+C<[sender]>. It will work with every type of authentication (user ID, 
+C<alternate_email>, ...).
+
+Example:
+
+  (Login = [sender])
+
+  (|(ID = [sender])(UID = [sender]))
+
+=item C<get_dn_by_email_filter>
+
+Defines the search filter corresponding to the email addresses (canonic and 
+alternative --- this is RFC 2254 compliant). If you want to apply the filter 
+on the user, use the variable C<[sender]>. It will work with every type of 
+authentication (user ID, C<alternate_email>..).
+
+Example: a person is described by
+
+  dn: cn=Fabrice Rafart, ou=Siege, o=MaSociete, c=FR
+  objectClass: person
+  cn: Fabrice Rafart
+  title: Network Responsible
+  o: Siege
+  ou: Data processing
+  telephoneNumber: 01-00-00-00-00
+  facsimileTelephoneNumber: 01-00-00-00-00
+  l: Paris
+  country: France
+  uid: frafart
+  mail: Fabrice.Rafart@MaSociete.fr
+  alternate_email: frafart@MaSociete.fr
+  alternate: rafart@MaSociete.fr
+
+The filters can be:
+
+  (mail = [sender])
+
+  (| (mail = [sender])(alternate_email = [sender]) )
+
+  (| (mail = [sender])(alternate_email = [sender])(alternate  = [sender]) )
+
+=item C<email_attribute>
+
+The name of the attribute for the canonic email in your directory: for 
+instance C<mail>, C<canonic_email>, C<canonic_address>, ... In the previous 
+example, the canonic email is C<mail>.
+
+=item C<alternative_email_attribute>
+
+I<Obsoleted>.
+
+On Sympa 6.2.38 or earlier, web interface provided a cookie named
+C<sympa_altemails> which contained attribute values specified by this
+parameter along with authenticated email address.
+This feature was deprecated.
+
+=item C<scope>
+
+Default value: C<sub>
+
+By default, the search is performed on the whole tree below the specified 
+base object. This may be changed by specifying a scope:
+
+=over
+
+=item C<base>
+
+Search only the base object,
+
+=item C<one>
+
+Search the entries immediately below the base object,
+
+=item C<sub>
+
+Search the whole tree below the base object. This is the default.
+
+=back
+
+=item C<authentication_info_url>
+
+Defines the URL of a document describing LDAP password management. When 
+hitting Sympa's "Send me a password" button, LDAP users will be redirected to 
+this URL.
+
+=back
+
+=head3 TLS parameters
+
+Following parameters are used to provide LDAPS (LDAP over TLS/SSL):
+
+=over
+
+=item C<use_ssl> (OBSOLETE)
+
+If set to C<1>, connection to the LDAP server will use LDAPS (LDAP over 
+TLS/SSL).
+
+Obsoleted as of Sympa 6.2.15. Use C<use_tls> instead.
+
+=item C<use_tls>
+
+Default value: C<none>
+
+=over
+
+=item C<ldaps>
+
+Use LDAPS (LDAP over TLS/SSL),
+
+=item C<starttls>
+
+Use StartTLS,
+
+=item C<none>
+
+TLS (SSL) is disabled.
+
+=back
+
+=item C<ssl_version>
+
+Default value: C<tlsv1>
+
+This defines the version of the TLS/SSL protocol to use. Possible values are 
+C<sslv2>, C<sslv3>, C<tlsv1>, C<tlsv1_1> and C<tlsv1_2>.
+
+=item C<ssl_ciphers>
+
+Specify which subset of cipher suites are permissible for this connection, 
+using the standard OpenSSL string format. The default value of Net::LDAPS for 
+ciphers is C<ALL>, which permits all ciphers, even those that do not encrypt!
+
+=item C<ssl_cert>
+
+Path to client certificate.
+
+Introduced on Sympa 6.2.
+
+=item C<ssl_key>
+
+Path to the secret key of client certificate.
+
+Introduced on Sympa 6.2.
+
+=item C<ca_verify>
+
+C<none>, C<optional> or C<required>. If set to C<none>, will never verify 
+server certificate. Latter two need appropriate C<ca_path> and/or C<ca_file> 
+settings.
+
+Introduced on Sympa 6.2.
+
+=item C<ca_path>
+
+Path to directory store of CA certificates.
+
+Introduced on Sympa 6.2.
+
+=item C<ca_file>
+
+Path to file store of CA certificates.
+
+Introduced on Sympa 6.2.
+
+=back
+
+=head2 C<generic_sso> paragraph
+
+=over
+
+=item C<regexp>
+
+=item C<negative_regexp>
+
+See L<C<user_table> paragraph|/user_table paragraph>.
+
+=item C<service_name>
+
+This is the SSO service name that will be offered to the user in the login 
+banner menu.
+
+=item C<service_id>
+
+This service ID is used as a parameter by Sympa to refer to the SSO service 
+(instead of the service name).
+
+A corresponding URL on the local web server should be protected by the SSO 
+system; this URL would look like 
+C<http://yourhost.yourdomain/sympa/sso_login/inqueue> if the C<service_id> is 
+"C<inqueue>".
+
+=item C<http_header_list>
+
+Sympa gets user attributes from environment variables coming from the web 
+server. These variables are then cached in the C<user_table> database table 
+for later use in authorization scenarios (in structure). You can define a 
+comma-separated list of header field names.
+
+=item C<http_header_prefix>
+
+Only environment variables starting with the defined prefix will be kept. 
+Another option is to list HTTP header fields explicitly using
+C<http_header_list> parameter.
+
+=item C<email_http_header>
+
+This parameter defines the environment variable that will contain the 
+authenticated user's email address.
+
+=item C<http_header_value_separator>
+
+Default: C<;>
+
+User attributes may be multi-valued (including the user email address. This 
+parameter defines the values separator character(s).
+
+=item C<logout_url>
+
+This optional parameter allows one to specify the SSO logout URL. If defined, 
+Sympa will redirect the user to this URL after the Sympa logout has been 
+performed.
+
+=back
+
+=head3 netID mapping parameters
+
+The following parameters define how Sympa can check the user email address, 
+either provided by the SSO or by the user themselves:
+
+=over
+
+=item C<internal_email_by_netid>
+
+If set to C<1>, this parameter makes Sympa use its C<netidmap> table to 
+associate net IDs to user email addresses.
+
+=item C<netid_http_header>
+
+This parameter defines the environment variable that will contain the user's 
+identifier. This net ID will then be associated with an email address provided 
+by the user.
+
+=item C<force_email_verify>
+
+If set to C<1>, this parameter makes Sympa check the user's email address. If 
+the email address was not provided by the authentication module, then the 
+user is requested to provide a valid email address.
+
+=back
+
+=head3 LDAP parameters for generic SSO
+
+The following parameters define how Sympa can retrieve the user email 
+address; B<these are useful only in case the C<email_http_header> entry was 
+not defined>:
+
+=over
+
+=item C<ldap_host>
+
+The LDAP host Sympa will connect to fetch user email. The C<ldap_host> 
+include the port number and it may be a comma separated list of redundant
+hosts.
+
+=item C<ldap_bind_dn>
+
+The DN used to bind to this server. Anonymous bind is used if this parameter 
+is not defined.
+
+=item C<ldap_bind_password>
+
+The password used unless anonymous bind is used.
+
+=item C<ldap_suffix>
+
+The LDAP suffix used when searching user email.
+
+=item C<ldap_scope>
+
+The scope used when searching user email. Possible values are C<sub>, C<base> 
+and C<one>.
+
+=item C<ldap_get_email_by_uid_filter>
+
+The filter used to perform the email search. It can refer to any environment 
+variables inherited from the SSO module, as shown below.
+
+Example:
+
+  ldap_get_email_by_uid_filter (mail=[SSL_CLIENT_S_DN_Email])
+
+=item C<ldap_email_attribute>
+
+The attribute name to be used as user canonical email. In the current version 
+of Sympa, only the first value returned by the LDAP server is used.
+
+=item C<ldap_timeout>
+
+The time out for the search.
+
+=back
+
+=head3 TLS parameters
+
+To support LDAPS (LDAP over SSL/TLS), corresponding parameters in C<ldap> 
+paragraph may also be used for C<generic_sso>.
+
+=head2 C<cas> paragraph
+
+Note that Sympa will act as a CAS client to validate CAS tickets. During this 
+exchange, Sympa will check the CAS server X.509 certificate. Therefore you 
+should ensure that the certificate authority of the CAS server is known by
+Sympa ; this should be configured through the L<cafile|sympa.conf(5)/cafile> 
+or L<capath|sympa.conf(5)/capath> F<sympa.conf> configuration parameters.
+
+=over
+
+=item C<regexp>
+
+=item C<negative_regexp>
+
+See L<C<user_table> paragraph|/user_table paragraph>.
+
+=item C<auth_service_name>
+
+The authentication service name. Note that it is used as an identifier in the 
+code; it should therefore be made of alphanumeric characters only, with no 
+space.
+
+=item C<auth_service_friendly_name>
+
+If defined, this string is proposed on the web login banner.
+
+=item C<host> (OBSOLETE)
+
+This parameter has been replaced by C<base_url> parameter.
+
+=item C<base_url>
+
+The base URL of the CAS server.
+
+=item C<non_blocking_redirection>
+
+C<on> or C<off>. Default value: C<on>
+
+This parameter only concerns the first access to Sympa services by a user, it 
+activates or not the non blocking redirection to the related CAS server to 
+check automatically if the user as been previously authenticated with this 
+CAS server. The redirection to CAS is used with the CGI parameter 
+C<gateway=1> that specifies to CAS server to always redirect the user to the 
+original URL, but just check if the user is logged. If active, the SSO 
+service is effective and transparent, but in case the CAS server is out of 
+order, the access to Sympa services is impossible.
+
+=item C<login_uri> (OBSOLETE)
+
+This parameter has been replaced by the C<login_path> parameter.
+
+=item C<login_path> (OPTIONAL)
+
+The login service path.
+
+=item C<check_uri> (OBSOLETE)
+
+This parameter has been replaced by the C<service_validate_path> parameter.
+
+=item C<service_validate_path> (OPTIONAL)
+
+The ticket validation service path.
+
+=item C<logout_uri> (OBSOLETE)
+
+This parameter has been replaced by the C<logout_path> parameter.
+
+=item C<logout_path> (OPTIONAL)
+
+The logout service path.
+
+=item C<proxy_path> (OPTIONAL)
+
+The proxy service path, only used by the Sympa SOAP server.
+
+=item C<proxy_validate_path> (OPTIONAL)
+
+The proxy validate service path, only used by the Sympa SOAP server.
+
+=back
+
+=head3 LDAP parameters for CAS
+
+=over
+
+=item C<ldap_host>
+
+The LDAP host Sympa will connect to fetch user email when user uid is return 
+by CAS service. The C<ldap_host> includes the port number and it may be a 
+comma separated list of redundant hosts.
+
+=item C<ldap_bind_dn>
+
+The DN used to bind to this server. Anonymous bind is used if this parameter 
+is not defined.
+
+=item C<ldap_bind_password>
+
+The password used unless anonymous bind is used.
+
+=item C<ldap_suffix>
+
+The LDAP suffix used when searching user email.
+
+=item C<ldap_scope>
+
+The scope used when searching user email. Possible values are C<sub>, C<base> 
+and C<one>.
+
+=item C<ldap_get_email_by_uid_filter>
+
+The filter used to perform the email search.
+
+=item C<ldap_email_attribute>
+
+The attribute name to be used as user canonical email. In the current version 
+of Sympa, only the first value returned by the LDAP server is used.
+
+=item C<ldap_timeout>
+
+The time out for the search.
+
+=back
+
+=head3 TLS parameters
+
+To support LDAPS (LDAP over SSL/TLS), corresponding parameters in ldap 
+paragraph may also be used for cas.
+
+=head2 C<cgi> paragraph
+
+This paragraph allows Sympa to receive authentication information from
+the external authentication mechanism through Common Gateway Interface (CGI).
+By this, Sympa may use authentication methods not supported by Sympa itself.
+
+=over
+
+=item C<regexp>
+
+=item C<negative_regexp>
+
+See L<C<user_table> paragraph|/user_table paragraph>.
+
+=item C<remote_user_variable>
+
+The name of the CGI environment variable that contains the e-mail address
+of the authenticated user.
+Note that the name of CGI variable is case-sensitive.
+
+=item C<auth_scheme>
+
+Optional.
+If set, authentication is considered successful only if it matches the
+name of authentication scheme, i.e. value of the C<AUTH_TYPE> CGI
+environment variable.
+
+The value of this parameter is case-insensitive.
+
+=back
+
+=head1 FILES
+
+=over
+
+=item F<$DEFAULTDIR/auth.conf>
+
+Distribution default.  This file should not be edited.
+
+=item F<$SYSCONFDIR/auth.conf>
+
+=item F<$SYSCONFDIR/E<lt>robot nameE<gt>/auth.conf>
+
+Configuration files for site-wide default and each robot.
+
+=back
+
+=head1 SEE ALSO
+
+L<wwsympa(8)>,
+L<sympa_soap_server(8)>.
+
+L<Sympa::Auth>.
+
+=head1 HISTORY
+
+Descriptions of parameters were originally taken from the chapter
+"Authentication" in
+I<Sympa, Mailing List Management Software - Reference manual>, written by
+Serge Aumont, Soji Ikeda, Olivier SalaE<252>n and David Verdin.
+
+C<cgi> paragraph was introduced on Sympa 6.2.71b.
+
+=cut
+

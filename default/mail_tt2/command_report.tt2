@@ -1,7 +1,7 @@
-[%# $Id$ ~%]
+[%# command_report.tt2 ~%]
 To: [% to %]
-Subject: [% FILTER qencode %][%|loc%]Results of your commands[%END%][%END%]
-X-Loop: [% conf.email %]@[% conf.host %]
+Subject: [%"Results of your commands"|loc|qencode%]
+X-Loop: [% conf.email %]@[% domain %]
 
 [%############################-%]
 [%########## SUCCESS #########-%]
@@ -22,45 +22,19 @@ X-Loop: [% conf.email %]@[% conf.host %]
 [%~ END -%]
 
 > [% notice.entry %]
-[% IF notice.entry == 'smime' -%]
-[%|loc%]Your message signature was successfully verified using S/MIME.[%END%]
+[% notice_msg = BLOCK ~%]
+  [% PROCESS report.tt2
+     report_type='notice'
+     report_entry=notice.entry
+     report_param=notice
+  %]
+[%~ END ~%]
+[% IF notice_msg.match('\S') ~%]
+  [% notice_msg %]
+[%~ ELSE ~%]
+  [% notice.entry %]
+[%~ END %]
 
-[% ELSIF notice.entry == 'dkim' -%]
-[%|loc%]Your message contain a DKIM signature. It was succesfully verified[%END%]
-
-[% ELSIF notice.entry == 'sent_to_owner' -%]
-[%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's
-owners for approval. You will receive a notification when you have
-been subscribed (or unsubscribed) to the list.[%END-%]
-
-[% ELSIF notice.entry == 'updated_info' -%]
-[%|loc(notice.email,notice.listname)%]Information regarding user %1 has been updated for list %2.[%END%]
-
-[% ELSIF notice.entry == 'now_subscriber' -%]
-[%|loc(notice.email,notice.listname)%]User %1 is now subscriber of list %2.[%END%]
-
-[% ELSIF notice.entry == 'invite' -%]
-[%|loc(notice.email,notice.listname)%]User %1 has been invited to subscribe in list %2.[%END%]
-
-[% ELSIF notice.entry == 'remind' -%]
-[%|loc(notice.total,notice.listname)%]Subscription reminder sent to each of %1 %2 subscribers.[%END%]
-
-[% ELSIF notice.entry == 'glob_remind' -%]
-[%|loc(notice.count)%]The Reminder has been sent to %1 users.[%END%]
-
-[% ELSIF notice.entry == 'removed' -%]
-[%|loc(notice.email,notice.listname)%]The user %1 has been removed from the list %2.[%END%]
-
-[% ELSIF notice.entry == 'config_updated' -%]
-[%|loc(notice.listname)%]Your configuration regarding list %1 has been updated.[%END%]
-
-[% ELSIF notice.entry == 'finished' -%]
-[%|loc(notice.cmd)%]Command '%1' found: ignoring end of message.[%END%]
-
-[% ELSIF notice.entry == 'no_message_to_moderate' -%]
-[%|loc(notice.listname)%]There is no message to moderate for list '%1'.[%END%]
-
-[% END -%]
 [% END -%]
 [% END -%]
 [%#####################-%]
@@ -84,7 +58,10 @@ been subscribed (or unsubscribed) to the list.[%END-%]
   [% auth.cmd %]
 [%~ END -%]
 
-[% SET reason = auth.entry -%]  [% PROCESS authorization_reject.tt2 -%]
+  [% PROCESS report.tt2
+     report_type='auth'
+     report_entry=auth.entry
+  %]
 [% END -%]
 [% END -%]
 [%################-%]
@@ -108,91 +85,19 @@ been subscribed (or unsubscribed) to the list.[%END-%]
   [% u_err.cmd %]
 [%~ END -%]
 
-[% IF u_err.entry == 'unknown_action' -%]
-  [%|loc%]Command not understood: ignoring end of message.[%END%]
+  [% error_msg = BLOCK ~%]
+    [% PROCESS report.tt2
+       report_type='user'
+       report_entry=u_err.entry
+       report_param=u_err
+    %]
+  [%~ END ~%]
+  [% IF error_msg.match('\S') ~%]
+    [% error_msg %]
+  [%~ ELSE ~%]
+    [% u_err.entry %]
+  [%~ END %]
 
-[% ELSIF u_err.entry == 'no_verify_sign' -%]
-  [%|loc%]Your message was not a multipart/signed message or Sympa could not verify the signature 
-(be aware that Sympa can't check signature if you use the subject header to write a command).[%END-%]
-
-[% ELSIF u_err.entry == 'syntax_errors' -%]
-  [%|loc%]Command syntax error.[%END%]
-
-[% ELSIF u_err.entry == 'unknown_list' -%]
-  [%|loc(u_err.listname)%]List '%1' does not exist.[%END%]
-
-[% ELSIF u_err.entry == 'no_subscriber_preference' -%]
-  [%|loc(u_err.listname)%]%1 mailing list does not provide subscriber preferences.[%END%]
-
-[% ELSIF u_err.entry == 'not_subscriber' -%]
-  [%|loc(u_err.email,u_err.listname)%]Your e-mail address %1 has not been found in the list %2. Maybe you subscribed from a different e-mail address?[%END-%]
-
-[% ELSIF u_err.entry == 'user_not_subscriber' -%]
-  [%|loc(u_err.email,u_err.listname)%]E-mail address %1 has not been found in the list %2.[%END%]
-
-[% ELSIF u_err.entry == 'no_digest' -%]
-  [%|loc(u_err.listname)%]List %1 does not accept the DIGEST mode. 
-Your configuration regarding this command has not been updated.[%END-%]
-
-[% ELSIF u_err.entry == 'not_available_reception_mode' -%]
-  [%|loc(u_err.listname)%]List %1 allows only these reception modes: [%END -%]
-[%- FOREACH m = u_err.reception_modes -%]
-[%- IF loop.size >= 2 && loop.count == loop.size -%]
-[%|loc%], and [%END%][%|optdesc('reception',1)%][% m %][%END-%]
-[%- ELSIF loop.count > 1 -%]
-[%|loc%], [%END%][%|optdesc('reception',1)%][% m %][%END-%]
-[%- ELSE -%]
-[%|optdesc('reception',1)%][% m %][%END-%]
-[%- END -%]
-[%- END -%]
-
-[% ELSIF u_err.entry == 'empty_archives' -%]
-  [%|loc()%]This list archive is empty.[%END%] 
-
-[% ELSIF u_err.entry == 'no_required_file' -%]
-  [%|loc%]Required file does not exist.[%END%]
-
-[% ELSIF u_err.entry == 'no_subscriber' -%]
-  [%|loc(u_err.listname)%]List %1 has no subscriber.[%END%]
-
-[% ELSIF u_err.entry == 'already_subscriber' -%]
-  [%|loc(u_err.email,u_err.listname)%]The User '%1' is already subscriber of list '%2'.[%END%]
-
-[% ELSIF u_err.entry == 'max_list_members_exceeded' -%]
-  [%|loc(u_err.email,u_err.listname,u_err.max_list_members)%]Unable to add user '%1' in list '%2'. Attempt to exceed the max number of members (%3) for this list.[%END%]
-
-[% ELSIF u_err.entry == 'wrong_email_confirm' -%]
-[% IF u_err.command == 'subscribe' -%]
-  [%|loc%]The authentication process failed. You probably confirmed your subscription using a different email address. Please try using your canonical address.[%END-%]
-[% ELSIF u_err.command == 'signoff' -%]
-  [%|loc%]The authentication process failed. You probably confirmed your unsubscription using a different email address. Please try using your canonical address.[%END-%]
-[% ELSIF u_err.command == 'add' -%]
-  [%|loc%]The authentication process failed. You probably confirmed your addition using a different email address. Please try using your canonical address.[%END-%]
-[% ELSIF u_err.command == 'invite' -%]
-  [%|loc%]The authentication process failed. You probably confirmed your invitation using a different email address. Please try using your canonical address.[%END-%]
-[% ELSIF u_err.command == 'del' -%]
-  [%|loc%]The authentication process failed. You probably confirmed your deletion using a different email address. Please try using your canonical address.[%END-%]
-[% ELSIF u_err.command == 'remind' -%]
-  [%|loc%]The authentication process failed. You probably confirmed your request of subscription reminder using a different email address. Please try using your canonical address.[%END-%]
-[% ELSIF u_err.command == 'global_remind' -%]
-  [%|loc%]The authentication process failed. You probably confirmed your request of subscription reminder using a different email address. Please try using your canonical address.[%END-%]
-[% ELSE -%]
-  [%|loc(u_err.command)%]The authentication process failed. You probably confirmed your "%1" command using a different email address. Please try using your canonical address.[%END-%]
-[% END -%]
-
-[% ELSIF u_err.entry == 'already_moderated' -%]
-  [%|loc(u_err.listname,u_err.key)%]Unable to access the message on list %1 with  key %2.
-Warning: this message may already have been sent by one of the list's editor.[%END%]
-
-[% ELSIF u_err.entry == 'already_confirmed' -%]
-  [%|loc(u_err.key)%]Unable to access the message authenticated with key %1. The message may already been confirmed.[%END%]
-
-[% ELSIF u_err.entry == 'no_lists' -%]
-  [%|loc%]No lists available.[%END%]
-
-[% ELSE %]
-[% u_err.entry %]
-[% END -%]
 [% END -%]
 [% END -%]
 [%###################-%]
@@ -221,4 +126,6 @@ Warning: this message may already have been sent by one of the list's editor.[%E
 
 -----------==========================================-----------
 
+[% IF conf.wwsympa_url -%]
 [%|loc(conf.wwsympa_url)%]For further information, check the mailing list web site %1[%END%]
+[% END -%]

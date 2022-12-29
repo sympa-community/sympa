@@ -1,37 +1,54 @@
-[%# $Id$ ~%]
+[%# request_auth.tt2 ~%]
 To: [% to %]
-Subject: [% FILTER qencode %]AUTH [%keyauth%] [%cmd%][%END%]
+[% IF conf.wwsympa_url && type == 'family_signoff' -%]
+Subject: [%"%1 / unsubscribing from family %2"|loc(conf.title,family.name)|qencode%]
+[%- ELSIF conf.wwsympa_url && type == 'signoff' -%]
+Subject: [%"%1 / unsubscribing from %2"|loc(conf.title,list.name)|qencode%]
+[%- ELSIF conf.wwsympa_url && type == 'subscribe' -%]
+Subject: [%"%1 / subscribing to %2"|loc(conf.title,list.name)|qencode%]
+[%- ELSE -%]
+Subject: [%"AUTH ${keyauth} ${cmd}"|qencode%]
+[%- END %]
 
-  [% IF type == 'signoff' -%]
-[%|loc(list.name)-%]You asked for your e-mail address to be removed from list '%1'.[%- END -%]
+[% IF type == 'family_signoff' -%]
+[%|loc(family.name)-%]You requested that your e-mail address be removed from family '%1'.[%- END -%]
 
-  [%- ELSIF type == 'subscribe'  -%]
-[%|loc(list.name)-%]You asked for your e-mail address to be added to list '%1'.[%- END -%]
+[%- ELSIF type == 'signoff' -%]
+[%|loc(list.name)-%]You requested that your e-mail address be removed from list '%1'.[%- END -%]
 
-  [%- ELSIF type == 'add' -%]
-[%|loc(list.name)-%]You requested a user subscription in list %1.[%- END -%]
+[%- ELSIF type == 'subscribe' -%]
+[%|loc(list.name)-%]You requested that your e-mail address be added to list '%1'.[%- END -%]
 
-  [%- ELSIF type == 'del' -%]
-[%|loc(list.name)-%]You requested a user removal from list %1.[%- END -%]
+[%- ELSIF type == 'add' -%]
+[%|loc(list.name)-%]You've made a user subscription request to list %1.[%- END -%]
 
-  [%- ELSIF type == 'remind' -%]
+[%- ELSIF type == 'del' -%]
+[%|loc(list.name)-%]You've made a user removal request from list %1.[%- END -%]
+
+[%- ELSIF type == 'remind' -%]
 [%|loc(list.name)-%]You requested a subscription reminder to be sent to each subscriber of list %1[%- END -%]
 
-  [%- ELSIF type == 'global_remind' -%]
+[%- ELSIF type == 'global_remind' -%]
 [%|loc-%]You requested a subscription reminder to be sent to each subscriber of list '*'[%- END -%]
-[%- END -%]	
 
-[% sympa = BLOCK %][% conf.email %]@[% conf.host %][%END%]
-[%|loc(sympa,"AUTH ${keyauth} ${cmd}") %]If you want this action to be taken, please
+[%- ELSE -%]
+[%|loc(type)%]You requested an action '%1'.[% END -%]
+
+[%- END -%]
+
+[% IF conf.wwsympa_url -%]
+[%|loc%]If you want this action to be taken, please hit the following link:[%END%]
+  [% 'auth' | url_abs([keyauth,type],{email=>to}) ~%]
+[%- ELSE -%]
+[%|loc("${conf.email}@${domain}","AUTH ${keyauth} ${cmd}") %]If you want this action to be taken, please
 
 - reply to this mail
 OR
 - send a message to %1 with subject
  %2
 OR
-- hit the following mailto[% END %]
- [% | mailtourl({subject => "AUTH ${keyauth} ${cmd}"}) ~%]
-   [% conf.email %]@[% conf.host %]
- [%~ END %]
+- click on the following URL[% END %]
+  [% "${conf.email}@${domain}" | mailtourl({subject => "AUTH ${keyauth} ${cmd}"}) %]
+[%- END %]
 
 [%|loc-%]If you do not want this action to be taken, you can safely ignore this message.[% END %]

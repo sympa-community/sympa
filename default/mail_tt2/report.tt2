@@ -1,0 +1,953 @@
+[%# report.tt2 ~%]
+
+[%#####################~%]
+[%# AUTHORIZATION ERROR~%]
+[%#####################~%]
+[% IF report_type == 'auth' ~%]
+
+[% IF report_entry == '' ~%]
+
+[%~ ELSIF report_entry == 'mail_archive_closed' ~%]
+[%|loc()%]Archives are closed.[%END%]
+
+[%~ ELSIF report_entry == 'mail_archive_owner' ~%]
+[%|loc()%]Archives are restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'mail_archive_subscriber' ~%]
+[%|loc()%]Archives are restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'web_archive_closed' ~%]
+[%|loc()%]Web archives are closed.[%END%]
+
+[%~ ELSIF report_entry == 'web_archive_local_user_sub' ~%]
+[%|loc()%]Web archives are restricted to list subscribers and local domain users.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'web_archive_listmaster' ~%]
+[%|loc()%]Web archives are restricted to listmaster.[%END%]
+
+[%~ ELSIF report_entry == 'web_archive_owner' ~%]
+[%|loc()%]Web archives are restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'web_archive_subscriber' ~%]
+[%|loc()%]Web archives are restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'add_owner' ~%]
+[%|loc()%]Adding a user to the list is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'add_closed' ~%]
+[%|loc()%]Adding a user to this list is not allowed.[%END%]
+
+[%~ ELSIF report_entry == 'create_list_local_user' ~%]
+[%|loc()%]List creation is restricted to local domain users.[%END%]
+
+[%~ ELSIF report_entry == 'create_list_listmaster' ~%]
+[%|loc()%]List creation is restricted to listmaster.[%END%]
+
+[%~ ELSIF report_entry == 'create_list_closed' ~%]
+[%|loc()%]List creation is not allowed.[%END%]
+
+[%~ ELSIF report_entry == 'd_edit_subscriber' ~%]
+[%|loc()%]Shared document edition is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'd_edit_owner' ~%]
+[%|loc()%]Shared document edition is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'd_edit_subscriber_https' ~%]
+[%|loc()%]Shared document edition is restricted to list subscribers authenticated with user certificate.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'del_owner' ~%]
+[%|loc()%]Deleting a user from the list is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'del_closed' ~%]
+[%|loc()%]It is not possible to delete a user from the list.[%END%]
+
+[%~ ELSIF report_entry == 'd_read_owner' ~%]
+[%|loc()%]Shared document reading is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'd_read_subscriber' ~%]
+[%|loc()%]Shared document reading is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'd_read_subscriber_https' ~%]
+[%|loc()%]Shared document reading is restricted to list subscribers authenticated with user certificate.[%END%]
+
+[%~ ELSIF report_entry == 'edit_list_closed' ~%]
+[%|loc()%]you are not allowed to edit list parameters.[%END%]
+
+[%~ ELSIF report_entry == 'edit_list_owner' ~%]
+[%|loc()%]List parameter editing is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'global_remind_listmaster' ~%]
+[%|loc()%]The 'global remind' feature is restricted to listmaster.[%END%]
+
+[%~ ELSIF report_entry == 'info_subscriber' ~%]
+[%|loc()%]List information is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'invite_closed' ~%]
+[%|loc()%]The 'invite' feature is unavailable.[%END%]
+
+[%~ ELSIF report_entry == 'invite_owner' ~%]
+[%|loc()%]The 'invite' feature is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'invite_subscriber' ~%]
+[%|loc()%]The 'invite' feature is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF reason == 'move_user_closed' ~%]
+[%|loc()%]The 'move_user' feature is unavailable.[%END%]
+
+[%~ ELSIF reason == 'move_user_listmaster' ~%]
+[%|loc()%]Changing user's email is not allowed.[%END%]
+
+[%~ ELSIF report_entry == 'remind_listmaster' ~%]
+[%|loc()%]The 'remind' feature is restricted to listmaster.[%END%]
+
+[%~ ELSIF report_entry == 'remind_owner' ~%]
+[%|loc()%]The 'remind' feature is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'review_closed' ~%]
+[%|loc()%]The 'review' feature is unavailable.[%END%]
+
+[%~ ELSIF report_entry == 'review_local_user_sub' ~%]
+[%|loc()%]The 'review' feature is restricted to list subscribers and local domain users.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'review_listmaster' ~%]
+[%|loc()%]The 'review' feature is restricted to listmaster.[%END%]
+
+[%~ ELSIF report_entry == 'review_owner' ~%]
+[%|loc()%]The 'review' feature is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'review_subscriber' ~%]
+[%|loc()%]The 'review' feature is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'send_closed' ~%]
+[%|loc()%]Message distribution in this list is not allowed.[%END%]
+
+[%~ ELSIF report_entry == 'send_local_user' ~%]
+[%|loc()%]Message distribution in the list is restricted to local domain users.[%END%]
+
+[%~ ELSIF report_entry == 'send_local_user_sub' ~%]
+[%|loc()%]Message distribution for this list is restricted to list subscribers and local domain users.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'send_editor' ~%]
+[%|loc()%]Message distribution for this list is restricted to list moderators.[%END%]
+
+[%~ ELSIF report_entry == 'send_owner' ~%]
+[%|loc()%]Message distribution for this list is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'send_multipart' ~%]
+[%|loc()%]Multipart messages are not allowed in this list.[%END%]
+
+[%~ ELSIF report_entry == 'send_subscriber' ~%]
+[%|loc()%]Message distribution in the list is restricted to list subscribers.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'send_subscriber_smime' ~%]
+[%|loc()%]Message distribution for this list is restricted to list subscribers check S/MIME signature.[%END%]
+[%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
+
+[%~ ELSIF report_entry == 'subscribe_closed' ~%]
+[%|loc()%]You are not allowed to subscribe to this list.[%END%]
+
+[%~ ELSIF report_entry == 'subscribe_local_user' ~%]
+[%|loc()%]Subscription to this list is restricted to local domain users.[%END%]
+
+[%~ ELSIF report_entry == 'subscribe_smime' ~%]
+[%|loc()%]Subscription to this list requires S/MIME signature.[%END%]
+
+[%~ ELSIF report_entry == 'topic_listmaster' ~%]
+[%|loc()%]Topics visibility is restricted to listmaster.[%END%]
+
+[%~ ELSIF report_entry == 'topic_identified' ~%]
+[%|loc()%]Topics visibility is restricted to identified users.[%END%]
+
+[%~ ELSIF report_entry == 'unsub_closed' ~%]
+[%|loc()%]It is not possible to unsubscribe from this list.[%END%]
+
+[%~ ELSIF report_entry == 'list_private_no_archive' ~%]
+[%|loc%]List is Private. You can not read the archives.[%END%]
+
+[%~ ELSIF report_entry == 'list_private_no_browse' ~%]
+[%|loc%]List is Private. You can not browse available files.[%END%]
+
+[%~ ELSIF report_entry == 'restricted_modindex' ~%]
+[%|loc%]The MODINDEX command is restricted to moderators.[%END%]
+
+[%~ ELSIF report_entry == 'action_owner_or_editor' ~%]
+[%|loc%]This action is restricted to list owners or moderators.[%END%]
+
+[%~ ELSIF report_entry == 'action_editor' ~%]
+[%|loc%]This action is restricted to moderators.[%END%]
+
+[%~ ELSIF report_entry == 'action_owner' ~%]
+[%|loc%]This action is restricted to list owners.[%END%]
+
+[%~ ELSIF report_entry == 'action_listmaster' ~%]
+[%|loc%]This action is restricted to listmasters.[%END%]
+
+[%~ ELSIF report_entry == 'action_listmaster_or_owner' ~%]
+[%|loc%]This action is restricted to listmasters or list owners.[%END%]
+
+[%~ ELSIF report_entry == 'action_listmaster_or_privileged_owner' ~%]
+[%|loc%]This action is restricted to listmasters or privileged list owners.[%END%]
+
+[%~ ELSIF report_entry == 'action_listmaster_or_privileged_owner_or_author' ~%]
+[%|loc%]This action is restricted to the document author, listmasters, or privileged list owners.[%END%]
+
+[%~ ELSIF report_entry == 'action_privileged_owner' ~%]
+[%|loc%]This action is restricted to privileged list owners.[%END%]
+
+[%~ ELSIF report_entry == 'action_super_listmaster' ~%]
+[%|loc%]This action is restricted to super-listmasters.[%END%]
+
+[%~ ELSIF report_entry == 'edit_right' ~%]
+[%|loc(role,right)%]Rights to this action are '%2' for a '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'not_authenticated' ~%]
+[%|loc(role,right)%]You need to login.[%END%]
+
+[%~ ELSIF report_entry == 'edit_moderated' ~%]
+[%|loc(role,right)%]This action is impossible because editing is a moderated function.[%END%]
+
+[%~ ELSIF report_entry == 'dir_edit_moderated' ~%]
+[%|loc(role,right)%]This action is impossible for directories because editing is a moderated function.[%END%]
+
+[%~ ELSIF report_entry == 'list-no-open' ~%]
+[%|loc%]The list is closed.[%END%]
+
+[%~ ELSE ~%]
+  [%|loc%]you are not allowed to perform this action.[%END%]
+
+[%~ END ~%] 
+
+[%###################~%]
+[%#### INTERN  ERROR ~%]
+[%###################~%]
+[%~ ELSIF report_type == 'intern' ~%]
+
+[% IF report_entry == '' ~%]
+
+[%~ ELSIF report_entry == 'inaccessible_archive' ~%]
+  [%|loc(report_param.year_month)%]Archives from %1 are not accessible[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_load_list_of_topics' ~%]
+  [%|loc%]Unable to load list topics.[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_load_create_list_templates' ~%]
+  [%|loc%]Unable to load create_list templates.[%END%]
+
+[%~ ELSIF report_entry == 'sync_include_failed' # No longer used ~%]
+  [%|loc%]Failed to include members[%END%] 
+
+[%~ ELSIF report_entry == 'sync_include_admin_failed' # No longer used ~%]
+  [%|loc%]Failed to include list admins[%END%] 
+
+[%~ ELSIF report_entry == 'no_owner_defined' ~%]
+  [%|loc%]No owner is defined for the list[%END%] 
+
+[%~ ELSIF report_entry == 'exportation_failed' ~%]
+  [%|loc(report_param.listname)%]The exportation failed for list '%1'[%END%] 
+
+[%~ ELSIF report_entry == 'cannot_create_child' ~%]
+  [%|loc(name)%]Cannot create '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'cannot_unzip' ~%]
+  [%|loc(name)%]Cannot unzip file '%1'.[%END%] 
+
+[%~ ELSIF report_entry == 'auth_msg_failed' ~%]
+  [%|loc(report_param.key)%]Unable to access the message authenticated with key %1[%END%]
+
+[%~ ELSIF report_entry == 'no_identified_user' ~%]
+  [%|loc%]Failed to get your email address from the authentication service.[%END%]
+
+[%~ ELSIF report_entry == 'db_error' ~%]
+  [%|loc%]Database error.[%END%]
+
+[%~ ELSIF report_entry == 'db_update_failed' ~%]
+  [%|loc(report_param.key)%]Failed to update database.[%END%]
+
+[%~ ELSIF report_entry == 'file_update_failed' ~%]
+  [%|loc(report_param.key)%]Failed to update a file.[%END%]
+
+[%~ ELSIF report_entry == 'create_list' ~%]
+  [%|loc(report_param.listname)%]Failed creating list '%1'. The list might already exist or list name might include forbidden characters.[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_rename_list' ~%]
+  [%|loc(report_param.listname,report_param.new_listname)%]Unable to rename list '%1' to '%2'.[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_add_to_database' ~%]
+  [%|loc(report_param.email)%]Attempts to add some users in database failed.[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_delete_from_database' ~%]
+  [%|loc(report_param.email)%]Attempts to delete some users in database failed.[%END%]
+
+[%~ END ~%]
+
+[%############################~%]
+[%########## SUCCESS #########~%]
+[%############################~%]
+[%~ ELSIF report_type == 'notice' ~%]
+
+[% IF report_entry == '' ~%]
+
+[%~ ELSIF report_entry == 'smime' ~%]
+[%|loc%]Your message signature was successfully verified using S/MIME.[%END%]
+
+[%~ ELSIF report_entry == 'dkim' ~%]
+[%|loc%]Your message contains a DKIM signature. It was successfully verified[%END%]
+
+[%~ ELSIF report_entry == 'sent_to_owner' ~%]
+[%|loc%]Your request to subscribe/unsubscribe has been forwarded to the list's owners for approval. You will receive a notification when you have been subscribed (or unsubscribed).[%END%]
+
+[%~###~%]
+[%~ ELSIF report_entry == 'sent_to_owner' ~%]
+  [%|loc%]Your request has been forwarded to the list owner[%END%]
+
+[%~ ELSIF report_entry == 'sent_to_user' ~%]
+  [% IF report_param.email ~%]
+    [%|loc(report_param.email)%]Your request has been forwarded to the user %1[%END%]
+  [%~ ELSE ~%]
+    [%|loc%]To confirm your identity and prevent anyone from subscribing you to this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%]
+  [%~ END %]
+
+[%~###~%]
+[%~ ELSIF report_entry == 'sent_to_user' ~%]
+[% IF report_param.action == 'auto_signoff' ~%]
+[%|loc(report_param.email,report_param.listname)%]You clicked a link to unsubscribe the address %1 from list %2.[% END %]
+[%|loc(report_param.listname)%]A confirmation was just sent to this address. By clicking the link it contains, you will be unsubscribed from list %1[% END %]
+[%~ ELSIF report_param.action == 'subscribe' ~%]
+[%|loc(report_param.listname)%]You've made a subscription request to %1.[%END%]
+[%|loc%]To confirm your identity and prevent anyone from subscribing you to this list against your will, a message containing an validation link was sent to the e-mail address you provided.[%END%]
+[%|loc(report_param.listname)%]Check your mailbox for new messages and click this link. This will confirm your subscription to list %1.[%END%]
+[%~ ELSIF report_param.action == 'signoff' ~%]
+[%|loc(report_param.listname)%]We need to check your identity before validating your unsubscription request for list %1. If you have a user account you should login or create an account. Otherwise we can send you an email with a validation link inside. Please provide your email address below to receive this validation link.[%END%]
+[%|loc%]We've sent you an email including a validation link. Please check your mailbox to read this email and use this validation link.[%END%]
+[%~ END %]
+
+[%~ ELSIF report_entry == 'add_performed' ~%]
+[%|loc(report_param.total)%]%1 subscribers added[%END%]
+
+[%~ ELSIF report_entry == 'updated_info' ~%]
+[%|loc(report_param.email,report_param.listname)%]Information regarding user %1 has been updated for list %2.[%END%]
+
+[%~ ELSIF report_entry == 'now_subscriber' ~%]
+[%|loc(report_param.email,report_param.listname)%]User %1 is now subscriber of list %2.[%END%]
+
+[%~ ELSIF report_entry == 'invite' ~%]
+[%|loc(report_param.email,report_param.listname)%]User %1 has been invited to subscribe in list %2.[%END%]
+
+[%~ ELSIF report_entry == 'remind' ~%]
+[%|loc(report_param.total,report_param.listname)%]Subscription reminder sent to each of %1 %2 subscribers.[%END%]
+
+[%~ ELSIF report_entry == 'glob_remind' ~%]
+[%|loc(report_param.count)%]The Reminder has been sent to %1 users.[%END%]
+
+[%~ ELSIF report_entry == 'removed' ~%]
+[%|loc(report_param.email,report_param.listname)%]The user %1 has been removed from the list %2.[%END%]
+
+[%~ ELSIF report_entry == 'config_updated' ~%]
+[%|loc(report_param.listname)%]Your configuration regarding list %1 has been updated.[%END%]
+
+[%~ ELSIF report_entry == 'finished' ~%]
+[%|loc(report_param.cmd)%]Command '%1' found: ignoring end of message.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_to_moderate' ~%]
+[%|loc(report_param.listname)%]There is no message to moderate for list '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'include_skip' ~%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.listname)%]Including list owners into list %1 was skipped.[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.listname)%]Including moderators into list %1 was skipped.[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.listname)%]Including subscribers into list %1 was skipped.[%END%]
+    [%~ END %]
+
+[%~ ELSIF report_entry == 'include' ~%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.name,report_param.listname)%]List owners were included from data source "%1" into list %2.[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.name,report_param.listname)%]Moderators were included from data source "%1" into list %2.[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.name,report_param.listname)%]Subscribers were included from data source "%1" into list %2.[%END%]
+    [%~ END %]
+
+[%~ ELSIF report_entry == 'include_failed' ~%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.name,report_param.listname)%]Including list owners from data source "%1" into list %2 failed.[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.name,report_param.listname)%]Including moderators from data source "%1" into list %2 failed.[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.name,report_param.listname)%]Including subscribers from data source "%1" into list %2 failed.[%END%]
+    [%~ END %]
+
+[%~ ELSIF report_entry == 'include_incomplete' ~%]
+   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion entirely failed (%1 added, %2 held, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'include_partial' ~%]
+   [%|loc(report_param.result.added,report_param.result.held,report_param.result.updated)%]Inclusion partially failed (%1 added, %2 held, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'include_performed' ~%]
+   [%|loc(report_param.result.added,report_param.result.deleted,report_param.result.updated)%]Inclusion succeeded (%1 added, %2 deleted, %3 updated).[%END%]
+
+[%~ ELSIF report_entry == 'time_limit_for_include' # Maybe no longer used ~%]
+  [%|loc()%]You're not allowed to make sync, time limit in action[%END%]
+
+[%~ ELSIF report_entry == 'del_performed' ~%]
+  [%|loc(report_param.total)%]%1 addresses have been removed[%END%]
+
+[%~ ELSIF report_entry == 'performed' ~%]
+  [%|loc(report_param.action)%]%1: action completed[%END%]
+
+[%~ ELSIF report_entry == 'performed_soon' ~%]
+  [%|loc(report_param.action)%]%1: action will complete soon[%END%]
+
+[%~ ELSIF report_entry == 'list_config_updated' ~%]
+  [%|loc%]Configuration file has been updated[%END%]
+
+[%~ ELSIF report_entry == 'no_parameter_edited' ~%]
+  [%|loc%]No parameter was edited[%END%]
+
+[%~ ELSIF report_entry == 'list_purged' ~%]
+  [%|loc%]List has been purged[%END%]
+
+[%~ ELSIF report_entry == 'list_closed' ~%]
+  [%|loc%]List has been closed[%END%]
+
+[%~ ELSIF report_entry == 'list_restored' ~%]
+  [%|loc%]List has been restored[%END%]
+
+[%~ ELSIF report_entry == 'upload_success' ~%]
+  [%|loc(report_param.path)%]File %1 successfully uploaded![%END%]
+
+[%~ ELSIF report_entry == 'unzip_success' ~%]
+  [%|loc(report_param.path)%]File %1 unzipped![%END%]
+
+[%~ ELSIF report_entry == 'file_erased' ~%]
+  [%|loc(report_param.path)%]Old file %1 has been erased[%END%]
+
+[%~ ELSIF report_entry == 'to_moderate' ~%]
+  [%|loc(report_param.path)%]File %1 waiting for moderation[%END%]
+
+[%~ ELSIF report_entry == 'save_success' ~%]
+  [%|loc(report_param.path)%]File %1 saved[%END%]
+
+[%~ ELSIF report_entry == 'password_sent' ~%]
+  [%|loc%]Your password has been emailed to you[%END%]
+
+[%~ ELSIF report_entry == 'you_should_choose_a_password' ~%]
+  [%|loc%]To choose your password go to 'preferences', from the upper menu.[%END%]
+
+[%~ ELSIF report_entry == 'no_msg_document' ~%]
+  [%|loc(report_param.list)%]No message and no document to moderate for list %1[%END%]
+
+[%~ ELSIF report_entry == 'member_updated' # No longer used ~%]
+  [%|loc%]The list of list subscribers has been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'owner_updated' # No longer used ~%]
+  [%|loc%]The list of list owners has been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'editor_updated' # No longer used ~%]
+  [%|loc%]The list of list moderators has been built/updated.[%END%]
+
+[%~ ELSIF report_entry == 'subscribers_updated_soon' # No longer used ~%]
+  [%|loc%]The list of list members will be built/updated soon (a few minutes).[%END%]
+
+[%~ ELSIF report_entry == 'member_updated_soon' ~%]
+  [%|loc%]The list of list subscribers will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize members with data sources".[%END%]
+
+[%~ ELSIF report_entry == 'owner_updated_soon' ~%]
+  [%|loc%]The list of list owners will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize owners with data sources".[%END%]
+
+[%~ ELSIF report_entry == 'editor_updated_soon' ~%]
+  [%|loc%]The list of moderators will be built/updated soon (in an hour). If you wish immediate update, click "Synchronize moderators with data sources".[%END%]
+
+[%~ ELSIF report_entry == 'subscribers_noticed_deleted_topics' ~%]
+  [%|loc%]Concerned subscribers have been notified about deleted topics.[%END%]
+
+[%~ ELSIF report_entry == 'you_have_been_authenticated' ~%]
+  [%|loc%]You have been authenticated[%END%]
+
+[%~ ELSIF report_entry == 'file_renamed' ~%]
+  [%|loc(report_param.orig_file,report_param.new_file)%]File %1 has been renamed to %2[%END%]
+
+[%~ ELSIF report_entry == 'pending_list' ~%]
+  [%|loc%]List has been set to the pending status. The listmaster needs to approve it.[%END%]
+
+[%~ ELSIF report_entry == 'listname_lowercased' ~%]
+  [%|loc%]List name has been lowercased[%END%]
+
+[%~ ELSIF report_entry == 'auto_aliases' ~%]
+  [%|loc%]Aliases have been installed.[%END%] ([% report_param.listname %])
+
+[%~ ELSIF report_entry == 'user_notified' ~%]
+  [%|loc(report_param.notified_user)%]User %1 has been notified[%END%]
+
+[%~ ELSIF report_entry == 'logout' ~%]
+  [%|loc%]You have logged out[%END%]
+
+[%~ ELSIF report_entry == 'account_deleted' ~%]
+  [%|loc%]You have been unsubscribed from all your lists and your account has been deleted[%END%]
+
+[%~ END ~%]
+
+[%################~%]
+[%#### USER  ERROR~%]
+[%################~%]
+[%~ ELSIF report_type == 'user' ~%]
+
+[% IF report_entry == '' ~%]
+
+[%~ ELSIF report_entry == 'unknown_command' ~%]
+  [%|loc%]Command not understood: ignoring end of message.[%END%]
+
+[%~ ELSIF report_entry == 'unknown_action' ~%]
+  [%|loc()%]Unknown action[%END%]
+
+[%~ ELSIF report_entry == 'no_verify_sign' ~%]
+  [%|loc%]Your message was not a multipart/signed message or Sympa could not verify the signature (be aware that Sympa can't check signature if you use the subject header to write a command).[%END%]
+
+[%~ ELSIF report_entry == 'syntax_errors' ~%]
+  [% IF report_param.p_name ~%]
+    [%|loc(report_param.p_name)%]Syntax errors with the following parameters: %1[%END%]
+  [%~ ELSE ~%]
+    [%|loc%]Command syntax error.[%END%]
+  [%~ END %]
+
+[%~ ELSIF report_entry == 'unknown_list' ~%]
+  [%|loc(report_param.listname)%]List '%1' does not exist.[%END%]
+
+[%~###~%]
+[%~ ELSIF report_entry == 'unknown_list' ~%]
+  [%|loc(report_param.listname)%]%1: unknown list[%END%]
+
+[%~ ELSIF report_entry == 'no_subscriber_preference' ~%]
+  [%|loc(report_param.listname)%]%1 mailing list does not provide subscriber preferences.[%END%]
+
+[%~ ELSIF report_entry == 'not_subscriber' ~%]
+[%|loc(report_param.email,report_param.listname)%]Your e-mail address %1 has not been found in the list %2. Maybe you subscribed from a different e-mail address?[%END%]
+
+[%~ ELSIF report_entry == 'user_not_subscriber' ~%]
+[%|loc(report_param.email,report_param.listname)%]E-mail address %1 was not found in list %2.[%END%]
+
+[%~ ELSIF report_entry == 'not_list_user' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.email,report_param.listname)%]E-mail address %1 was not found in the owners of list %2.[%END%]
+  [%~ ELSIF report_param.role == 'editor' ~%]
+    [%|loc(report_param.email,report_param.listname)%]E-mail address %1 was not found in the moderators of list %2.[%END%]
+  [%~ END %]
+
+[%~ ELSIF report_entry == 'no_digest' ~%]
+[%|loc(report_param.listname)%]List %1 does not accept the DIGEST mode. Your configuration has not been changed.[%END%]
+
+[%~ ELSIF report_entry == 'not_available_reception_mode' ~%]
+  [% IF report_param.role == 'owner' || report_param.role == 'editor' ~%]
+    [%|loc(report_param.reception_mode)%]%1 is not an available reception mode[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.listname)%]List %1 allows only these reception modes: [%END%]
+    [%~ FOREACH m = report_param.reception_modes ~%]
+      [% IF loop.size >= 2 && loop.count == loop.size ~%]
+        [%|loc%], and [%END%][% m | optdesc('reception',1)%]
+      [%~ ELSIF loop.count > 1 ~%]
+        [%|loc%], [%END%][% m | optdesc('reception',1)%]
+      [%~ ELSE ~%]
+        [% m | optdesc('reception',1)%]
+      [%~ END %]
+    [%~ END %]
+  [%~ END %]
+
+[%~ ELSIF report_entry == 'not_available_visibility' ~%]
+  [%|loc(report_param.visibility)%]%1 is not an available visibility[%END%]
+
+[%~ ELSIF report_entry == 'not_available_profile' ~%]
+  [%|loc(report_param.profile)%]%1 is not an available owner profile[%END%]
+
+[%~ ELSIF report_entry == 'no_changed_propereties' ~%]
+  [%|loc%]no changed properties[%END%]
+
+[%~ ELSIF report_entry == 'empty_archives' ~%]
+[%|loc%]Archives are empty for this list[%END%]
+
+[%~ ELSIF report_entry == 'no_required_file' ~%]
+  [%|loc%]Required file does not exist.[%END%]
+
+[%~ ELSIF report_entry == 'no_subscriber' ~%]
+[%|loc%]List has no subscribers[%END%]
+
+[%~ ELSIF report_entry == 'already_subscriber' ~%]
+  [%|loc(report_param.email,report_param.listname)%]The User '%1' is already subscriber of list '%2'.[%END%]
+
+[%~ ELSIF report_entry == 'list_not_open' ~%]
+  [% statdesc = BLOCK %][% report_param.status | optdesc('status') %][%END ~%]
+  [%|loc(statdesc)%]Service unavailable because list status is '%1'[%END%]
+
+[%~ ELSIF report_entry == 'max_list_members_exceeded' ~%]
+  [%|loc(report_param.email,report_param.listname,report_param.max_list_members)%]Unable to add user '%1' in list '%2'. Attempt to exceed the max number of members (%3) for this list.[%END%]
+
+[%~ ELSIF report_entry == 'wrong_email_confirm' ~%]
+  [% IF report_param.command == 'subscribe' ~%]
+    [%|loc%]The authentication process failed. You probably confirmed your subscription using a different email address. Please try using your canonical address.[%END%]
+  [%~ ELSIF report_param.command == 'signoff' ~%]
+    [%|loc%]The authentication process failed. You probably confirmed your unsubscription using a different email address. Please try using your canonical address.[%END%]
+  [%~ ELSIF report_param.command == 'add' ~%]
+    [%|loc%]The authentication process failed. You probably confirmed your addition using a different email address. Please try using your canonical address.[%END%]
+  [%~ ELSIF report_param.command == 'invite' ~%]
+    [%|loc%]The authentication process failed. You probably confirmed your invitation using a different email address. Please try using your canonical address.[%END%]
+  [%~ ELSIF report_param.command == 'del' ~%]
+    [%|loc%]The authentication process failed. You probably confirmed your deletion using a different email address. Please try using your canonical address.[%END%]
+  [%~ ELSIF report_param.command == 'remind' ~%]
+    [%|loc%]The authentication process failed. You probably confirmed your request of subscription reminder using a different email address. Please try using your canonical address.[%END%]
+  [%~ ELSIF report_param.command == 'global_remind' ~%]
+    [%|loc%]The authentication process failed. You probably confirmed your request of subscription reminder using a different email address. Please try using your canonical address.[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.command)%]The authentication process failed. You probably confirmed your "%1" command using a different email address. Please try using your canonical address.[%END%]
+  [%~ END %]
+
+[%~ ELSIF report_entry == 'already_moderated' ~%]
+[%|loc(report_param.listname,report_param.key)%]Unable to access the message on list %1 with key %2.
+Warning: this message may already have been sent by one of the list's moderators.[%END%]
+
+[%~###~%]
+[%~ ELSIF report_entry == 'already_moderated' ~%]
+  [%|loc%]Failed to moderate a message. It was probably moderated by another moderator.[%END%]
+
+[%~ ELSIF report_entry == 'already_confirmed' ~%]
+  [%|loc(report_param.key)%]Unable to access the message authenticated with key %1. The message may already been confirmed.[%END%]
+
+[%~###~%]
+[%~ ELSIF report_entry == 'already_confirmed' ~%]
+  [%|loc%]Failed to get the held message; it has probably been confirmed[%END%]
+
+[%~ ELSIF report_entry == 'no_lists' ~%]
+  [%|loc%]No lists available.[%END%]
+
+[%~ ELSIF report_entry == 'wrong_param' ~%]
+  [%|loc()%]Wrong parameters[%END%]
+
+[%~ ELSIF report_entry == 'authorization_reject' ~%]
+  [%|loc()%]Authorization rejected. Maybe you forgot to log in?[%END%]
+
+[%~ ELSIF report_entry == 'unknown_robot' ~%]
+  [%|loc(report_param.new_robot)%]%1: unknown robot[%END%]
+
+[%~ ELSIF report_entry == 'unknown_family' ~%]
+  [%|loc(report_param.family)%]%1: unknown family[%END%]
+
+[%~ ELSIF report_entry == 'already_login' ~%]
+  [%|loc(report_param.email)%]You are already logged in as %1[%END%]
+
+[%~ ELSIF report_entry == 'passwd_reminder_not_allowed' ~%]
+  [%|loc%]You cannot receive a password reminder. This could be because your password is managed outside of Sympa by a Single Sign-On system or LDAP directory.[%END%]
+
+[%~ ELSIF report_entry == 'no_email' ~%]
+  [%|loc%]Please provide an email address[%END%]
+
+[%~ ELSIF report_entry == 'missing_arg' ~%]
+  [%|loc(report_param.argument)%]Missing argument %1[%END%]
+
+[%~ ELSIF report_entry == 'prohibited_listname' ~%]
+  [%|loc(report_param.argument)%]The name you want to use for your list (%1) is prohibited by the configuration of the server.[%END%]
+
+[%~ ELSIF report_entry == 'missing_post_source' ~%]
+  [%|loc()%]You didn't define the web page you want to use to create your newsletter. Please specify either an URL or a file to upload.[%END%]
+
+[%~ ELSIF report_entry == 'two_post_sources_defined' ~%]
+  [%|loc()%]You specified both an URL and a file to upload. Sympa can't choose which one to send. Please fill the form with one of them only. A web page OR a file to upload.[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_parse' ~%]
+  [%|loc()%]The page could not be parsed properly. Please check the content of web page or file you submitted.[%END%]
+  [% report_param.error %]
+
+[%~ ELSIF report_entry == 'wrong_value' ~%]
+  [%|loc(report_param.argument)%]Wrong value for parameter %1[%END%]
+
+[%~ ELSIF report_entry == 'no_user' ~%]
+  [%|loc%]You need to login[%END%]
+
+[%~ ELSIF report_entry == 'incorrect_email' ~%]
+  [%|loc(report_param.email || report_param.value)%]Address "%1" is incorrect[%END%]
+
+[%~ ELSIF report_entry == 'blocklisted_domain' ~%]
+  [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blocklisted domain[%END%]
+
+[%~ ELSIF report_entry == 'email_is_the_list' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.email)%]Address "%1" is the address for the list owners[%END%]
+  [%~ ELSIF report_param.role == 'editor' ~%]
+    [%|loc(report_param.email)%]Address "%1" is the address for the list moderators[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.email)%]Address "%1" is the address of the list[%END%]
+  [%~ END %]
+
+[%~ ELSIF report_entry == 'incorrect_passwd' ~%]
+  [%|loc%]Provided password is incorrect[%END%]
+
+[%~ ELSIF report_entry == 'init_passwd' ~%]
+  [%|loc%]You did not choose a password, request a reminder of the initial password[%END%]
+
+[%~ ELSIF report_entry == 'ldap_user' ~%]
+  [%|loc%]Your password is stored in an LDAP directory, therefore Sympa cannot post a reminder[%END%]
+
+[%~ ELSIF report_entry == 'nb_days_to_much' ~%]
+  [%|loc(report_param.nb_days)%]The period is too long (%1 days)[%END%]
+
+[%~ ELSIF report_entry == 'no_page' ~%]
+  [%|loc(report_param.page)%]No page %1[%END%]
+
+[%~ ELSIF report_entry == 'no_filter' ~%]
+  [%|loc%]Missing filter[%END%]
+
+[%~ ELSIF report_entry == 'custom_attribute' ~%]
+  [%|loc%]Check the additional information[%END%]
+
+[%~ ELSIF report_entry == 'file_not_editable' ~%]
+  [%|loc(report_param.file)%]%1: file not editable[%END%]
+
+[%~ ELSIF report_entry == 'user_already_subscriber' ~%]
+  [%|loc(report_param.email,report_param.list)%]%1 is already subscribed to the list %2[%END%] 
+
+[%~ ELSIF report_entry == 'no_passwd' ~%]
+  [%|loc%]Please provide your password[%END%]
+
+[%~ ELSIF report_entry == 'diff_passwd' ~%]
+  [%|loc%]The passwords you typed do not match[%END%]
+
+[%~ ELSIF report_entry == 'passwd_validation' ~%]
+  [%|loc(report_param.reason)%]The password you typed does not match this sites standards of strength: %1. Please pick a stronger password.[%END%]
+
+[%~ ELSIF report_entry == 'unknown_template' ~%]
+  [%|loc(report_param.tpl)%]Provided path is incorrect for template '%1'[%END%]
+
+[%~ ELSIF report_entry == 'cannot_open_file' ~%]
+  [%|loc(report_param.path)%]Cannot open file '%1'[%END%]
+
+[%~ ELSIF report_entry == 'listname_needed' ~%]
+  [%|loc%]You need to provide list name[%END%]
+
+[%~ ELSIF report_entry == 'msg_topic_missing' ~%]
+  [%|loc%]Tagging message is required for this list[%END%]
+
+[%~###~%]
+[%~ ELSIF report_entry == 'msg_topic_missing' ~%]
+  [%|loc%]Tag message with topic is required for this list[%END%]
+
+[%~ ELSIF report_entry == 'didnt_change_anything' ~%]
+  [%|loc%]You did not select an action to perform[%END%]
+
+[%~ ELSIF report_entry == 'no_bounce_user' ~%]
+  [%|loc(report_param.email)%]No bounce for user  %1[%END%]
+
+[%~ ELSIF report_entry == 'no_bounce_subscriber' ~%]
+  [%|loc%]List has no bouncing subscribers[%END%]
+
+[%~ ELSIF report_entry == 'config_changed' ~%]
+  [%|loc(report_param.email)%]Config file has been modified by %1. Cannot apply your changes[%END%]
+
+[%~ ELSIF report_entry == 'topic_other' ~%]
+  [%|loc%]Topic "other" is a reserved word[%END%]
+
+[%~ ELSIF report_entry == 'mandatory_parameter' ~%]
+  [%|loc(report_param.p_name)%]Parameter '%1' is mandatory. Ignoring deletion.[%END%]
+
+[%~ ELSIF report_entry == 'unique_paragraph_key' ~%]
+  [%|loc(report_param.value,report_param.p_name)%]Duplicate value '%1' for parameter '%2'. Ignoring change.[%END%]
+
+[%~ ELSIF report_entry == 'p_family_controlled' ~%]
+  [%|loc(report_param.param)%]Parameter '%1' must have values[%END%]
+
+[%~ ELSIF report_entry == 'p_family_wrong' ~%]
+  [%|loc(report_param.param,report_param.val)%]Parameter '%1' has got wrong value: '%2'[%END%]
+
+[%~ ELSIF report_entry == 'already_closed' ~%]
+  [%|loc(report_param.listname)%]The list '%1' is already closed[%END%]
+
+[%~ ELSIF report_entry == 'not_closed' ~%]
+  [%|loc(report_param.listname)%]The list '%1' is not closed[%END%]
+
+[%~ ELSIF report_entry == 'incorrect_listname' ~%]
+  [%|loc(report_param.bad_listname)%]'%1': bad list name[%END%]
+
+[%~ ELSIF report_entry == 'list_already_exists' ~%]
+  [%|loc(report_param.new_listname)%]'%1' list already exists[%END%]
+
+[%~ ELSIF report_entry == 'listname_matches_aliases' ~%]
+  [%|loc(report_param.new_listname)%]Incorrect list name '%1': matches one of service aliases[%END%]
+
+[%~ ELSIF report_entry == 'failed_to_install_aliases' ~%]
+  [%|loc(report_param.listname)%]Failed to remove list aliases for list %1[%END%] 
+
+[%~ ELSIF report_entry == 'no_such_document' ~%]
+  [%|loc(report_param.path)%]%1: No such file or directory[%END%] 
+
+[%~ ELSIF report_entry == 'empty_document' ~%]
+  [%|loc(report_param.path)%]Unable to read %1: empty document[%END%]
+
+[%~ ELSIF report_entry == 'no_shared' ~%]
+  [%|loc%]There is no shared documents[%END%]
+
+[%~ ELSIF report_entry == 'shared_empty' ~%]
+  [%|loc%]The shared document space is empty[%END%]
+
+[%~ ELSIF report_entry == 'cannot_describe_shared_directory'~%]
+  [%|loc%]The shared directory cannot have any description[%END%]
+
+[%~ ELSIF report_entry == 'no_description' ~%]
+  [%|loc%]No description specified[%END%]
+
+[%~ ELSIF report_entry == 'no_doc_to_describe' ~%]
+  [%|loc(report_param.path)%]Unable to describe, the document '%1' does not exist[%END%]
+
+[%~ ELSIF report_entry == 'synchro_failed' ~%]
+  [%|loc%]Data has changed on disk. Cannot apply your changes[%END%] 
+
+[%~ ELSIF report_entry == 'incorrect_name' ~%]
+  [%|loc(report_param.name)%]%1: incorrect name[%END%]
+  [%~ IF report_param.reason %][%|loc%]:[%END%] [% report_param.reason %][%END%]
+
+[%~ ELSIF report_entry == 'no_content' ~%]
+  [%|loc%]Failed: your content is empty[%END%]  
+
+[%~ ELSIF report_entry == 'cannot_overwrite' ~%]
+  [%|loc(report_param.path)%]Cannot overwrite file %1:[%END%] [% report_param.reason %]
+
+[%~ ELSIF report_entry == 'doc_already_a_dir' ~%]
+  [%|loc(report_param.path)%]A directory named '%1' already exists:[%END%] [% report_param.reason %]
+
+[%~ ELSIF report_entry == 'doc_already_exist' ~%]
+  [%|loc(report_param.name)%]This is an already existing document: '%1'[%END%]
+
+[%~ ELSIF report_entry == 'no_name' ~%]
+  [%|loc%]No name specified[%END%] 
+
+[%~ ELSIF report_entry == 'shared_full' ~%]
+  [%|loc%]The document repository exceed disk quota.[%END%]
+
+[%~ ELSIF report_entry == 'cannot_upload' ~%]
+  [%|loc(report_param.path)%]Cannot upload file %1:[%END%] [% report_param.reason %]
+
+[%~ ELSIF report_entry == 'index_html' ~%]
+  [%|loc(report_param.dir)%]You're not authorized to upload an INDEX.HTML file in %1[%END%] 
+
+[%~ ELSIF report_entry == 'no_uploaded_file' ~%]
+  [%|loc%]The upload failed, try it again[%END%] 
+
+[%~ ELSIF report_entry == 'directory_no_copied' ~%]
+  [%|loc(report_param.name,report_param.reason)%]Directory %1 and its contents could not be copied: %2[%END%]
+
+[%~ ELSIF report_entry == 'file_no_copied' ~%]
+  [%|loc(report_param.name,report_param.reason)%]File %1 was not copied: %2 [%END%]
+
+[%~ ELSIF report_entry == 'full_directory' ~%]
+  [%|loc(report_param.directory)%]Failed: %1 not empty[%END%] 
+
+[%~ ELSIF report_entry == 'missing_cert' ~%]
+  [%|loc%]No certificate for this list[%END%]
+
+[%~ ELSIF report_entry == 'no_topic' ~%]
+  [%|loc%]This list has no message topic[%END%]
+
+[%~ ELSIF report_entry == 'no_entry' ~%]
+  [%|loc(report_param.email)%]No entry for user '%1'[%END%]
+
+[%~ ELSIF report_entry == 'select_month' ~%]
+  [%|loc%]Please select archive months[%END%]
+
+[%~ ELSIF report_entry == 'no_soap_service' ~%]
+  [%|loc%]No SOAP service[%END%]
+
+[%~ ELSIF report_entry == 'auth_failed' ~%]
+  [%|loc%]Authentication failed[%END%]
+
+[%~ ELSIF report_entry == 'template_exists' ~%]
+  [%|loc(report_param.argument)%]This Template '%1' already exists[%END%]
+
+[%~ ELSIF report_entry == 'cannot_delete' ~%]
+  [%|loc(report_param.file_del)%]Cannot delete this file '%1'[%END%]
+
+[%~ ELSIF report_entry == 'invalid_filename' ~%]
+  [%|loc(report_param.filename)%]Unable to read file: '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'change_member_email_failed' ~%]
+  [%|loc(report_param.email,report_param.listname)%]Failed to update member email '%1' in list '%2'.[%END%]
+
+[%~ ELSIF report_entry == 'change_member_email_failed_included' ~%]
+  [%|loc(report_param.listname)%]Failed to update member email in list '%1', list owner has been notified.[%END%]
+
+[%~ ELSIF report_entry == 'change_member_email_failed_deleting' ~%]
+  [%|loc(report_param.email,report_param.listname)%]Failed to delete member email '%1' in list '%2'.[%END%]
+
+[%~ ELSIF report_entry == 'change_admin_email_failed' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.email,report_param.listname)%]Failed to update owner email '%1' in list '%2'.[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.email,report_param.listname)%]Failed to update moderator email '%1' in list '%2'.[%END%]
+  [%~ END %]
+
+[%~ ELSIF report_entry == 'change_admin_email_failed_included' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.listname)%]Failed to update owner email in list '%1', listmaster has been notified.[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.listname)%]Failed to update moderator email in list '%1', listmaster has been notified.[%END%]
+  [%~ END %]
+
+[%~ ELSIF report_entry == 'change_admin_email_failed_deleting' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.email,report_param.listname)%]Failed to delete owner email '%1' in list '%2'.[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.email,report_param.listname)%]Failed to delete moderator email '%1' in list '%2'.[%END%]
+  [%~ END %]
+
+[%~ ELSIF report_entry == 'no_email_changed' ~%]
+[%|loc%]Address was not changed.[%END%]
+
+[%~ ELSIF report_entry == 'merge_failed' ~%]
+  [%|loc(report_param.error)%]Your message cannot be personalized due to error: %1.  Please check template syntax.[%END%]
+
+[%~ ELSIF report_entry == 'owner_domain' ~%]
+  [%|loc(report_param.value,report_param.owner_domain)%]%1: all list owners must be in the following domains: %2.[%END%]
+
+[%~ ELSIF report_entry == 'owner_domain_min' ~%]
+  [%|loc(report_param.value,report_param.owner_domain_min,report_param.owner_domain)%]Unable to reduce the number of list owners in required domains to %1. Domains that count toward the minimum requirement of %2: %3[%END%]
+
+[%~ ELSIF report_entry == 'still_owner' ~%]
+  [%|loc(report_param.lists)%]You are the only owner of the following list(s): %1. Please give ownership to other people before deleting your account. You have been unsubscribed from all your lists though.[%END%]
+
+[%~ ELSIF report_entry == 'no_classic_session' ~%]
+  [%|loc()%]You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.).[%END%]
+
+[%~ ELSIF report_entry == 'unknown_authentication_service' ~%]
+  [%|loc(report_param.name)%]Unknown authentication service %1.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_send' ~%]
+  [%|loc()%]Unable to send archive: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_view' ~%]
+  [%|loc()%]Unable to view archived message: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'list_not_configured_for_tracking' ~%]
+  [%|loc()%]This list is not configured for tracking.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_in_archive' ~%]
+  [%|loc(report_param.msgid)%]No message found in archives matching Message-ID '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'unknown_scenario' ~%]
+  [%|loc(report_param.msgid)%]Unknown scenario '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'month_not_found' ~%]
+  [%|loc(report_param.month)%]Unable to find month '%1'[%END%]
+
+[%~ ELSIF report_entry == 'cannot_get_privilege' ~%]
+  [%|loc()%]You are not allowed to get the privilege of this user.[%END%]
+
+[%~ END ~%]
+
+[%~ END ~%]

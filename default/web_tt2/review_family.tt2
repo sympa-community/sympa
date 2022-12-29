@@ -1,21 +1,21 @@
-<!-- $Id$ -->
+<!-- review_family.tt2 -->
 
-<table  class="responsive listOfItems">
-<caption>[%|loc%]Table which display family lists[%END%]</caption>
- <tr>
-   <th>[%|loc%]Status[%END%]</th>
-   <th>[%|loc%]Listname[%END%]</th>
-   <th>[%|loc%]Instantiation date[%END%]</th>
-   <th>[%|loc%]Subject[%END%]</th>
- </tr>
+<table class="responsive listOfItems">
+    <caption>[%|loc%]Table which display family lists[%END%]</caption>
+    <tr>
+        <th>[%|loc%]Status[%END%]</th>
+        <th>[%|loc%]List name[%END%]</th>
+        <th>[%|loc%]Instantiation date[%END%]</th>
+        <th>[%|loc%]Subject[%END%]</th>
+    </tr>
 
-[% FOREACH list = family_lists %]
-<tr>
-<td>[%|optdesc('status')%][% list.status %][%END%]</td>
-<td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
-<td>[% list.instantiation_date %]</td>
-<td>[% list.subject %]</td>
-</tr>
-[% END %]
+    [% FOREACH list = family_lists %]
+        <tr>
+            <td>[% list.status | optdesc('status')%]</td>
+            <td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
+            <td>[% list.instantiation_date_epoch | optdesc('unixtime') %]</td>
+            <td>[% list.subject %]</td>
+        </tr>
+    [% END %]
 </table>
 <!-- end review_family.tt2 -->

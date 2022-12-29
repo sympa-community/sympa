@@ -1,52 +1,81 @@
-<!-- $Id$ -->
+<!-- docindex.tt2 -->
 <h2>[%|loc%]Listing of shared documents to moderate[%END%]</h2>
-[% IF mod_total_shared %]
-<form class="noborder" action="[% path_cgi %]" method="post" name="moderate_shared">
-<fieldset>
-  <input type="hidden" name="list" value="[% list %]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
-  <br />
-    <table  class="responsive listOfItems">
-    <caption>[%|loc%]Listing of documents shared to moderate[%END%]</caption>
-      <tr>
-	<th><a href="#" onclick="toggle_selection(document.moderate_shared.id)" title="[%|loc%]Toggle Selection[%END%]"><i class="fa fa-check-square-o"></i></a></th>
-        <th>[%|loc%]Date[%END%]</th>
-	<th>[%|loc%]Author[%END%]</th>
-	<th>[%|loc%]Path[%END%]</th>
-	<th>[%|loc%]Size[%END%]	</th>
-      </tr>	 
-      [% FOREACH f = info_doc_mod %]
-        <tr>
-         <td>
-            <input type="checkbox" name="id" value="[% f.path %][% f.fname %]" />
-	 </td>
-	  <td>
-	    [% IF f.date %]
-	      [% f.date %]
-	    [% ELSE %]
-	      &nbsp;
-	    [% END %]
-	  </td>
-	  <td>[% f.author %]</td>
-	  <td>
-	    [%# FIXME:path would be percent-encoded. ~%]
-	    <a href="[% 'd_read' | url_rel([list]) %][% f.escaped_path %][% f.escaped_fname %]">[% f.visible_path %][% f.visible_fname %]</a>
-	  </td>
-	  <td>[% f.size %] kb</td>
-	</tr>
-      [% END %] 
-    </table>
 
-  <input class="MainMenuLinks" type="button" value="[%|loc%]Toggle Selection[%END%]" onclick="toggle_selection(document.moderate_shared.id)" />
-<br /><br />
-  <input class="MainMenuLinks" type="submit" name="action_d_install_shared" value="[%|loc%]Install[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_reject_shared.quiet" value="[%|loc%]Reject[%END%]" />
-  <input class="MainMenuLinks" type="submit" name="action_d_reject_shared" value="[%|loc%]Notified reject[%END%]" />
-</fieldset>
-</form>
-[% ELSE %]
-<p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No documents to moderate[%END%]</p>
-[% END %]
+[% IF shared_doc.children ~%]
+    <form id="docindex" name="docindex" action="[% path_cgi %]" method="POST">
+        <fieldset class="toggleContainer" data-toggle-selector="input[name='id']" role="table">
+            <input type="hidden" name="list" value="[% list %]" form="docindex" />
+                <div class="row" role="row">
+                    <div class="small-2 medium-1 columns" role="columnheader">
+                        <a href="#" data-tooltip aria-haspopup="true"
+                           title="[%|loc%]Toggle Selection[%END%]"
+                           class="toggleButton">
+                            <i class="fa fa-check-square-o"></i>
+                        </a>&nbsp;&nbsp;
+                    </div>
+                    <div class="small-4 medium-4 columns" role="columnheader">
+                        <label>[%|loc%]Author[%END%]</label>
+                    </div>
+                    <div class="small-6 medium-3 columns" role="columnheader">
+                        <label>[%|loc%]Path[%END%]</label>
+                    </div>
+                    <div class="medium-2 columns show-for-medium" role="columnheader">
+                        <label>[%|loc%]Date[%END%]</label>
+                    </div>
+                    <div class="medium-2 columns show-for-medium" role="columnheader">
+                        <label>[%|loc%]Size[%END%]</label>
+                    </div>
+                </div>
+                [% FOREACH f = shared_doc.children ~%]
+                    <div class="row" role="row">
+                        <div class="columns" role="separator"><hr /></div>
+                    </div>
+                    <div class="row" role="row">
+                        <div class="small-2 medium-1 columns" role="cell">
+                            <input type="checkbox" name="id" value="[% f.paths.join("/") %]" form="docindex" />&nbsp;&nbsp;
+                        </div>
+                        <div class="small-4 medium-4 columns" role="cell">
+                            [% f.owner %]
+                        </div>
+                        <div class="small-6 medium-3 columns" role="cell">
+                            <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">
+                                [% f.paths.join("/") %]
+                            </a>
+                        </div>
+                        <div class="small-11 medium-2 columns" role="cell">
+                            [% UNLESS f.date ~%]
+                                <i>[%|loc%](unknown date)[%END%]</i>
+                            [%~ ELSE ~%]
+                                [% f.date %]
+                            [%~ END %]
+                        </div>
+                        <div class="show-for-medium medium-2 columns" role="cell">
+                            [% f.size %] [%|loc%]Kbytes[%END%]
+                        </div>
+                    </div>
+                [%~ END %]
+
+            <div class="row" role="row">
+                <div class="columns">
+                    <input class="MainMenuLinks disableUnlessChecked"
+                           data-selector="input[name='id']"
+                           type="submit" name="action_d_install_shared"
+                           value="[%|loc%]Install[%END%]" />
+                    <input class="MainMenuLinks disableUnlessChecked"
+                           data-selector="input[name='id']"
+                           type="submit" name="action_d_reject_shared.quiet"
+                           value="[%|loc%]Reject[%END%]" />
+                    <input class="MainMenuLinks disableUnlessChecked"
+                           data-selector="input[name='id']"
+                           type="submit" name="action_d_reject_shared"
+                           value="[%|loc%]Notified reject[%END%]" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+[%~ ELSE ~%]
+    <p class="small-8 small-centered columns alert-box info text-center">
+        [%|loc%]No documents to moderate[%END%]
+    </p>
+[%~ END %]
 <!-- end docindex.tt2 -->

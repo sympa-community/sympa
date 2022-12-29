@@ -1,3 +1,5 @@
+# subscribe.open
 title.gettext for anyone without authentication
 
-true()  smtp,dkim,smime,md5 -> do_it
+!equal([sender],[email])           smtp,md5,smime -> request_auth([email])
+true()                             smtp,md5,smime -> do_it

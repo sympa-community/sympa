@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,9 +38,9 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Message::Plugin;
 use Sympa::Regexps;
+use Sympa::Spool::Topic;
 use Sympa::Template;
 use Sympa::Tools::Data;
-use Sympa::Topic;
 
 use base qw(Sympa::Spindle);
 
@@ -56,12 +59,12 @@ sub _twist {
     my $robot = $list->{'domain'};
 
     # Update msg_count, and returns the new X-Sequence, if any.
-    $message->{xsequence} = $list->get_next_sequence;
+    ($message->{xsequence}) = $list->update_stats(1);
 
     ## Loading info msg_topic file if exists, add X-Sympa-Topic
     my $topic;
     if ($list->is_there_msg_topic) {
-        $topic = Sympa::Topic->load($message);
+        $topic = Sympa::Spool::Topic->load($message);
     }
     if ($topic) {
         # Add X-Sympa-Topic: header.
@@ -79,9 +82,8 @@ sub _twist {
         $message->replace_header('From',
             $list->{'admin'}{'anonymous_sender'});
         $message->delete_header('Resent-From');
-        my $new_id =
-            $list->{'name'} . '.' . $message->{xsequence} . '@anonymous';
-        $message->replace_header('Message-Id', "<$new_id>");
+        my $new_id = Sympa::unique_message_id($list);
+        $message->replace_header('Message-Id', $new_id);
         $message->delete_header('Resent-Message-Id');
 
         # Duplicate topic file by new message ID.
@@ -197,10 +199,12 @@ sub _twist {
     ## Prepare tracking if list config allow it
     my @apply_tracking = ();
 
-    push @apply_tracking, 'dsn'
+    push @apply_tracking,
+        'dsn'
         if Sympa::Tools::Data::smart_eq(
         $list->{'admin'}{'tracking'}->{'delivery_status_notification'}, 'on');
-    push @apply_tracking, 'mdn'
+    push @apply_tracking,
+        'mdn'
         if Sympa::Tools::Data::smart_eq(
         $list->{'admin'}{'tracking'}->{'message_disposition_notification'},
         'on')
@@ -242,15 +246,70 @@ Process to transform messages - first stage
 
 =head1 DESCRIPTION
 
-TBD.
+This class executes the first stage of message transformation to be sent
+through the list. This stage is put before storing messages into archive
+spool (See also L<Sympa::Spindle::DistributeMessage>).
+Transformation processes by this class are done in the following order:
+
+=over
+
+=item *
+
+Executes C<pre_distribute> hook of L<message hooks|Sympa::Message::Plugin>
+if available.
+
+=item *
+
+Adds C<X-Sympa-Topic> header field, if any message topics
+(see L<Sympa::Spool::Topic>) are tagged for the message.
+
+=item *
+
+Anonymizes message,
+if L<C<anonymous_sender>|list_config(5)/anonymous_sender> list configuration
+parameter is enabled.
+
+=item *
+
+Adds custom subject tag to C<Subject> field, if
+L<C<custom_subject>|list_config(5)/custom_subject> list configuration
+parameter is available.
+
+=item *
+
+Enables message tracking (see L<Sympa::Tracking>) if necessary.
+
+=item *
+
+Removes header fields specified by
+L<C<remove_headers>|list_config(5)/remove_headers>.
+
+=back
+
+Then this class passes the message to the next stage of transformation.
+
+=head1 CAVEAT
+
+=over
+
+=item *
+
+Transformation by this class can break integrity of DKIM signature,
+because some header fields including C<From>, C<Message-ID> and C<Subject> may
+be altered.
+
+=back
 
 =head1 SEE ALSO
+
+L<Sympa::Internals::Workflow>.
 
 L<Sympa::Message>,
 L<Sympa::Message::Plugin>,
 L<Sympa::Spindle>,
 L<Sympa::Spindle::DistributeMessage>,
-L<Sympa::Topic>.
+L<Sympa::Spool::Topic>,
+L<Sympa::Tracking>.
 
 =head1 HISTORY
 

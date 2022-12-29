@@ -17,15 +17,15 @@ and HTTPS based authentication and encryption.
 Sympa is a modern mailing-list manager. It supports a lot of useful
 features.
 
-Below is the list of documentaion of Sympa.
+Below is the list of documentation of Sympa.
 
 =head2 Reference manual
 
 =over
 
-=item I<Sympa, Mailing List Management Software - Reference manual>
+=item I<Sympa Administration Manual>
 
-L<http://www.sympa.org/manual/>.
+L<https://www.sympa.community/manual/>.
 
 =back
 
@@ -55,7 +55,7 @@ Daemon to handle incoming messages
 
 =item L<task_manager(8)>
 
-Daemon to Process Periodical Sympa Tasks
+Daemon to process periodical Sympa tasks
 
 =back
 
@@ -87,60 +87,6 @@ Command line utility to manage Sympa
 
 Alias database maintenance
 
-=item L<sympa_wizard(1)>
-
-Help Performing Sympa Initial Setup
-
-=back
-
-=head3 Maintenance tools
-
-=over
-
-=item L<arc2webarc(1)>
-
-TBD.
-
-=item L<init_comment(1)>
-
-TBD.
-
-=item L<mod2html(1)>
-
-Generates HTML view of messages to be moderated
-
-=item L<p12topem(1)>
-
-TBD.
-
-=item L<sympa_soap_client(1)>
-
-TBD.
-
-=item L<sympa_test_ldap(1)>
-
-Testing LDAP connection for Sympa
-
-=item L<testlogs(1)>
-
-TBD.
-
-=item L<tpl2tt2(1)>
-
-TBD.
-
-=item L<upgrade_bulk_spool(1)>
-
-Migrating messages in bulk tables
-
-=item L<upgrade_send_spool(1)>
-
-Upgrade messages in incoming spool
-
-=item L<upgrade_sympa_password(1)>
-
-Upgrading password in database
-
 =back
 
 =head2 Auxiliary Programs
@@ -149,7 +95,7 @@ Upgrading password in database
 
 =item L<alias_manager(8)>
 
-Manage Sympa Aliases
+Manage Sympa aliases (Obsoleted)
 
 =item L<ldap_alias_manager(8)>
 
@@ -168,23 +114,47 @@ L<wwsympa-wrapper(8)>
 
 TBD.
 
-=item L<sympa_smtpc(1)>
-
-SMTP / LMTP client
-
 =back
 
 =head2 Configuration files
 
 =over
 
+=item L<auth.conf(5)>
+
+Configuration of authentication mechanisms for web interface of Sympa
+
 =item L<charset.conf(5)>
 
-Configiration file for legacy character set support by Sympa
+Configuration file for legacy character set support by Sympa
 
-=item L<sympa.conf(5)>, L<robot.conf(5)>
+=item L<crawlers_detection.conf(5)>
 
-Configuration file for default site and robot
+User agents to be excluded from session management
+
+=item L<edit_list.conf(5)>
+
+Configuration of privileges to edit list configuration
+
+=item L<ldap_alias_manager.conf(5)>
+
+Configuration of LDAP alias management
+
+=item L<nrcpt_by_domain.conf(5)>
+
+Grouping factor for SMTP sessions by recipient domains
+
+=item L<sympa_config(5)>
+
+Configuration files for Sympa mailing list manager
+
+=item L<sympa_scenario(5)>
+
+Authorization scenario
+
+=item L<topics.conf(5)>
+
+Configuration of list topics
 
 =back
 
@@ -198,29 +168,28 @@ List of Sympa internal modules
 
 =item L<sympa_database(5)>
 
-Strutcure of Sympa core database
+Structure of Sympa core database
 
 =back
 
 =head1 AVAILABILITY
 
-Latest version of B<Sympa> is available from L<http://www.sympa.org/>.
+Latest version of B<Sympa> is available from
+L<https://github.com/sympa-community/sympa/releases>.
 
 =head1 MORE DOCUMENTATION
 
 The full documentation in HTML format can be found in
-L<http://www.sympa.org/manual/>.
+L<https://www.sympa.community/manual/>.
 
 The mailing lists (with web archives) can be accessed at
-L<http://listes.renater.fr/sympa/lists/informatique/sympa>.
+L<https://www.sympa.community/community/lists.html>.
 
 =head1 BUGS
 
 Report bugs to Sympa bug tracker.
-See L<http://www.sympa.org/tracking>.
+See L<https://github.com/sympa-community/sympa/issues>.
 
 =head1 SEE ALSO
-
-L<sendmail(8)>.
 
 =cut

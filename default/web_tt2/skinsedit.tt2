@@ -1,226 +1,461 @@
-<!-- $Id: skinsedit.tt2 5649 2009-04-07 14:33:38Z serge.aumont -->
-
- 
+<!-- skinsedit.tt2 -->
 
 <h2>[%|loc%]Cascading Style Sheet[%END%]</h2>
-<p>
-
-[%|loc%]When not using css_url parameters, sympa deliver a dynamic CSS which is created using a template name css.tt2. Usually this template is comming from Sympa distribution tar. Using this CSS is not a good solution because for each clic, Sympa fcgi server is requested twice. If you use  css_url parameters the style sheet are delivered by your http server. When you install a new Sympa version and start it at the first time, the different CSS files are installed in the directory specified by css_path parameter. So if you want to preserve some site customization from being overwriten when starting a new sympa version, css_path and css_url should not point to the same directory .[%END%] 
 
 [% IF css_result %]
-<strong>[%|loc%]static css installation succeed. Reload the current page and/or check sympa logs  to be sure that static css a really in use.[%END%]</strong><br /><br />
+    <p>
+        <strong>
+            [%|loc%]static css installation succeed. Reload the current page and/or check sympa logs to be sure that static css a really in use.[%END%]
+        </strong>
+    </p>
 [% END %]
-[% IF css_path %]
-<ul>
-<li>[%|loc%]The css_path parameter is defined, value is[%END%] <strong>[% css_path %]</strong> </li>
-<li>[%|loc%]the current definition for css location (css_url parameter) is[%END%] <a target="test" href="[% css_url %]">[% css_url %] </a><strong>[% css_warning %]</strong>.</li>
 
-</ul><br />
+<form action="[% path_cgi %]" method="POST">
+    <fieldset>
+        <h2>
+            [%|loc%]Colors[%END%]
+            <a href="#" class="accordionButton" data-selector="#help\.Colors">
+                <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+            </a>
+        </h2>
 
-	<form action="[% path_cgi %]" method="post">
-	<fieldset>
-	<input type="hidden" name="action" value="skinsedit" />
-        <input type="hidden" name="installcss" value="1" />
-        <input class="MainMenuLinks" type="submit" name="action_skinsedit" value="[%|loc%]Install Static CSS[%END%]" />
-	</fieldset>
-	</form>
+        <div id="help.Colors" class="secondary callout" data-closable>
+            <p>
+                [%|loc%]Use the color editor in order to change defined colors. First select the color you want to change and pick a color, then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you chosen, you may save them in a new static CSS.[%END%]
+            </p>
+            <p>
+                [%|loc%]Be careful: the CSS file is overwritten using css.tt2 template, usually this file is coming from Sympa distribution so your CSS customization may be erased when doing this.[% END %]
+                [%|loc%]So if you want to preserve some site customizations from being overwritten when upgrading to a new sympa version, css_path and css_url should not point to the same directory.[%END%]
+            </p>
+        </div>
 
-[% ELSE %]
+        <input type="hidden" name="editcolors" value="1">
+        <input type="hidden" name="action" value="skinsedit">
+        <p>
+            <input class="MainMenuLinks" type="submit" name="subaction_test"
+                   value="[%|loc%]test this color in my session[%END%]" />
+            <input class="MainMenuLinks" type="submit" name="subaction_reset"
+                   value="[%|loc%]reset colors in my session[%END%]"
+                   [%~ UNLESS custom_css %] disabled="disabled"[% END %] />
+            <input class="MainMenuLinks" type="submit" name="subaction_install"
+                   value="[%|loc%]Install my session colors in a new static CSS[%END%]"
+                   [%~ UNLESS custom_css %] disabled="disabled"[% END %] />
+        </p>
 
-[%|loc(cssurl)%]Currently you have not defined the css_path parameter. <strong>You should edit the robot.conf configuration file </strong> (or if not using virtual robot, the sympa.conf file). Setting this parameter allows you to use this page to install static CSS and <strong>make sympa faster</strong>. Don't forget to set parameter css_url, it must be the URL for the directory where css are stored (current value is <a target="test" href="%1">%1</a>).[%END%]
+        <h3>
+            [%|loc%]Color chart[%END%]
+            <a href="#" class="accordionButton" data-selector="#help\.ColorChart">
+                <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+            </a>
+        </h3>
 
-[% END %]
-</p>
-<h2>[%|loc%]Colors[%END%]</h2>
-<p>
+        <div id="help.ColorChart" class="secondary callout" data-closable>
+            <p>
+                [%|loc%]Please note that these descriptions don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well that works.[%END%]
+            </p>
+        </div>
 
-[%|loc%]If you are not using css_path and css_url parameters, colors are defined in the robot.conf configuration file. Otherwise, colors are defined in the static CSS. Colors can be changed on your current session using the following color editor. When finished, you may copy the result a new CCS static file. The target is specified by css_path parameter.[%END%]
-[% IF css_path %]([% css_path %])[% END %]
-[%|loc%]
-Be careful: the CSS file is overwritten using css.tt2 template, usually this file is comming from Sympa distribution so your CSS customization may be erased when doing this.[% END %]
-</p>
-<p>
-[%|loc%]Use the color editor in order to change defined colors. First select the color you want to change and pick a color,then apply it using the test button. The new color is not really installed but it is used only for your own session. When happy with the different colors you choosen, you may save them in a new static CSS.
-[%END%]
-</p>
-
-<form action="[% path_cgi %]" method="post">
-<fieldset>
-<ol><li>[%|loc%] pick the color you want to test. [%END%]
-<input type="text" id="custom_color_value" name="custom_color_value" class="color" value="[% custom_color_value %]">
-<input type="hidden" name="editcolors" value="1">
-<input type="hidden" name="action" value="skinsedit">
-</li>
-
-<li>[%|loc%]Select the parameter you want to change: [%END%]
-<select id="custom_color_number" name="custom_color_number">
-<option value=""></option>
-[% FOREACH col IN ['color_0' 'color_1' 'color_2' 'color_3''color_4' 'color_5' 'color_6' 'color_7' 'color_8''color_9' 'color_10' 'color_11' 'color_12' 'color_13' 'color_14' 'color_15'] %]
-<option value="[%col%]" [% IF col == custom_color_number %]selected="selected"[% END %]>[%col%]</option>
-[% END %]
-</select>
-
-</li>
-<li>
-<input class="MainMenuLinks" type="submit" name="subaction_test" value="[%|loc%]test this color in my session[%END%]" onclick="return (isNotEmpty('custom_color_number') && isNotEmpty('custom_color_value'));" />
-<input class="MainMenuLinks" type="submit" name="subaction_reset" value="[%|loc%]reset colors in my session[%END%]" />
-<input class="MainMenuLinks" type="submit" name="subaction_install" value="[%|loc%]Install my session colors in a new static CSS[%END%]" />
-</li>
-</ol>
-
-</fieldset> 
+        <div id="color_table" role="table"
+             aria-label="[%|loc%]This table displays every color used in Sympa, with their hexadecimal code [%END%]">
+            <div id="color_table_title" class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="columnheader">
+                    <strong>[%|loc%]parameter[%END%]</strong>
+                </div>
+                <div class="small-6 medium-3 columns" role="columnheader">
+                    <strong>[%|loc%]value[%END%]</strong>
+                </div>
+                <div class="small-6 medium-7 columns" role="columnheader">
+                    <strong>[%|loc%]parameter usage[%END%]</strong>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_0">color_0</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_0" name="color_0"
+                           value="[% color_0 %]" data-color="[% color_0 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]background color of:[%END%]
+                    <ul>
+                        <li>[%|loc%]Text background color[%END%]</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_1">color_1</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_1" name="color_1"
+                           value="[% color_1 %]" data-color="[% color_1 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]Miscellaneous texts font color[% END %]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_2">color_2</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_2" name="color_2"
+                           value="[% color_2 %]" data-color="[% color_2 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                [%|loc%]Titles and buttons color[% END %]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_3">color_3</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_3" name="color_3"
+                           value="[% color_3 %]" data-color="[% color_3 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]Main texts font color[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_4">color_4</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_4" name="color_4"
+                           value="[% color_4 %]" data-color="[% color_4 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]font color of:[%END%]
+                    <ul>
+                        <li>[%|loc%]form labels;[%END%]</li>
+                        <li>[%|loc%]side menu titles;[%END%]</li>
+                        <li>[%|loc%]text areas in forms.[%END%]</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_5">color_5</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_5" name="color_5"
+                           value="[% color_5 %]" data-color="[% color_5 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]background color of:[%END%]
+                    <ul>
+                        <li>[%|loc%]HTTP links[%END%]</li>
+                        <li>[%|loc%]hovered buttons[%END%]</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_6">color_6</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_6" name="color_6"
+                           value="[% color_6 %]" data-color="[% color_6 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    <ul>
+                        <li>[%|loc%]text color of hovered links;[%END%]</li>
+                        <li>[%|loc%]background color of buttons.[%END%]</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_7">color_7</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_7" name="color_7"
+                           value="[% color_7 %]" data-color="[% color_7 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]text color of:[%END%]
+                    <ul>
+                        <li>[%|loc%]navigation links and buttons[%END%]</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_8">color_8</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_8" name="color_8"
+                           value="[% color_8 %]" data-color="[% color_8 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]background color of:[%END%]
+                    <ul>
+                        <li>[%|loc%]tables;[%END%]</li>
+                        <li>[%|loc%]notice messages.[%END%]</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                <label for="color_9">color_9</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                <input type="text" class="colorPicker" id="color_9" name="color_9"
+                value="[% color_9 %]" data-color="[% color_9 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                [%|loc%]border color of:[%END%]
+                <ul>
+                <li>[%|loc%]tables;[%END%]</li>
+                </ul>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_10">color_10</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_10" name="color_10"
+                           value="[% color_10 %]" data-color="[% color_10 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]background color of list configuration edition and navigation edition links[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_11">color_11</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_11" name="color_11"
+                           value="[% color_11 %]" data-color="[% color_11 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]background color of <b>current</b> list configuration edition and navigation edition links.[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_12">color_12</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_12" name="color_12"
+                           value="[% color_12 %]" data-color="[% color_12 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    <ul>
+                        <li>[%|loc%]border color of form elements;[%END%]</li>
+                        <li>[%|loc%]background color of disabled form elements[%END%]</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_13">color_13</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_13" name="color_13"
+                           value="[% color_13 %]" data-color="[% color_13 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]background color of:[%END%]
+                    <ul>
+                        <li>[%|loc%]invalid form elements[%END%]</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_14">color_14</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_14" name="color_14"
+                           value="[% color_14 %]" data-color="[% color_14 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]Background color of ins and mark elements.[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="color_15">color_15</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="color_15" name="color_15"
+                           value="[% color_15 %]" data-color="[% color_15 %]" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]Selected text background color[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="dark_color">dark_color</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="dark_color" name="dark_color"
+                           value="[% dark_color %]" data-color="[% dark_color %]"
+                           disabled="disabled" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]deprecated[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="light_color">light_color</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="light_color" name="light_color"
+                           value="[% light_color %]" data-color="[% light_color %]"
+                           disabled="disabled" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]deprecated[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="text_color">text_color</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="text_color" name="text_color"
+                           value="[% text_color %]" data-color="[% text_color %]"
+                           disabled="disabled" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]deprecated[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="bg_color">bg_color</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="bg_color" name="bg_color"
+                           value="[% bg_color %]" data-color="[% bg_color %]"
+                           disabled="disabled" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]deprecated[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="error_color">error_color</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="error_color" name="error_color"
+                           value="[% error_color %]" data-color="[% error_color %]"
+                           disabled="disabled" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]deprecated[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="selected_color">selected_color</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="selected_color" name="selected_color"
+                           value="[% selected_color %]" data-color="[% selected_color %]"
+                           disabled="disabled" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]deprecated[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+            <div class="row" role="row">
+                <div class="medium-2 columns show-for-medium" role="cell">
+                    <label for="shaded_color">shaded_color</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="cell">
+                    <input type="text" class="colorPicker" id="shaded_color" name="shaded_color"
+                           value="[% shaded_color %]" data-color="[% shaded_color %]"
+                           disabled="disabled" />
+                </div>
+                <div class="small-6 medium-7 columns" role="cell">
+                    [%|loc%]deprecated[%END%]
+                </div>
+            </div>
+            <div class="row" role="separator">
+                <hr />
+            </div>
+        </div>
+    </fieldset>
 </form>
 
-<h3>[%|loc%]Color chart[%END%]</h3>
-
-<p>[%|loc%]Please note that these indications don't cover the exact usage of each color parameter, as it would be far too long to describe. What lies in this table should however give you a correct snapshot of what the color parameters are used for. For more details on rendering, feel free to try changing the colors in your session to see how well all that works.[%END%]</p>
-
-<table  id="color_table" class="responsive">
-<caption>[%|loc%]This table display every colors used in Sympa, with their hexadecimal code [%END%]</caption>
-<tr id="color_table_title">
-<th>[%|loc%]parameter[%END%]</th>
-<th>[%|loc%]parameter value[%END%]</th>
-<th>[%|loc%]color lookup[%END%]</th>
-<th>[%|loc%]parameter usage[%END%]</th>
-</tr>
-<tr>
-     <td>color_0</td>
-     <td>[% color_0 %]</td>
-     <td style="background-color: [% color_0 %]; cursor: pointer;" onclick="chooseColorNumber('color_0','[% color_0 %]')" align="center">&nbsp;</td>
-     <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]Text background color[%END%]</LI></UL></td>
-</tr>
-<tr>
-     <td>color_1</td>
-     <td>[% color_1 %]</td>
-     <td style="background-color: [% color_1 %]; cursor: pointer;" onclick="chooseColorNumber('color_1','[% color_1 %]');" align="center" >&nbsp;</td>
-     <td>[%|loc%]Miscelaneous texts font color[% END %]</td>
-</tr>
-<tr>
-     <td>color_2</td>
-     <td>[% color_2 %]</td>
-     <td style="background-color: [% color_2 %]; cursor: pointer;" onclick="chooseColorNumber('color_2','[% color_2 %]');"  align="center">&nbsp;</td>
-     <td>[%|loc%]Titles and buttons color[% END %]</td>
-</tr>
-<tr>
-     <td>color_3</td>
-     <td>[% color_3 %]</td>
-     <td style="background-color: [% color_3 %]; cursor: pointer;" onclick="chooseColorNumber('color_3','[% color_3 %]')"  align="center">&nbsp;</td>
-     <td>[%|loc%]Main texts font color[%END%]</td>
-</tr>
-<tr>
-     <td>color_4</td>
-     <td>[% color_4 %]</td>
-     <td style="background-color: [% color_4 %]; cursor: pointer;" onclick="chooseColorNumber('color_4','[% color_4 %]')" align="center" >&nbsp;</td>
-     <td>[%|loc%]font color of:[%END%]<UL>
-		<LI>[%|loc%]form labels;[%END%]</LI>
-		<LI>[%|loc%]side menu titles;[%END%]</LI>
-		<LI>[%|loc%]text areas in forms.[%END%]</LI>
-	 </UL></td>
-</tr>
-<tr>
-     <td>color_5</td>
-     <td>[% color_5 %]</td>
-     <td style="background-color: [% color_5 %]; cursor: pointer;" onclick="chooseColorNumber('color_5','[% color_5 %]')"  align="center">&nbsp;</td>
-     <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]HTTP links[%END%]</LI><LI>[%|loc%]hovered buttons[%END%]</LI></UL></td>
-</tr>
-<tr>
-     <td>color_6</td>
-     <td>[% color_6 %]</td>
-     <td style="background-color: [% color_6 %]; cursor: pointer;" onclick="chooseColorNumber('color_6','[% color_6 %]')"  align="center">&nbsp;</td>
-     <td><UL><LI>[%|loc%]text color of hovered links;[%END%]</LI><LI>[%|loc%]background color of buttons.[%END%]</LI></UL></td>
-</tr>
-<tr>
-     <td>color_7</td>
-     <td>[% color_7 %]</td>
-     <td style="background-color: [% color_7 %]; cursor: pointer;" onclick="chooseColorNumber('color_7','[% color_7 %]')"  align="center">&nbsp;</td>
-     <td>[%|loc%]text color of:[%END%]<UL><LI>[%|loc%]navigation links and buttons[%END%]</LI></UL></td>
-</tr>
-<tr>
-     <td>color_8</td>
-     <td>[% color_8 %]</td>
-     <td style="background-color: [% color_8 %]; cursor: pointer;" onclick="chooseColorNumber('color_8','[% color_8 %]')"  align="center">&nbsp;</td>
-     <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]tables;[%END%]</LI><LI>[%|loc%]notice messages.[%END%]</LI></UL></td>
-</tr>
-<tr>
-     <td>color_9</td>
-     <td>[% color_9 %]</td>
-     <td style="background-color: [% color_9 %]; cursor: pointer;" onclick="chooseColorNumber('color_9','[% color_9 %]')"  align="center">&nbsp;</td>
-     <td>[%|loc%]border color of:[%END%]<UL><LI>[%|loc%]tables;[%END%]</LI></UL></td>
-</tr>
-<tr>
-     <td>color_10</td>
-     <td>[% color_10 %]</td>
-     <td style="background-color: [% color_10 %]; cursor: pointer;" onclick="chooseColorNumber('color_10','[% color_10 %]')"  align="center">&nbsp;</td>
-     <td>[%|loc%]background color of list configuration edition navigation edition links.[%END%]</td>
-</tr>
-<tr>
-     <td>color_11</td>
-     <td>[% color_11 %]</td>
-     <td style="background-color: [% color_11 %]; cursor: pointer;" onclick="chooseColorNumber('color_11','[% color_11 %]')"  align="center">&nbsp;</td>
-     <td>[%|loc%]background color of <b>current</b> list configuration edition navigation eidtion links.[%END%]</td>
-</tr>
-<tr>
-     <td>color_12</td>
-     <td>[% color_12 %]</td>
-     <td style="background-color: [% color_12 %]; cursor: pointer;" onclick="chooseColorNumber('color_12','[% color_12 %]');" align="center" >&nbsp;</td>
-     <td><UL><LI>[%|loc%]border color of form elements;[%END%]</LI><LI>[%|loc%]background color of disabled form elements[%END%]</LI></UL></td>
-</tr>
-<tr>
-     <td>color_13</td>
-     <td>[% color_13 %]</td>
-     <td style="background-color: [% color_13 %]; cursor: pointer;" onclick="chooseColorNumber('color_13','[% color_13 %]')" align="center" >&nbsp;</td>
-     <td>[%|loc%]background color of:[%END%]<UL><LI>[%|loc%]invalid form elements[%END%]</LI></UL></td>
-</tr>
-<tr>
-     <td>color_14</td>
-     <td>[% color_14 %]</td>
-     <td style="background-color: [% color_14 %]; cursor: pointer;" onclick="chooseColorNumber('color_14','[% color_14 %]')"  align="center">&nbsp;</td>
-     <td>[%|loc%]Background color of ins and mark elements.[%END%]</td>
-</tr>
-<tr>
-     <td>color_15</td>
-     <td>[% color_15 %]</td>
-     <td style="background-color: [% color_15 %]; cursor: pointer;" onclick="chooseColorNumber('color_15','[% color_15 %]')" align="center">&nbsp;</td>
-     <td>[%|loc%]Selected text background color[%END%]</td>
-</tr>
-<tr>
-     <td>dark_color</td>
-     <td>[% dark_color %]</td>
-     <td style="background-color: [% dark_color %];" >&nbsp;</td>
-     <td>[%|loc%]deprecated[%END%]</td>
-</tr>
-<tr>
-     <td>light_color</td>
-     <td>[% light_color %]</td>
-     <td style="background-color: [% light_color %];" >&nbsp;</td>
-     <td>[%|loc%]deprecated[%END%]</td>
-</tr>
-<tr>
-     <td>text_color</td>
-     <td>[% text_color %]</td>
-     <td style="background-color: [% text_color %];" >&nbsp;</td>
-     <td>[%|loc%]deprecated[%END%]</td>
-</tr>
-<tr>
-     <td>bg_color</td>
-     <td>[% bg_color %]</td>
-     <td style="background-color: [% bg_color %];" >&nbsp;</td>
-     <td>[%|loc%]deprecated[%END%]</td>
-</tr>
-<tr>
-     <td>selected_color</td>
-     <td>[% selected_color %]</td>
-     <td style="background-color: [% selected_color %];" >&nbsp;</td>
-     <td>[%|loc%]deprecated[%END%]</td>
-</tr>
-<tr>
-     <td>shaded_color</td>
-     <td>[% shaded_color %]</td>
-     <td style="background-color: [% shaded_color %];" >&nbsp;</td>
-     <td>[%|loc%]deprecated[%END%]</td>
-</tr>
-
-</table>
-
-<br /><br />
 <!-- end skinsedit.tt2 -->

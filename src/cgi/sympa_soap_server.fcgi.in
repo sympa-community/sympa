@@ -8,7 +8,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,14 +34,12 @@ use SOAP::Lite;
 
 ## Sympa API
 use Conf;
-use Sympa::Alarm;
 use Sympa::DatabaseManager;
 use Sympa::List;
 use Sympa::Log;
-use Sympa::SOAP;
-use Sympa::SOAP::Transport;
-
-my $birthday = time;
+use Sympa::Spool::Listmaster;
+use Sympa::WWW::SOAP;
+use Sympa::WWW::SOAP::Transport;
 
 ## Load sympa config
 unless (Conf::load()) {
@@ -70,7 +71,7 @@ unless (Sympa::DatabaseManager->instance) {
 
 ## The process should not fork for sending mail
 ## Messages will be spooled instead
-Sympa::Alarm->instance->{use_bulk} = 1;
+Sympa::Spool::Listmaster->instance->{use_bulk} = 1;
 
 ## Loading all Lists at startup, in order to increase execution speed
 
@@ -80,12 +81,9 @@ my $all_lists = Sympa::List::get_lists('*');
 #    Soap part
 ##############################################################################
 
-my $server = Sympa::SOAP::Transport->new();
-
-$server->dispatch_with({'urn:sympasoap' => 'Sympa::SOAP'});
-#$server->dispatch_to('--modulesdir--', 'Sympa::SOAP');
-
-$server->handle($birthday);
+Sympa::WWW::SOAP::Transport->new(
+    cookie_expire => $Conf::Conf{'cookie_expire'})
+    ->dispatch_with({'urn:sympasoap' => 'Sympa::WWW::SOAP'})->handle;
 
 __END__
 
@@ -97,10 +95,10 @@ sympa_soap_server, sympa_soap_server.fcgi - Sympa SOAP server
 
 =head1 DESCRIPTION
 
-Sympa SOAP server allows to access Sympa service though SOAP.
+Sympa SOAP server allows one to access Sympa service though SOAP.
 
-To know details on Sympa SOAP server, see Reference Manual:
-L<https://www.sympa.org/manual/soap>.
+To know details on Sympa SOAP server, see Sympa Administration Manual:
+L<https://www.sympa.community/manual/customize/soap-api.html>.
 
 =head1 HISTORY
 

@@ -1,0 +1,119 @@
+=encoding utf-8
+
+=head1 NAME
+
+ldap_alias_manager.conf - Configuration of LDAP alias management
+
+=head1 DESCRIPTION
+
+F<ldap_alias_manager.conf> is used by the L<ldap_alias_manager(8)>;
+it allows one to manage mail aliases in an LDAP directory.
+To make sympa use the ldap_alias_manager.pl script, you should edit the
+'alias_manager' L<sympa.conf(5)> parameter.
+
+Format of F<ldap_alias_manager.conf> is as following:
+
+=over
+
+=item *
+
+Lines beginning with C<#> and containing only spaces are ignored.
+
+=item *
+
+Each line has the form "I<parameter> I<value>".
+I<value> may contain spaces but may not contain newlines.
+
+=back
+
+=head2 Parameters
+
+=over
+
+=item ldap_host <host>
+
+I<Mandatory>. LDAP server host.
+
+Example:
+  ldap_host ldap.example.com
+
+=item ldap_bind_dn <distinguished name>
+
+I<Mandatory>. LDAP bind DN.
+
+Example:
+  ldap_bind_dn cn=sympa,ou=services,dc=example,dc=com
+
+=item ldap_bind_pwd <secret>
+
+I<Mandatory>. LDAP bind password.
+
+Example:
+  ldap_bind_pwd secret
+
+=item ldap_base_dn <distinguished name>
+
+I<Mandatory>. LDAP base DN.
+
+Example:
+  ldap_base_dn ou=mail,dc=example,dc=com
+
+=item ldap_mail_attribute <attribute name>
+
+I<Mandatory>. LDAP mail attribute.
+
+Example:
+  ldap_mail_attribute mail
+
+=item ldap_ssl <0/1>
+
+I<Mandatory>. Use TLS (SSL) for connection to LDAP server.
+
+Example:
+  ldap_ssl 0
+
+=item ldap_ssl_version <sslv2 /sslv3 / tlsv1 / tlsv1_1 / tlsv1_2>
+
+I<Mandatory> if C<ldap_ssl> is C<1>. Protocol version of TLS.
+
+Example:
+  ldap_ssl_version tlsv1
+
+=item ldap_cachain <file path>
+
+LDAP CA chain file
+
+Example:
+  ldap_cachain /etc/ldap/cert/cachain.pem
+
+=item queue_transport <name>
+
+I<Mandatory>. Postfix transport parameter for queue
+
+Example:
+  queue_transport sympa
+
+=item bouncequeue_transport <name>
+
+I<Mandatory>. Postfix transport parameter for bouncequeue
+
+Example:
+  bouncequeue_transport   sympabounce
+
+=back
+
+=head1 FILES
+
+=over
+
+=item F<$SYSCONFDIR/ldap_alias_manager.conf>
+
+Configuration file.
+
+=back
+
+=head1 SEE ALSO
+
+L<ldap_alias_manager(8)>.
+
+=cut

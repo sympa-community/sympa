@@ -1,0 +1,10 @@
+[Unit]
+Description=Sympa SOAP interface socket
+
+[Socket]
+SocketUser=nobody
+SocketMode=0600
+ListenStream=--piddir--/sympasoap.socket
+
+[Install]
+WantedBy=sockets.target

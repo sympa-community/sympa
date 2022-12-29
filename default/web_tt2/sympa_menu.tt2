@@ -1,86 +1,199 @@
-<!-- $Id$ -->
-        [% IF not top_menu %]
-        <li class="menu_title"><label><i class="fa fa-bars"></i> [%|loc%]Sympa menu[%END%]</label></li>
-        [% END %]
-	[% IF action == 'home' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li class="[% class %]"><a  href="[% 'home' | url_rel %]"><i class="fi-home"></i>  [%|loc%]Home[%END%]</a></li>
-		
-	[% IF may_create_list %]
-		[% IF action == 'create_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li class="[% class %]"><a  href="[% 'create_list_request' | url_rel %]" onclick="show('loading'); hide('content-inner');"><i class="fa fa-plus"></i> [%|loc%]Request a List[%END%]</a></li>
-	[% END %]
-		
-	[% IF is_listmaster %]
-		[% IF action == 'serveradmin' or action == 'skinsedit' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' or action == 'edit_config' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li class="[% class %]"><a  href="[% 'serveradmin' | url_rel %]" ><i class="fa fa-wrench"></i> [%|loc%]Listmaster Admin[%END%]</a></li>
-	[% END %]
-		[% IF top_menu %]		
-		[% IF action == 'search_list_request' or action == 'lists' or action == 'lists_categories' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		<li class="has-dropdown [% class %]">
-			<a href="#"><i class="fa fa-search-plus"></i> [%|loc%]Search for List(s)[%END%]</a>
-			<ul class="dropdown">
-		[% END %]
-				[% IF action == 'search_list_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-				<li class="[% class %]"><a href="[% 'search_list_request' | url_rel %]"><i class="fa fa-search"></i> [%|loc%]Search form[%END%]</a></li>
-				[% IF action == 'lists' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-				<li class="[% class %]"><a href="[% 'lists' | url_rel %]" onclick="show('loading'); hide('content-inner');"><i class="fa fa-list"></i> [%|loc%]Index of Lists[%END%]</a></li>
-				[% IF action == 'lists_categories' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-				<li class="[% class %]"><a href="[% 'lists_categories' | url_rel %]" target=""><i class="fa fa-sitemap"></i> [%|loc%]Browse lists by categories[%END%]</a>		
-		[% IF top_menu %]
-			</ul>
-		</li>
-		[% END %]
-		[% IF action == 'help' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-		[% IF top_menu %]
-		<li class="has-dropdown [% class %]">
-			<a href="#"><i class="fa fa-life-ring"></i> [%|loc%]Support[%END%]</a>
-			<ul class="dropdown">
-		[% END %]
-				[% IF action == 'help' && help_topic != 'faq' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-				<li class="[% class %]"><a href="[% 'help' | url_rel %]" title="[%|loc%]Documentation[%END%]"><i class="fa fa-book"></i> [%|loc%]Documentation[%END%]</a></li>
-				[% IF help_topic == 'faq' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-				<li class="[% class %]"><a href="[% 'help/faq' | url_rel %]" title="[%|loc%]Frequently asked questions[%END%]"><i class="fa fa-question"></i> [%|loc%]FAQ[%END%]</a></li>
-				[% SET class = '' %]
-				[% IF is_listmaster %]<li class="[% class %]"><a href="mailto:sympa-feedback@listes.renater.fr" data-tooltip aria-haspopup="true" title="[%|loc%]Give us feedback about this new Sympa version[%END%]"><i class="fa fa-comments"></i> [%|loc%]Feedback[%END%]</a></li>[% END %]
-		[% IF top_menu %]
-			</ul>
-		</li>
-		[% END %]
-	[% IF conf.main_menu_custom_button_1_title %]
-		<li><a class="MainMenuLinks" [% IF conf.main_menu_custom_button_1_target %] target ="[% conf.main_menu_custom_button_1_target %]"[% END %] href="[% conf.main_menu_custom_button_1_url %]">[% conf.main_menu_custom_button_1_title %]</a></li>
-	[%END%]
-		
-	[% IF conf.main_menu_custom_button_2_title %]
-		<li><a class="MainMenuLinks" [% IF conf.main_menu_custom_button_2_target %] target ="[% conf.main_menu_custom_button_2_target %]"[% END %] href="[% conf.main_menu_custom_button_2_url %]">[% conf.main_menu_custom_button_2_title %]</a></li>
-	[%END%]
-	
-	[% IF conf.main_menu_custom_button_3_title %]
-		<li><a class="MainMenuLinks" [% IF conf.main_menu_custom_button_3_target %] target ="[% conf.main_menu_custom_button_3_target %]"[% END %] href="[% conf.main_menu_custom_button_3_url %]">[% conf.main_menu_custom_button_3_title %]</a></li>
-	[%END%]
+<!-- sympa_menu.tt2 -->
+[% IF not top_menu %]
+    <li class="menu_title">
+        <label>
+            <i class="fa fa-bars"></i> [%|loc%]Sympa menu[%END%]
+        </label>
+    </li>
+[% END %]
+[% IF action == 'home' %]
+    [% SET class = 'active' %]
+[% ELSE %]
+    [% SET class = '' %]
+[% END %]
+    <li class="[% class %]">
+        <a href="[% 'home' | url_rel %]">
+            <i class="fi-home"></i>  [%|loc%]Home[%END%]
+        </a>
+    </li>
 
-	[% IF conf.automatic_list_families.keys && user.email %]
-		[% SET family_li = '' %]
-		[% SET owns_family = 0 %]
-		[% FOREACH alf IN conf.automatic_list_families.keys %]
-			[% IF action == 'automatic_lists_request' && family.name == conf.automatic_list_families.$alf.name %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]  
-			[% IF session.is_family_owner.$alf %]
-			[% display = conf.automatic_list_families.$alf.display %]
-			[% name = conf.automatic_list_families.$alf.name %]
-			[% family_li = BLOCK ~%]
-			  [% family_li ~%]
-			  <li class="[% class %]"><a href="[% 'automatic_lists_request' | url_rel([name]) %]" ><i class="fa fa-list-alt"></i> [% display %]</a></li>
-			[%~ END %]
-			[% owns_family = 1 %]
-			[% END %]
-		[% END %]
-			[% IF top_menu %][% IF action == 'automatic_lists_request' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %][% END %]
-			[% IF owns_family %]
-			<li class="has-dropdown [% class %]">
-				<a href="#"><i class="fa fa-list-alt"></i> [%|loc%]Lists Families[%END%]</a>
-				<ul class="dropdown">
-					[% family_li %]
-				 </ul>
-			</li>
-			[% END %]
-	[% END %]
-<!-- end sympa_menu.tt2 -->	
+[% IF may_create_list %]
+    [% IF action == 'create_list_request' %]
+        [% SET class = 'active' %]
+    [% ELSE %]
+        [% SET class = '' %]
+    [% END %]
+    <li class="[% class %]">
+        <a class="heavyWork" href="[% 'create_list_request' | url_rel %]">
+            <i class="fa fa-plus"></i> [%|loc%]Request a List[%END%]
+        </a>
+    </li>
+[% END %]
+
+[% IF is_listmaster %]
+    [% IF action == 'serveradmin' or action == 'skinsedit' or action == 'get_pending_lists'  or action == 'get_closed_lists'  or action == 'get_latest_lists'   or action == 'get_inactive_lists' or action == 'edit_config' %]
+        [% SET class = 'active' %]
+    [% ELSE %]
+        [% SET class = '' %]
+    [% END %]
+    <li class="[% class %]">
+        <a href="[% 'serveradmin' | url_rel %]" >
+            <i class="fa fa-wrench"></i> [%|loc%]Listmaster Admin[%END%]
+        </a>
+    </li>
+[% END %]
+[% IF top_menu %]
+    [% IF action == 'search_list_request' or action == 'lists' or action == 'lists_categories' %]
+        [% SET class = 'active' %]
+    [% ELSE %]
+        [% SET class = '' %]
+    [% END %]
+    <li class="[% class %]">
+        <a href="#">
+            <i class="fa fa-search-plus"></i> [%|loc%]Search for List(s)[%END%]
+        </a>
+        <ul class="vertical menu">
+[% END %]
+            [% IF action == 'search_list_request' %]
+                [% SET class = 'active' %]
+            [% ELSE %]
+                [% SET class = '' %]
+            [% END %]
+            <li class="[% class %]">
+                <a href="[% 'search_list_request' | url_rel %]">
+                    <i class="fa fa-search"></i> [%|loc%]Search form[%END%]
+                </a>
+            </li>
+            [% IF action == 'lists' %]
+                [% SET class = 'active' %]
+            [% ELSE %]
+                [% SET class = '' %]
+            [% END %]
+            <li class="[% class %]">
+                <a class="heavyWork" href="[% 'lists' | url_rel %]">
+                    <i class="fa fa-list"></i> [%|loc%]Index of Lists[%END%]
+                </a>
+            </li>
+            [% IF action == 'lists_categories' %]
+                [% SET class = 'active' %]
+            [% ELSE %]
+                [% SET class = '' %]
+            [% END %]
+            <li class="[% class %]"><a href="[% 'lists_categories' | url_rel %]" target=""><i class="fa fa-sitemap"></i> [%|loc%]Browse lists by categories[%END%]</a>
+[% IF top_menu %]
+        </ul>
+    </li>
+[% END %]
+[% IF action == 'help' %]
+    [% SET class = 'active' %]
+[% ELSE %]
+    [% SET class = '' %]
+[% END %]
+[% IF top_menu %]
+    <li class="[% class %]">
+        <a href="#">
+            <i class="fa fa-life-ring"></i> [%|loc%]Support[%END%]
+        </a>
+        <ul class="vertical menu">
+[% END %]
+            [% IF action == 'help' && help_topic != 'faq' %]
+                [% SET class = 'active' %]
+            [% ELSE %]
+                [% SET class = '' %]
+            [% END %]
+            <li class="[% class %]">
+                <a href="[% 'help' | url_rel %]" title="[%|loc%]Documentation[%END%]">
+                    <i class="fa fa-book"></i> [%|loc%]Documentation[%END%]
+                </a>
+            </li>
+            [% IF help_topic == 'faq' %]
+                [% SET class = 'active' %]
+            [% ELSE %]
+                [% SET class = '' %]
+            [% END %]
+            <li class="[% class %]">
+                <a href="[% 'help' | url_rel(['faq.html']) %]" title="[%|loc%]Frequently asked questions[%END%]">
+                    <i class="fa fa-question"></i> [%|loc%]FAQ[%END%]
+                </a>
+            </li>
+            [% SET class = '' %]
+            [% IF is_listmaster %]
+                <li class="[% class %]">
+                    <a href="https://github.com/sympa-community/sympa/issues" target="_blank" data-tooltip aria-haspopup="true" title="[%|loc%]Give us feedback about this new Sympa version[%END%]">
+                        <i class="fa fa-comments"></i> [%|loc%]Feedback[%END%]
+                    </a>
+                </li>
+            [% END %]
+[% IF top_menu %]
+        </ul>
+    </li>
+[% END %]
+[% IF conf.main_menu_custom_button_1_title %]
+    <li>
+        <a class="MainMenuLinks" href="[% conf.main_menu_custom_button_1_url %]"
+           [% IF conf.main_menu_custom_button_1_target %] target ="[% conf.main_menu_custom_button_1_target %]"[% END %]>
+            [% conf.main_menu_custom_button_1_title %]
+        </a>
+    </li>
+[%END%]
+
+[% IF conf.main_menu_custom_button_2_title %]
+    <li>
+        <a class="MainMenuLinks" href="[% conf.main_menu_custom_button_2_url %]"
+           [% IF conf.main_menu_custom_button_2_target %] target ="[% conf.main_menu_custom_button_2_target %]"[% END %]>
+            [% conf.main_menu_custom_button_2_title %]
+        </a>
+    </li>
+[%END%]
+
+[% IF conf.main_menu_custom_button_3_title %]
+    <li>
+        <a class="MainMenuLinks" href="[% conf.main_menu_custom_button_3_url %]"
+           [% IF conf.main_menu_custom_button_3_target %] target ="[% conf.main_menu_custom_button_3_target %]"[% END %]>
+            [% conf.main_menu_custom_button_3_title %]
+        </a>
+    </li>
+[%END%]
+
+[% IF conf.automatic_list_families.keys && user.email %]
+    [% SET family_li = '' %]
+    [% SET owns_family = 0 %]
+    [% FOREACH alf IN conf.automatic_list_families.keys %]
+        [% IF action == 'create_automatic_list_request' && family.name == conf.automatic_list_families.$alf.name %]
+            [% SET class = 'active' %]
+        [% ELSE %]
+            [% SET class = '' %]
+        [% END %]
+        [% IF may_create_automatic_list.$alf %]
+            [% display = conf.automatic_list_families.$alf.display %]
+            [% name = conf.automatic_list_families.$alf.name %]
+            [% family_li = BLOCK ~%]
+                [% family_li ~%]
+                <li class="[% class %]">
+                    <a href="[% 'create_automatic_list_request' | url_rel([name]) %]" >
+                        <i class="fa fa-list-alt"></i> [% display %]
+                    </a>
+                </li>
+            [%~ END %]
+            [% owns_family = 1 %]
+        [% END %]
+    [% END %]
+    [% IF top_menu %]
+        [% IF action == 'create_automatic_list_request' %]
+            [% SET class = 'active' %]
+        [% ELSE %]
+            [% SET class = '' %]
+        [% END %]
+    [% END %]
+    [% IF owns_family %]
+        <li class="[% class %]">
+            <a href="#">
+                <i class="fa fa-list-alt"></i> [%|loc%]Lists Families[%END%]
+            </a>
+            <ul class="vertical menu">
+                [% family_li %]
+            </ul>
+        </li>
+    [% END %]
+[% END %]
+<!-- end sympa_menu.tt2 -->

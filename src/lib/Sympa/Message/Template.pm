@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018, 2020, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -62,14 +64,21 @@ sub new {
     die 'Parameter $tpl is not defined'
         unless defined $tpl and length $tpl;
 
-    my ($list, $robot_id);
+    my ($list, $family, $robot_id, $domain);
     if (ref $that eq 'Sympa::List') {
         $robot_id = $that->{'domain'};
         $list     = $that;
+        $domain   = $that->{'domain'};
+    } elsif (ref $that eq 'Sympa::Family') {
+        $robot_id = $that->{'domain'};
+        $family   = $that;
+        $domain   = $that->{'domain'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
+        $domain = Conf::get_robot_conf($that, 'domain');
     } else {
         $robot_id = '*';
+        $domain   = $Conf::Conf{'domain'};
     }
 
     my $data = Sympa::Tools::Data::dup_var($context);
@@ -89,9 +98,9 @@ sub new {
         if ($list) {
             # FIXME: Don't overwrite date & update_date.  Format datetime on
             # the template.
-            my $subscriber =
-                Sympa::Tools::Data::dup_var($list->get_list_member($who));
-            if ($subscriber) {
+            if (my $subscriber = $list->get_list_member($who)) {
+                $data->{'subscriber'} =
+                    Sympa::Tools::Data::dup_var($subscriber);
                 $data->{'subscriber'}{'date'} =
                     $language->gettext_strftime("%d %b %Y",
                     localtime($subscriber->{'date'}));
@@ -107,12 +116,6 @@ sub new {
                 }
             }
         }
-
-        unless ($data->{'user'}{'password'}) {
-            $data->{'user'}{'password'} =
-                Sympa::Tools::Password::tmp_passwd($who);
-        }
-
     }
 
     # Lang
@@ -136,26 +139,36 @@ sub new {
     }
 
     foreach my $p (
-        'email',   'gecos',      'host',        'sympa',
-        'request', 'listmaster', 'wwsympa_url', 'title',
-        'listmaster_email'
-        ) {
+        'email', 'gecos', 'listmaster', 'wwsympa_url',
+        'title', 'listmaster_email'
+    ) {
         $data->{'conf'}{$p} = Conf::get_robot_conf($robot_id, $p);
     }
+    $data->{'domain'} = $domain;
     $data->{'conf'}{'version'} = Sympa::Constants::VERSION();
-
     $data->{'sender'} ||= $who;
+
+    # Compat.: Deprecated attributes of Robot.
+    $data->{'conf'}{'sympa'} = Sympa::get_address($robot_id);
+    $data->{'conf'}{'request'} = Sympa::get_address($robot_id, 'owner');
+    # No longer used.
+    $data->{'robot_domain'} = $domain;
+    # Compat. < 6.2.32
+    $data->{'conf'}{'host'} = $domain;
 
     if ($list) {
         $data->{'list'}{'lang'}    = $list->{'admin'}{'lang'};
         $data->{'list'}{'name'}    = $list->{'name'};
-        $data->{'list'}{'domain'}  = $data->{'robot_domain'} = $robot_id;
-        $data->{'list'}{'host'}    = $list->{'admin'}{'host'};
         $data->{'list'}{'subject'} = $list->{'admin'}{'subject'};
         $data->{'list'}{'owner'}   = [$list->get_admins('owner')];
         $data->{'list'}{'dir'} = $list->{'dir'};    #FIXME: Required?
         $data->{'list'}{'family'} = {name => $list->get_family->{'name'}}
             if $list->get_family;
+        # Compat. < 6.2.32
+        $data->{'list'}{'domain'} = $list->{'domain'};
+        $data->{'list'}{'host'}   = $list->{'domain'};
+    } elsif ($family) {
+        $data->{family} = {name => $family->{'name'},};
     }
 
     # Sign mode
@@ -167,16 +180,19 @@ sub new {
         # . a list should have several certificates and use if possible a
         #   certificate issued by the same CA as the recipient CA if it exists
         if ($smime_sign) {
-            $data->{'fromlist'} = $list->get_list_address();
-            $data->{'replyto'}  = $list->get_list_address('owner');
+            $data->{'fromlist'} = Sympa::get_address($list);
+            $data->{'replyto'} = Sympa::get_address($list, 'owner');
         } else {
-            $data->{'fromlist'} = $list->get_list_address('owner');
+            $data->{'fromlist'} = Sympa::get_address($list, 'owner');
         }
-    } else {
-        $data->{'robot_domain'} = Conf::get_robot_conf($robot_id, 'domain');
     }
-    $data->{'boundary'} = '----------=_' . Sympa::unique_message_id($robot_id)
+    my $unique_id = Sympa::unique_message_id($robot_id);
+    $data->{'boundary'} = sprintf '----------=_%s', $unique_id
         unless $data->{'boundary'};
+    $data->{'boundary1'} = sprintf '---------=1_%s', $unique_id
+        unless $data->{'boundary1'};
+    $data->{'boundary2'} = sprintf '---------=2_%s', $unique_id
+        unless $data->{'boundary2'};
 
     my $self = $class->_new_from_template($that, $tpl . '.tt2',
         $who, $data, %options);
@@ -234,10 +250,13 @@ sub _new_from_template {
     my $data     = shift;
     my %options  = @_;
 
-    my ($list, $robot_id);
+    my ($list, $family, $robot_id);
     if (ref $that eq 'Sympa::List') {
         $list     = $that;
         $robot_id = $list->{'domain'};
+    } elsif (ref $that eq 'Sympa::Family') {
+        $family   = $that;
+        $robot_id = $family->{'domain'};
     } elsif ($that and $that ne '*') {
         $robot_id = $that;
     } else {
@@ -296,7 +315,7 @@ sub _new_from_template {
         foreach my $header (
             qw(message-id date to from subject reply-to
             mime-version content-type content-transfer-encoding)
-            ) {
+        ) {
             if ($line =~ /^$header\s*:/i) {
                 $header_ok{$header} = 1;
                 last;
@@ -416,8 +435,8 @@ sub _new_from_template {
     # Determine what value the Auto-Submitted header field should take.
     # See RFC 3834.  The header field can have one of the following keywords:
     # "auto-generated", "auto-replied".
-    # The header should not be set when WWSympa sends a command to sympa.pl
-    # through its spool.
+    # The header should not be set when WWSympa stores a command into
+    # incoming spool.
     # n.b. The keyword "auto-forwarded" was abandoned.
     unless ($data->{'not_auto_submitted'} || $header_ok{'auto_submitted'}) {
         ## Default value is 'auto-generated'
@@ -431,6 +450,7 @@ sub _new_from_template {
 
     # All these data provide mail attachments in service messages.
     my @msgs = ();
+    my $ifh;
     if (ref($data->{'msg_list'}) eq 'ARRAY') {
         @msgs =
             map { $_->{'msg'} || $_->{'full_msg'} } @{$data->{'msg_list'}};
@@ -438,12 +458,14 @@ sub _new_from_template {
         @msgs = @{$data->{'spool'}};
     } elsif ($data->{'msg'}) {
         push @msgs, $data->{'msg'};
-    } elsif ($data->{'msg_path'} and open IN, '<' . $data->{'msg_path'}) {
-        push @msgs, join('', <IN>);
-        close IN;
-    } elsif ($data->{'file'} and open IN, '<' . $data->{'file'}) {
-        push @msgs, join('', <IN>);
-        close IN;
+    } elsif ($data->{'msg_path'} and open $ifh, '<', $data->{'msg_path'}) {
+        #XXX NOTREACHED: No longer used.
+        push @msgs, join('', <$ifh>);
+        close $ifh;
+    } elsif ($data->{'file'} and open $ifh, '<', $data->{'file'}) {
+        #XXX NOTREACHED: No longer used.
+        push @msgs, join('', <$ifh>);
+        close $ifh;
     }
 
     my $self =
@@ -479,7 +501,7 @@ __END__
 
 Sympa::Message::Template - Mail message generated from template
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Sympa::Message::Template;
   my $message = Sympa::Message::Template->new(
@@ -513,7 +535,7 @@ Template filename (without extension).
 
 Scalar or arrayref: SMTP "RCPT TO:" field.
 
-If it is a scalar, trys to retrieve information of the user
+If it is a scalar, tries to retrieve information of the user
 (See also L<Sympa::User>.
 
 =item data =E<gt> $data

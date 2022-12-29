@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -90,7 +93,7 @@ See also L<Sympa::Spool/"Public methods">.
 =item next ( )
 
 Returns next instance of L<Sympa::Spool::Digest>.
-Order is controled by modification times of spool directories.
+Order is controlled by modification times of spool directories.
 Spool directory is locked to prevent processing by multiple processes.
 
 =item quarantine ( )
@@ -99,7 +102,7 @@ Does nothing.
 
 =item remove ( $handle )
 
-Trys to remove directory of spool.
+Tries to remove directory of spool.
 If succeeded, returns true value.
 Otherwise returns false value.
 

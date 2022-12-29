@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2020, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,16 +32,17 @@ package Sympa::Template;
 use strict;
 use warnings;
 use CGI::Util;
+use Encode qw();
 use English qw(-no_match_vars);
 use MIME::EncWords;
 use Template;
 
 use Sympa;
 use Conf;
-use Sympa::Constants;
 use Sympa::HTMLDecorator;
 use Sympa::Language;
 use Sympa::ListOpt;
+use Sympa::Robot;
 use Sympa::Tools::Text;
 
 my $language = Sympa::Language->instance;
@@ -99,11 +102,18 @@ sub _escape_xml {
 }
 
 # Old name: tt2::escape_quote().
-sub _escape_quote {
+# No longer used.  Use _escape_cstr().
+#sub _escape_quote;
+
+sub _escape_cstr {
     my $string = shift;
 
-    $string =~ s/\'/\\\'/g;
-    $string =~ s/\"/\\\"/g;
+    $string =~ s{([\t\n\r\'\"\\])}{
+        ($1 eq "\t") ? "\\t" : 
+        ($1 eq "\n") ? "\\n" : 
+        ($1 eq "\r") ? "\\r" : 
+        "\\$1"
+    }eg;
 
     return $string;
 }
@@ -142,7 +152,7 @@ sub decode_utf8 {
 # domain "sympa".
 sub _template2textdomain {
     my $template_name = shift;
-    return ($template_name =~ /\Ahelp(?:_\w+)?[.]tt2\z/) ? 'web_help' : '';
+    return ($template_name =~ /\Ahelp(?:_[-\w]+)?[.]tt2\z/) ? 'web_help' : '';
 }
 
 sub maketext {
@@ -162,14 +172,18 @@ sub maketext {
 
 sub locdatetime {
     my ($fmt, $arg) = @_;
-    if ($arg !~
-        /^(\d{4})\D(\d\d?)(?:\D(\d\d?)(?:\D(\d\d?)\D(\d\d?)(?:\D(\d\d?))?)?)?/
-        ) {
-        return sub { $language->gettext("(unknown date)"); };
-    } else {
+
+    if (defined $arg and $arg =~ /\A-?\d+\z/) {
+        return sub { $language->gettext_strftime($_[0], localtime $arg); };
+    } elsif (defined $arg
+        and $arg =~
+        /\A(\d{4})\D(\d\d?)(?:\D(\d\d?)(?:\D(\d\d?)\D(\d\d?)(?:\D(\d\d?))?)?)?/
+    ) {
         my @arg =
             ($6 || 0, $5 || 0, $4 || 0, $3 || 1, $2 - 1, $1 - 1900, 0, 0, 0);
         return sub { $language->gettext_strftime($_[0], @arg); };
+    } else {
+        return sub { $language->gettext("(unknown date)"); };
     }
 }
 
@@ -186,6 +200,17 @@ sub wrap {
         my $ret  = Sympa::Tools::Text::wrap_text($text, $init, $subs, $cols);
         $ret =~ s/\n$// unless $nl;
         $ret;
+    };
+}
+
+sub _mailbox {
+    my ($context, $email, $comment) = @_;
+
+    return sub {
+        my $text = shift;
+
+        return Sympa::Tools::Text::addrencode($email, $text,
+            Conf::lang2charset($language->get_lang), $comment);
     };
 }
 
@@ -225,7 +250,7 @@ sub _obfuscate {
     my ($context, $mode) = @_;
 
     return sub {shift}
-        unless grep { $mode eq $_ } qw(at javascript);
+        unless grep { $mode eq $_ } qw(at concealed javascript);
 
     return sub {
         my $text = shift;
@@ -233,16 +258,99 @@ sub _obfuscate {
     };
 }
 
-sub optdesc {
-    my ($context, $type, $withval) = @_;
+sub _optdesc_func {
+    my $self    = shift;
+    my $type    = shift;
+    my $withval = shift;
+
+    my $that = $self->{context};
+    my $encode_html = ($self->{subdir} && $self->{subdir} eq 'web_tt2');
+
     return sub {
         my $x = shift;
         return undef unless defined $x;
         return undef unless $x =~ /\S/;
         $x =~ s/^\s+//;
         $x =~ s/\s+$//;
-        return Sympa::ListOpt::get_title($x, $type, $withval);
+        my $title = _get_option_description($that, $x, $type, $withval);
+        $encode_html ? Sympa::Tools::Text::encode_html($title) : $title;
     };
+}
+
+# Old name: Sympa::List::get_option_title().
+# Old name: Sympa::ListOpt::get_title().
+# Old name: Sympa::ListOpt::get_option_description().
+sub _get_option_description {
+    my $that    = shift;
+    my $option  = shift;
+    my $type    = shift || '';
+    my $withval = shift || 0;
+
+    my $title = undef;
+
+    if ($type eq 'dayofweek') {
+        if ($option =~ /\A[0-9]+\z/) {
+            $title = [
+                split /:/,
+                $language->gettext(
+                    'Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday'
+                )
+            ]->[$option % 7];
+        }
+    } elsif ($type eq 'lang') {
+        $language->push_lang;
+        if ($language->set_lang($option)) {
+            $title = $language->native_name;
+        }
+        $language->pop_lang;
+    } elsif ($type eq 'listtopic' or $type eq 'listtopic:leaf') {
+        my $robot_id;
+        if (ref $that eq 'Sympa::List') {
+            $robot_id = $that->{'domain'};
+        } elsif (ref $that eq 'Sympa::Family') {
+            $robot_id = $that->{'domain'};
+        } elsif ($that and $that ne '*') {
+            $robot_id = $that;
+        } else {
+            $robot_id = '*';
+        }
+        if ($type eq 'listtopic') {
+            $title = Sympa::Robot::topic_get_title($robot_id, $option);
+        } else {
+            $title =
+                [Sympa::Robot::topic_get_title($robot_id, $option)]->[-1];
+        }
+    } elsif ($type eq 'password') {
+        return '*' x length($option);    # return
+    } elsif ($type eq 'unixtime') {
+        $title = $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+            localtime $option);
+    } else {
+        my $map = {
+            'reception'  => \%Sympa::ListOpt::reception_mode,
+            'visibility' => \%Sympa::ListOpt::visibility_mode,
+            'status'     => \%Sympa::ListOpt::list_status,
+            'status:cap' => \%Sympa::ListOpt::list_status_capital,
+        }->{$type}
+            || \%Sympa::ListOpt::list_option;
+        my $t = $map->{$option} || {};
+        if ($t->{gettext_id}) {
+            $title = $language->gettext($t->{gettext_id});
+            $title =~ s/^\s+//;
+            $title =~ s/\s+$//;
+        }
+    }
+
+    if (defined $title) {
+        return sprintf '%s (%s)', $title, $option if $withval;
+        return $title;
+    }
+    return $option;
+}
+
+sub _permalink_id {
+    my $string = shift;
+    return Sympa::Tools::Text::permalink_id($string);
 }
 
 sub _url_func {
@@ -252,6 +360,12 @@ sub _url_func {
     my %options;
     @options{qw(paths query fragment)} = @_;
 
+    # Flatten nested path components.
+    if ($options{paths} and @{$options{paths}}) {
+        $options{paths} =
+            [map { ref $_ eq 'ARRAY' ? @$_ : ($_) } @{$options{paths}}];
+    }
+
     @options{qw(authority decode_html nomenu)} = (
         ($is_abs ? 'default' : 'omit'),
         ($self->{subdir} && $self->{subdir} eq 'web_tt2'),
@@ -260,7 +374,8 @@ sub _url_func {
 
     my $that = $self->{context};
     my $robot_id =
-          (ref $that eq 'Sympa::List') ? $that->{'domain'}
+          (ref $that eq 'Sympa::List')   ? $that->{'domain'}
+        : (ref $that eq 'Sympa::Family') ? $that->{'domain'}
         : ($that and $that ne '*') ? $that
         :                            '*';
 
@@ -285,9 +400,6 @@ sub parse {
     my %options    = @_;
 
     my @include_path;
-    if ($self->{plugins}) {
-        push @include_path, @{$self->{plugins}->tt2Paths || []};
-    }
     if (defined $self->{context}) {
         push @include_path,
             @{Sympa::get_search_path($self->{context}, %$self) || []};
@@ -297,7 +409,7 @@ sub parse {
     }
 
     my $config = {
-        ABSOLUTE => ($self->{allow_absolute} ? 1 : 0),
+        ABSOLUTE     => ($self->{allow_absolute} ? 1 : 0),
         INCLUDE_PATH => [@include_path],
         PLUGIN_BASE  => 'Sympa::Template::Plugin',
         # PRE_CHOMP  => 1,
@@ -309,19 +421,22 @@ sub parse {
             loc      => [\&maketext, 1],
             helploc  => [\&maketext, 1],
             locdt    => [\&locdatetime, 1],
-            wrap         => [\&wrap,          1],
-            mailto       => [\&_mailto,       1],
-            mailtourl    => [\&_mailtourl,    1],
-            obfuscate    => [\&_obfuscate,    1],
-            optdesc      => [\&optdesc,       1],
-            qencode      => [\&qencode,       0],
-            escape_xml   => [\&_escape_xml,   0],
-            escape_url   => [\&_escape_url,   0],
-            escape_quote => [\&_escape_quote, 0],
-            decode_utf8  => [\&decode_utf8,   0],
-            encode_utf8  => [\&encode_utf8,   0],
+            wrap      => [\&wrap,       1],
+            mailbox   => [\&_mailbox,   1],
+            mailto    => [\&_mailto,    1],
+            mailtourl => [\&_mailtourl, 1],
+            obfuscate => [\&_obfuscate, 1],
+            optdesc => [sub { shift; $self->_optdesc_func(@_) }, 1],
+            qencode     => [\&qencode,      0],
+            escape_cstr => [\&_escape_cstr, 0],
+            escape_xml  => [\&_escape_xml,  0],
+            escape_url  => [\&_escape_url,  0],
+            decode_utf8 => [\&decode_utf8,  0],
+            encode_utf8 => [\&encode_utf8,  0],
             url_abs => [sub { shift; $self->_url_func(1, $data, @_) }, 1],
             url_rel => [sub { shift; $self->_url_func(0, $data, @_) }, 1],
+            canonic_email => \&Sympa::Tools::Text::canonic_email,
+            permalink_id  => [\&_permalink_id, 0],
         }
     };
 
@@ -461,10 +576,6 @@ Reference to array containing additional template search paths.
 I<Read only>.
 Error occurred at the last execution of parse, or C<undef>.
 
-=item {plugins}
-
-TBD.
-
 =item {subdir}, {lang}, {lang_only}
 
 TBD.
@@ -478,6 +589,12 @@ See L<Template::Manual::Filters> about usage of filters.
 
 =over
 
+=item canonic_email
+
+Canonicalize e-mail address.
+
+This filter was added by Sympa 6.2.17.
+
 =item decode_utf8
 
 No longer used.
@@ -486,9 +603,18 @@ No longer used.
 
 No longer used.
 
+=item escape_cstr
+
+Applies C-style escaping of a string (not enclosed by quotes).
+
+This filter was added on Sympa 6.2.37b.1.
+
 =item escape_quote
 
 Escape quotation marks.
+
+B<Deprecated>.
+Use escape_cstr.
 
 =item escape_url
 
@@ -525,6 +651,29 @@ A string representing date/time:
 "YYYY/MM", "YYYY/MM/DD", "YYYY/MM/DD/HH/MM" or "YYYY/MM/DD/HH/MM/SS".
 
 =back
+
+=item mailbox ( email, [ comment ] )
+
+Generates mailbox string appropriately encoded to suit for addresses
+in header fields.
+
+=over
+
+=item Filtered text
+
+Display name, if any.
+
+=item email
+
+E-mail address.
+
+=item comment
+
+Comment, if any.
+
+=back
+
+This filter was introduced on Sympa 6.2.42.
 
 =item mailto ( email, [ {key =E<gt> val, ...}, [ nodecode ] ] )
 
@@ -603,6 +752,10 @@ This filter was introduced by Sympa 6.2.14.
 
 Generates i18n'ed description of list parameter value.
 
+As of Sympa 6.2.17, if it is called by the web templates
+(in C<web_tt2> subdirectories),
+special characters in result will be encoded.
+
 =over
 
 =item Filtered text
@@ -611,7 +764,8 @@ Parameter value.
 
 =item type
 
-Type of list parameter value: 'reception', 'visibility', 'status'
+Type of list parameter value:
+Special types (See L<Sympa::ListDef/"field_type">)
 or others (default).
 
 =item withval
@@ -619,6 +773,13 @@ or others (default).
 If parameter value is added to the description.  False by default.
 
 =back
+
+=item permalink_id
+
+Calculate permalink ID from message ID.
+
+Note:
+This filter was introduced by Sympa 6.2.71b.
 
 =item qencode
 
@@ -676,7 +837,7 @@ Generates folded text.
 
 =item init
 
-Indentation (or its length) of each paragraphm if any.
+Indentation (or its length) of each paragraph if any.
 
 =item subs
 
@@ -698,8 +859,8 @@ extracted during packaging process and are added to translation catalog.
 =head2 Plugins
 
 Plugins may be placed under F<LIBDIR/Sympa/Template/Plugin>.
-See <https://www.sympa.org/manual/templates_plugins> about usage of
-plugins.
+See <https://www.sympa.community/manual/customize/template-plugins.html>
+about usage of plugins.
 
 =head1 SEE ALSO
 

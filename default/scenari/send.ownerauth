@@ -1,0 +1,5 @@
+title.gettext Restricted to list owners with previous MD5 authentication
+
+is_owner([listname],[sender])                  smtp	       -> request_auth
+is_owner([listname],[sender])                  md5,smime       -> do_it
+true()					       smtp,md5,smime  -> reject(reason='send_owner')

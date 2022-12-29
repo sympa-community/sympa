@@ -1,0 +1,128 @@
+<!-- help_admin-members.tt2 -->
+<h2><a name="manage_members"></a>[%|helploc%]Managing subscribers[%END%]</h2>
+
+<p>
+    [%|helploc%]This section lets you browse the <strong>list of all the list subscribers</strong>. For each subscriber, the following information is available:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]<strong>email address</strong>;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>domain</strong> of the email address (<em class="example">@cru.fr</em>, <em class="example">@mitre.org</em>, <em class="example">@acme.com</em>, etc.);[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>picture</strong> (if that feature was activated for the list);[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>name</strong> (according to the subscription method, it is not always displayed);[%END%]
+    </li>
+    <li>
+        [%|helploc%]<a href="user-suboptions.html"><strong>message delivery mode</strong></a>;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>data source</strong> indicating the origin in case the subscriber is included in the list and not directly subscribed;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>date of subscription</strong> to the list;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>latest update</strong> of the subscriber options.[%END%]
+    </li>
+</ul>
+
+<p class="retraitita">
+    [%|helploc%]By default, each page displays 25 subscribers. You can browse through the pages by using the browsing arrows or display more subscribers on each page. You may also wish to sort subscribers according to different criteria by clicking on the corresponding column header.[%END%]
+</p>
+<p>
+    [%|helploc%]To <strong>search a subscriber</strong>, enter all or part of their email address or name in the input field and click on the '<strong>Search</strong>' button.[%END%]
+</p>
+<p>
+    [%|helploc%]You can <strong>subscribe other people to the list</strong> from this page:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]To add <strong>a single person</strong>, enter their email address in the input field and click on the '<strong>Add</strong>' button.[%END%]
+    </li>
+    <li>
+        [%|helploc%]To add <strong>several persons</strong>, click on the '<strong>Multiple add</strong>' button. In the input field that displays, enter the email addresses and names of the people you want to subscribe to the list and click on '<strong>Add subscribers</strong>'.[%END%]
+    </li>
+</ul>
+
+<p class="retraitita">
+    [%|helploc%]If you want to subscribe people without letting them know through a notice, tick the 'Quiet' box. However, it is far better to warn people that you subscribe them![%END%]
+</p>
+<p>
+    [%|helploc(conf.email,domain)%]Even though you have the possibility to subscribe people to your mailing lists, it is always <strong>much better that people take the necessary steps to subscribe themselves</strong> to the list. You can also <strong>invite people to subscribe to the list</strong> through the INVITE command: send an email to %1@%2 and type the following command in the message body: <strong>invite nameofthelist emailaddress</strong> (example: <em class="example">invite list_example john.doe(@)fai.com</em>).[%END%]
+</p>
+<p>
+    [%|helploc%]To <strong>accept or reject the subscription requests to the list</strong>, click on '<strong>Pending subscriptions</strong>'. The list of all people who requested subscription to the list displays. To accept or reject a request, tick the box in front of a person's name and click on the button of your choice.[%END%]
+</p>
+<p>
+    [%|helploc%]To <strong>send a subscription reminder to all subscribers</strong>, click on the '<strong>Remind all</strong>' button. The subscription reminder message contains:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]the <strong>name of the list</strong> to which the subscriber is subscribed;[%END%]
+    </li>
+    <li>
+        [%|helploc%]the <strong>email address</strong> with which the subscriber is subscribed;[%END%]
+    </li>
+    <li>
+        [%|helploc%]the subscriber's <strong>list password</strong>;[%END%]
+    </li>
+    <li>
+        [%|helploc%]a <strong>link to the information page</strong> of the list;[%END%]
+    </li>
+    <li>
+        [%|helploc%]a <strong>clickable address in order to allow subscribers to unsubscribe</strong> from the list.[%END%]
+    </li>
+</ul>
+<p class="retraitita">
+    [%|helploc%]You can also configure an automatic subscription reminder through the '<a href="admin-editlist-other.html">Miscellaneous</a>' page of the 'Edit list config' section.[%END%]
+</p>
+
+<p>
+    [%|helploc%]To <strong>unsubscribe subscribers</strong> from this page, select them by ticking the boxes in front of their names and click on the '<strong>Delete selected email addresses</strong>' button.[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]If you do not want to notify the subscribers, tick the 'Quiet' box. However, this is not advisable, except in the case of bouncing subscribers.[%END%]
+</p>
+
+<p class="retraitita">
+    [%|helploc%]Tip: to select all subscribers at once, first make sure that they are all displayed on the page, and then click on the 'Toggle selection' button: all subscribers will be selected in a single click![%END%]
+</p>
+
+<p>
+    [%|helploc%]To <strong>change a subscriber's subscriber options</strong>, click on their email address.[%END%]
+</p>
+<p>
+    [%|helploc%]From this page, you can <strong>change the name, email address and message delivery mode of the subscriber</strong>. You can also <strong>unsubscribe him/her</strong>.[%END%]
+</p>
+
+<p>
+    [%|helploc%]If the subscriber is <a href="admin-bounces.html">bouncing</a>, another form displays under the 'Subscriber information' form:[%END%]
+</p>
+<p>
+    [%|helploc%]The information displayed involves:[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]the type of error (in English);[%END%]
+    </li>
+    <li>
+        [%|helploc%]the number or errors;[%END%]
+    </li>
+    <li>
+        [%|helploc%]the period during which errors occurred.[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]You can <strong>check the latest error</strong> or <strong>reset errors</strong>. If you reset errors, the subscriber's <a href="admin-editlist-bounces.html">score</a> will be reset to zero.[%END%]
+</p>
+
+<p>
+    [%|helploc%]To manage bouncing addresses more easily, go to the '<a href="admin-bounces.html">Bounces</a>' page of the list administration module.[%END%]
+</p>
+
+<!-- end help_admin-members.tt2 -->

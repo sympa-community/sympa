@@ -1,44 +1,47 @@
-<!-- $Id$ -->
+<!-- active_lists.tt2 -->
+<h2 class="block">
+    <strong>
+        [% IF count %]
+            [%|loc(count)%] The %1 most active lists [%END%]
+        [% ELSE %]
+            [%|loc%] Active lists [%END%]
+        [% END %]
 
-<h2 class="block"> <strong>
- [% IF count %]
-   [%|loc(count)%] The %1 most active lists [%END%] 
- [% ELSE %]
-   [%|loc%] Active lists [%END%] 
- [% END %]
+        [% IF for %]
+            [%|loc(for)%] for %1 days [%END%]
+        [% END %]
+    </strong>
+</h2>
 
- [% IF for %]
-   [%|loc(for)%] for %1 days [%END%] 	
- [% END %]
-</strong> </h2> 	
-
-<br /> 
+<br />
 
 <table class="responsive listOfItems" >
-<caption>[%|loc(count)%] The %1 most active lists [%END%][%|loc(for)%] for %1 days [%END%]</caption>
-<tr class="color_light">
-   <th id="list_name"><strong>[%|loc%]List name[%END%]</strong></th>
-   <th id="message"><strong>[%|loc%]Number of messages[%END%]</strong></th>	
-   <th id="average"><strong>[%|loc%]Average per day[%END%]</strong></th>	
-   <th id="date"><strong>[%|loc%]Creation date[%END%]</strong></th>
-   <th id="subject"><strong>[%|loc%]Subject[%END%]</strong></th>
- </tr>
+    <caption>[%|loc(count)%] The %1 most active lists [%END%][%|loc(for)%] for %1 days [%END%]</caption>
+    <tr class="color_light">
+        <th id="list_name"><strong>[%|loc%]List name[%END%]</strong></th>
+        <th id="message"><strong>[%|loc%]Number of messages[%END%]</strong></th>
+        <th id="average"><strong>[%|loc%]Average by day[%END%]</strong></th>
+        <th id="date"><strong>[%|loc%]Creation date[%END%]</strong></th>
+        <th id="subject"><strong>[%|loc%]Subject[%END%]</strong></th>
+    </tr>
 
-[% SET dark = '0' %]
-[% FOREACH l = active_lists %]
-  [% IF dark == '1' %]<tr>[% SET dark = '0' %][% ELSE %]<tr class="color0">[% SET dark = '1' %][% END %]
-
-   <td headers="list_name">
-     <a href="[% 'info' | url_rel([l.name]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.name %]@[% l.host %][% END %]</strong></a>
-   </td>
-  <td class="text_center" headers="message"> [% l.msg_count %] </td>
-  <td class="text_center" headers="average"> [% l.average %] </td>
-  <td headers="date"> [% l.date %] </td>
-  <td headers="subject"> [% l.subject %] </td>
- </tr>
- 
- [% END %] 
- 
+    [% SET dark = '0' %]
+    [% FOREACH l = active_lists %]
+        [% IF dark == '1' %]
+            <tr>
+            [% SET dark = '0' %]
+        [% ELSE %]
+            <tr class="color0">
+            [% SET dark = '1' %]
+        [% END %]
+            <td headers="list_name">
+                <a href="[% 'info' | url_rel([l.name]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.name %]@[% domain %][% END %]</strong></a>
+            </td>
+            <td class="text_center" headers="message"> [% l.msg_count %] </td>
+            <td class="text_center" headers="average"> [% l.average %] </td>
+            <td headers="date"> [% l.date %] </td>
+            <td headers="subject"> [% l.subject %] </td>
+         </tr>
+    [% END %]
 </table>
-
 <!-- end active_lists.tt2 -->

@@ -1,58 +1,62 @@
-<!-- $Id$ -->
+<!-- header.tt2 -->
 <header>
+    <div class="title-bar"
+         data-responsive-toggle="sympa-top-bar" data-hide-for="medium">
+        <span class="menu-text" aria-hidden="true">
+            [% IF conf.logo_html_definition ~%]
+                [% conf.logo_html_definition %]
+            [%~ ELSE ~%]
+                <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]">
+                    <img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" />
+                </a>
+            [%~ END %]
+        </span>
+        <div class="title-bar-right">
+            <div class="title-bar-title">
+                <span>[%|loc%]Sympa Menu[%END%]</span>
+            </div>
+            <a class="menu-icon" href="#" data-toggle="sympa-top-bar"></a>
+        </div>
+    </div>
 
-[%# Remove the class "menu-icon" to get rid of menu icon.
-    Take out inner text of span element to just have icon alone. ~%]
-<nav class="top-bar" data-topbar role="navigation">
-    <ul class="title-area large-2 columns show-for-large-up">
-        <li class="name">
-                [% IF  conf.logo_html_definition %]
-                  [% conf.logo_html_definition %]
-                [% ELSE %]
-                  <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
-                [% END %]
-        </li>
-        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Sympa Menu[%END%]</span></a></li>
-    </ul>
+    <nav class="top-bar" id="sympa-top-bar" role="navigation">
+        <ul class="top-bar-left medium-2 columns show-for-medium">
+            <li class="name">
+                <span class="menu-text">
+                    [% IF conf.logo_html_definition ~%]
+                        [% conf.logo_html_definition %]
+                    [%~ ELSE ~%]
+                        <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]">
+                            <img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" />
+                        </a>
+                    [%~ END %]
+                </span>
+            </li>
+        </ul>
 
-    <ul class="title-area hide-for-large-up">
-        <li class="name">
-                [% IF  conf.logo_html_definition %]
-                  [% conf.logo_html_definition %]
-                [% ELSE %]
-                  <a href="[% conf.wwsympa_url %]" title="[% conf.wwsympa_url %]"><img src="[% icons_url %]/logo_sympa.png" alt="[%|loc%]SYMPA logo[%END%]" /></a>
-                [% END %]
-        </li>
-        <li class="toggle-topbar menu-icon"><a href="#"><span>[%|loc%]Sympa Menu[%END%]</span></a></li>
-    </ul>
-<menu class="top-bar-section">
-  <ul class="right">
-        <!-- sympa menu start --> 
-          [% PROCESS 'sympa_menu.tt2' %]
-        <!-- end of sympa menu-->
-        [% IF user.email %]
-        <li class="has-dropdown">
-            <a href="#"><i class="fa fa-user"></i> [% IF user.gecos %] [% user.gecos %][% ELSE %] [% user.email %] [% END %]</a>
-            <ul class="dropdown">
-        [% END %]
-        <!-- login banner start -->
-          [% PROCESS 'loginbanner.tt2' %]
-        <!-- end of login banner-->
-        [% IF user.email %]
+        <menu class="top-bar-right">
+            <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+                [% PROCESS 'sympa_menu.tt2' %]
+                [%# login banner or login button ~%]
+                [% IF user.email ~%]
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-user"></i> [% user.gecos || user.email %]
+                        </a>
+                        <ul class="vertical menu">
+                            [% PROCESS 'user_menu.tt2' %]
+                        </ul>
+                    </li>
+                [%~ ELSIF use_passwd || sso.size || authentication_info_url ~%]
+                    [% PROCESS 'login_menu.tt2' %]
+                [%~ END %]
             </ul>
-        </li>
-        [% END %]
-    </ul>
-</menu>
-</nav>
-[% IF top_menu %]
-[% IF not list %]
-<h1 class="row">[% main_title %]</h1>
-[% ELSE %]
-<h1 class="medium-offset-3 medium-9 columns">[% main_title %]</h1>
-[% END %]
-[% ELSE %]
-<h1 class="medium-offset-3 medium-9 columns">[% main_title %]</h1>
-[% END %]
+        </menu>
+    </nav>
+    [% IF not list ~%]
+        <h1 class="row">[% main_title %]</h1>
+    [%~ ELSE ~%]
+        <h1 class="medium-offset-3 medium-9 columns">[% main_title %]</h1>
+    [%~ END %]
 </header>
 <!-- end header.tt2 -->

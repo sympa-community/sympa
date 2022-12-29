@@ -1,5 +1,0 @@
-title.gettext Moderated, no authentication needed if DKIM signature from editor is OK
-
-is_editor([listname],[sender])                 dkim,md5,smime        -> do_it
-is_editor([listname],[sender])                 smtp                  -> request_auth
-true()                                         smtp,dkim,smime,md5   -> editorkey

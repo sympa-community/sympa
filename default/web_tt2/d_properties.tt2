@@ -1,58 +1,134 @@
-<!-- $Id$ -->
-<h2>[%|loc%]Shared documents[%END%] <a  href="[% 'nomenu/help/shared' | url_rel %]" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
-    
+<!-- d_properties.tt2 -->
+<h2>[%|loc%]Shared documents[%END%]
+    <a class="openInNewWindow" target="wws_help"
+       href="[% 'nomenu/help' | url_rel(['shared.html']) %]">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+    </a>
+</h2>
+
+<menu class="shared">
+    [% FOREACH a = shared_doc.ancestors ~%]
+        [% IF a.type == 'root' ~%]
+            <li>
+                <a class="actionMenuLinks sharedMenu tip-left"
+                   data-tooltip aria-haspopup="true"
+                   href="[% 'd_read' | url_rel([list,'']) %]"
+                   title="[%|loc%]Root folder[%END%]">
+                    <i class="fa fa-home fa-lg"></i>
+                </a>
+            </li>
+        [%~ ELSE ~%]
+            <li>
+                <a class="actionMenuLinks sharedMenu"
+                   href="[% 'd_read' | url_rel([list,a.paths_d]) %]">
+                    <i class="fa fa-folder-open"></i> [%~ a.name ~%]
+                </a>
+            </li>
+        [%~ END %]
+    [%~ END ~%]
+
+    <li>
+        <span class="actionMenuLinksInactive sharedMenu">
+            [% IF shared_doc.type == 'directory' ~%]
+                <i class="fa fa-folder"></i> [%~ shared_doc.name ~%]
+            [%~ ELSE ~%]
+                <i class="fa fa-file"></i> [%~ shared_doc.name ~%]
+            [%~ END %]
+        </span>
+    </li>
+</menu>
+
+<h3>
+    <i class="fa fa-cog fa-lg"></i>
+    [% IF shared_doc.type == 'url' ~%]
+        [%|loc(shared_doc.label)%]Properties of the bookmark %1[%END%]
+    [%~ ELSIF shared_doc.type == 'directory' ~%]
+        [%|loc(shared_doc.name)%]Properties of the directory %1[%END%]
+    [%~ ELSE ~%]
+        [%|loc(shared_doc.name)%]Properties of the file %1[%END%]
+    [%~ END %]
+</h3>
+
+<p>
+    [%|loc(shared_doc.owner)%]Owner: %1[%END%] <br />
+    [%|loc(shared_doc.date)%]Last update: %1[%END%] <br />
+    [%|loc(shared_doc.title)%]Description: %1[%END%] <br />
+</p>
+
+[% IF shared_doc.may_edit || shared_doc.may_control ~%]
     <menu class="shared">
-    <li><span class="search_form"> <a class="actionMenuLinks" href="[% 'd_read' | url_rel([list,escaped_father]) %]" title="[%|loc%]Up to higher level directory[%END%]"><i class="fa fa-folder-open fa-lg"><i class="fa fa-level-up fa-lg"></i></i></a></span></li>
+        <span class="search_form">
+            [% IF shared_doc.type == 'directory' %]
+              <a class="actionMenuLinks"
+                href="[% 'd_read' | url_rel([list,shared_doc.paths_d]) %]">
+                <i class="fa fa-list-ul"></i> [%|loc%]browse[%END%]</a>
+            [% ELSIF shared_doc.may_edit %]
+              <a class="actionMenuLinks"
+                href="[% 'd_editfile' | url_rel([list,shared_doc.paths_d]) %]">
+                <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]</a>
+            [% ELSE %]
+              <span class="actionMenuLinksInactive">
+                <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]</span>
+            [% END %]
+
+            [% IF shared_doc.may_edit %]
+                <a class="actionMenuLinks"
+                   href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
+                    <i class="fa fa-trash"></i> [%|loc%]delete[%END%]
+                </a>
+            [% END %]
+            [% IF shared_doc.may_control %]
+                <a class="actionMenuLinks"
+                   href="[% 'd_control' | url_rel([list,shared_doc.paths_d]) %]">
+                    <i class="fa fa-lock"></i> [%|loc%]access[%END%]
+                </a>
+            [% END %]
+            [% IF shared_doc.may_edit %]
+                <span class="actionMenuLinksInactive">
+                    <i class="fa fa-cog"></i> [%|loc%]properties[%END%]
+                </span>
+            [% END %]
+        </span>
     </menu>
+[%~ END %]
 
-  [% IF url %]
-  <h3>[%|loc(visible_path)%]Properties of the bookmark %1[%END%]  </h3>
-  [% ELSIF directory %]
-  <h3>[%|loc(visible_path)%]Properties of the directory %1[%END%]</h3>
-  [% ELSE %]
-  <h3>[%|loc(visible_path)%]Properties of the file %1[%END%]</h3>
-  [% END %]
-    <p>
-    [%|loc(doc_owner)%]Owner: %1[%END%] <br />
-    [%|loc(doc_date)%]Last update: %1[%END%] <br />
-    [%|loc(desc)%]Description: %1[%END%] <br />
-    </p>
-  <form action="[% path_cgi %]" method="post">
-  <fieldset>
-  <label for="content">
-  [% IF directory %]
-  [%|loc(fname)%]Describe directory '%1'[%END%]
-  [% ELSE %]
-  [%|loc(fname)%]Describe file '%1'[%END%]
-  [% END %]
-  </label>
-  <input id="content" size="50" maxlength="100" name="content" value="[% desc %]" />
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="path" value="[% path %]" />
-  <input type="hidden" name="serial" value="[% serial_desc %]" />
-  <input type="hidden" name="action" value="d_describe" />
-  <input class="MainMenuLinks" size="50" maxlength="100" type="submit" name="action_d_describe" value="[%|loc%]Apply[%END%]" />
-  </fieldset>
-  </form>
+<form action="[% path_cgi %]" method="post">
+    <fieldset>
+      <label for="content">
+          [% IF shared_doc.type == 'directory' %]
+              [%|loc(shared_doc.name)%]Describe directory '%1'[%END%]
+          [% ELSE %]
+              [%|loc(shared_doc.name)%]Describe file '%1'[%END%]
+          [% END %]
+      </label>
+      <input id="content" size="50" maxlength="100" name="content" value="[% shared_doc.title %]" />
 
-  <form action="[% path_cgi %]" method="post">
-  <fieldset>
-  <label for="new_name">
-  [% IF directory %]
-  [%|loc(fname)%]Rename directory %1[%END%]
-  [% ELSE %]
-  [%|loc(fname)%]Rename file %1[%END%]
-  [% END %]
-  </label>
-  <input size="50" maxlength="100" name="new_name" />
-  <input type="hidden" name="list" value="[% list %]" />
-  <input type="hidden" name="path" value="[% path %]" />
-  <input type="hidden" name="serial" value="[% serial_desc %]" />
-  <input type="hidden" name="action" value="d_rename" />
+      <input type="hidden" name="list"   value="[% list %]" />
+      <input type="hidden" name="path"   value="[% shared_doc.paths.join("/") %]" />
+      <input type="hidden" name="serial" value="[% shared_doc.serial_desc %]" />
+      <input type="hidden" name="action" value="d_describe" />
+      <input class="MainMenuLinks" size="50" maxlength="100" type="submit" name="action_d_describe" value="[%|loc%]Apply[%END%]" />
+    </fieldset>
+</form>
 
-  <input class="MainMenuLinks" size="20" maxlength="50" type="submit" name="action_d_rename" value="[%|loc%]Rename[%END%]" />
-  </fieldset>
-  </form>
+<form action="[% path_cgi %]" method="post">
+    <fieldset>
+        <label for="new_name">
+            [% IF shared_doc.type == 'directory' %]
+                [%|loc(shared_doc.name)%]Rename directory %1[%END%]
+            [% ELSE %]
+                [%|loc(shared_doc.name)%]Rename file %1[%END%]
+            [% END %]
+        </label>
+        <input size="50" maxlength="100" name="new_name" id="new_name" />
 
+        <input type="hidden" name="list"   value="[% list %]" />
+        <input type="hidden" name="path"   value="[% shared_doc.paths.join("/") %]" />
+        <input type="hidden" name="serial" value="[% shared_doc.serial_desc %]" />
+        <input type="hidden" name="action" value="d_rename" />
+
+        <input class="MainMenuLinks" size="20" maxlength="50" type="submit" name="action_d_rename" value="[%|loc%]Rename[%END%]" />
+    </fieldset>
+</form>
 
 <!-- end d_properties.tt2 -->

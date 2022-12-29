@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -42,7 +44,9 @@ sub _twist {
     my $request = shift;
 
     # Skip authorization unless specific scenario is defined.
-    if ($request->{error} or not $request->handler->action_scenario) {
+    if (   $request->{error}
+        or not $request->handler->action_scenario
+        or ($self->{scenario_context} and $self->{scenario_context}{skip})) {
         return ['Sympa::Spindle::DispatchRequest'];
     }
 
@@ -61,6 +65,10 @@ sub _twist {
 
     my $context = $self->{scenario_context}
         or die 'bug in logic. Ask developer';
+    # Add target email kept only in request to context.
+    # FIXME: $request and $context would be merged in some future
+    $context = {email => $request->{email}, %$context}
+        if exists $request->{email};
 
     # Call scenario: auth_method MD5 do not have any sense in
     # scenario because auth is performed by AUTH command.
@@ -72,11 +80,10 @@ sub _twist {
     my $auth_method =
           $request->{smime_signed} ? 'smime'
         : $request->{md5_check}    ? 'md5'
-        : $request->{dkim_pass}    ? 'dkim'
         :                            'smtp';
 
-    $result = Sympa::Scenario::request_action($that, $scenario, $auth_method,
-        $context);
+    $result =
+        Sympa::Scenario->new($that, $scenario)->authz($auth_method, $context);
     $action = $result->{'action'} if ref $result eq 'HASH';
 
     unless (defined $action and $action =~ /\A(?:$action_regexp)\b/) {
@@ -103,29 +110,65 @@ sub _twist {
         return undef;
     }
 
-    # Special cases for subscribe & signoff: If membership is unsatisfactory,
-    # force execute request and let it be rejected.
-    unless ($action =~ /\Areject\b/i) {
-        if ($request->{action} eq 'subscribe'
-            and defined $that->get_list_member($request->{email})) {
-            $action =~ s/\A\w+/do_it/;
-        } elsif ($request->{action} eq 'signoff'
-            and not defined $that->get_list_member($request->{email})) {
-            $action =~ s/\A\w+/do_it/;
+    # Special cases for "subscribe" and "signoff" actions.
+    if ($action =~ /\Areject\b/i) {
+        ;
+    } elsif (
+        $sender ne ($request->{email} // '')
+        and
+        ($request->{action} eq 'subscribe' or $request->{action} eq 'signoff')
+    ) {
+        # Request by an other/anonymous user:
+        # If membership is unsatisfactory, fake successful response to prevent
+        # sniffing users.
+        my $is_list_member = $that->get_list_member($request->{email});
+        if (   $request->{action} eq 'subscribe' and $is_list_member
+            or $request->{action} eq 'signoff' and not $is_list_member) {
+            $log->syslog(
+                'info',
+                '%s %s for %s from %s is in vain (omitted)',
+                uc $request->{action},
+                $request->{email}, $that, $sender
+            );
+            # Notify target address.
+            Sympa::send_notify_to_user($that, 'vain_request_by_other',
+                $request->{email}, {request => $request});
+            # Fake succsssful result.
+            if ($action =~ /\Arequest_auth\b/i) {
+                $self->add_stash($request, 'notice', 'sent_to_user',
+                    {email => $request->{email}});
+            } elsif ($action =~ /\Aowner\b/i) {
+                $self->add_stash($request, 'notice', 'sent_to_owner');
+            }
+            # Abort processing request.
+            return 1;
         }
+
+        # Otherwise, confirmation should be sent to target email instead of
+        # sender.  This fixup is necessary for subscribe.* scenarios bundled
+        # in 6.2.34 or earlier.
+        $action =~
+            s/\Arequest_auth(?![(][[]email[]][)])/request_auth([email])/;
     }
 
     if ($action =~ /\Ado_it\b/i) {
         $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);    # Overwrite.
         $request->{notify} = ($action =~ /,\s*notify\b/i);
         return ['Sympa::Spindle::DispatchRequest'];
-    } elsif ($action =~ /\Arequest_auth\b(?:\s*[[]\s*(\S+)\s*[]])?/i) {
+    } elsif ($action =~ /\Alistmaster\b/i) {
+        # Special case for move_list and create_list.
+        $request->{pending} = 'pending';
+        $request->{notify}  = ($action =~ /,\s*notify\b/i);
+        return ['Sympa::Spindle::DispatchRequest'];
+    } elsif (
+        $action =~ /\Arequest_auth\b(?:\s*[(]\s*[[]\s*(\S+)\s*[]]\s*[)])?/i) {
         my $to = $1;
         if ($to and $to eq 'email') {
             $request->{sender_to_confirm} = $request->{email};
         }
         return ['Sympa::Spindle::ToAuth'];
     } elsif ($action =~ /\Aowner\b/i and ref $that eq 'Sympa::List') {
+        # Special case for subscribe and signoff.
         $request->{quiet} ||= ($action =~ /,\s*quiet\b/i);
         return ['Sympa::Spindle::ToAuthOwner'];
     } elsif ($action =~ /\Areject\b/i) {
@@ -196,7 +239,7 @@ See also L<Sympa::Spindle/"Public methods">.
 =item new ( key =E<gt> value, ... )
 
 In most cases, L<Sympa::Spindle::ProcessMessage>
-splices meessages to this class.  This method is not used in ordinal case.
+splices messages to this class.  This method is not used in ordinal case.
 
 =item spin ( )
 

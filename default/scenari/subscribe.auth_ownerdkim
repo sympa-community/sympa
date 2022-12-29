@@ -1,8 +1,0 @@
-title.gettext requires authentication unless DKIM signature is OK, then owner approval
-
-# subscription under owner control but previously email are checked by auth
-true()                                     smtp      -> request_auth
-is_subscriber([listname],[previous_email]) dkim,md5,smime -> do_it
-true()                                     dkim,md5,smime -> owner
-
-

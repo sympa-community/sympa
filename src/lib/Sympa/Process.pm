@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ BEGIN {
         unless $Config::Config{d_sigaction};
     die 'Non-blocking wait is not supported'
         unless $Config::Config{d_waitpid}
-            or $Config::Config{d_wait4};
+        or $Config::Config{d_wait4};
 }
 
 INIT {
@@ -193,7 +193,7 @@ sub sync_child {
         foreach my $child_pid (keys %$hash) {
             next
                 if exists $self->{children}->{$child_pid}
-                    and kill 0, $child_pid;
+                and kill 0, $child_pid;
             delete $hash->{$child_pid};
         }
     }
@@ -204,7 +204,7 @@ sub sync_child {
 
             next
                 if exists $self->{children}->{$child_pid}
-                    and kill 0, $child_pid;
+                and kill 0, $child_pid;
 
             $log->syslog(
                 'err',
@@ -305,7 +305,7 @@ sub write_pid {
             user  => Sympa::Constants::USER,
             group => Sympa::Constants::GROUP,
         )
-        ) {
+    ) {
         die sprintf 'Unable to set rights on %s. Exiting.', $piddir;
         ## No return
     }
@@ -362,7 +362,7 @@ sub write_pid {
             user  => Sympa::Constants::USER,
             group => Sympa::Constants::GROUP,
         )
-        ) {
+    ) {
         ## Unlock pid file
         $lock_fh->close();
         die sprintf 'Unable to set rights on %s', $pidfile;
@@ -386,7 +386,7 @@ sub direct_stderr_to_file {
             user  => Sympa::Constants::USER,
             group => Sympa::Constants::GROUP,
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Unable to set rights on %s: %m',
@@ -406,9 +406,9 @@ sub _send_crash_report {
     my $language = Sympa::Language->instance;
     my (@err_output, $err_date);
     if (-f $err_file) {
-        open(ERR, $err_file);
-        @err_output = map { chomp $_; $_; } <ERR>;
-        close ERR;
+        open my $ifh, '<', $err_file;
+        @err_output = map { chomp $_; $_; } <$ifh>;
+        close $ifh;
 
         my $err_date_epoch = (stat $err_file)[9];
         if (defined $err_date_epoch) {

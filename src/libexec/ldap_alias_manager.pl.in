@@ -3,30 +3,31 @@
 # vim:ft=perl:et:sw=4
 # $Id$
 
-#Author: Philippe Baumgart
-#Company: BT
-#License: GPL
-#Version: 1.0
-## This version of alias_manager.pl has been customized by Ludovic Marcotte,
-## Kazuo Moriwaka and Francis Lachapelle
-## Modified by Philippe Baumgart:
-## Added  Optional LDAPS support
-## Added LDAP configuration stored in a separate config file
-## --defaultdir--/ldap_alias_manager.conf
+# Sympa - SYsteme de Multi-Postage Automatique
 #
-# Modified by Roland Hopferwieser:
-#   Use template for entry definition
-#   Added simulation mode
-#	Bugfix for ldap_ssl = 0
-#Purpose: It has the ability to add/remove list aliases in an LDAP directory
-# You should edit all the --defaultdir--/ldap_alias_manager.conf to use your
-# own LDAP directory
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
 use warnings;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use English qw(-no_match_vars);
 use Net::LDAP;
+use Net::LDAP::Entry;
 use Net::LDAPS;
 use POSIX;
 
@@ -83,7 +84,7 @@ $ldap_mail_attribute = $ldap_params{'ldap_mail_attribute'}
 $ldap_ssl_version = lc($ldap_params{'ldap_ssl_version'} || '');
 unless ($ldap_ssl_version) {
     $ldap_ssl_version = $ldap_ssl ? 'tlsv1' : undef;
-} elsif ($ldap_ssl_version !~ /\A(sslv2|sslv3|tlsv1|tlsv1_1|tlsv1_2)\z/) {
+} elsif ($ldap_ssl_version !~ /\A(sslv2|sslv3|tlsv1|tlsv1_[123])\z/) {
     printf STDERR
         "Invalid parameter ldap_ssl_version in the config file %s\n",
         $manager_conf_file;
@@ -303,11 +304,11 @@ sub already_defined {
 ## Parse the alias_ldap.conf config file
 sub GetLdapParameter {
     #read the config file
-    open(LDAPCONFIG, $manager_conf_file)
-        or print STDERR "Can't read the config file $manager_conf_file\n"
+    open my $ifh, '<', $manager_conf_file
+        or printf STDERR "Can't read the config file %s\n", $manager_conf_file
         and return 0;
-    my @ldap_conf = <LDAPCONFIG>;
-    close LDAPCONFIG;
+    my @ldap_conf = <$ifh>;
+    close $ifh;
     foreach (@ldap_conf) {
         #we skip the comments
         if ($_ =~ /^\s*\#/) {
@@ -334,33 +335,19 @@ sub GetLdapParameter {
 sub initialize_ldap {
 
     if ($ldap_ssl eq '1') {
-        if ($ldap_cachain) {
-            unless (
-                $ldap_connection = Net::LDAPS->new(
-                    $ldap_host,
-                    version    => 3,
-                    verify     => 'require',
-                    sslversion => $ldap_ssl_version,
-                    cafile     => $ldap_cachain
-                )
-                ) {
-                print STDERR
-                    "Can't connect to LDAP server using SSL or unable to verify Server certificate for $ldap_host: $EVAL_ERROR\n";
-                return 0;
-            }
-        } else {
-            unless (
-                $ldap_connection = Net::LDAPS->new(
-                    $ldap_host,
-                    version    => 3,
-                    verify     => 'none',
-                    sslversion => $ldap_ssl_version
-                )
-                ) {
-                print STDERR
-                    "Can't connect to LDAP server using SSL for $ldap_host: $EVAL_ERROR\n";
-                return 0;
-            }
+        unless (
+            $ldap_connection = Net::LDAPS->new(
+                $ldap_host,
+                version    => 3,
+                verify     => ($ldap_cachain ? 'require' : 'none'),
+                sslversion => $ldap_ssl_version,
+                ($ldap_cachain ? (cafile => $ldap_cachain) : ())
+            )
+        ) {
+            printf STDERR
+                "Can't connect to LDAP server using SSL or unable to verify Server certificate for %s: %s\n",
+                $ldap_host, $EVAL_ERROR;
+            return 0;
         }
     } else {
         unless ($ldap_connection = Net::LDAP->new($ldap_host, version => 3)) {
@@ -387,3 +374,49 @@ sub finalize_ldap {
         $ldap_connection = undef;
     }
 }
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+ldap_alias_manager, ldap_alias_manager.pl - LDAP alias manager
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 FILES
+
+=over
+
+=item F<$SYSCONFDIR/ldap_alias_manager.conf>
+
+Configuration file of ldap_alias_manager.
+
+=item F<$SYSCONFDIR/ldap_alias_entry.tt2>
+
+Template for ldap entries.
+
+=back
+
+=head1 SEE ALSO
+
+alias_manager(8).
+
+=head1 HISTORY
+
+F<ldap_alias_manager> appeared on Sympa 5.2b2.
+
+It was originally written by Philippe Baumgart, British Telecom.
+And it was customized by
+Ludovic Marcotte, Kazuo Moriwaka and Francis Lachapelle.
+
+Philippe Baumgart added optional LDAPS support
+and configuration stored in a separate config file F<ldap_alias_manager.conf>.
+
+Roland Hopferwieser added template for entry definition
+and simulation mode.
+
+=cut

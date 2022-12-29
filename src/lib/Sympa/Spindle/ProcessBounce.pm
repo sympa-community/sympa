@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,13 +37,13 @@ use MIME::Head;
 use MIME::Parser;
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Process;
 use Sympa::Regexps;
 use Sympa::Scenario;
+use Sympa::Spool::Listmaster;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
 use Sympa::Tracking;
@@ -56,12 +59,8 @@ sub _init {
     my $state = shift;
 
     if ($state == 1) {
-        Sympa::List::init_list_cache();
         # Process grouped notifications.
-        Sympa::Alarm->instance->flush;
-    } elsif ($state == 2) {
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
+        Sympa::Spool::Listmaster->instance->flush;
     }
 
     1;
@@ -119,7 +118,7 @@ sub _twist {
         # Pick address only.
         my @to = Mail::Address->parse($to);
         if (@to and $to[0] and $to[0]->address) {
-            $to = lc($to[0]->address);
+            $to = Sympa::Tools::Text::canonic_email($to[0]->address);
         } else {
             undef $to;
         }
@@ -217,7 +216,7 @@ sub _twist {
                     status       => $dsn_status,
                     arrival_date => $arrival_date
                 )
-                ) {
+            ) {
                 $log->syslog('notice', 'DSN %s correctly treated', $message);
                 $numreported++;
             } else {
@@ -276,7 +275,7 @@ sub _twist {
                     status       => $mdn_status,
                     arrival_date => $date
                 )
-                ) {
+            ) {
                 $log->syslog('notice', 'MDN %s correctly treated', $message);
                 $numreported++;
             } else {
@@ -294,7 +293,7 @@ sub _twist {
     # AOL.
     if (    $eff_type eq 'multipart/report'
         and $report_type eq 'feedback-report') {
-        # Prepare entity to analyze.
+        # Prepare entity to analyse.
         # Not extract message/* parts.
         my $parser = MIME::Parser->new;
         $parser->extract_nested_messages(0);
@@ -308,9 +307,9 @@ sub _twist {
             my $etype = $part->effective_type || '';
             next
                 unless $etype eq 'message/rfc822'
-                    or $etype eq 'text/rfc822-headers'
-                    or $etype eq 'message/global'
-                    or $etype eq 'message/global-headers';
+                or $etype eq 'text/rfc822-headers'
+                or $etype eq 'message/global'
+                or $etype eq 'message/global-headers';
             next unless $part->bodyhandle;
 
             my $str  = $part->bodyhandle->as_string . "\n\n";
@@ -323,7 +322,7 @@ sub _twist {
                         scalar reverse($list_id),
                         scalar reverse('.', $robot)
                     )
-                    ) {
+                ) {
                     my $listname = substr $list_id, 0, -length($robot) - 1;
                     $list =
                         Sympa::List->new($listname, $robot, {just_try => 1});
@@ -341,7 +340,6 @@ sub _twist {
         # Overwrite context.
         $message->{context} = $list;
 
-        my $email_regexp = Sympa::Regexps::email();
         my @reports =
             _parse_multipart_report($message, 'message/feedback-report');
         foreach my $report (@reports) {
@@ -353,8 +351,9 @@ sub _twist {
 
             my $feedback_type = lc($report->{feedback_type}->[0] || '');
             my @original_rcpts =
-                grep {m/$email_regexp/}
-                map { lc($_ || '') } @{$report->{original_rcpt_to} || []};
+                grep { Sympa::Tools::Text::valid_email($_) }
+                map { Sympa::Tools::Text::canonic_email($_ || '') }
+                @{$report->{original_rcpt_to} || []};
 
             # Malformed reports are forwarded to listmaster.
             unless (@original_rcpts) {
@@ -411,16 +410,16 @@ sub _twist {
                 # opt-out-list are abandoned.
                 if ($feedback_type =~ /\babuse\b/) {
                     my $result =
-                        Sympa::Scenario::request_action($list, 'unsubscribe',
-                        'smtp', {'sender' => $original_rcpt});
+                        Sympa::Scenario->new($list, 'unsubscribe')
+                        ->authz('smtp', {'sender' => $original_rcpt});
                     my $action = $result->{'action'}
                         if ref $result eq 'HASH';
                     if ($action and $action =~ /do_it/i) {
                         if ($list->is_list_member($original_rcpt)) {
                             $list->delete_list_member(
-                                'users'     => [$original_rcpt],
-                                'exclude'   => ' 1',
-                                'operation' => 'auto_del',
+                                [$original_rcpt],
+                                exclude   => 1,
+                                operation => 'auto_del'
                             );
 
                             $log->syslog(
@@ -492,8 +491,8 @@ sub _twist {
         $log->syslog('debug',
             "VERP for a service message, try to remove the subscriber");
 
-        my $result = Sympa::Scenario::request_action(
-            $list, 'del', 'smtp',
+        my $result = Sympa::Scenario->new($list, 'del')->authz(
+            'smtp',
             {   'sender' => $Conf::Conf{'listmaster'},    #FIXME
                 'email'  => $who
             }
@@ -503,9 +502,9 @@ sub _twist {
         if ($action and $action =~ /do_it/i) {
             if ($list->is_list_member($who)) {
                 $list->delete_list_member(
-                    'users'     => [$who],
-                    'exclude'   => '1',
-                    'operation' => 'auto_del',
+                    [$who],
+                    exclude   => 1,
+                    operation => 'auto_del'
                 );
                 $log->syslog(
                     'notice',
@@ -615,7 +614,7 @@ sub _parse_dsn {
             $message,
             qw(message/delivery-status message/global-delivery-status)
         )
-        ) {
+    ) {
         next unless $report->{status};
         my $status = $report->{status}->[0];
         if ($status and $status =~ /\b(\d+[.]\d+[.]\d+)\b/) {
@@ -645,7 +644,7 @@ sub _parse_multipart_report {
     my $message       = shift;
     my @subpart_types = @_;
 
-    # Prepare entity to analyze.
+    # Prepare entity to analyse.
     # Not extract message/* parts.
     my $parser = MIME::Parser->new;
     $parser->extract_nested_messages(0);
@@ -888,7 +887,7 @@ sub _anabounce {
             }
         } elsif (
             /^\s*-+ The following addresses (had permanent fatal errors|had transient non-fatal errors|have delivery notifications) -+/m
-            ) {
+        ) {
 
             my $adr;
 
@@ -1010,7 +1009,7 @@ sub _anabounce {
             foreach (@paragraphe) {
 
                 if (/^Your message add?ressed to (.*) couldn\'t be delivered, for the following reason :/
-                    ) {
+                ) {
                     $adr = $1;
                     $adr =~ s/^[\"\<](.+)[\"\>]$/$1/;
                     $type = 5;
@@ -1028,7 +1027,7 @@ sub _anabounce {
             ## Rapport X400
         } elsif (
             /^Your message was not delivered to:\s+(\S+)\s+for the following reason:\s+(.+)$/m
-            ) {
+        ) {
 
             my ($adr, $error) = ($1, $2);
             $error =~ s/Your message.*$//;
@@ -1038,7 +1037,7 @@ sub _anabounce {
             ## Rapport X400
         } elsif (
             /^Your message was not delivered to\s+(\S+)\s+for the following reason:\s+(.+)$/m
-            ) {
+        ) {
 
             my ($adr, $error) = ($1, $2);
             $error =~ s/\(.*$//;
@@ -1275,7 +1274,7 @@ sub _anabounce {
             /^Your message has encountered delivery problems\s+to (\S+)\.$/m
             or
             /^Your message has encountered delivery problems\s+to the following recipient\(s\):\s+(\S+)$/m
-            ) {
+        ) {
 
             my $adr = $2 || $1;
             $info{$adr}{error} = "";
@@ -1288,8 +1287,8 @@ sub _anabounce {
 
             ## Rapport Exim paragraphe suivant
         } elsif (
-            /^A message that you sent could not be delivered to all of its recipients/m
-            or /^The following address\(es\) failed:/m) {
+            /^A message that you sent could not be delivered to (all|one or more) of its/m
+            or /(^|permanent error. )The following address\(es\) failed:/m) {
 
             $exim = 1;
 
@@ -1301,6 +1300,16 @@ sub _anabounce {
             if (/^\s*(\S+):\s+(.*)$/m) {
 
                 $info{$1}{error} = $2;
+                $type = 24;
+
+            } elsif (/^\s*(\S+)\n+\s*(.*)$/m) {
+                my ($exim_user, $exim_msg) = ($1, $2);
+                if ($exim_msg =~ /MTP error.*: \d\d\d (\d\.\d\.\d) \w/i) {
+                    $info{$exim_user}{error} = $1;
+                } elsif ($exim_msg =~ /MTP error.*: (\d)\d\d \w/i) {
+                    $info{$exim_user}{error} =
+                        ($1 eq "5") ? "5.1.1" : "4.2.2";
+                }
                 $type = 24;
 
             } elsif (/^\s*(\S+)$/m) {
@@ -1327,7 +1336,7 @@ sub _anabounce {
             ## Rapport Mercury 1.43 par. suivant
         } elsif (
             /^The local mail transport system has reported the following problems/m
-            ) {
+        ) {
 
             $mercury_143 = 1;
 
@@ -1391,7 +1400,7 @@ sub _anabounce {
             ## Rapport Mercury 1.31 par. suivant
         } elsif (
             /^One or more addresses in your message have failed with the following/m
-            ) {
+        ) {
 
             $mercury_131 = 1;
 
@@ -1487,7 +1496,7 @@ sub _anabounce {
 
         } elsif (
             /^The following message could not be delivered because the address (\S+) does not exist/m
-            ) {
+        ) {
 
             $info{$1}{error} = "user unknown";
 
@@ -1498,7 +1507,7 @@ sub _anabounce {
             ## Rapport Exim 1.73 dans proc. paragraphe
         } elsif (
             /^The address to which the message has not yet been delivered is:/m
-            ) {
+        ) {
 
             $exim_173 = 1;
 
@@ -1592,7 +1601,7 @@ sub _anabounce {
             /^Your message cannot be delivered to the following recipients:/m
             or
             /^Your message has been enqueued and undeliverable for \d day\s*to the following recipients/m
-            ) {
+        ) {
 
             $pmdf = 1;
 
@@ -1783,7 +1792,7 @@ with envelope ID, and increase bounce score.
 =item *
 
 Others, and messages are E-mail Feedback Report.
-Reports are analyzed, and if opt-out report is found and list configuration
+Reports are analysed, and if opt-out report is found and list configuration
 allows it, original recipient will be deleted.
 
 =back

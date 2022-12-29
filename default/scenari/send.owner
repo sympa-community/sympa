@@ -1,0 +1,4 @@
+title.gettext Restricted to list owners only
+
+is_owner([listname],[sender])                  smtp,md5,smime  -> do_it
+true()					       smtp,md5,smime  -> reject(reason='send_owner')

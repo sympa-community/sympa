@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2019, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,270 +29,127 @@ package Sympa::Config_XML;
 
 use strict;
 use warnings;
+use Encode qw();
+use English qw(-no_match_vars);
 use XML::LibXML;
 
 use Sympa::Log;
 
 my $log = Sympa::Log->instance;
 
-#########################################
-# new
-#########################################
-# constructor of the class Config_XML :
+# Constructor of the class Config_XML :
 #   parse the xml file
 #
 # IN : -$class
-#      -$fh :  file handler on the xml file
-#########################################
+#      -$file : path of XML file or file handle on the XML file.
 sub new {
+    $log->syslog('debug2', '(%s, %s)', @_);
     my $class = shift;
-    my $fh    = shift;
-    $log->syslog('debug2', '');
+    my $file  = shift;
 
-    my $self   = {};
-    my $parser = XML::LibXML->new();
+    my $fh;
+    if (ref $file) {
+        $fh = $file;
+    } else {
+        unless (open $fh, '<', $file) {
+            $log->syslog('err', 'Can\'t open %s: %s', $file, $ERRNO);
+            return bless {} => $class;
+        }
+    }
+
+    my $parser = XML::LibXML->new;
     $parser->line_numbers(1);
-    my $doc = $parser->parse_fh($fh);
-
-    $self->{'root'} = $doc->documentElement();
-
-    bless $self, $class;
-    return $self;
-}
-
-################################################
-# createHash
-################################################
-# Create a hash used to create a list. Check
-#  elements unicity when their are not
-#  declared multiple
-#
-# IN : -$self
-# OUT : -1 or undef
-################################################
-sub createHash {
-    my $self = shift;
-    $log->syslog('debug2', '');
-
-    unless ($self->{'root'}->nodeName eq 'list') {
-        $log->syslog('err',
-            "Config_XML::createHash() : the root element must be called \"list\" "
-        );
-        return undef;
+    my $doc = eval { $parser->parse_fh($fh) };
+    unless ($doc) {
+        $log->syslog('err', '%s',
+            (ref $EVAL_ERROR) ? $EVAL_ERROR->as_string : $EVAL_ERROR);
+        return bless {} => $class;
     }
 
-    unless (defined $self->_getRequiredElements()) {
-        $log->syslog('err', 'Error in required elements');
-        return undef;
-    }
-
-    if ($self->{'root'}->hasChildNodes()) {
-        my $hash = _getChildren($self->{'root'});
-        unless (defined $hash) {
-            $log->syslog('err', 'Error in list elements');
-            return undef;
-        }
-        if (ref($hash) eq "HASH") {
-            foreach my $k (keys %$hash) {
-                if ($k eq "type") {
-                    ## the list template creation without family context
-                    $self->{'type'} = $hash->{'type'};
-                } else {
-                    $self->{'config'}{$k} = $hash->{$k};
-                }
+    my $root = $doc->documentElement;
+    my $config;
+    if ($root) {
+        unless ($root->nodeName eq 'list') {
+            $log->syslog('err', 'The root element must be called "list"');
+        } elsif (not _checkRequiredSingle($root, 'listname')) {
+            ;
+        } else {
+            my $hash = _getChildren($root);
+            if (ref $hash eq 'HASH' and %$hash) {
+                $config = $hash;
             }
-        } elsif ($hash ne "") {    # a string
-            $log->syslog('err',
-                'Config_XML::createHash() : the list\'s children are not homogeneous'
-            );
-            return undef;
         }
     }
-    return 1;
-}
 
-#########################################
-# getHash
-#########################################
-# return the hash structure containing :
-#   type, config
-#
-# IN  : -$self
-# OUT : -$hash
-#########################################
-sub getHash {
-    my $self = shift;
-    $log->syslog('debug2', '');
-
-    my $hash = {};
-
-    ## the list template creation without family context
-    $hash->{'type'} = $self->{'type'}
-        if (defined $self->{'type'});
-    $hash->{'config'} = $self->{'config'};
-
-    return $hash;
-}
-
-############################# PRIVATE METHODS ##############################
-
-#################################################################
-# _getRequiredElements
-#################################################################
-# get all obligatory elements and store them :
-#  single : listname
-# remove it in order to the later recursive call
-#
-# IN : -$self
-# OUT : -1 or undef
-#################################################################
-sub _getRequiredElements {
-    $log->syslog('debug3', @_);
-    my $self = shift;
-
-    # listname element is obligatory
-    unless ($self->_getRequiredSingle('listname')) {
-        return undef;
-    }
-    return 1;
-}
-
-####################################################
-# _getMultipleAndRequiredChild  : no used anymore
-####################################################
-# get all nodes with name $nodeName and check if
-#  they contain the child $childName and store them
-#
-# IN : -$self
-#      -$nodeName
-#      -$childName
-# OUT : - the number of node with the name $nodeName
-####################################################
-sub _getMultipleAndRequiredChild {
-    my $self      = shift;
-    my $nodeName  = shift;
-    my $childName = shift;
-    $log->syslog('debug3', '(%s, %s)', $nodeName, $childName);
-
-    my @nodes = $self->{'root'}->getChildrenByTagName($nodeName);
-
-    unless (defined _verify_single_nodes(\@nodes)) {
-        return undef;
+    if ($config) {
+        # Compatibility: single topic on 6.2.24 or earlier.
+        $config->{topics} ||= $config->{topic};
+        # In old documentation "moderator" was single or multiple editors.
+        my $mod = $config->{moderator};
+        $config->{editor} ||=
+            (ref $mod eq 'ARRAY') ? $mod : (ref $mod eq 'HASH') ? [$mod] : [];
     }
 
-    foreach my $o (@nodes) {
-        my @child = $o->getChildrenByTagName($childName);
-        if ($#child < 0) {
-            $log->syslog('err',
-                'Element "%s" is required for element "%s", line: %s',
-                $childName, $nodeName, $o->line_number());
-            return undef;
-        }
-
-        my $hash = _getChildren($o);
-        unless (defined $hash) {
-            $log->syslog('err', 'Error on _getChildren(%s)', $o->nodeName);
-            return undef;
-        }
-
-        push @{$self->{'config'}{$nodeName}}, $hash;
-        $self->{'root'}->removeChild($o);
-    }
-    return ($#nodes + 1);
+    return bless {config => $config} => $class;
 }
 
-############################################
-# _getRequiredSingle
-############################################
-# get the node with name $nodeName and check
-#  its unicity and store it
-#
-# IN : -$self
-#      -$nodeName
-# OUT : -1 or undef
-############################################
-sub _getRequiredSingle {
-    my $self     = shift;
+# Returns the hash structure.
+sub as_hashref {
+    return shift->{config} || undef;
+}
+
+# Old name: Sympa::Config_XML::createHash().
+# Deprecated: No longer used.
+#sub _createHash;
+
+# Deprecated: No longer used.
+#sub getHash;
+
+# Deprecated: No longer used.
+#sub _getRequiredElements;
+
+# No longer used.
+#sub _getMultipleAndRequiredChild;
+
+# Old name: Sympa::Config_XML::_getRequiredSingle().
+sub _checkRequiredSingle {
+    $log->syslog('debug3', '(%s, %s, %s)', @_);
+    my $root     = shift;
     my $nodeName = shift;
-    $log->syslog('debug3', '(%s)', $nodeName);
 
-    my @nodes = $self->{'root'}->getChildrenByTagName($nodeName);
-
-    unless (_verify_single_nodes(\@nodes)) {
-        return undef;
-    }
-
-    if ($#nodes < 0) {
+    my @nodes = $root->getChildrenByTagName($nodeName);
+    unless (@nodes) {
         $log->syslog('err', 'Element "%s" is required for the list',
             $nodeName);
         return undef;
-    }
-
-    if ($#nodes > 0) {
-        my @error;
-        foreach my $i (@nodes) {
-            push(@error, $i->line_number());
-        }
+    } elsif (1 < scalar @nodes) {
+        my @error = map { $_->line_number } @nodes;
         $log->syslog('err',
             'Only one element "%s" is allowed for the list, lines: %s',
             $nodeName, join(", ", @error));
         return undef;
-    }
-
-    my $node = shift(@nodes);
-
-    if ($node->getAttribute('multiple')) {
+    } elsif ($nodes[0]->getAttribute('multiple')) {
         $log->syslog('err',
-            'Attribute multiple=1 not allowed for the element "%s"',
-            $nodeName);
+            'Attribute multiple not allowed for the element "%s"', $nodeName);
         return undef;
     }
 
-    if ($nodeName eq "type") {
-        ## the list template creation without family context
-
-        my $value = $node->textContent;
-        $value =~ s/^\s*//;
-        $value =~ s/\s*$//;
-        $self->{$nodeName} = $value;
-
-    } else {
-        my $values = _getChildren($node);
-        unless (defined $values) {
-            $log->syslog('err', 'Error on _getChildren(%s)', $node->nodeName);
-            return undef;
-        }
-
-        if (ref($values) eq "HASH") {
-            foreach my $k (keys %$values) {
-                $self->{'config'}{$nodeName}{$k} = $values->{$k};
-            }
-        } else {
-            $self->{'config'}{$nodeName} = $values;
-        }
+    my $values = _getChildren($nodes[0]);
+    if (not $values or ref $values) {
+        return undef;
     }
 
-    $self->{'root'}->removeChild($node);
     return 1;
 }
 
-##############################################
-# _getChildren
-##############################################
-# get $node's children (elements, text,
-# cdata section) and their values
-#  it is a recursive call
-#
+# Gets $node's children (elements, text, cdata section) and their values
+# recursively.
 # IN :  -$node
-# OUT : -$hash : hash of children and
-#         their contents if elements
-#        or
-#        $string : value of cdata section
-#         or of text content
-##############################################
+# OUT : -$hash : hash of children and their contents if elements, or
+#        $string : value of cdata section or of text content
 sub _getChildren {
+    $log->syslog('debug3', '(%s)', @_);
     my $node = shift;
-    $log->syslog('debug3', '(%s)', $node->nodeName);
 
     # return value
     my $hash   = {};
@@ -301,28 +161,30 @@ sub _getChildren {
 
     my @nodeList = $node->childNodes();
 
-    unless (_verify_single_nodes(\@nodeList)) {
-        return undef;
-    }
-
     foreach my $child (@nodeList) {
         my $type      = $child->nodeType;
         my $childName = $child->nodeName;
 
-        # ELEMENT_NODE
         if ($type == 1) {
+            # ELEMENT_NODE
             my $values = _getChildren($child);
-            unless (defined $values) {
-                $log->syslog('err', 'Error on _getChildren(%s)', $childName);
-                return undef;
-            }
+            return undef unless defined $values;
 
-            ## multiple
             if ($child->getAttribute('multiple')) {
                 push @{$multiple_nodes->{$childName}}, $values;
-
-                ## single
             } else {
+                # Verify single nodes.
+                my @sisters = $node->getChildrenByTagName($childName);
+                if (1 < scalar @sisters) {
+                    $log->syslog(
+                        'err',
+                        'Element "%s" is not declared in multiple but it is: lines %s',
+                        $childName,
+                        join(', ', map { $_->line_number } @sisters)
+                    );
+                    return undef;
+                }
+
                 if (ref($values) eq "HASH") {
                     foreach my $k (keys %$values) {
                         $hash->{$childName}{$k} = $values->{$k};
@@ -336,9 +198,8 @@ sub _getChildren {
                 $error = 1;
             }
             $return = "hash";
-
-            # TEXT_NODE
         } elsif ($type == 3) {
+            # TEXT_NODE
             my $value = Encode::encode_utf8($child->nodeValue);
             $value =~ s/^\s+//;
             unless ($value eq "") {
@@ -348,9 +209,8 @@ sub _getChildren {
                 }
                 $return = "string";
             }
-
-            # CDATA_SECTION_NODE
         } elsif ($type == 4) {
+            # CDATA_SECTION_NODE
             $string = $string . Encode::encode_utf8($child->nodeValue);
             if ($return eq "hash") {
                 $error = 1;
@@ -383,68 +243,10 @@ sub _getChildren {
     }
 }
 
-##################################################
-# _verify_single_nodes
-##################################################
-# check the uniqueness(in a node list) for a node not
-#  declared  multiple.
-# (no attribute multiple = "1")
-#
-# IN :  -$nodeList : ref on the array of nodes
-# OUT : -1 or undef
-##################################################
-sub _verify_single_nodes {
-    my $nodeList = shift;
-    $log->syslog('debug3', '');
+# Deprecated: No longer used.
+#sub _verify_single_nodes;
 
-    my $error = 0;
-    my %error_nodes;
-    my $nodeLines = _find_lines($nodeList);
-
-    foreach my $node (@$nodeList) {
-        if ($node->nodeType == 1) {    # ELEMENT_NODE
-            unless ($node->getAttribute("multiple")) {
-                my $name = $node->nodeName;
-                if ($#{$nodeLines->{$name}} > 0) {
-                    $error_nodes{$name} = 1;
-                }
-            }
-        }
-    }
-    foreach my $node (keys %error_nodes) {
-        my $lines = join ', ', @{$nodeLines->{$node}};
-        $log->syslog('err',
-            'Element %s is not declared in multiple but it is: lines %s',
-            $node, $lines);
-        $error = 1;
-    }
-
-    if ($error) {
-        return undef;
-    }
-    return 1;
-}
-
-###############################################
-# _find_lines
-###############################################
-# make a hash : keys are node names, values
-#  are arrays of their line occurrences
-#
-# IN  : - $nodeList : ref on a array of nodes
-# OUT : - $hash : ref on the hash defined
-###############################################
-sub _find_lines {
-    my $nodeList = shift;
-    $log->syslog('debug3', '');
-    my $hash = {};
-
-    foreach my $node (@$nodeList) {
-        if ($node->nodeType == 1) {    # ELEMENT_NODE
-            push @{$hash->{$node->nodeName}}, $node->line_number();
-        }
-    }
-    return $hash;
-}
+# Deprecated: No longer used.
+#sub _find_lines;
 
 1;

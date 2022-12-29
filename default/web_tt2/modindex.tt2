@@ -1,99 +1,165 @@
-<!-- $Id$ -->
-<h2>[%|loc%]Listing messages to moderate[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<!-- modindex.tt2 -->
+<h2>[%|loc%]Listing messages to moderate[%END%]
+    <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['admin-moderate.html']) %]" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+    </a>
+</h2>
 
-<!-- moderation of messages -->
-[% IF mod_message %]
-[% line_count = 0 %]
-[% mod_display_message = 1 %]
-[% FOREACH msg = spool %]
-    [% line_count = line_count + 1 %]
-<div id="mainviewmod[% msg.key %]" class="reveal-modal medium" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
-<h3>[%|loc%]Current message[%END%]</h3>
-[% PROCESS modform.tt2 %]
+[%# moderation of messages ~%]
+[% IF mod_message ~%]
+    <form id="moderate_mails" name="moderate_mails" action="[% path_cgi %]" method="POST">
+        <fieldset class="toggleContainer" data-toggle-selector="input[name='id']" role="table">
+            <input type="hidden" name="list" value="[% list %]" form="moderate_mails" />
+            <div class="row" role="row">
+                <div class="small-2 medium-1 columns" role="columnheader">
+                    <a href="#" data-tooltip aria-haspopup="true"
+                       title="[%|loc%]Toggle Selection[%END%]"
+                       class="toggleButton">
+                        <i class="fa fa-check-square-o"></i>
+                    </a>&nbsp;&nbsp;
+                </div>
+                <div class="small-4 medium-4 columns" role="columnheader">
+                    <label>[%|loc%]Author[%END%]</label>
+                </div>
+                <div class="small-6 medium-3 columns" role="columnheader">
+                    <label>[%|loc%]Subject[%END%]</label>
+                </div>
+                <div class="medium-2 columns show-for-medium" role="columnheader">
+                    <label>[%|loc%]Date[%END%]</label>
+                </div>
+                <div class="medium-2 columns show-for-medium" role="columnheader">
+                    <label>[%|loc%]Size[%END%]</label>
+                </div>
+            </div>
 
-<div id="viewmod[% msg.key %]">
-  [%|loc%]loading message...[%END%]
-  <!-- empty div that will display a content by AJAX -->
-</div>
-<a class="close-reveal-modal" aria-label="Close">&#215;</a>
-</div>
+            [% FOREACH msg = spool ~%]
+                <div class="row" role="row">
+                    <div class="columns" role="separator"><hr /></div>
+                </div>
+                <div class="row" role="row">
+                    <div class="small-2 medium-1 columns" role="cell">
+                        <input type="checkbox" name="id" value="[% msg.key %]" form="moderate_mails" />&nbsp;&nbsp;
+                        [%~# Button to load AJAX content into reveal modal with Foundation ~%]
+                        <a href="[% 'ajax/viewmod' | url_rel([list,msg.key]) %]"
+                           data-reveal-id="mainviewmod" data-reveal-ajax="true"
+                           data-tooltip aria-haspopup="true"
+                           title="[%|loc%]view[%END%]">
+                            <i class="fa fa-eye"></i>
+                        </a>
 
-[% END %]
+                        [% IF msg.value.spam_status == 'spam' ~%]
+                            <span data-tooltip title="[%|loc%]Spam[%END%]">
+                                <i class="fa fa-ban text-error"></i>
+                            </span>
+                        [%~ ELSE ~%]
+                            &nbsp;
+                        [%~ END %]
+                    </div>
+                    <div class="small-4 medium-4 columns" role="cell">
+                        [% IF msg.value.gecos ~%]
+                            <span data-tooltip title="[% msg.value.gecos %] &lt;[% msg.value.from %]&gt;">
+                                [% msg.value.gecos %] &lt;[% msg.value.from %]&gt;
+                            </span>
+                        [%~ ELSE ~%]
+                            <span data-tooltip title="[% msg.value.from %]">
+                                [% msg.value.from %]
+                            </span>
+                        [%~ END %]
+                    </div>
+                    <div class="small-6 medium-3 columns" role="cell">
+                        [% UNLESS msg.value.subject.length ~%]
+                            <i>[%|loc%]No subject[%END%]</i>
+                        [%~ ELSE ~%]
+                            [% msg.value.subject %]
+                        [%~ END %]
+                    </div>
+                    <div class="small-11 medium-2 columns" role="cell">
+                        [% UNLESS msg.value.date ~%]
+                            <i>[%|loc%](unknown date)[%END%]</i>
+                        [%~ ELSE ~%]
+                            [% msg.value.date %]
+                        [%~ END %]
+                    </div>
+                    <div class="show-for-medium medium-2 columns" role="cell">
+                        [% msg.value.size %] [%|loc%]Kbytes[%END%]
+                    </div>
+                </div>
+            [%~ END %]
 
-[% mod_display_message = 0 %]
+            <h3>[%|loc%]Bulk moderation[%END%]</h3>
+            <p>
+                <input class="MainMenuLinks disableUnlessChecked"
+                       data-selector="input[name='id']"
+                       type="submit" form="moderate_mails" name="action_distribute"
+                       value="[%|loc%]Distribute selected emails[%END%]" />
+            </p>
+            <p>
+                <input class="MainMenuLinks disableUnlessChecked"
+                       data-selector="input[name='id']"
+                       type="submit" form="moderate_mails" name="action_reject"
+                       value="[%|loc%]Reject selected emails[%END%]" />
+                <input type="hidden" name="from_modindex" value="from_modindex"
+                       form="moderate_mails" />
+                <select name="message_template" form="moderate_mails">
+                    <option value="reject_quiet"
+                            [%~ IF msg.value.spam_status == 'spam' -%] selected="selected"[% END ~%]>
+                        [%|loc %]No notification[%END%]
+                    </option>
+                    <option value="reject">
+                        [%|loc %]Server default rejection message[%END%]
+                    </option>
+                    [% FOREACH file = available_files ~%]
+                        <option value="reject_[% file %]"
+                                [%~ IF file == default_reject_template %] selected="selected"[%END ~%]>
+                            [% file %]
+                        </option>
+                    [% END ~%]
+                </select>
+            </p>
+            <p>
+                [% IF conf.reporting_spam_script_path ~%]
+                    <input type=checkbox id="signal_spam" name="signal_spam"
+                           form="moderate_mails"/>
+                    <label for="signal_spam">
+                        [%|loc %]Report messages as undetected spam[%END%]
+                    </label>
+                [% END ~%]
+                [% IF conf.use_blocklist != 'none' ~%]
+                    <input type="checkbox" id="blocklist" name="blocklist"
+                           form="moderate_mails" />
+                    <label for="blocklist">
+                        [%|loc %]Add to blocklist[%END%]
+                    </label>
+                [% END ~%]
+            </p>
 
- <table  class="responsive listOfItems">
- <caption>[%|loc%]Listing messages to moderate[%END%]</caption>
-      <tr>
-	<th>[%|loc%]Actions[%END%]</th>
-     [%- IF conf.antispam_feature == 'on' -%]
-	<th>[%|loc%]Spam[%END%]</th>	
-     [%- END -%]
-	<th >[%|loc%]Author[%END%]</th>
-	<th>[%|loc%]Subject[%END%]</th>
-        <th>[%|loc%]Date[%END%]</th>
-	<th>[%|loc%]Size[%END%]</th>
-      </tr>	 
-      [% FOREACH msg = spool %]
+        </fieldset>
+    </form>
+[%~ ELSE ~%]
+    <p class="small-8 small-centered columns alert-box info text-center">
+        [%|loc%]No messages to moderate[%END%]
+    </p>
+[%~ END %]
 
-        [% line_count = line_count + 1 %]	
-        [% IF dark == '1' %]
-	  [% dark = '0' %]
-	  <tr>
-	[% ELSE %]
-	  [% dark = '1' %]
-          <tr class="color0">
-	[% END %]
-          <td class="text-left">
-           [% PROCESS modform.tt2 %]
-          </td>
-        [%- IF conf.antispam_feature == 'on' -%]	
-	 <td>
-	  [%- IF msg.value.spam_status == 'spam' -%]<img src="[% icons_url %]/junk.png" alt="[%|loc%]junk[%END%]" />
-	  [%- ELSE -%]&nbsp;
-	  [%- END -%]
-	</td>
-	[%- END -%]
+<hr>
 
-	  <td>
-	    [% IF msg.value.gecos %]
-	    [% msg.value.gecos %] &lt;[% msg.value.from %]&gt;
-	    [% ELSE %]
-	    [% msg.value.from %]
-	    [% END %]
-	  </td>
-	  <td>
-	    [% IF msg.value.subject == 'no_subject' %]
-	      [%|loc%]No subject[%END%]
-	    [% ELSE %]
-	      [% msg.value.subject %]
-	    [% END %]
-	  </td>
-
-	  <td>
-	    [% IF msg.value.date %]
-	      [% msg.value.date %]
-	    [% ELSE %]
-	      &nbsp;
-	    [% END %]
-	  </td>
-	  <td>[% msg.value.size %] kb</td>
-	</tr>
-      [% END %] 
-    </table>
-[% ELSE %]
-<p class="small-8 small-centered columns alert-box info text-center">[%|loc%]No messages to moderate[%END%]</p>
-[% END %]
-<br />
-<h2>[%|loc%]Moderation management[%END%] <a  href="[% 'nomenu/help/admin' | url_rel %]#moderate" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=400,height=200')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+<h2>[%|loc%]Moderation management[%END%]
+    <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['admin-moderate.html']) %]" target="wws_help">
+        <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" aria-hidden="true"></i>
+    </a>
+</h2>
 
 <form class="noborder" action="[% path_cgi %]" method="post" name="moderation_management">
-<fieldset>
-  <input type="hidden" name="list" value="[% list %]" />
-[% IF conf.use_blacklist != 'none' %]
-   <input class="MainMenuLinks" type="submit" name="action_blacklist" value="[%|loc%]edit blacklist[%END%]" />
-[% END %]
- <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" />
-</fieldset>
+    <fieldset>
+        <input type="hidden" name="list" value="[% list %]" />
+        [% IF conf.use_blocklist != 'none' %]
+            <input class="MainMenuLinks" type="submit" name="action_blocklist" value="[%|loc%]edit blocklist[%END%]" />
+        [% END %]
+        <input class="MainMenuLinks" type="submit" name="action_manage_template" value="[%|loc%]Manage rejection messages[%END%]" />
+    </fieldset>
 </form>
+
+<div id="mainviewmod" class="reveal medium" data-reveal aria-labelledby="[%|loc%]Current message[%END%]" aria-hidden="true" role="dialog">
+    [%# empty div that will display a content by AJAX. ~%]
+</div>
 <!-- end modindex.tt2 -->

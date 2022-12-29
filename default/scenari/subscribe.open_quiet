@@ -1,3 +1,5 @@
+# subscribe.open_quiet
 title.gettext anyone, no welcome message
 
-true()  smtp,dkim,smime,md5 -> do_it,quiet
+!equal([sender],[email])           smtp,md5,smime -> request_auth([email])
+true()                             smtp,md5,smime -> do_it,quiet

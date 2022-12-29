@@ -31,12 +31,14 @@ workflow of Sympa.  For more details see documentation on each class.
  
  Digest::Collection => [ProcessDigest]
                                     :
+                                    v
                                     *1
  
-                     +-> (reject or ignore)
-                    /
-                   +---> [DoCommand]
-                  /               :
+                      +-> (reject or ignore)
+                     /
+                    +---> [DoCommand]
+                   /              :
+                  /               v
  Incoming => [ProcessIncoming]    *2
                   \                              +-> (reject)
                    +-> [DoForward] => (Mailer)  /
@@ -44,62 +46,67 @@ workflow of Sympa.  For more details see documentation on each class.
                      +-> [DoMessage]          /
                                \             /---> [ToHeld] => Held
           *3 (CONFIRM)          +-> [AuthorizeMessage]
-          :                    /             \---> [ToModeration] => Mod.
- Held => [ProcessHeld] -------+               \
-                                               +-> [DistributeMessage]
-            *3 (DISTRIBUTE)                   /             \
-               (REJECT)       +--> (reject)  /               \
-                :            /              /                 \
+          :                    /      :      \---> [ToModeration] => Mod.
+          v                   /     Topic     \
+ Held => [ProcessHeld] ------+                 \
+                                                +-> [DistributeMessage]
+            *3 (DISTRIBUTE)                    /           \
+               (REJECT)       +--> (reject)   /             \
+                :            /               /               \
+                v           /               /                 \
  Moderation => [ProcessModeration]         /                   \
-                             \            /                     \
-                              +----------+                       \
+                            \             /                     \
+                             +---------- +                       \
                                                                   \
                        +-------------------------------------------+
                         \
                         [TransformIncoming]
- <<wwsympa.fcgi>>         \
+                          \        :
+                           \     Topic
+ <<wwsympa.fcgi>>           \
                         [ToArchive] => Archive
- (list archive)             \
+ (list archive)               \
   => [ResendArchive] -- [TransformOutgoing] -+
-                              \               \
+                                \             \
                         [ToDigest] => Digest   \
-                                \               \
-                                 +---------------+-> [ToList] => Outgoing
- 
-                            +-> [TransformDigestFinal]  
-                           /                     \
- <<Template sending>>     /         +----------> [ToOutgoing] => Outgoing 
+                                  \             \
+                                   +-------------+-> [ToList] => Outgoing
+                                                           :
+                            +-> [TransformDigestFinal]    Topic
+                           /                 \
+ <<Template sending>>     /         +------> [ToOutgoing] => Outgoing
                          /         / 
- (mail template) => [ProcessTemplate] ---------> [ToAlarm] => Alarm
-                        :          \
-                        *1          +----------> [ToMailer] => (Mailer)
+ (mail template) => [ProcessTemplate] -----> [ToListmaster] => Listmaster
+                       /           \
+                       ^            +------> [ToMailer] => (Mailer)
+                       |
+                       *1
 
 =head2 Command processing
 
- <<sympa_msg.pl>>
- 
-                 *2
-                 :                             +-> (reject)
-   (message) => [ProcessMessage]              /
-                              \              /---> [ToAuth] => Auth
-          *3 (AUTH)            +-> [AuthorizeRequest]
-          :                   /              \---> [ToAuthOwner] => Auth
- Auth => [ProcessAuth] ------+                \
-                            /                  +-> [DispatchRequest]
-                           /                                \
-                          /                          (request handler)
- Request::Collection =>  /                                      :
-           [ProcessRequest]                                     *3
+                      *2
+ <<sympa_msg.pl>>     :
+                      v
+ (message) => [ProcessMessage] --+             +-> (reject)
+                                  \           /
+      *3 (AUTH)                    \         /---> [ToAuth] => Auth
+         (DECL)     +-> (decline)   +-> [AuthorizeRequest]
+          :        /               /         \---> [ToAuthOwner] => Auth
+          v       /               /           \
+ Auth => [ProcessAuth]           /             \
+                  \             /               +-> [DispatchRequest]
+                   +-----------+                            \
+                              /                      (request handler)
+ <<wwsympa.fcgi, SOAP>>      /                                :
+                            /                                 v
+ Request::Collection       /                                  *3 
+        => [ProcessRequest]
 
-=begin comment
-
-These have not been implemented yet.
+=head2 Task processing
 
  <<task_manager.pl>>
  
  Task => [ProcessTask] => Task
- 
-=end comment
 
 =head2 Legend
 
@@ -111,14 +118,9 @@ Spool class.  Prefix C<Sympa::Spool::> is omitted.
 
 =over
 
-=item C<Alarm>
-
-=item C<Outgoing>
-
 =item C<Tracking>
 
-L<Sympa::Alarm>, L<Sympa::Bulk> and L<Sympa::Tracking> classes
-(they are named such by historical reason).
+L<Sympa::Tracking> class
 
 =back
 

@@ -1,0 +1,78 @@
+<!-- help_user-subscribe.tt2 -->
+<h2><a name="subscribe"></a>[%|helploc%]Subscribing to mailing lists[%END%]</h2>
+
+<p>
+    [%|helploc%]Subscribing to a mailing list is very simple:[%END%]
+</p>
+<ol>
+    <li>
+        [%|helploc%]<strong>Choose the address</strong> with which you want to subscribe to the list.[%END%]
+        <br />
+        <p class="retraitita">
+            [%|helploc%]You should choose an address you can check frequently and which offers a large storage capacity for your email: some lists distribute many messages, which sometimes contain large attachments.[%END%]
+        </p>
+        <p class="retraitita">
+            [%|helploc%]Of course you can subscribe to the same list with several email addresses. Then you will need to redo the whole process with a different email address.[%END%]
+        </p>
+    </li>
+    <li>
+        [%|helploc(conf.email,domain)%]Send a <strong>message to %1@%2</strong> from the address you want to subscribe to the list.[%END%]
+        <br />
+        <p class="retraitita">
+            [%|helploc%]Sympa is not a person but a mailing list management robot. Thus it is useless to send it loving words! ;-)[%END%]
+        </p>
+    </li>
+    <li>
+        [%|helploc%]In the subject line of your message, type in: <strong>subscribe nameofthelist Firstname Name</strong> (replace 'nameofthelist' by the name of the list you want to subscribe to and indicate your own first name and name).[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>Leave the message body blank</strong>.[%END%]
+        <br />
+        <p class="retraitita">
+            [%|helploc%]To save some time, you can also send several commands in a single message. To do that, follow the instructions available in the <a href="user.html">How the mailing list service works</a> section.[%END%]
+        </p>
+    </li>
+</ol>
+
+<p>
+    [%|helploc(domain)%]<strong>After this, you will receive a message telling you whether your request was accepted or not</strong>: if the subscription to the list is subject to any approval, the list owner may choose not to subscribe you. If so, do not send several other requests: it is useless as the result will remain the same. You can possibly send a message directly to the list owner (nameofthelist-request@%1) to explain why you really want to subscribe to the list...[%END%]
+</p>
+<p class="retraitita">
+    [%|helploc%]Note: you will sometimes be asked to confirm your subscription request before it can be processed. If so, please conform to the instructions contained in the message you receive.[%END%]
+</p>
+<p>
+    [%|helploc%]According to the type of list (list with subscription subject to conditions or not) and to the availability of the list owner, <strong>you may not receive the notice immediately</strong>. It is useless to send several requests.[%END%]
+</p>
+<p>
+    [%|helploc%]<strong>If your request is accepted, the message you receive confirms your subscription to the list. This message</strong> (the list Charter) <strong>contains several pieces of essential information:</strong>[%END%]
+</p>
+<ul>
+    <li>
+        [%|helploc%]your <strong>list password</strong>. This password is the same for all the lists you subscribed to with a single email address. You can <a href="user-pref.html" title="How to change your password">change it online</a> after logging on to the mailing list environment;[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>detailed information about the list</strong>: its purpose, the Internet address at which the message archive is available, etc.[%END%]
+    </li>
+    <li>
+        [%|helploc%]the <strong>rules applying to the list and its members</strong>: allowed and forbidden topics, netiquette, legal information, privacy policy, etc.[%END%]
+    </li>
+</ul>
+<p>
+    [%|helploc%]<strong>You should keep your subscription notice</strong>: you may need it later to remember your password or to send a precise command to Sympa (example: signoff command). More generally, <strong>we advise you to keep all your subscription notices to mailing lists</strong>.[%END%]
+</p>
+<p>
+    [%|helploc%]<strong>You can also subscribe to a list through the mailing list web interface</strong>. To do that, do as follows:[%END%]
+</p>
+<ol>
+    <li>
+        [%|helploc%]Go to the list environment <strong><a href="../home">homepage</a></strong> and <strong>log on</strong>.[%END%]
+    </li>
+    <li>
+        [%|helploc%]<strong>Go to the information page of the list</strong> you want to subscribe to.[%END%]
+    </li>
+    <li>
+        [%|helploc%]In the left menu, <strong>click on the 'Subscribe'</strong> link.[%END%]
+    </li>
+</ol>
+
+<!-- end help_user-subscribe.tt2 -->

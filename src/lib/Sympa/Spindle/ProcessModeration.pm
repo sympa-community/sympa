@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -148,6 +151,15 @@ sub _reject {
             },
             date => time + 1
         );
+        $log->db_log(
+            'robot'        => $list->{'domain'},
+            'list'         => $list->{'name'},
+            'action'       => 'reject',
+            'parameters'   => $message->{authkey},
+            'target_email' => $message->{sender},
+            'status'       => 'success',
+            'user_email'   => $param->{rejected_by}
+        );
     }
 
     1;
@@ -191,6 +203,16 @@ sub _distribute {
     unless ($self->{quiet}) {
         Sympa::send_dsn($message->{context}, $message, {}, '2.1.5');
     }
+
+    $log->db_log(
+        'robot'        => $list->{'domain'},
+        'list'         => $list->{'name'},
+        'action'       => 'distribute',
+        'parameters'   => $message->{authkey},
+        'target_email' => $message->{sender},
+        'status'       => 'success',
+        'user_email'   => $self->{distributed_by}
+    );
 
     $message->{envelope_sender} = $self->{distributed_by};
     return ['Sympa::Spindle::DistributeMessage'];
@@ -254,7 +276,7 @@ spool.
 
 =item quiet =E<gt> 1
 
-If this option is set, automatic replys reporting result of processing
+If this option is set, automatic replies reporting result of processing
 to the user (see L</"distributed_by"> and L</"rejected_by">) will not be sent.
 
 =back

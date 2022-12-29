@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2020, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +28,7 @@ package Sympa::Spindle::ToEditor;
 
 use strict;
 use warnings;
+use Time::HiRes qw();
 
 use Sympa;
 use Sympa::Log;
@@ -88,19 +91,9 @@ sub _twist {
     );
 
     # Do not report to the sender if the message was tagged as a spam.
-    unless ($self->{quiet} or $message->{'spam_status'} eq 'spam') {
-        # Ensure 1 second elapsed since last message.
-        Sympa::send_file(
-            $list,
-            'message_report',
-            $sender,
-            {   type           => 'success',              # Compat. <=6.2.12.
-                entry          => 'moderating_message',
-                auto_submitted => 'auto-replied'
-            },
-            date => time + 1
-        );
-    }
+    Sympa::send_dsn($list, $message, {}, '2.3.0')
+        unless $self->{quiet}
+        or $message->{'spam_status'} eq 'spam';
     return 1;
 }
 
@@ -115,17 +108,38 @@ sub _send_confirm_to_editor {
 
     @rcpt = $list->get_admins_email('receptive_editor');
     @rcpt = $list->get_admins_email('actual_editor') unless @rcpt;
-    $log->syslog('notice',
-        'Warning: No owner and editor defined at all in list %s', $list)
-        unless @rcpt;
+    $log->syslog(
+        'notice',
+        'No owner and editor defined at all in list %s; incoming message is rejected',
+        $list
+    ) unless @rcpt;
 
     # Did we find a recipient?
+    # If not, send back DSN to notify failure to original sender.
     unless (@rcpt) {
-        $log->syslog(
-            'err',
-            'Impossible to send the moderation request for message %s to editors of list %s. Neither editor nor owner defined!',
-            $message,
-            $list
+        Sympa::send_notify_to_listmaster(
+            $message->{context} || '*',
+            'mail_intern_error',
+            {   error =>
+                    sprintf(
+                    'Impossible to forward a message to editor of %s: undefined in this list',
+                    $list->{'name'}),
+                who    => $message->{sender},
+                msg_id => $message->{message_id},
+            }
+        );
+        Sympa::send_dsn(
+            $message->{context} || '*', $message,
+            {function => 'editor'}, '5.2.4'
+        );
+        $log->db_log(
+            'robot'      => $list->{'domain'},
+            'list'       => $list->{'name'},
+            'action'     => 'ToEditor',
+            'msg_id'     => $message->{message_id},
+            'status'     => 'error',
+            'error_type' => 'internal',
+            'user_email' => $message->{sender}
         );
         return undef;
     }
@@ -165,7 +179,7 @@ sub _send_confirm_to_editor {
             Sympa::send_file(
                 $list, 'moderate', $recipient, $param, date => time + 1
             )
-            ) {
+        ) {
             return undef;
         }
     }

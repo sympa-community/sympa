@@ -1,5 +1,0 @@
-title.gettext need authentication unless DKIM signature is OK
-
-!is_subscriber ([listname],[email]) smtp,dkim,smime,md5 -> do_it
-true()                              smtp                -> request_auth([email])
-true()			            dkim,md5,smime      -> do_it

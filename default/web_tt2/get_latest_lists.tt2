@@ -1,27 +1,27 @@
-<!-- $Id$ -->
+<!-- get_latest_lists.tt2 -->
 
 <div class="block">
-<h2>[%|loc%]View Lists sorted by Creation Date[%END%]</h2>
-<table  class="responsive table_style">
-<caption>[%|loc%]Latests Lists[%END%]</caption>
- <tr class="color_light">
-   <th>[%|loc%]Creation date[%END%]</th>
-   <th>[%|loc%]Listname[%END%]</th>
-   <th>[%|loc%]Subject[%END%]</th>
- </tr>
+    <h2>[%|loc%]View Lists sorted by Creation Date[%END%]</h2>
+    <table  class="responsive table_style">
+        <caption>[%|loc%]Latest Lists[%END%]</caption>
+        <tr class="color_light">
+            <th>[%|loc%]Creation date[%END%]</th>
+            <th>[%|loc%]List name[%END%]</th>
+            <th>[%|loc%]Subject[%END%]</th>
+        </tr>
 
-[% FOREACH list = latest_lists %]
-[% IF dark == '1' %]
-  <tr>[% SET dark = 0 %]
-[% ELSE %]
-  <tr class="color0">[% SET dark = 1 %]
-[% END %]
-<td>[% list.creation_date %]</td>
-<td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
-<td>[% list.subject %]</td>
-</tr>
-[% END %]
-</table>
+        [% FOREACH list = latest_lists %]
+            [% IF dark == '1' %]
+                <tr>[% SET dark = 0 %]
+            [% ELSE %]
+                <tr class="color0">[% SET dark = 1 %]
+            [% END %]
+                    <td>[% list.creation_date_epoch | optdesc('unixtime') %]</td>
+                    <td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
+                    <td>[% list.subject %]</td>
+                </tr>
+        [% END %]
+    </table>
 </div>
 
 <!-- end get_latest_lists.tt2 -->

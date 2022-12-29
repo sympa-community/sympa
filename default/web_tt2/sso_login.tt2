@@ -1,36 +1,41 @@
-<!-- $Id$ -->
+<!-- sso_login.tt2 -->
 [% IF subaction == 'requestemail' %]
+    <p>
+        [%|loc%]The mailing list server requires a working email address. Please provide your email address below.[%END%]
+    </p>
+    <p>
+        <i>[%|loc%]Please note:[%END%]</i>
+        [%|loc%]the email field may be pre-populated.  If it is, then your authentication server has supplied an email address it associates with you.  Whether you enter an address manually or accept the one provided, you will still need to confirm that this is a working email address by entering a confirmation password that will be sent to you.  Please press the "Send me a confirmation password" to continue to the confirmation step.[%END%]
+    </p>
+    <p>
+        [%|loc%]A confirmation password will be sent to the address you supply, after pressing the button. This will take you to the next screen to confirm that your address is operational.[%END%]
+    </p>
 
-      [%|loc%]The mailing list server requires a working email address. Please provide your email address below. <p><i>Please note:</i> the email field may be pre-populated.  If it is, then your authentication server has supplied an email address it associates with you.  Whether you enter an address manually or accept the one provided, you will still need to confirm that this is a working email address by entering a confirmation password that will be sent to you.  Please press the "Send me a confirmation password" to continue to the confirmation step.[%END%]<br /><p>
-      [%|loc%]A confirmation password will be sent to the address you supply, after pressing the button. This will take you to the next screen to confirm that your address is operational.[%END%]
+    <form action="[% path_cgi %]" method="post">
+        <fieldset>
+            <input type="hidden" name="previous_action" value="[% previous_action %]" />
+            <input type="hidden" name="previous_list" value="[% previous_list %]" />
+            <input type="hidden" name="subaction" value="validateemail" />
+            <input type="hidden" name="action" value="sso_login" />
+            <input type="hidden" name="nomenu" value="[% nomenu %]" />
+            <input type="hidden" name="auth_service_name" value="[% server.key %]" />
 
-      <form action="[% path_cgi %]" method="post">
-	<fieldset>
-          <input type="hidden" name="previous_action" value="[% previous_action %]" />
-          <input type="hidden" name="previous_list" value="[% previous_list %]" />
-	  <input type="hidden" name="referer" value="[% referer %]" />
-	  <input type="hidden" name="subaction" value="validateemail" />
-	  <input type="hidden" name="action" value="sso_login" />
-  	  <input type="hidden" name="nomenu" value="[% nomenu %]" />
-          <input type="hidden" name="auth_service_name" value="[% server.key %]" />
-
-          <label for="email"><strong>[%|loc%]Your e-mail address:[%END%]</strong><br />
-        [% IF init_email %]
-	  [% email %]
-            <input id="email" type="text" name="email" value="[% init_email %]" />
-	[% ELSE %]
-	    <input id="email" type="text" name="email" value="" />
-	[% END %]
-          </label>&nbsp; &nbsp; &nbsp;
-	  <input type="submit" name="action_sso_login" value="[%|loc%]Send me a confirmation password[%END%]"/>
-	</fieldset>
-      </form>
-
+            <label for="email">
+                <strong>[%|loc%]Your e-mail address:[%END%]</strong>
+                <br />
+                [% IF init_email %]
+                    [% email %]
+                    <input id="email" type="text" name="email" value="[% init_email %]" />
+                [% ELSE %]
+                    <input id="email" type="text" name="email" value="" />
+                [% END %]
+            </label>&nbsp; &nbsp; &nbsp;
+            <input type="submit" name="action_sso_login" value="[%|loc%]Send me a confirmation password[%END%]"/>
+        </fieldset>
+    </form>
 [% ELSIF subaction == 'validateemail' %]
-
-<br />
-  [%|loc(init_email)%]A confirmation password has been sent to your email address %1.<br />Please check your e-mail box for the message containing the confirmation link.[%END%]
-  <br /><br />
-
+    <br />
+    [%|loc(init_email)%]A confirmation password has been sent to your email address %1. Please check your email inbox for the message containing the confirmation link.[%END%]
+    <br /><br />
 [% END %]
 <!-- end sso_login.tt2 -->

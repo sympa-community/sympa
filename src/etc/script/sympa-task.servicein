@@ -1,9 +1,0 @@
-[Unit]
-Description=Sympa mailing list manager (task management)
-After=syslog.target
-BindTo=sympa.service
- 
-[Service]
-Type=forking
-PIDFile=--piddir--/task_manager.pid
-ExecStart=--sbindir--/task_manager.pl

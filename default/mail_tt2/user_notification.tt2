@@ -1,17 +1,16 @@
-[%# $Id$ ~%]
+[%# user_notification.tt2 ~%]
 To: [% to %]
 [% IF type == 'auto_notify_bouncers' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Your bouncing address in list %1[%END%][%END%]
+Subject: [%"Your bouncing address in list %1"|loc(list.name)|qencode%]
 
-[%|loc(list.name,to,subscriber.first_bounce)%]Messages from list %1 that were sent to your address %2
-have generated non-delivery reports since %3. 
+[%|loc(list.name,to,subscriber.first_bounce)%]Messages from list %1 that were sent to your address %2 have generated non-delivery reports since %3. 
 If this problem persists, you will be automatically unsubscribed from the list.[%END%]
 
-[%|loc%]You can contact list owner:[%END%] [% list.name %]-request@[% conf.host %]
+[%|loc%]You can contact list owner:[%END%] [% list.name %]-request@[% domain %]
 
 
 [% ELSIF type == 'deleted_msg_topics' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Topics udpating in list %1[%END%][%END%]
+Subject: [%"Topics updated in list %1"|loc(list.name)|qencode%]
 
 [%|loc(list.name)%]Some of the topics you are subscribed to in the list '%1' have been deleted.
 Deleted topic(s) is(are):[%END%]
@@ -24,67 +23,46 @@ Deleted topic(s) is(are):[%END%]
 
 
 [% ELSIF type == 'added_as_listadmin' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Management of list %1[%END%][%END%]
+Subject: [%"Management of list %1"|loc(list.name)|qencode%]
 
 [% IF admin_type == 'owner' %]
-[%|loc(delegator,list.name,list.host)%]You have been delegated the responsability of list owner by %1 for list %2@%3.[%END%]
+[%|loc(delegator,list.name,domain)%]You have been delegated the responsibility of list owner by %1 for list %2@%3.[%END%]
 [% ELSE %]
-[%|loc(delegator,list.name,list.host)%]You have been delegated the responsability of list moderator by %1 for list %2@%3.[%END%]
+[%|loc(delegator,list.name,domain)%]You have been delegated the responsibility of list moderator by %1 for list %2@%3.[%END%]
 [% END %]
 
+[% IF conf.wwsympa_url -%]
 [%|loc%]The list homepage:[%END%] [% 'info' | url_abs([list.name]) %]
-[%|loc%]Owner and moderator guide:[%END%] [% 'help/admin' | url_abs %]
-
-
-[% ELSIF type == 'ticket_to_send' -%]
-Subject: [% FILTER qencode %][%|loc%]Changing your subscriber email address[%END%][%END%]
-
-[%|loc%]You have requested to change your subscriber email address. To confirm your new email address with the SYMPA server, please click the link below:[%END%] 
-  [% 'ticket' | url_abs([one_time_ticket]) %]
-
-
-[% ELSIF type == 'ticket_to_signoff' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Unsubscribing from list %1[%END%][%END%]
-[% IF context == 'auto_signoff'%]
-[%|loc(list.name,ip)%]Somebody (probably you) requested to unsubscribe you from list %1.
-This query was issued from the IP number '%2'.
-To confirm and get removed from the list, please click the link below: [%END%] 
-[% ELSE %]
-[%|loc(list.name)%]You have requested to be removed from list %1. To confirm and get removed from the list, please click the link below: [%END%] 
-[% END %]
-  [% 'ticket' | url_abs([one_time_ticket]) %]
-
-[% ELSIF type == 'ticket_to_family_signoff' -%]
-Subject: [% FILTER qencode %][%|loc(family)%]Unsubscribing from family %1[%END%][%END%]
-[% IF context == 'family_signoff'%]
-[%|loc(family,ip)%]Somebody (probably you) requested to unsubscribe you from family %1.
-This query was issued from the IP number '%2'.
-To confirm and get removed from all the lists of this family, please click the link below: [%END%] 
-[% ELSE %]
-[%|loc(family)%]You have requested to be removed from family %1. To confirm and get removed from all the lists of this family, please click the link below: [%END%] 
-[% END %]
-  [% 'ticket' | url_abs([one_time_ticket]) %]
-
-
-[% ELSIF type == 'hundred_percent_error' -%]
-Subject: [% FILTER qencode %][%|loc(list.name)%]No valid receipient in list %1[%END%][%END%]
-
-[%|loc(list.name, conf.listmaster_email, list.domain) %]
-You message to list %1 could not be delivered. All the subscribers to this list have their address in error.
-Please contact the listmaster (%2@%3) to fix this probem before re-posting your message.
-[% END %]
-
-[% ELSIF type == 'plugin' -%]
-[%- TRY -%][%- INCLUDE $entry -%]
-[%- CATCH -%]
-Subject: [%FILTER qencode%][%|loc%]report message error on plugin[%END%][%END%]
-
-ENTRY=[% entry %]
-ERROR=[% error %]
+[%|loc%]Owner and moderator guide:[%END%] [% 'help' | url_abs(['admin.html']) %]
 [% END -%]
 
+[% ELSIF type == 'hundred_percent_error' -%]
+Subject: [%"No valid recipient in list %1"|loc(list.name)|qencode%]
+
+[%|loc(list.name,conf.listmaster_email,domain) %]Your message to list %1 could not be delivered. All the subscribers to this list have their address in error.
+Please contact the listmaster (%2@%3) to fix this problem before re-posting your message.[% END %]
+
+[% ELSIF type == 'vain_request_by_other' -%]
+[% IF request.action == 'subscribe' -%]
+Subject: [%"FYI: subscribing to %1"|loc(list.name)|qencode%]
+[%- ELSIF request.action == 'signoff' -%]
+Subject: [%"FYI: unsubscribing from %1"|loc(conf.title,list.name)|qencode%]
+[%- ELSE -%]
+Subject: [% request.action %]
+[%- END %]
+
+[% IF request.action == 'subscribe' -%]
+[%|loc(list.name)%]Someone (probably you) requested for subscribing to list %1, but you have already subscribed to this list.[%END%]
+[%- ELSIF request.action == 'signoff' -%]
+[%|loc(list.name)%]Someone (probably you) requested for unsubscribing from list %1, but you have not subscribed to this list.[%END%]
+[%- ELSE -%]
+[% request.action %]
+[%- END %]
+
+[%|loc%]No action is needed on your side.[%END%]
+
 [% ELSE -%]
-Subject: [% FILTER qencode %][%list.name%] / [%type%][%END%]
+Subject: [%"${list.name} / ${type}"|qencode%]
 
 [% param0 %]
 [% END %]

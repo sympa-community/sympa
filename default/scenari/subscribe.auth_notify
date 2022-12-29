@@ -1,6 +1,7 @@
+# subscribe.auth_notify
 title.gettext need authentication (notification is sent to owners)
 
-# do not authentify nor notify updates 
-is_subscriber ([listname],[sender])  smtp,dkim,smime,md5 -> do_it
-true()				     smtp,dkim           -> request_auth
-true()				     md5,smime           -> do_it,notify
+!equal([sender],[email])           smtp,md5,smime -> request_auth([email])
+is_subscriber([listname],[email])  smtp,md5,smime -> do_it
+true()                             smtp           -> request_auth([email])
+true()                             md5,smime      -> do_it,notify

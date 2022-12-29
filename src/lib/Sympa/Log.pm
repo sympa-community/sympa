@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -186,7 +189,7 @@ sub syslog {
             and ($self->{log_to_stderr} eq 'all'
                 or 0 <= index($self->{log_to_stderr}, $level))
         )
-        ) {
+    ) {
         print STDERR "$message\n";
     }
     return unless defined $self->{level};
@@ -327,7 +330,7 @@ sub db_log {
             $target_email, $msg_id, $status, $error_type,
             $user_email,   $client, $daemon
         )
-        ) {
+    ) {
         $self->syslog('err',
             'Unable to insert new db_log entry in the database');
         return undef;
@@ -381,7 +384,7 @@ sub add_stat {
             $daemon, $ip,   $robot,     $parameter,
             $read
         )
-        ) {
+    ) {
         $self->syslog('err',
             'Unable to insert new stat entry in the database');
         return undef;
@@ -430,7 +433,7 @@ sub get_first_db_log {
         'list_management' => [
             'create_list',          'rename_list',
             'close_list',           'edit_list',
-            'admin',                'blacklist',
+            'admin',                'blocklist',
             'install_pending_list', 'purge_list',
             'edit_template',        'copy_template',
             'remove_template'
@@ -469,16 +472,22 @@ sub get_first_db_log {
                   FROM logs_table
                   WHERE robot_logs = %s }, $sdm->quote($select->{'robot'});
 
-    #if a type of target and a target are specified
-    if (($select->{'target_type'}) && ($select->{'target_type'} ne 'none')) {
-        if ($select->{'target'}) {
-            $select->{'target_type'} = lc($select->{'target_type'});
-            $select->{'target'}      = lc($select->{'target'});
-            $statement .= 'AND '
-                . $select->{'target_type'}
-                . '_logs = '
-                . $sdm->quote($select->{'target'}) . ' ';
-        }
+    if (    $select->{target_type}
+        and $select->{target_type} ne 'none'
+        and $select->{target_type} =~ /\A\w+\z/
+        and $select->{target}) {
+        # If a type of target and a target are specified:
+        $statement .= sprintf 'AND %s_logs = %s ',
+            lc $select->{target_type}, $sdm->quote(lc $select->{target});
+    } elsif ($select->{type}
+        and $select->{type} ne 'none'
+        and $select->{type} ne 'all_actions'
+        and $action_type{$select->{type}}) {
+        # If the search is on a precise type:
+        $statement .= sprintf 'AND (%s) ',
+            join ' OR ',
+            map { sprintf "logs_table.action_logs = '%s'", $_ }
+            @{$action_type{$select->{'type'}}};
     }
 
     #if the search is between two date
@@ -504,29 +513,6 @@ sub get_first_db_log {
         }
     }
 
-    #if the search is on a precise type
-    if ($select->{'type'}) {
-        if (   ($select->{'type'} ne 'none')
-            && ($select->{'type'} ne 'all_actions')) {
-            my $first = 'false';
-            foreach my $type (@{$action_type{$select->{'type'}}}) {
-                if ($first eq 'false') {
-                    #if it is the first action, put AND on the statement
-                    $statement .=
-                        sprintf "AND (logs_table.action_logs = '%s' ", $type;
-                    $first = 'true';
-                }
-                #else, put OR
-                else {
-                    $statement .= sprintf "OR logs_table.action_logs = '%s' ",
-                        $type;
-                }
-            }
-            $statement .= ')';
-        }
-
-    }
-
     # if the listmaster want to make a search by an IP address.
     if ($select->{'ip'}) {
         $statement .= sprintf ' AND client_logs = %s ',
@@ -547,7 +533,18 @@ sub get_first_db_log {
         $statement .= sprintf "AND list_logs = '%s' ", $select->{'list'};
     }
 
-    $statement .= 'ORDER BY date_logs, usec_logs ';
+    # Unknown sort key as 'date'.
+    my $sortby = $select->{'sortby'};
+    unless (
+        $sortby
+        and grep { $sortby eq $_ }
+        qw(date robot list action parameters target_email msg_id
+        status error_type user_email client daemon)
+    ) {
+        $sortby = 'date';
+    }
+    $statement .= sprintf 'ORDER BY %s ',
+        ($sortby eq 'date' ? 'date_logs, usec_logs' : $sortby . '_logs');
 
     my $sth;
     unless ($sth = $sdm->do_query($statement)) {
@@ -616,7 +613,7 @@ sub aggregate_stat {
               WHERE read_stat = 0
               ORDER BY date_stat ASC}
         )
-        ) {
+    ) {
         $self->syslog('err', 'Unable to retrieve oldest non processed stat');
         return undef;
     }
@@ -719,7 +716,7 @@ sub _aggregate_data {
               GROUP BY robot_stat, list_stat, email_stat},
             $begin_date, $end_date
         )
-        ) {
+    ) {
         while ($row = $sth->fetchrow_hashref('NAME_lc')) {
             $sdm->do_prepared_query(
                 q{UPDATE subscriber_table
@@ -743,7 +740,7 @@ sub _aggregate_data {
               WHERE ? <= date_stat AND date_stat < ?},
             $begin_date, $end_date
         )
-        ) {
+    ) {
         $self->syslog('err',
             'Unable to set stat entries between date % and date %s as read',
             $begin_date, $end_date);
@@ -786,7 +783,7 @@ sub aggregate_daily_data {
             $operation,
             $list->{'domain'}, $list->{'name'}
         )
-        ) {
+    ) {
         $self->syslog('err', 'Unable to get stat data %s for list %s',
             $operation, $list);
         return;

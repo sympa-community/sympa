@@ -1,11 +1,16 @@
+[%# expire_deletion.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Removed from %1[%END%][%END%]
+Subject: [%"Removed from %1"|loc(list.name)|qencode%]
 
-[%|loc(user.email,list.name,list.host)%]Your address (%1) has been removed from list
+[%|loc(user.email,list.name,domain)%]Your address (%1) has been removed from list
 %2@%3
 because you didn't confirm your subscription.[%END%]
 
 [%|loc%]You can subscribe again:[%END%]
-[% | mailtourl({subject => "sub ${list.name}"}) ~%]
-  [%conf.email%]@[%conf.host%]
-[%~ END %]
+[% IF conf.wwsympa_url -%]
+[% 'subscribe' | url_abs([list.name]) %]
+[%- ELSE -%]
+[% "${conf.email}@${domain}" | mailtourl({subject => "sub ${list.name}"}) %]
+[%- END %]
+
+[%# end expire_deletion.tt2 ~%]

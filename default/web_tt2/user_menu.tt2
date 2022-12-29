@@ -1,0 +1,40 @@
+<!-- user_menu.tt2 -->
+[% IF restore_email ~%]
+    <li>
+        <form action="[% path_cgi %]" method="post">
+            <fieldset>
+                <span>
+                    <button type="submit" name="action_restore_email" value="[%|loc%]Restore identity[%END%]" />
+                        <i class="fa fa-undo"></i> [%|loc%]Restore identity[%END%]
+                    </button>
+                </span>
+            </fieldset>
+        </form>
+    </li>
+[%~ END %]
+
+<li>
+    <a href="[% 'pref' | url_rel %]">
+        <i class="fa fa-cog"></i> [%|loc%]My preferences[%END%]
+    </a>
+</li>
+<li>
+    <a class="heavyWork" href="[% 'my' | url_rel %]">
+        <i class="fa fa-envelope"></i> [%|loc%]My lists[%END%]
+    </a>
+</li>
+<li>
+    [% IF auth_method == 'md5' ~%]
+        <form action="[% path_cgi %]" method="post">
+            <fieldset>
+                <input type="hidden" name="action" value="logout" />
+                <span>
+                    <button class="MainMenuLinks" type="submit" name="action_logout" value="[%|loc%]Logout[%END%]">
+                        <i class="fa fa-power-off"></i> [%|loc%]Logout[%END%]
+                    </button>
+                </span>
+            </fieldset>
+        </form>
+    [%~ END %]
+</li>
+<!-- end user_menu.tt2 -->

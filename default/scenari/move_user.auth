@@ -1,0 +1,6 @@
+title.gettext need authentication
+
+equal([sender],[current_email])     smtp,md5,smime -> request_auth([email])
+is_listmaster([sender])             md5,smime      -> do_it
+equal([sender],[email])             md5,smime      -> do_it
+true()                              smtp,md5,smime -> reject

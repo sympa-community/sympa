@@ -1,104 +1,93 @@
+<!-- css_ie.tt2 -->
 <!-- $Id$ -->
 
 <!-- Specific css for IE -->
 
 <!--[if lte IE 8]>
 <style type="text/css">
-
-/* Workaround for "noscript ghost" bug */
-noscript {
-          display: block;
-          }
-
+    /* Workaround for "noscript ghost" bug */
+    noscript {
+        display: block;
+    }
 </style>
 <![endif]-->
 
 <!--[if IE 7]>
 <style type="text/css">
+    #subnav {
+        position:absolute;
+        left:25em;
+    }
 
-#subnav {
-          position:absolute;
-	  left:25em;
-          }
-
-#bandeau_top .login .MainMenuLinks {
-	                             margin-top:0.2em;
-           	                     }
-
+    #bandeau_top .login .MainMenuLinks {
+        margin-top:0.2em;
+    }
 </style>
 <![endif]-->
-
 
 <!--[if  lte IE 7]>
 <style type="text/css">
+    ul#MainMenuLinks {
+        margin-left:-3em;
+    }
 
-ul#MainMenuLinks {
-                   margin-left:-3em;
-                   }
+    a.input {
+        padding: 0 0.3em;
+    }
 
-a.input {
-          padding: 0 0.3em;
-          }
+    /* "vertical-align: baseline" aligns form fields on bottom of widgets */
+    form input,
+    form textarea,
+    form select {
+        vertical-align: middle;
+    }
+    .MainMenuLinks {
+        margin-bottom: 0.2em;
+        vertical-align: middle;
+    }
 
-/* "vertical-align: baseline" aligns form fields on bottom of widgets */
-form input,
-form textarea,
-form select {
-             vertical-align: middle;
-             }
-.MainMenuLinks {
-                margin-bottom: 0.2em;
-                vertical-align: middle;
-                }
-
-/* Workaround for "peek-a-boo" bug. */
-a.MainMenuLinks,
-a.MainMenuLinks:hover,
-a.MainMenuLinksCurrentPage,
-a.MainMenuLinksCurrentPage:hover {
-                                  position: relative;
-                                  }
-
+    /* Workaround for "peek-a-boo" bug. */
+    a.MainMenuLinks,
+    a.MainMenuLinks:hover,
+    a.MainMenuLinksCurrentPage,
+    a.MainMenuLinksCurrentPage:hover {
+        position: relative;
+    }
 </style>
 <![endif]-->
 
-
-
 <!--[if lte IE 6]>
 <style type="text/css">
-
-#logo {
+    #logo {
         position:absolute;
         top:0.5em;
         left:-5em;
         z-index:510;
-        }
+    }
 
-#Stretcher {
-             width:99.5%;
-             }
+    #Stretcher {
+        width:99.5%;
+    }
 
-#subnav {
-          width:100%;
-	  background-color:[% color_5 %];
-          border:1px solid [% color_8 %];
-          border-width: 0 1px 0 0;
-          }
+    #subnav {
+        width:100%;
+        background-color:[% color_5 %];
+        border:1px solid [% color_8 %];
+        border-width: 0 1px 0 0;
+    }
 
-#nav {
-       width:99%;
-       }
+    #nav {
+        width:99%;
+    }
 
-#Footer {
-          margin: 0.5em 0.8em;
-          }
+    #Footer {
+        margin: 0.5em 0.8em;
+    }
 
-#bandeau_top .login .MainMenuLinks {
-	                             margin-top:0;
-           	                     }
-
-
+    #bandeau_top .login .MainMenuLinks {
+        margin-top:0;
+    }
 </style>
 <![endif]-->
 
-<!-- end  css_ie.tt2 -->
+<!-- end css_ie.tt2 -->

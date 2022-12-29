@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -70,9 +72,8 @@ sub new {
                   (exists $params{$_} and defined $params{$_})
                 ? ($_ => $params{$_})
                 : ()
-            } (
-            @{$driver->required_parameters}, @{$driver->optional_parameters}
-            )
+        } ( @{$driver->required_parameters}, @{$driver->optional_parameters}
+        )
     );
 }
 
@@ -118,7 +119,9 @@ sub connect {
 
     # Check if required module such as DBD is installed.
     foreach my $module (@{$self->required_modules}) {
-        unless (eval "require $module") {
+        unless (
+            do { local $SIG{__DIE__}; eval "require $module" }
+        ) {
             $log->syslog(
                 'err',
                 'A module for %s is not installed. You should download and install %s',
@@ -131,7 +134,7 @@ sub connect {
         }
     }
     foreach my $module (@{$self->optional_modules}) {
-        eval "require $module";
+        do { local $SIG{__DIE__}; eval "require $module" };
     }
 
     # Set unique ID to determine connection.
@@ -152,7 +155,8 @@ sub connect {
 
     unless ($self->ping) {
         unless ($persistent_connection_of{$self->{_id}}) {
-            $log->syslog('err', 'Can\'t connect to Database %s', $self);
+            $log->syslog('err', 'Can\'t connect to Database %s: %s',
+                $self, $DBI::errstr);
             $self->{_status} = 'failed';
             return undef;
         }
@@ -427,16 +431,43 @@ sub error {
     return undef;
 }
 
+# Old name: Sympa::DatabaseManager::_check_db_field_type().
+sub is_sufficient_field_type {
+    my $self      = shift;
+    my $required  = shift;
+    my $effective = shift;
+
+    my ($required_type, $required_size, $effective_type, $effective_size);
+
+    if ($required =~ /^(\w+)(\((\d+)\))?$/) {
+        ($required_type, $required_size) = ($1, $3);
+    }
+
+    if ($effective =~ /^(\w+)(\((\d+)\))?$/) {
+        ($effective_type, $effective_size) = ($1, $3);
+    }
+
+    if (    ($effective_type // '') eq ($required_type // '')
+        and (not defined $required_size or $effective_size >= $required_size))
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
 sub set_persistent {
     my $self = shift;
     my $flag = shift;
 
+    my $ret = $persistent_connection_of{$self->get_id};
     if ($flag) {
         $persistent_connection_of{$self->get_id} = 1;
     } elsif (defined $flag) {
         delete $persistent_connection_of{$self->get_id};
     }
-    return $self;
+    # Returns the previous value of the flag (6.2.65b.1 or later)
+    return $ret;
 }
 
 sub ping {
@@ -470,22 +501,16 @@ sub quote {
 ## This sub takes a single argument: the name of the field to be used in
 ## the query.
 ##
-sub get_canonical_write_date {
-    my $self  = shift;
-    my $field = shift;
-    return $self->get_formatted_date({'mode' => 'write', 'target' => $field});
-}
+# Moved to Sympa::Upgrade::_get_canonical_write_date().
+#sub get_canonical_write_date;
 
 ## Returns a character string corresponding to the expression to use in
 ## a write query (e.g. UPDATE or INSERT) for the value given as argument.
 ## This sub takes a single argument: the value of the date to be used in
 ## the query.
 ##
-sub get_canonical_read_date {
-    my $self  = shift;
-    my $value = shift;
-    return $self->get_formatted_date({'mode' => 'read', 'target' => $value});
-}
+# Moved to Sympa::Upgrade::_get_canonical_read_date().
+#sub get_canonical_read_date;
 
 # We require that user also matches (except SQLite).
 sub get_id {
@@ -571,7 +596,7 @@ Statement handle (L<DBI::st> object or such), or C<undef>.
 
 =head1 SEE ALSO
 
-L<Sympa::DatabaseDriver>, L<Sympa::Datasource>.
+L<Sympa::DatabaseDriver>.
 
 =head1 HISTORY
 

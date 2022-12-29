@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018, 2020, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,17 +28,26 @@ package Sympa::Tools::Text;
 
 use strict;
 use warnings;
+use feature qw(fc);
+use Digest::MD5;
 use Encode qw();
 use English qw(-no_match_vars);
 use Encode::MIME::Header;    # 'MIME-Q' encoding.
 use HTML::Entities qw();
+use MIME::Base64 qw();       # encode_base64url() needs 3.11 or later.
 use MIME::EncWords;
 use Text::LineFold;
+use Unicode::GCString;
 use URI::Escape qw();
-use if (5.008 < $] && $] < 5.016), qw(Unicode::CaseFold fc);
-use if (5.016 <= $]), qw(feature fc);
+BEGIN { eval 'use Unicode::Normalize qw()'; }
+BEGIN { eval 'use Unicode::UTF8 qw()'; }
 
+use Sympa::Language;
 use Sympa::Regexps;
+
+my $email_re = Sympa::Regexps::email();
+my $email_like_re = sprintf '(?:<%s>|%s)', Sympa::Regexps::email(),
+    Sympa::Regexps::email();
 
 # Old name: tools::addrencode().
 sub addrencode {
@@ -73,7 +84,7 @@ sub addrencode {
     }
 
     return
-          ($phrase  =~ /\S/ ? "$phrase "    : '')
+          ($phrase =~ /\S/  ? "$phrase "    : '')
         . ($comment =~ /\S/ ? "($comment) " : '')
         . "<$addr>";
 }
@@ -109,22 +120,90 @@ sub canonic_message_id {
     return $msg_id;
 }
 
+sub canonic_text {
+    my $text = shift;
+
+    return undef unless defined $text;
+
+    # Normalize text. See also discussion on
+    # https://lists.sympa.community/msg/devel/2018-03/4QnaLDHkIC-7ZXa2e4npdQ
+    #
+    # N.B.: Corresponding modules are optional by now, and should be
+    # mandatory in the future.
+    my $utext;
+    if (Encode::is_utf8($text)) {
+        $utext = $text;
+    } elsif ($Unicode::UTF8::VERSION) {
+        no warnings 'utf8';
+        $utext = Unicode::UTF8::decode_utf8($text);
+    } else {
+        $utext = Encode::decode_utf8($text);
+    }
+    if ($Unicode::Normalize::VERSION) {
+        $utext = Unicode::Normalize::normalize('NFC', $utext);
+    }
+
+    # Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL,
+    # and EIMS:
+    $utext =~ s/\r\n|\r/\n/g;
+
+    if (Encode::is_utf8($text)) {
+        return $utext;
+    } else {
+        return Encode::encode_utf8($utext);
+    }
+}
+
+sub slurp {
+    my $path = shift;
+
+    my $ifh;
+    return undef unless open $ifh, '<', $path;
+    my $text = do { local $RS; <$ifh> };
+    close $ifh;
+
+    return canonic_text($text);
+}
+
 sub wrap_text {
     my $text = shift;
     my $init = shift;
     my $subs = shift;
     my $cols = shift;
-    $cols = 78 unless defined $cols;
+
+    $init //= '';
+    $subs //= '';
+    $cols //= 78;
     return $text unless $cols;
 
-    $text = Text::LineFold->new(
-        Language      => Sympa::Language->instance->get_lang,
-        OutputCharset => (Encode::is_utf8($text) ? '_UNICODE_' : 'utf8'),
-        Prep          => 'NONBREAKURI',
-        ColumnsMax    => $cols
-    )->fold($init, $subs, $text);
+    my $linefold = Text::LineFold->new(
+        Language   => Sympa::Language->instance->get_lang,
+        Prep       => 'NONBREAKURI',
+        prep       => [$email_like_re, sub { shift; @_ }],
+        ColumnsMax => $cols,
+        Format     => sub {
+            shift;
+            my $event = shift;
+            my $str   = shift;
+            if ($event =~ /^eo/)     { return "\n"; }
+            if ($event =~ /^so[tp]/) { return $init . $str; }
+            if ($event eq 'sol')     { return $subs . $str; }
+            undef;
+        },
+    );
 
-    return $text;
+    my $t = Encode::is_utf8($text) ? $text : Encode::decode_utf8($text);
+
+    my $ret = '';
+    while (1000 < length $t) {
+        my $s = substr $t, 0, 1000;
+        $ret .= $linefold->break_partial($s);
+        $t = substr $t, 1000;
+    }
+    $ret .= $linefold->break_partial($t) if length $t;
+    $ret .= $linefold->break_partial(undef);
+
+    return Encode::is_utf8($text) ? $ret : Encode::encode_utf8($ret);
 }
 
 sub decode_filesystem_safe {
@@ -155,8 +234,9 @@ sub encode_filesystem_safe {
 
 sub encode_html {
     my $str = shift;
+    my $additional_unsafe = shift || '';
 
-    HTML::Entities::encode_entities($str, '<>&"');
+    HTML::Entities::encode_entities($str, '<>&"' . $additional_unsafe);
 }
 
 sub encode_uri {
@@ -173,32 +253,8 @@ sub encode_uri {
 }
 
 # Old name: tools::escape_chars().
-sub escape_chars {
-    my $s          = shift;
-    my $except     = shift;                            ## Exceptions
-    my $ord_except = ord $except if defined $except;
-
-    ## Escape chars
-    ##  !"#$%&'()+,:;<=>?[] AND accented chars
-    ## escape % first
-    foreach my $i (
-        0x25,
-        0x20 .. 0x24,
-        0x26 .. 0x2c,
-        0x3a .. 0x3f,
-        0x5b, 0x5d,
-        0x80 .. 0x9f,
-        0xa0 .. 0xff
-        ) {
-        next if defined $ord_except and $i == $ord_except;
-        my $hex_i = sprintf "%lx", $i;
-        $s =~ s/\x$hex_i/%$hex_i/g;
-    }
-    ## Special traetment for '/'
-    $s =~ s/\//%a5/g unless defined $except and $except eq '/';
-
-    return $s;
-}
+# Moved to: Sympa::Upgrade::_escape_chars()
+#sub escape_chars;
 
 # Old name: tt2::escape_url().
 # DEPRECATED.  Use Sympa::Tools::Text::escape_uri() or
@@ -207,15 +263,69 @@ sub escape_chars {
 
 sub foldcase {
     my $str = shift;
-    return '' unless defined $str and length $str;
 
-    if ($] <= 5.008) {
-        # Perl 5.8.0 does not support Unicode::CaseFold. Use lc() instead.
-        return Encode::encode_utf8(lc(Encode::decode_utf8($str)));
-    } else {
-        # later supports it. Perl 5.16.0 and later have built-in fc().
-        return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
+    return '' unless defined $str and length $str;
+    return Encode::encode_utf8(fc(Encode::decode_utf8($str)));
+}
+
+my %legacy_charsets = (
+    'ar'    => [qw(iso-8859-6)],
+    'bs'    => [qw(iso-8859-2)],
+    'cs'    => [qw(iso-8859-2)],
+    'eo'    => [qw(iso-8859-3)],
+    'et'    => [qw(iso-8859-4)],
+    'he'    => [qw(iso-8859-8)],
+    'hr'    => [qw(iso-8859-2)],
+    'hu'    => [qw(iso-8859-2)],
+    'ja'    => [qw(euc-jp cp932 MacJapanese)],
+    'kl'    => [qw(iso-8859-4)],
+    'ko'    => [qw(cp949)],
+    'lt'    => [qw(iso-8859-4)],
+    'lv'    => [qw(iso-8859-4)],
+    'mt'    => [qw(iso-8859-3)],
+    'pl'    => [qw(iso-8859-2)],
+    'ro'    => [qw(iso-8859-2)],
+    'ru'    => [qw(koi8-r cp1251)],               # cp866? MacCyrillic?
+    'sk'    => [qw(iso-8859-2)],
+    'sl'    => [qw(iso-8859-2)],
+    'th'    => [qw(iso-8859-11 cp874 MacThai)],
+    'tr'    => [qw(iso-8859-9)],
+    'uk'    => [qw(koi8-u)],                      # MacUkrainian?
+    'zh-CN' => [qw(euc-cn)],
+    'zh-TW' => [qw(big5-eten)],
+);
+
+sub guessed_to_utf8 {
+    my $text  = shift;
+    my @langs = @_;
+
+    return Encode::encode_utf8($text) if Encode::is_utf8($text);
+    return $text
+        unless defined $text
+        and length $text
+        and $text =~ /[^\x00-\x7F]/;
+
+    my $utf8;
+    if ($Unicode::UTF8::VERSION) {
+        $utf8 =
+            eval { Unicode::UTF8::decode_utf8($text, Encode::FB_CROAK()) };
     }
+    unless (defined $utf8) {
+        foreach my $charset (map { $_ ? @$_ : () } @legacy_charsets{@langs}) {
+            $utf8 =
+                eval { Encode::decode($charset, $text, Encode::FB_CROAK()) };
+            last if defined $utf8;
+        }
+    }
+    unless (defined $utf8) {
+        $utf8 = Encode::decode('iso-8859-1', $text);
+    }
+
+    # Apply NFC: e.g. for modified-NFD by Mac OS X.
+    $utf8 = Unicode::Normalize::normalize('NFC', $utf8)
+        if $Unicode::Normalize::VERSION;
+
+    return Encode::encode_utf8($utf8);
 }
 
 sub mailtourl {
@@ -285,8 +395,33 @@ sub _url_query_string {
                 sprintf '%s=%s',
                     Sympa::Tools::Text::encode_uri($dkey),
                     Sympa::Tools::Text::encode_uri($dval);
-                } sort keys %$query
+            } sort keys %$query
         );
+    }
+}
+
+sub permalink_id {
+    my $message_id = shift;
+
+    $message_id =~ s/[\s<>]//g;
+    return MIME::Base64::encode_base64url(Digest::MD5::md5($message_id));
+}
+
+sub pad {
+    my $str   = shift;
+    my $width = shift;
+
+    return $str unless $width and defined $str;
+
+    my $ustr = Encode::is_utf8($str) ? $str : Encode::decode_utf8($str);
+    my $cols = Unicode::GCString->new($ustr)->columns;
+
+    unless ($cols < abs $width) {
+        return $str;
+    } elsif ($width < 0) {
+        return $str . (' ' x (-$width - $cols));
+    } else {
+        return (' ' x ($width - $cols)) . $str;
     }
 }
 
@@ -336,30 +471,70 @@ sub qencode_filename {
     return $filename;
 }
 
-# Old name: tools::unescape_chars().
-sub unescape_chars {
-    my $s = shift;
+sub clip {
+    my $string = shift;
+    return undef unless @_;
+    my $length = shift;
 
-    $s =~ s/%a5/\//g;    ## Special traetment for '/'
-    foreach my $i (0x20 .. 0x2c, 0x3a .. 0x3f, 0x5b, 0x5d, 0x80 .. 0x9f,
-        0xa0 .. 0xff) {
-        my $hex_i = sprintf "%lx", $i;
-        my $hex_s = sprintf "%c",  $i;
-        $s =~ s/%$hex_i/$hex_s/g;
+    my ($gcstr, $blen);
+    if (ref $string eq 'Unicode::GCString') {
+        $gcstr = $string;
+        $blen  = length Encode::encode_utf8($string->as_string);
+    } elsif (Encode::is_utf8($string)) {
+        $gcstr = Unicode::GCString->new($string);
+        $blen  = length Encode::encode_utf8($string);
+    } else {
+        $gcstr = Unicode::GCString->new(Encode::decode_utf8($string));
+        $blen  = length $string;
     }
 
-    return $s;
+    $length += $blen if $length < 0;
+    return '' if $length < 0;             # out of range
+    return $string if $blen <= $length;
+
+    my $result = $gcstr->substr(0, _gc_length($gcstr, $length));
+
+    if (ref $string eq 'Unicode::GCString') {
+        return $result;
+    } elsif (Encode::is_utf8($string)) {
+        return $result->as_string;
+    } else {
+        return Encode::encode_utf8($result->as_string);
+    }
 }
+
+sub _gc_length {
+    my $gcstr  = shift;
+    my $length = shift;
+
+    return 0 unless $gcstr->length;
+    return 0 unless $length;
+
+    my ($shorter, $longer) = (0, $gcstr->length);
+    while ($shorter < $longer) {
+        my $cur = ($shorter + $longer + 1) >> 1;
+        my $elen =
+            length Encode::encode_utf8($gcstr->substr(0, $cur)->as_string);
+        if ($elen <= $length) {
+            $shorter = $cur;
+        } else {
+            $longer = $cur - 1;
+        }
+    }
+
+    return $shorter;
+}
+
+# Old name: tools::unescape_chars().
+# Moved to: Sympa::Upgrade::_unescape_chars().
+#sub unescape_chars;
 
 # Old name: tools::valid_email().
 sub valid_email {
     my $email = shift;
 
-    my $email_re = Sympa::Regexps::email();
-    return undef unless $email =~ /^${email_re}$/;
-
-    # Forbidden characters.
-    return undef if $email =~ /[\|\$\*\?\!]/;
+    return undef
+        unless defined $email and $email =~ /\A$email_re\z/;
 
     return 1;
 }
@@ -373,7 +548,7 @@ sub weburl {
         Sympa::Tools::Text::encode_uri(
               (not defined $_)      ? ''
             : $options{decode_html} ? Sympa::Tools::Text::decode_html($_)
-            : $_
+            :                         $_
         );
     } @{$paths || []};
 
@@ -426,7 +601,7 @@ Returns formatted (and encoded) name-addr as RFC5322 3.4.
 I<Function>.
 Returns canonical form of e-mail address.
 
-Leading and trailing whilte spaces are removed.
+Leading and trailing white spaces are removed.
 Latin letters without accents are lower-cased.
 
 For malformed inputs returns C<undef>.
@@ -435,6 +610,21 @@ For malformed inputs returns C<undef>.
 
 Returns canonical form of message ID without trailing or leading whitespaces
 or C<E<lt>>, C<E<gt>>.
+
+=item canonic_text ( $text )
+
+Canonicalizes text.
+C<$text> should be a binary string encoded by UTF-8 character set or
+a Unicode string.
+Forbidden sequences in binary string will be replaced by
+U+FFFD REPLACEMENT CHARACTERs, and Normalization Form C (NFC) will be applied.
+
+=item clip ( $string, $length )
+
+I<Function>.
+Clips $string according to $length by bytes,
+considering boundary of grapheme clusters.
+UTF-8 is assumed for $string as bytestring.
 
 =item decode_filesystem_safe ( $str )
 
@@ -498,10 +688,11 @@ two hexdigits.
 
 Note that C<'/'> will also be encoded.
 
-=item encode_html ( $str )
+=item encode_html ( $str, [ $additional_unsafe ] )
 
 I<Function>.
 Encodes characters in a string $str to HTML entities.
+By default
 C<'E<lt>'>, C<'E<gt>'>, C<'E<amp>'> and C<'E<quot>'> are encoded.
 
 Parameter:
@@ -511,6 +702,12 @@ Parameter:
 =item $str
 
 String to be encoded.
+
+=item $additional_unsafe
+
+Character or range of characters additionally encoded as entity references.
+
+This optional parameter was introduced on Sympa 6.2.37b.3.
 
 =back
 
@@ -546,10 +743,10 @@ Encoded string, stripped C<utf8> flag if any.
 
 =item escape_chars ( $str )
 
-Escape weird characters.
+B<Deprecated>.
+Use L</encode_filesystem_safe>.
 
-ToDo: This should be obsoleted in the future release: Would be better to use
-L</encode_filesystem_safe>.
+Escape weird characters.
 
 =item escape_url ( $str )
 
@@ -579,6 +776,32 @@ A string.
 
 =back
 
+=item guessed_to_utf8( $text, [ lang, ... ] )
+
+I<Function>.
+Guesses text charset considering language context
+and returns the text reencoded by UTF-8.
+
+Parameters:
+
+=over
+
+=item $text
+
+Text to be reencoded.
+
+=item lang, ...
+
+Language tag(s) which may be given by L<Sympa::Language/"implicated_langs">.
+
+=back
+
+Returns:
+
+Reencoded text.
+If any charsets could not be guessed, C<iso-8859-1> will be used
+as the last resort, just because it covers full range of 8-bit.
+
 =item mailtourl ( $email, [ decode_html =E<gt> 1 ],
 [ query =E<gt> {key =E<gt> val, ...} ] )
 
@@ -607,6 +830,35 @@ Returns:
 
 Constructed URL.
 
+=item pad ( $str, $width )
+
+Pads space a string so that result will not be narrower than given width.
+
+Parameters:
+
+=over
+
+=item $str
+
+A string.
+
+=item $width
+
+If $width is false value or width of $str is not less than $width,
+does nothing.
+If $width is less than C<0>, pads right.
+Otherwise, pads left.
+
+=back
+
+Returns:
+
+Padded string.
+
+=item permalink_id ( $message_id )
+
+Calculates permalink ID from mesage ID.
+
 =item qdecode_filename ( $filename )
 
 Q-Decodes web file name.
@@ -623,12 +875,18 @@ ToDo:
 This should be obsoleted in the future release: Would be better to use
 L</encode_filesystem_safe>.
 
+=item slurp ( $file )
+
+Get entire content of the file.
+Normalization by canonic_text() is applied.
+C<$file> is the path to text file.
+
 =item unescape_chars ( $str )
 
-Unescape weird characters.
+B<Deprecated>.
+Use L</decode_filesystem_safe>.
 
-ToDo: This should be obsoleted in the future release: Would be better to use
-L</decode_filesystem_safe>.
+Unescape weird characters.
 
 =item valid_email ( $string )
 
@@ -712,5 +970,11 @@ on Sympa 6.2.10.
 
 decode_html(), encode_html(), encode_uri() and mailtourl()
 were added on Sympa 6.2.14, and escape_url() was deprecated.
+
+guessed_to_utf8() and pad() were added on Sympa 6.2.17.
+
+canonic_text() and slurp() were added on Sympa 6.2.53b.
+
+clip() was added on Sympa 6.2.61b.
 
 =cut

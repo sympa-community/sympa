@@ -1,34 +1,36 @@
-[%# $Id$ ~%]
+[%# delivery_status_notification.tt2 ~%]
 Content-Type: multipart/report; report-type=delivery-status; 
 	boundary="[% boundary %]"
-[% IF action == "delivered" -%]
-Subject: [% FILTER qencode %][%|loc%]Message was successfully delivered[%END%][%END%]
+[% IF status == '2.3.0' || status == '4.3.0' -%]
+Subject: [%"Message distribution: Forwarded"|loc|qencode%]
 [% ELSIF status == '4.2.1' -%]
-Subject: [% FILTER qencode %][%|loc%]List could not be created[%END%][%END%]
+Subject: [%"List could not be created"|loc|qencode%]
 [% ELSIF status == '4.2.4' -%]
-Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
+Subject: [%"List unknown"|loc|qencode%]
 [% ELSIF status == '5.1.1' || status == '5.1.2' -%]
-Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
+Subject: [%"List unknown"|loc|qencode%]
 [% ELSIF status == '5.2.3' -%]
-Subject: [% FILTER qencode %][%|loc%]Too large message[%END%][%END%]
-[% ELSIF status == '5.3.0' -%]
-Subject: [% FILTER qencode %][%|loc%]Message distribution: Internal server error[%END%][%END%]
+Subject: [%"Too large message"|loc|qencode%]
+[% ELSIF status == '5.2.4' || status == '5.3.0' -%]
+Subject: [%"Message distribution: Internal server error"|loc|qencode%]
 [% ELSIF status == '5.3.5' -%]
-Subject: [% FILTER qencode %][%|loc%]Message distribution: User error[%END%][%END%]
+Subject: [%"Message distribution: User error"|loc|qencode%]
 [% ELSIF status == '5.6.0' -%]
-Subject: [% FILTER qencode %][%|loc%]Message distribution: User error[%END%][%END%]
+Subject: [%"Message distribution: User error"|loc|qencode%]
 [% ELSIF status == '5.6.1' -%]
-Subject: [% FILTER qencode %][%|loc%]Results of your commands[%END%][%END%]
+Subject: [%"Results of your commands"|loc|qencode%]
 [% ELSIF status == '5.6.5' -%]
-Subject: [% FILTER qencode %][%|loc%]Cannot personalize message[%END%][%END%]
+Subject: [%"Cannot personalize message"|loc|qencode%]
 [% ELSIF status == '5.7.0' -%]
-Subject: [% FILTER qencode %][%|loc%]A virus in your mail[%END%][%END%]
+Subject: [%"A virus in your mail"|loc|qencode%]
 [% ELSIF status == '5.7.1' -%]
-Subject: [% FILTER qencode %][%|loc%]Message distribution: Authorization denied[%END%][%END%]
+Subject: [%"Message distribution: Authorization denied"|loc|qencode%]
+[% ELSIF action == "delivered" -%]
+Subject: [%"Message was successfully delivered"|loc|qencode%]
 [% ELSE -%]
-Subject: [% FILTER qencode %][%|loc(action)%]Delivery Status Notification: %1[%END%][%END%]
+Subject: [%"Delivery Status Notification: %1"|loc(action)|qencode%]
 [% END -%]
-X-Loop: [% conf.email %]@[% conf.host %]
+X-Loop: [% conf.email %]@[% domain %]
 
 This is a MIME-encapsulated message.
 
@@ -37,7 +39,10 @@ Content-Disposition: inline
 Content-Description: Notification
 
 [%|loc%]This is an automatic response sent by Sympa Mailing Lists Manager.[%END%]
-[% IF action == "delivered" -%]
+[% IF status == '2.3.0' || status == '4.3.0' -%]
+[%|loc(listname)%]Your message to the list '%1' has been forwarded to the moderator(s)[%END%]
+
+[% ELSIF action == "delivered" -%]
 [%|loc%]Message was successfully delivered to following address:[%END%]
 
 	[% recipient %]
@@ -57,24 +62,25 @@ Content-Description: Notification
 [%   ELSIF status == '5.2.3' -%]
 [%|loc(msg_size,max_size)%]Your message could not be sent because its size (%1 kB) was over the maximum size (%2 kB) allowed on this list.
 
-Note: Because binary files have to be encoded in less-efficient ASCII format before being sent over email, the final size of an attachment is often significantly larger that the original file.[%END%]
+Note: Because binary files have to be encoded in less-efficient ASCII format before being sent over email, the final size of an attachment is often significantly larger than the original file.[%END%]
+
+[%   ELSIF status == '5.2.4' -%]
+[%|loc(list.name,function)%]Impossible to forward your message to '%1-%2' because of an internal server error.[%END%]
+
+[%|loc(list.name,domain)%]For further information, please contact %1-request@%2[%END -%]
 
 [%   ELSIF status == '5.3.0' -%]
-[% IF entry == 'forward' -%]
-[%|loc(list.name,function)%]Impossible to forward your message to '%1-%2' because of an internal server error.[%END%]
-[% ELSE -%]
 [%|loc(list.name)%]Impossible to distribute your message for list '%1' because of an internal server error.[%END%]
-[% END -%]
 
-[%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END -%]
+[%|loc(list.name,domain)%]For further information, please contact %1-request@%2[%END -%]
 
 [%   ELSIF status == '5.3.5' -%]
 [%|loc(listname)%]The %1 list could not be created.[%END%]
 
-[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+[%|loc(conf.listmaster_email,domain)%]For further information, please contact %1@%2[%END%]
 
 [%   ELSIF status == '5.6.0' -%]
-[%|loc(list.name,"${conf.email}@${conf.host}",list.host,cmd)%]The following message was sent to list '%1' and it contains a line '%4' that can be interpreted as a command.
+[%|loc(list.name,"${conf.email}@${domain}",domain,cmd)%]The following message was sent to list '%1' and it contains a line '%4' that can be interpreted as a command.
 
 If your message contained a command (like subscribe, unsubscribe, help, index, get, ...), please note that commands should never be sent to lists. Commands must be sent to %2 exclusively.
 
@@ -95,7 +101,7 @@ Thank you for your attention.[%END%]
 
 [%|loc(virus_name,recipient,sender)%]Our viruschecker found a virus named %1 in a message addressed to %2 and that seems to be yours (From: %3).[%END%]
 
-[%|loc%]We stopped delivery of this email.[%END%]
+[%|loc%]Delivery of this message has been blocked.[%END%]
 
 [%|loc%]It may be useful to check your system for viruses.
 
@@ -105,40 +111,48 @@ Note, however, that many viruses fake sender's e-mail address, so it is possible
 [%|loc(list.name)%]Your message for list '%1' (attached below) was rejected.
 You are not allowed to send this message for the following reason:[%END%]
 
- [% PROCESS authorization_reject.tt2 -%]
+ [% PROCESS report.tt2
+    report_type='auth'
+    report_entry=reason
+ -%]
 
-[%|loc(list.name,list.host)%]For further information, please contact %1-request@%2[%END%]
+[%|loc(list.name,domain)%]For further information, please contact %1-request@%2[%END%]
 
 [%   ELSE -%]
 [%|loc%]The following address is not a known mailing list:[%END%]
 
-	[% recipient %]
+    [% recipient %]
 
-[%|loc%]To find out the correct listname, ask for this server's lists directory:[%END%]
+[%|loc%]To find out the correct list name, ask for this server's lists directory:[%END%]
 
-	[% | mailtourl({subject => 'WHICH'}) ~%]
-	  [% conf.email %]@[% conf.host %]
-	[%~ END %]
+[% IF conf.wwsympa_url -%]
+    [% 'my' | url_abs %]
+[%- ELSE -%]
+    [% "${conf.email}@${domain}" | mailtourl({subject => 'WHICH'}) %]
+[%- END %]
 
-[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+[%|loc(conf.listmaster_email,domain)%]For further information, please contact %1@%2[%END%]
 
 [%   END -%]
 [% END -%]
 --[% boundary %]
 Content-Type: message/delivery-status
 
-Reporting-MTA: dns; [% conf.host %]
+Reporting-MTA: dns; [% domain %]
 Arrival-Date: [% date %]
 
 Final-Recipient: rfc822; [% recipient %]
 Action: [% action %]
 Status: [% status %]
-Remote-MTA: dns; [% conf.host %]
+Remote-MTA: dns; [% domain %]
 Diagnostic-Code: X-Sympa; [% diagnostic_code %]
 
 --[% boundary %]
-[%# Attach only header part of potentially unsafe contents. ~%]
-[% IF status == '5.1.1' || status == '5.1.2'
+[%# Attach only header part of potentially unsafe contents.
+  # And, 2.1.5, 2.3.0 and 4.3.0 are successful stata and don't need copy of
+  # message content. ~%]
+[% IF status == '2.1.5' || status == '2.3.0' || status == '4.3.0'
+   || status == '5.1.1' || status == '5.1.2'
    || status == '5.2.3' || status == '5.7.0' -%]
 Content-Type: text/rfc822-headers
 Content-Disposition: inline
@@ -154,3 +168,5 @@ X-Sympa-Attach: yes
 
 [% END -%]
 --[% boundary %]--
+
+[%# end delivery_status_notification.tt2 ~%]

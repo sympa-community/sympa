@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,11 +42,15 @@ sub build_connect_string {
     my $self = shift;
 
     my $connect_string = "DBI:Oracle:";
-    if ($self->{'db_host'} and $self->{'db_name'}) {
+    if (    $self->{'db_host'}
+        and $self->{'db_host'} ne 'none'
+        and $self->{'db_name'}) {
         $connect_string .= "host=$self->{'db_host'};sid=$self->{'db_name'}";
+        $connect_string .= ';port=' . $self->{'db_port'}
+            if defined $self->{'db_port'};
+    } elsif ($self->{'db_name'}) {
+        $connect_string .= $self->{'db_name'};
     }
-    $connect_string .= ';port=' . $self->{'db_port'}
-        if defined $self->{'db_port'};
     $connect_string .= ';' . $self->{'db_options'}
         if defined $self->{'db_options'};
     return $connect_string;
@@ -88,25 +94,8 @@ sub get_substring_clause {
 #DEPRECATED.
 #sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
-sub get_formatted_date {
-    my $self  = shift;
-    my $param = shift;
-    $log->syslog('debug', 'Building SQL date formatting');
-    if (lc($param->{'mode'}) eq 'read') {
-        return
-            sprintf
-            q{((to_number(to_char(%s,'J')) - to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) * 86400) +to_number(to_char(%s,'SSSSS'))},
-            $param->{'target'}, $param->{'target'};
-    } elsif (lc($param->{'mode'}) eq 'write') {
-        return
-            sprintf
-            q{to_date(to_char(floor(%s/86400) + to_number(to_char(to_date('01/01/1970','dd/mm/yyyy'), 'J'))) || ':' ||to_char(mod(%s,86400)), 'J:SSSSS')},
-            $param->{'target'}, $param->{'target'};
-    } else {
-        $log->syslog('err', "Unknown date format mode %s", $param->{'mode'});
-        return undef;
-    }
-}
+#DEPRECATED.
+#sub get_formatted_date;
 
 sub is_autoinc {
     my $self  = shift;
@@ -122,7 +111,7 @@ sub is_autoinc {
             uc($param->{'table'}),
             uc('trg_' . $param->{'field'})
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to gather autoincrement field named %s for table %s',
             $param->{'field'}, $param->{'table'});
@@ -165,7 +154,7 @@ sub set_autoinc {
                 FROM dual;
               END;}, $field, $table, $field, $field
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to set field %s in table %s as autoincrement',
             $field, $table);
@@ -221,7 +210,7 @@ sub get_fields {
               FROM all_tab_columns
               WHERE table_name = ?}, uc($param->{'table'})
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get the list of fields from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -277,7 +266,7 @@ sub update_field {
               MODIFY (%s %s %s)},
             $param->{'table'}, $param->{'field'}, $param->{'type'}, $options
         )
-        ) {
+    ) {
         $log->syslog('err', 'Could not change field "%s" in table "%s"',
             $param->{'field'}, $param->{'table'});
         return undef;
@@ -310,7 +299,7 @@ sub add_field {
               ADD (%s %s %s)},
             $param->{'table'}, $param->{'field'}, $param->{'type'}, $options
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not add field %s to table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -333,7 +322,7 @@ sub drop_field {
 
     unless (
         $self->do_query(q{ALTER TABLE %s DROP (%s)}, $table, $field)
-        ) {
+    ) {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
             $field, $table, $self->{'db_name'});
@@ -365,7 +354,7 @@ sub get_primary_key {
                     cons.table_name = ?},
             uc($param->{'table'})
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not get field list from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -391,7 +380,7 @@ sub unset_primary_key {
             q{ALTER TABLE %s
               DROP PRIMARY KEY}, $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not drop primary key from table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
@@ -421,7 +410,7 @@ sub set_primary_key {
               ADD CONSTRAINT %s PRIMARY KEY (%s)},
             $param->{'table'}, $pkname, $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not set fields %s as primary key for table %s in database %s',
@@ -453,7 +442,7 @@ sub get_indexes {
               WHERE generated = 'N' AND table_name = ?},
             uc $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not get the list of indexes from table %s in database %s',
@@ -511,7 +500,7 @@ sub set_index {
               ON %s (%s)},
             $param->{'index_name'}, $param->{'table'}, $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',
@@ -542,7 +531,9 @@ sub translate_type {
     $type =~ s/^tinyint.*/number/g;
     $type =~ s/^double/number/g;
     $type =~ s/^enum.*/varchar2(20)/g;
-    $type =~ s/^text.*/varchar2(500)/g;
+    # varchar2(500) on <= 6.2.36
+    # FIXME: Oracle 8 and later support varchar2 up to 4000 o.
+    $type =~ s/^text.*/varchar2(2000)/g;
     $type =~ s/^longtext.*/long/g;
     $type =~ s/^datetime.*/date/g;
     $type =~ s/^mediumblob/blob/g;
@@ -571,6 +562,13 @@ sub AS_BLOB {
     return ({'ora_type' => DBD::Oracle::ORA_BLOB()} => $_[1])
         if scalar @_ > 1;
     return ();
+}
+
+sub md5_func {
+    shift;
+
+    return sprintf q{LOWER(RAWTOHEX(STANDARD_HASH(%s, 'MD5')))},
+        join ' || ', map { sprintf 'TO_CHAR(%s)', $_ } @_;
 }
 
 1;

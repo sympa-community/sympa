@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -62,32 +65,12 @@ sub _filter_pre {
 
 use constant _generator => 'Sympa::Request';
 
-sub _glob_pattern { shift->{_pattern} }
-
 use constant _marshal_format => '%ld,%s@%s_%s,%s,%s';
 use constant _marshal_keys =>
     [qw(date localpart domainpart KEYAUTH email action)];
 use constant _marshal_regexp =>
-    qr{\A(\d+),([^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z};
+    qr{\A(\d+),(\@?[^\s\@]+)\@([-.\w]+)_([\da-f]+),([^\s,]*),(\w+)\z};
 use constant _store_key => 'keyauth';
-
-sub new {
-    my $class   = shift;
-    my %options = @_;
-
-    my $self = $class->SUPER::new(%options);
-
-    # Build glob pattern using encoded e-mail.
-    if ($self) {
-        my $opts = {%options};
-        $self->_filter_pre($opts);
-        $self->{_pattern} =
-            Sympa::Spool::build_glob_pattern($self->_marshal_format,
-            $self->_marshal_keys, %$opts);
-    }
-
-    $self;
-}
 
 1;
 __END__
@@ -127,15 +110,18 @@ See also L<Sympa::Spool/"Public methods">.
 
 =over
 
-=item new ( [ context =E<gt> $list ], [ action =E<gt> $action ],
+=item new ( [ context =E<gt> $that ], [ action =E<gt> $action ],
 [ keyauth =E<gt> $id ], [ email =E<gt> $email ])
+
+Context may be either instance of L<Sympa::List> or L<Sympa::Family>,
+or robot.
 
 =item next ( [ no_lock =E<gt> 1 ] )
 
 If the pairs describing metadatas are specified,
 contents returned by next() are filtered by them.
 
-Order of items returned by next() is controled by time of submission.
+Order of items returned by next() is controlled by time of submission.
 
 =item quarantine ( )
 

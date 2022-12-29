@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2019, 2020, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,14 +32,14 @@ use English qw(-no_match_vars);
 use File::Copy qw();
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::Family;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
-use Sympa::Process;
+use Sympa::Spindle::ProcessRequest;
 use Sympa::Spool::Incoming;
+use Sympa::Spool::Listmaster;
 use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
@@ -51,12 +53,8 @@ sub _init {
     my $state = shift;
 
     if ($state == 1) {
-        Sympa::List::init_list_cache();
         # Process grouped notifications.
-        Sympa::Alarm->instance->flush;
-    } elsif ($state == 2) {
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
+        Sympa::Spool::Listmaster->instance->flush;
     }
 
     1;
@@ -73,7 +71,7 @@ sub _on_success {
                 $self->{distaff}->{directory} . '/' . $handle->basename,
                 $self->{keepcopy} . '/' . $handle->basename
             )
-            ) {
+        ) {
             $log->syslog(
                 'notice',
                 'Could not rename %s/%s to %s/%s: %m',
@@ -92,8 +90,6 @@ sub _on_success {
 sub _twist {
     my $self    = shift;
     my $message = shift;
-
-    my $status;
 
     unless (defined $message->{'message_id'}
         and length $message->{'message_id'}) {
@@ -170,8 +166,8 @@ sub _twist {
 
     # Load spam status.
     $message->check_spam_status;
-    # Check DKIM signatures.
-    $message->check_dkim_signature;
+    # Check Authentication-Results fields, DKIM signatures and/or ARC seals.
+    $message->aggregate_authentication_results;
     # Check S/MIME signature.
     $message->check_smime_signature;
     # Decrypt message.  On success, check nested S/MIME signature.
@@ -247,28 +243,38 @@ sub _twist {
             return undef;
         }
 
-        my $auth_level =
-              $message->{'smime_signed'} ? 'smime'
-            : $message->{'md5_check'}    ? 'md5'
-            : $message->{'dkim_pass'}    ? 'dkim'
-            :                              'smtp';
-        if ($list = $dyn_family->create_automatic_list(
-                (   'listname'   => $listname,
-                    'auth_level' => $auth_level,
-                    'sender'     => $sender,
-                    'message'    => $message
+        my $spindle_req = Sympa::Spindle::ProcessRequest->new(
+            context          => $dyn_family,
+            action           => 'create_automatic_list',
+            parameters       => {listname => $listname},
+            sender           => $sender,
+            smime_signed     => $message->{'smime_signed'},
+            md5_check        => $message->{'md5_check'},
+            dkim_pass        => $message->{'dkim_pass'},
+            scenario_context => {
+                sender             => $sender,
+                message            => $message,
+                family             => $dyn_family,
+                automatic_listname => $listname,
+            },
+        );
+        unless ($spindle_req and $spindle_req->spin) {
+            $log->syslog('err', 'Cannot create dynamic list %s', $listname);
+            return undef;
+        } elsif (
+            not($spindle_req->success
+                and $list = Sympa::List->new(
+                    $listname,
+                    $dyn_family->{'domain'},
+                    {just_try => 1}
                 )
             )
-            ) {
-            # Overwrite context of the message.
-            $message->{context} = $list;
-            $dyn_just_created = 1;
-        } else {
+        ) {
             $log->syslog('err',
                 'Unable to create list %s. Message %s ignored',
                 $listname, $message);
             Sympa::send_notify_to_listmaster(
-                $dyn_family->{'robot'},
+                $dyn_family->{'domain'},
                 'automatic_list_creation_failed',
                 {   'listname' => $listname,
                     'family'   => $dyn_list_family,
@@ -278,10 +284,10 @@ sub _twist {
             );
             Sympa::send_dsn($robot, $message, {}, '5.3.5');
             $log->db_log(
-                'robot'        => $dyn_family->{'robot'},
+                'robot'        => $dyn_family->{'domain'},
                 'list'         => $listname,
                 'action'       => 'process_message',
-                'parameters'   => $msg_id . "," . $dyn_family->{'robot'},
+                'parameters'   => $msg_id . "," . $dyn_family->{'domain'},
                 'target_email' => '',
                 'msg_id'       => $msg_id,
                 'status'       => 'error',
@@ -289,11 +295,15 @@ sub _twist {
                 'user_email'   => $sender
             );
             return undef;
+        } else {
+            # Overwrite context of the message.
+            $message->{context} = $list;
+            $dyn_just_created = 1;
         }
     }
 
     if ($dyn_just_created) {
-        unless (defined $list->sync_include()) {
+        unless (defined $list->sync_include('member')) {
             $log->syslog(
                 'err',
                 'Failed to synchronize list members of dynamic list %s from %s family',
@@ -315,22 +325,17 @@ sub _twist {
             );
             # purge the unwanted empty automatic list
             if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
-                $list->close_list();
-                # verifier pour tt ce bloc si supprime bien tout
-                $list->purge();
-                # but what about list_of_lists ?
-                if (exists $Sympa::List::list_of_lists{$list->{'domain'}}
-                    {$list->{'name'}}) {    # test à virer si ok
-                    delete $Sympa::List::list_of_lists{$list->{'domain'}}
-                        {$list->{'name'}};
-                    $log->syslog('err',
-                        'La liste a été trouvée dans la list_of_lists',
-                        $list, $dyn_list_family);
-                }
+                Sympa::Spindle::ProcessRequest->new(
+                    context          => $robot,
+                    action           => 'close_list',
+                    current_list     => $list,
+                    mode             => 'purge',
+                    scenario_context => {skip => 1},
+                )->spin;
             }
             return undef;
         }
-        unless ($list->get_total() > 0) {
+        unless ($list->get_total) {
             $log->syslog('err',
                 'Dynamic list %s from %s family has ZERO subscribers',
                 $list, $dyn_list_family);
@@ -349,18 +354,13 @@ sub _twist {
             );
             # purge the unwanted empty automatic list
             if ($Conf::Conf{'automatic_list_removal'} =~ /if_empty/i) {
-                $list->close_list();
-                # verifier pour tt ce bloc si supprime bien tout
-                $list->purge();
-                # but what about list_of_lists ?
-                if (exists $Sympa::List::list_of_lists{$list->{'domain'}}
-                    {$list->{'name'}}) {    # test à virer si ok
-                    delete $Sympa::List::list_of_lists{$list->{'domain'}}
-                        {$list->{'name'}};
-                    $log->syslog('err',
-                        'La liste a été trouvée dans la list_of_lists',
-                        $list, $dyn_list_family);
-                }
+                Sympa::Spindle::ProcessRequest->new(
+                    context          => $robot,
+                    action           => 'close_list',
+                    current_list     => $list,
+                    mode             => 'purge',
+                    scenario_context => {skip => 1},
+                )->spin;
             }
             return undef;
         }
@@ -418,6 +418,25 @@ If the list a message is bound for has not been there and list creation is
 authorized, it will be created.  Then the message is stored into incoming
 message spool again and waits for processing by
 L<Sympa::Spindle::ProcessIncoming>.
+
+Order to process messages in source spool are controlled by modification time
+of files and delivery date.
+Some messages are skipped according to these priorities
+(See L<Sympa::Spool::Automatic>):
+
+=over
+
+=item *
+
+Messages with lowest priority (C<z> or C<Z>) are skipped.
+
+=item *
+
+Messages with possibly higher priority are chosen.
+This is done by skipping messages with lower priority than those already
+found.
+
+=back
 
 =head2 Public methods
 

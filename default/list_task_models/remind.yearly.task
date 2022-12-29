@@ -1,9 +1,0 @@
-title.gettext remind message sent to subscribers every year
-
-/INIT
-next([execution_date]+1y,EXEC)
-
-/EXEC
-@selection = select_subs (older([execution_date]))
-send_msg (@selection, remind)
-next([execution_date]+1y,EXEC)

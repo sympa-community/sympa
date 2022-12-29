@@ -1,0 +1,274 @@
+[%# config_common.tt2 ~%]
+[%# Block definitions ~%]
+
+[%~ BLOCK EditListHeading # (ppaths,pitem,helem) ~%]
+    [% IF helem.match('^h[1-7]$') ~%]
+        <[%helem%]>
+    [%~ ELSE ~%]
+        <label for="param.[% ppaths.join('.') %]">
+    [%~ END %]
+
+    [% IF pitem.title ~%]
+        [% pitem.title %]
+        [%~ IF is_listmaster %] ([% pitem.name %])[% END %]
+    [%~ ELSE ~%]
+        [% pitem.name %]
+    [%~ END %]
+    [%~IF is_listmaster && pitem.default_value~%] [%|loc%](default)[%END%][%~END%]
+
+    [% IF pitem.scenario && is_listmaster ~%]
+        &nbsp;<a class="input"
+           href="[% 'dump_scenario' | url_rel([list,pitem.scenario]) %]"
+           title="[%|loc%]scenario source[%END%]">
+            [%|loc%]scenario source[%END~%]
+        </a>
+    [%~ END %]
+
+    [%~ IF pitem.comment ~%]
+        <a href="#" class="accordionButton"
+           data-selector="#help\.[% ppaths.join('\\.') %]">
+            <i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i>
+        </a>
+    [%~ END %]
+
+    [% IF helem.match('^h[1-7]$') ~%]
+        </[%helem%]>
+    [%~ ELSE ~%]
+        </label>
+    [%~ END %]
+
+    [% IF pitem.comment ~%]
+        <div id="help.[% ppaths.join('.') %]"
+             class="secondary callout" data-closable>
+            <p>[% pitem.comment.replace('\n', '</p><p>') %]</p>
+        </div>
+    [%~ END ~%]
+[%~END ~%]
+
+[%~ BLOCK EditListSet # (ppaths,pitem,val) ~%]
+    <!-- set -->
+    [% IF pitem.privilege == 'write' ~%]
+        <select name="multiple_param.[% ppaths.join('.') %]"
+                id="param.[% ppaths.join('.') %]"
+                multiple="multiple" size="[% pitem.format.size() %]"
+            [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]>
+            [% FOREACH enum = pitem.format ~%]
+                <option value="[% enum %]"
+                    [%~ FOREACH v = val ~%]
+                        [%~ IF enum == v %]selected="selected"[% END %]
+                    [%~ END %]
+                    [%~ IF pitem.field_type == 'lang' %]
+                        lang="[% enum %]"
+                        xml:lang="[% enum %]"
+                    [% END %]>
+                    [%~ enum | optdesc(pitem.field_type,is_listmaster) ~%]
+                </option>
+            [% END %]
+        </select>
+    [%~ ELSE ~%]
+        [% FOREACH enum = pitem.format ~%]
+            [% FOREACH v = val ~%]
+                [% IF enum == v ~%]
+                    [%~ IF pitem.field_type == 'lang' ~%]
+                        <span class="neutral" lang="[% enum %]" xml:lang="[% enum %]">
+                    [%~ END ~%]
+                            [% enum | optdesc(pitem.field_type,is_listmaster) %]
+                    [%~ IF pitem.field_type == 'lang' ~%]
+                        </span>
+                    [%~ END %]
+
+                    [%~ LAST %]
+                [%~ END %]
+            [% END %]
+        [%~ END %]
+    [%~ END %]
+    <!-- end set -->
+[%~ END ~%]
+
+[%~ BLOCK EditListArrayDel # (ppaths,pitem,labelled,val) ~%]
+    <!-- del -->
+    [% IF pitem.privilege == 'write' ~%]
+        <input type="checkbox" name="deleted_param.[% ppaths.join('.') %]"
+               id="del.[% ppaths.join('.') %]"
+               class="fadeIfChecked" data-selector="#item\.[% ppaths.join('\\.') %]"
+               value="[% val || 'del' %]" />
+        [% IF labelled ~%]
+            <label for="del.[% ppaths.join('.') %]">[%|loc%]Delete[%END%]</label>
+        [%~ END %]
+    [%~ END %]
+    <!-- end del -->
+[%~ END ~%]
+
+[%~ BLOCK EditListLeaf # (ppaths,pitem,val) ~%]
+    [% IF pitem.enum ~%]
+        [% PROCESS EditListEnum %]
+    [%~ ELSIF pitem.scenario ~%]
+        [% PROCESS EditListScenario %]
+    [%~ ELSIF pitem.task ~%]
+        [% PROCESS EditListTask %]
+    [%~ ELSIF pitem.datasource ~%]
+        [% PROCESS EditListDatasource %]
+    [%~ ELSE ~%]
+        [% PROCESS EditListScalar %]
+    [%~ END %]
+[%~ END ~%]
+
+[%~ BLOCK EditListEnum # (ppaths,pitem,val) ~%]
+    <!-- enum -->
+    [% IF pitem.privilege == 'write' ~%]
+        <select name="single_param.[% ppaths.join('.') %]"
+                id="param.[% ppaths.join('.') %]"
+                [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %]
+                [%~ IF pitem.enabling %] class="disableIfOff" data-selector="
+                    [%~ "#item\\." _ pitem.enabling.join(",#item\\.") %]"[% END %]>
+            [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
+                <option value=""></option>
+            [%~ END %]
+            [% FOREACH enum = pitem.format ~%]
+                <option value="[% enum %]"
+                        [%~ IF enum == val %] selected="selected"[% END %]
+                        [%~ IF pitem.field_type == 'lang' %] lang="[% enum %]"
+                        xml:lang="[% enum %]"[%END%]>
+                    [%~ enum | optdesc(pitem.field_type,is_listmaster) ~%]
+                </option>
+            [% END %]
+        </select>
+    [%~ ELSE ~%]
+        <span[%~ IF pitem.enabling %] class="disableIfOff" data-selector="
+            [%~ "#item\\." _ pitem.enabling.join(",#item\\.") %]"[% END %]>
+        [% FOREACH enum = pitem.format ~%]
+            [% IF enum == val ~%]
+                [% IF pitem.field_type == 'lang' ~%]
+                    <span class="neutral" lang="[% enum %]" xml:lang="[% enum %]">
+                [%~ END ~%]
+                [% enum | optdesc(pitem.field_type,is_listmaster) %]
+                [%~ IF pitem.field_type == 'lang' ~%]
+                    </span>
+                [%~ END %]
+
+                [%~ LAST %]
+            [%~ END %]
+        [%~ END %]
+        </span>
+    [%~ END %]
+    <!-- end enum -->
+[%~ END ~%]
+
+[%~ BLOCK EditListScenario # (ppaths,pitem,val) ~%]
+    <!-- scenario -->
+    [% IF pitem.privilege == 'write' ~%]
+        <select name="single_param.[% ppaths.join('.') %].name"
+                id="param.[% ppaths.join('.') %]">
+            [% FOREACH scenario = pitem.format ~%]
+                <option value="[% scenario.value.name %]"
+                        [%~ IF scenario.value.name == val.name %] selected="selected"[% END %]>
+                    [%~ scenario.value.title %]
+                    [%~ IF is_listmaster %] ([% scenario.value.name %])[% END ~%]
+                </option>
+            [% END %]
+        </select>
+    [%~ ELSE ~%]
+        [% FOREACH scenario = pitem.format ~%]
+            [% IF scenario.value.name == val.name ~%]
+                [% scenario.value.title %]
+                [%~ IF is_listmaster %]
+                    ([% scenario.value.name %])
+                [% END %]
+            [%~ END %]
+        [%~ END %]
+    [%~ END %]
+    <!-- end scenario -->
+[%~ END ~%]
+
+[%~ BLOCK EditListTask # (ppaths,pitem,val) ~%]
+    <!-- task -->
+    [% IF pitem.privilege == 'write' ~%]
+        <select name="single_param.[% ppaths.join('.') %].name"
+                id="param.[% ppaths.join('.') %]">
+            [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
+                <option value=""></option>
+            [%~ END %]
+            [% FOREACH task = pitem.format ~%]
+                <option value="[% task.value.name %]"
+                        [%~ IF task.value.name == val.name %] selected="selected"[% END %]>
+                    [%~ task.value.title %]
+                    [%~ IF is_listmaster %] ([% task.value.name %])[% END ~%]
+                </option>
+            [% END %]
+        </select>
+    [%~ ELSE ~%]
+        [% FOREACH task = pitem.format ~%]
+            [% IF task.value.name == val.name ~%]
+                [% task.value.title %]
+                [%~ IF is_listmaster %] ([% task.value.name %])[% END %]
+            [%~ END %]
+        [%~ END %]
+    [%~ END %]
+    <!-- end task -->
+[%~ END ~%]
+
+[%~ BLOCK EditListDatasource # (ppaths,pitem,val) ~%]
+    <!-- datasource -->
+    [% IF pitem.privilege == 'write' ~%]
+        <select name="single_param.[% ppaths.join('.') %]"
+                id="param.[% ppaths.join('.') %]">
+            [% IF pitem.occurrence.match('^0') || val.length() == 0 %][%# FIXME ~%]
+                <option value=""></option>
+            [%~ END %]
+            [% FOREACH source = pitem.format ~%]
+                <option value="[% source.value.name %]"
+                        [%~ IF source.value.name == val %] selected="selected"[% END %]>
+                    [%~ source.value.title %]
+                    [%~ IF is_listmaster %] ([% source.value.name %])[% END ~%]
+                </option>
+            [% END %]
+        </select>
+    [%~ ELSE ~%]
+        [% FOREACH source = pitem.format ~%]
+            [% IF source.value.name == val ~%]
+                [% source.value.title %]
+                [%~ IF is_listmaster %] ([% source.value.name %])[% END %]
+            [%~ END %]
+        [%~ END %]
+    [%~ END %]
+    <!-- end datasource -->
+[%~ END ~%]
+
+[%~ BLOCK EditListScalar # (ppaths,pitem,val) ~%]
+    <!-- scalar -->
+    [% IF pitem.privilege == 'write' ~%]
+        [% IF pitem.unit ~%]
+            <span style="display:inline-block">[%# FIXME %]
+        [%~ END %]
+                <input name="single_param.[% ppaths.join('.') %]"
+                       id="param.[% ppaths.join('.') %]"
+                       value="[% val %]" size="[% pitem.length %]"
+                       [%~ IF pitem.field_type == 'password' %] type="password"
+                       [%~ ELSE %] type="text"
+                       [%~ END %]
+                       [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />
+        [% IF pitem.unit ~%]
+            </span>
+        [%~ END %]
+
+        [% pitem.unit %]
+    [%~ ELSE ~%]
+        [% IF pitem.field_type == 'lang' ~%]
+            <span class="neutral" lang="[% val %]" xml:lang="[% val %]">
+        [%~ END ~%]
+        [% IF pitem.field_type ~%]
+            [% val | optdesc(pitem.field_type,is_listmaster) %]
+        [%~ ELSE ~%]
+            [% val %]
+        [%~ END %]
+        [%~ IF pitem.field_type == 'lang' ~%]
+            </span>
+        [%~ END %]
+
+        [% IF val.length() ~%]
+            [% pitem.unit %]
+        [%~ END %]
+    [%~ END %]
+    <!-- end scalar -->
+[%~ END ~%]
+[%# end config_common.tt2 ~%]

@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2018, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,7 +42,9 @@ sub build_connect_string {
     my $self = shift;
 
     my $connect_string =
-        'DBI:mysql:' . $self->{'db_name'} . ':' . $self->{'db_host'};
+          'DBI:mysql:'
+        . $self->{'db_name'} . ':'
+        . ($self->{'db_host'} || 'localhost');
     $connect_string .= ';port=' . $self->{'db_port'}
         if defined $self->{'db_port'};
     $connect_string .= ';' . $self->{'db_options'}
@@ -57,11 +62,16 @@ sub connect {
     #   when the processes are running under mod_perl or CGI environment
     #   so that "SET NAMES utf8" will be skipped.
     # - Set client-side character set to "utf8" or "utf8mb4".
+    # - Reset SQL mode that is given various default by versions of MySQL.
     $self->__dbh->{'mysql_auto_reconnect'} = 0;
     unless (defined $self->__dbh->do("SET NAMES 'utf8mb4'")
         or defined $self->__dbh->do("SET NAMES 'utf8'")) {
         $log->syslog('err', 'Cannot set client-side character set: %s',
             $self->error);
+    }
+    unless (defined $self->__dbh->do("SET SESSION sql_mode=''")) {
+        $log->syslog('err', 'Cannot reset SQL mode: %s', $self->error);
+        return undef;
     }
 
     return 1;
@@ -84,19 +94,8 @@ sub get_substring_clause {
 # DEPRECATED.
 #sub get_limit_clause ( { rows_count => $rows, offset => $offset } );
 
-sub get_formatted_date {
-    my $self  = shift;
-    my $param = shift;
-    $log->syslog('debug', 'Building SQL date formatting');
-    if (lc($param->{'mode'}) eq 'read') {
-        return sprintf 'UNIX_TIMESTAMP(%s)', $param->{'target'};
-    } elsif (lc($param->{'mode'}) eq 'write') {
-        return sprintf 'FROM_UNIXTIME(%d)', $param->{'target'};
-    } else {
-        $log->syslog('err', "Unknown date format mode %s", $param->{'mode'});
-        return undef;
-    }
-}
+# DEPRECATED.
+#sub get_formatted_date;
 
 sub is_autoinc {
     my $self  = shift;
@@ -110,7 +109,7 @@ sub is_autoinc {
             $param->{'table'},
             $param->{'field'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to gather autoincrement field named %s for table %s',
             $param->{'field'}, $param->{'table'});
@@ -135,7 +134,7 @@ sub set_autoinc {
             $param->{'table'}, $param->{'field'},
             $param->{'field'}, $field_type
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Unable to set field %s in table %s as autoincrement',
             $param->{'field'}, $param->{'table'});
@@ -179,7 +178,7 @@ sub add_table {
             "CREATE TABLE %s (temporary INT) DEFAULT CHARACTER SET utf8",
             $param->{'table'}
         )
-        ) {
+    ) {
         $log->syslog('err', 'Could not create table %s in database %s',
             $param->{'table'}, $self->{'db_name'});
         return undef;
@@ -232,7 +231,7 @@ sub update_field {
             $param->{'table'}, $param->{'field'}, $param->{'field'},
             $param->{'type'},  $options
         )
-        ) {
+    ) {
         $log->syslog('err', 'Could not change field "%s" in table "%s"',
             $param->{'field'}, $param->{'table'});
         return undef;
@@ -270,7 +269,7 @@ sub add_field {
             $param->{'field'},             $param->{'type'},
             $options
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not add field %s to table %s in database %s',
             $param->{'field'}, $param->{'table'}, $self->{'db_name'});
@@ -292,8 +291,8 @@ sub drop_field {
     my $field = shift;
 
     unless (
-        $self->do_query("ALTER TABLE %s DROP COLUMN `%s`", $table, $field)
-        ) {
+        $self->do_query(q{ALTER TABLE %s DROP COLUMN `%s`}, $table, $field)
+    ) {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
             $field, $table, $self->{'db_name'});
@@ -331,6 +330,20 @@ sub get_primary_key {
     return \%found_keys;
 }
 
+sub is_sufficient_field_type {
+    my $self     = shift;
+    my $required = shift;
+    my $actual   = shift;
+
+    # As of MySQL 8.0.17, the display width attribute is deprecated for
+    # integer data types (MeriaDB has not).
+    if (    $required =~ /\A((?:tiny|small|medium|big)?int)(?:[(]\d+[)])?\z/
+        and $actual eq $1) {
+        return 1;
+    }
+    return $self->SUPER::is_sufficient_field_type($required, $actual);
+}
+
 sub unset_primary_key {
     my $self  = shift;
     my $param = shift;
@@ -365,7 +378,7 @@ sub set_primary_key {
             "ALTER TABLE %s ADD PRIMARY KEY (%s)", $param->{'table'},
             $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not set fields %s as primary key for table %s in database %s',
@@ -420,7 +433,7 @@ sub unset_index {
             "ALTER TABLE %s DROP INDEX %s", $param->{'table'},
             $param->{'index'}
         )
-        ) {
+    ) {
         $log->syslog('err',
             'Could not drop index %s from table %s in database %s',
             $param->{'index'}, $param->{'table'}, $self->{'db_name'});
@@ -450,7 +463,7 @@ sub set_index {
             "ALTER TABLE %s ADD INDEX %s (%s)", $param->{'table'},
             $param->{'index_name'},             $fields
         )
-        ) {
+    ) {
         $log->syslog(
             'err',
             'Could not add index %s using field %s for table %s in database %s',
@@ -460,7 +473,8 @@ sub set_index {
         );
         return undef;
     }
-    my $report = "Table $param->{'table'}, index %s set using $fields";
+    my $report = sprintf 'Table %s, index %s set using fields %s',
+        $param->{'table'}, $param->{'index_name'}, $fields;
     $log->syslog('info', 'Table %s, index %s set using fields %s',
         $param->{'table'}, $param->{'index_name'}, $fields);
     return $report;

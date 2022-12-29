@@ -1,58 +1,57 @@
-<!-- $Id$ -->
+<!-- stats.tt2 -->
 <h3>[%|loc(listname)%]List %1 statistics[%END%]</h3>
 
-<p>[%|loc%]This page displays overall informations regarding the list activity[%END%]</p>
+<p>[%|loc%]This page displays overall information regarding the list activity[%END%]</p>
 
-<p><strong>[%|loc(shared_size)%]Shared document directory size: %1 kB[%END%]</strong><br />
-<strong>[%|loc(arc_size)%]Web archives size: %1 kB[%END%]</strong></p>
+<p>
+    <strong>[%|loc(shared_size)%]Shared document directory size: %1 kB[%END%]</strong><br />
+    <strong>[%|loc(arc_size)%]Web archives size: %1 kB[%END%]</strong>
+</p>
 
-
-[% FOREACH stat_id IN
-  [ 'send_mail', 'add_or_subscribe', 'signoff', 'del', 'auto_del' ]
-~%]
-  [% SET o = stats.$stat_id ~%]
-  [% SET chartid = "chartdiv" _ stat_id ~%]
-  [% SET chartcontainerid = "chartcontainer" _ stat_id ~%]
-  <div id="[% chartcontainerid %]">
-  <h4>[% o.title %]</h4>
-  [% IF o.defined('stats_values') %]
-    <div id="[% chartid %]" style="height:400px;">
-    <script>
-    <!--
-      var line = [% o.stats_values %];
-      $.jqplot('[% chartid %]', [line], {
-        title: '[% o.title %]',
-        axesDefaults: {
-          min: 0,
-          tickRenderer: $.jqplot.CanvasAxisTickRenderer,
-          tickOptions: {
-            angle: -60,
-            fontSize: '10pt'
-          }
-        },
-        axes: {
-          xaxis: {
-            renderer: $.jqplot.CategoryAxisRenderer,
-            tickOptions: {
-              showGridline: false
-            }
-          },
-          yaxis: {
-            tickOptions: {
-              angle: 0,
-              formatString: '%d'
-            }
-          }
-        },
-        series: [{renderer: $.jqplot.BarRenderer}]
-      });
-    //-->
-    </script>
+[% FOREACH stat_id IN [ 'send_mail', 'add_or_subscribe', 'signoff', 'del', 'auto_del' ] ~%]
+    [% SET o = stats.$stat_id ~%]
+    [% SET chartid = "chartdiv" _ stat_id ~%]
+    [% SET chartcontainerid = "chartcontainer" _ stat_id ~%]
+    <div id="[% chartcontainerid %]">
+        <h4>[% o.title %]</h4>
+        [% IF o.defined('stats_values') %]
+            <div id="[% chartid %]" style="height:400px;">
+                <script>
+                    <!--
+                    var line = [% o.stats_values %];
+                    $.jqplot('[% chartid %]', [line], {
+                        title: '[% o.title | escape_cstr %]',
+                        axesDefaults: {
+                            min: 0,
+                            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+                            tickOptions: {
+                                angle: -60,
+                                fontSize: '10pt'
+                            }
+                        },
+                        axes: {
+                            xaxis: {
+                                renderer: $.jqplot.CategoryAxisRenderer,
+                                tickOptions: {
+                                    showGridline: false
+                                }
+                            },
+                            yaxis: {
+                                tickOptions: {
+                                    angle: 0,
+                                    formatString: '%d'
+                                }
+                            }
+                        },
+                        series: [{renderer: $.jqplot.BarRenderer}]
+                    });
+                    //-->
+                </script>
+            </div>
+        [% ELSE %]
+            <p>[%|loc%]No operation recorded in this field yet.[%END%]</p>
+        [% END %]
     </div>
-  [% ELSE %]
-    <p>[%|loc%]No operation recorded in this field yet.[%END%]</p>
-  [% END %]
-  </div>
 [% END %]
 
 [%# FIXME: "New files in shared" section should be shown. #%]

@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2020 The Sympa Community. See the AUTHORS.md
+# file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,8 +36,10 @@ use POSIX qw();
 use Sys::Hostname qw();
 use Time::HiRes qw();
 
+use Sympa;
 use Conf;
 use Sympa::Constants;
+use Sympa::Family;
 use Sympa::List;
 use Sympa::LockedFile;
 use Sympa::Log;
@@ -53,11 +58,21 @@ sub new {
     my $self = bless {
         %options,
         %{$class->_directories(%options) || {}},
-        _metadatas => undef,
+        _metadatas    => undef,
+        _glob_pattern => undef,
     } => $class;
 
     $self->_create;
     $self->_init(0) or return undef;
+
+    # Build glob pattern (using encoded attributes).
+    unless ($self->_no_glob_pattern) {
+        my $opts = {%options};
+        $self->_filter_pre($opts);
+        $self->{_glob_pattern} =
+            Sympa::Spool::build_glob_pattern($self->_marshal_format,
+            $self->_marshal_keys, %$opts);
+    }
 
     $self;
 }
@@ -79,7 +94,7 @@ sub _create {
                     user  => Sympa::Constants::USER(),
                     group => Sympa::Constants::GROUP()
                 )
-                ) {
+            ) {
                 die sprintf 'Cannot create %s: %s', $directory, $ERRNO;
             }
         }
@@ -88,6 +103,17 @@ sub _create {
 }
 
 sub _init {1}
+
+sub _no_glob_pattern {0}
+
+sub marshal {
+    my $self    = shift;
+    my $message = shift;
+    my %options = @_;
+
+    return Sympa::Spool::marshal_metadata($message, $self->_marshal_format,
+        $self->_marshal_keys, %options);
+}
 
 sub next {
     my $self    = shift;
@@ -120,13 +146,14 @@ sub next {
             next unless $handle;
         }
 
-        $metadata = Sympa::Spool::unmarshal_metadata(
-            $self->{directory},     $marshalled,
-            $self->_marshal_regexp, $self->_marshal_keys
-        );
+        $metadata = $self->unmarshal($marshalled);
 
         if ($metadata) {
-            next unless $self->_filter($metadata);
+            if ($options{no_filter}) {
+                $self->_filter($metadata);
+            } else {
+                next unless $self->_filter($metadata);
+            }
 
             if ($self->_is_collection) {
                 $message = $self->_generator->new(%$metadata);
@@ -153,11 +180,11 @@ sub _load {
     my $self = shift;
 
     my @entries;
-    if ($self->_glob_pattern) {
+    if ($self->{_glob_pattern}) {
         my $cwd = Cwd::getcwd();
         die sprintf 'Cannot chdir to %s: %s', $self->{directory}, $ERRNO
             unless chdir $self->{directory};
-        @entries = glob $self->_glob_pattern;
+        @entries = glob $self->{_glob_pattern};
         chdir $cwd;
     } else {
         my $dh;
@@ -174,13 +201,11 @@ sub _load {
                 and !m{(?:\A|/)(?:\.|T\.|BAD-)}
                 and ((not $iscol and -f ($self->{directory} . '/' . $_))
                 or ($iscol and -d ($self->{directory} . '/' . $_)))
-            } @entries
+        } @entries
     ];
 
     return $metadatas;
 }
-
-sub _glob_pattern {undef}
 
 sub _is_collection {0}
 
@@ -240,10 +265,7 @@ sub store {
         $message, $self, $marshalled);
 
     if ($self->_store_key) {
-        my $metadata = Sympa::Spool::unmarshal_metadata(
-            $self->{directory},     $marshalled,
-            $self->_marshal_regexp, $self->_marshal_keys
-        );
+        my $metadata = $self->unmarshal($marshalled);
         return $metadata ? $metadata->{$self->_store_key} : undef;
     }
     return $marshalled;
@@ -252,6 +274,16 @@ sub store {
 sub _filter_pre {1}
 
 sub _store_key {undef}
+
+sub unmarshal {
+    my $self       = shift;
+    my $marshalled = shift;
+
+    return Sympa::Spool::unmarshal_metadata(
+        $self->{directory},     $marshalled,
+        $self->_marshal_regexp, $self->_marshal_keys
+    );
+}
 
 # Low-level functions.
 
@@ -264,7 +296,7 @@ sub build_glob_pattern {
         my $context = $options{context};
         if (ref $context eq 'Sympa::List') {
             @options{qw(localpart domainpart)} =
-                split /\@/, $context->get_list_address;
+                split /\@/, Sympa::get_address($context);
         } else {
             $options{domainpart} = $context;
         }
@@ -329,7 +361,13 @@ sub split_listname {
         my $type;
 
         if ($suffix eq 'request') {                         # -request
-            $type = 'owner';
+            if (   $name eq Conf::get_robot_conf($robot_id, 'email')
+                or $robot_id eq $Conf::Conf{'domain'}
+                and $name eq $Conf::Conf{'email'}) {        # sympa-request
+                ($name, $type) = (undef, 'sympaowner');
+            } else {
+                $type = 'owner';
+            }
         } elsif ($suffix eq 'editor') {
             $type = 'editor';
         } elsif ($suffix eq 'subscribe') {
@@ -367,30 +405,38 @@ sub unmarshal_metadata {
         map {
             my $value = shift @matches;
             (defined $value and length $value) ? (lc($_) => $value) : ();
-            } @{$marshal_keys}
+        } @{$marshal_keys}
     };
 
-    my ($robot_id, $listname, $type, $list, $priority);
+    my ($robot_id, $family, $listname, $type, $list, $priority);
 
     $robot_id = lc($data->{'domainpart'})
         if defined $data->{'domainpart'}
-            and length $data->{'domainpart'}
-            and Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
-    ($listname, $type) =
-        Sympa::Spool::split_listname($robot_id || '*', $data->{'localpart'});
+        and length $data->{'domainpart'}
+        and Conf::valid_robot($data->{'domainpart'}, {just_try => 1});
 
-    $list = Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1})
-        if defined $listname;
+    if ($data->{localpart} and 0 == index $data->{localpart}, '@') {
+        my $familyname = substr $data->{localpart}, 1;
+        $family = Sympa::Family->new($familyname, $robot_id || '*');
+    } else {
+        ($listname, $type) = Sympa::Spool::split_listname($robot_id || '*',
+            $data->{'localpart'});
+        $list =
+            Sympa::List->new($listname, $robot_id || '*', {'just_try' => 1})
+            if defined $listname;
+    }
 
     ## Get priority
     #FIXME: is this always needed?
     if (exists $data->{'priority'}) {
         # Priority was given by metadata.
         ;
+    } elsif ($type and $type eq 'sympaowner') {    # sympa-request
+        $priority = 0;
     } elsif ($type and $type eq 'listmaster') {
         ## highest priority
         $priority = 0;
-    } elsif ($type and $type eq 'owner') {    # -request
+    } elsif ($type and $type eq 'owner') {         # -request
         $priority = Conf::get_robot_conf($robot_id, 'request_priority');
     } elsif ($type and $type eq 'return_path') {    # -owner
         $priority = Conf::get_robot_conf($robot_id, 'owner_priority');
@@ -402,7 +448,7 @@ sub unmarshal_metadata {
         $priority = Conf::get_robot_conf($robot_id, 'default_list_priority');
     }
 
-    $data->{context} = $list || $robot_id || '*';
+    $data->{context} = $list || $family || $robot_id || '*';
     $data->{'listname'} = $listname if $listname;
     $data->{'listtype'} = $type     if defined $type;
     $data->{'priority'} = $priority if defined $priority;
@@ -417,16 +463,21 @@ sub marshal_metadata {
     my $message        = shift;
     my $marshal_format = shift;
     my $marshal_keys   = shift;
+    my %options        = @_;
 
-    #FIXME: Currently only "sympa@DOMAIN" and "LISTNAME(-TYPE)@DOMAIN" are
+    # "sympa@DOMAIN", "@FAMILYNAME@DOMAIN" and "LISTNAME(-TYPE)@DOMAIN" are
     # supported.
     my ($localpart, $domainpart);
-    if (ref $message->{context} eq 'Sympa::List') {
-        ($localpart) = split /\@/,
-            $message->{context}->get_list_address($message->{listtype});
-        $domainpart = $message->{context}->{'domain'};
+    my $that = $message->{context};
+    if (ref $that eq 'Sympa::List') {
+        ($localpart, $domainpart) = split /\@/,
+            Sympa::get_address($that, $message->{listtype});
+    } elsif (ref $that eq 'Sympa::Family') {
+        my $familyname;
+        ($familyname, $domainpart) = split /\@/, $that->get_id;
+        $localpart = sprintf '@%s', $familyname;
     } else {
-        my $robot_id = $message->{context} || '*';
+        my $robot_id = $that || '*';
         $localpart  = Conf::get_robot_conf($robot_id, 'email');
         $domainpart = Conf::get_robot_conf($robot_id, 'domain');
     }
@@ -436,6 +487,14 @@ sub marshal_metadata {
             $localpart;
         } elsif ($_ eq 'domainpart') {
             $domainpart;
+        } elsif (lc $_ ne $_
+            and $options{keep_keys}
+            and exists $message->{lc $_}
+            and defined $message->{lc $_}
+            and !ref($message->{lc $_})) {
+            # If keep_keys is set, use metadata instead of auto-generated
+            # values.
+            $message->{lc $_};
         } elsif ($_ eq 'AUTHKEY') {
             Digest::MD5::md5_hex(time . (int rand 46656) . $domainpart);
         } elsif ($_ eq 'KEYAUTH') {
@@ -568,16 +627,39 @@ This module is the base class for spool subclasses of Sympa.
 I<Constructor>.
 Creates new instance of the class.
 
-=item next ( [ no_lock =E<gt> 1 ] )
+=item marshal ( $message, [ keep_keys =E<gt> 1 ] )
 
 I<Instance method>.
-Gets next message to process, order is controled by name of spool file and
-so on.
-Message will be locked to prevent multiple proccessing of a single message.
+Gets marshalled key (file name) of the message.
 
 Parameters:
 
 =over
+
+=item $message
+
+Message to be marshalled.
+
+=item keep_keys =E<gt> 1
+
+See marshal_metadata().
+
+=back
+
+=item next ( [ no_filter =E<gt> 1 ], [ no_lock =E<gt> 1 ] )
+
+I<Instance method>.
+Gets next message to process, order is controlled by name of spool file and
+so on.
+Message will be locked to prevent multiple processing of a single message.
+
+Parameters:
+
+=over
+
+=item no_filter =E<gt> 1
+
+Won't skip messages when filter defined by _filter() returns false.
 
 =item no_lock =E<gt> 1
 
@@ -683,6 +765,25 @@ Returns:
 If storing succeeded, marshalled metadata (file name) of the message.
 Otherwise C<undef>.
 
+=item unmarshal ( $marshalled )
+
+I<Instance method>.
+Gets metadata from marshalled key (file name).
+
+Parameters:
+
+=over
+
+=item $marshalled
+
+Marshalled key.
+
+=back
+
+Returns:
+
+Hashref containing metadata.
+
 =back
 
 =head2 Properties
@@ -747,7 +848,8 @@ The keys C<localpart> and C<domainpart> are special.
 Following keys are derived from them:
 C<context>, C<listname>, C<listtype>, C<priority>.
 
-=item marshal_metadata ( $message, $marshal_format, $marshal_keys )
+=item marshal_metadata ( $message, $marshal_format, $marshal_keys,
+[ keep_keys =E<gt> 1 ] )
 
 I<Function>.
 Marshals metadata.
@@ -757,6 +859,7 @@ and metadatas indexed by keys in arrayref $marshal_keys.
 If key is uppercase, it means auto-generated value:
 C<'AUTHKEY'>, C<'KEYAUTH'>, C<'PID'>, C<'RAND'>, C<'TIME'>.
 Otherwise it means metadata or property of $message.
+If C<keep_keys> option (added on 6.2.23b) is set, forces using latter.
 
 sprintf() is executed under C<C> locale:
 Full stop (C<.>) is always used for decimal point in floating point number.
@@ -810,10 +913,7 @@ generator class must implement dup(), new() and to_string().
 
 =item _glob_pattern ( )
 
-I<Instance method>.
-If implemented and returns non-empty string,
-glob() is used to search entries in the spool.
-Otherwise readdir() is used for filesystem spool to get all entries.
+Deprecated.  See _no_glob_pattern ( )
 
 =item _init ( $state )
 
@@ -848,6 +948,14 @@ _marshal_format() and _marshal_keys() are used to marshal metadata.
 _marshal_keys() and _marshal_regexp() are used to unmarshal metadata.
 See also marshal_metadata() and unmarshal_metadata().
 
+=item _no_glob_pattern ( )
+
+I<Class or instance method>, I<overridable for filesystem spool>.
+If it returns false value,
+glob() is used as much as possible to scan the spool faster.
+Otherwise readdir() is used for filesystem spool to get all entries.
+By default returns false value.
+
 =item _store_key ( )
 
 I<Instance method>.
@@ -874,8 +982,8 @@ encodes the metadata
   domainpart => 'domain.name',
   date       => 143599229,
 
-Metadata always includes information of B<context>: List, Robot or
-Site.  For example:
+Metadata always includes information of B<context>: List, Robot, Site
+(or Family).  For example:
 
 - Message in incoming spool bound for E<lt>listname@domain.nameE<gt>:
 
@@ -893,6 +1001,27 @@ Context is determined when the generator class is instantiated, and
 generally never changed through lifetime of instance.
 Thus, constructor of generator class should take context object as an
 argument.
+
+C<localpart> is encoded in a bit complex manner.
+
+=over
+
+=item *
+
+If the context is Site or Robot, it is a value of C<email> parameter,
+typically "C<sympa>".
+
+=item *
+
+If the context is Family, it is encoded as C<@I<family name>>.
+This encoding was added on Sympa 6.2.53b.
+
+=item *
+
+If the context is List, it is encoded as local part of list address
+according to listtype (See also L<Sympa/get_address>).
+
+=back
 
 =head1 CONFIGURATION PARAMETERS
 
@@ -936,5 +1065,9 @@ It as the base class appeared on Sympa 6.2.6.
 build_glob_pattern(), size(), _glob_pattern() and _store_key()
 were introduced on Sympa 6.2.8.
 _filter_pre() was introduced on Sympa 6.2.10.
+marshal(), unmarshal() and C<no_filter> option of next()
+were introduced on Sympa 6.2.22.
+_no_glob_pattern() was introduced and _glob_pattern() was deprecated
+on Sympa 6.2.36.
 
 =cut

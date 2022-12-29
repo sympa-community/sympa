@@ -1,0 +1,6 @@
+# family_signoff.auth
+title.gettext need authentication
+
+!equal([sender],[email])           smtp,md5,smime -> request_auth([email])
+true()                             smtp           -> request_auth([email])
+true()                             md5,smime      -> do_it

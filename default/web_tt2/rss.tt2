@@ -17,63 +17,63 @@
   [% '' | url_abs %]
 [%- END -%]</link>
   <description>[% IF errors %] [%|loc%]Server error[%END%] [% END -%]
-[%- IF action == 'latest_lists' -%] 
+[%- IF action == 'latest_lists' -%]
  [%- IF count -%]
-   [%|loc(count)%]The %1 new lists[%END%] 
+   [%|loc(count)%]The %1 new lists[%END%]
  [%- ELSE -%]
-   [%|loc%]New lists[%END%] 
+   [%|loc%]New lists[%END%]
  [%- END -%]
  [%- IF for -%]
    [%|loc(for)%]for %1 days[%END -%]
  [%- END -%]
  [%- IF subtitle %] - [% subtitle %] [% END -%]
-[%- ELSIF action == 'active_lists' -%]  
+[%- ELSIF action == 'active_lists' -%]
  [%- IF count -%]
-   [%|loc(count)%]The %1 most active lists[%END%] 
+   [%|loc(count)%]The %1 most active lists[%END%]
  [%- ELSE -%]
-   [%|loc%]The most active lists[%END%] 
+   [%|loc%]The most active lists[%END%]
  [%- END -%]
  [%- IF for -%]
-   [%|loc(for)%]for %1 days[%END%] 	
+   [%|loc(for)%]for %1 days[%END%]
  [%- END -%]
  [%- IF subtitle %] - [% subtitle %] [% END -%]
-[%- ELSIF action == 'latest_arc' -%]  
+[%- ELSIF action == 'latest_arc' -%]
  [%- IF count -%]
-   [%|loc(count)%]The %1 most recent messages[%END%] 
+   [%|loc(count)%]The %1 most recent messages[%END%]
  [%- ELSE -%]
-   [%|loc%]Most recent messages[%END%] 
+   [%|loc%]Most recent messages[%END%]
  [%- END -%]
  [%- IF for -%]
-   [%|loc(for)%]for %1 days [%END%] 	
+   [%|loc(for)%]for %1 days [%END%]
  [%- END -%]
-[%- ELSIF action == 'latest_d_read' -%]  
+[%- ELSIF action == 'latest_d_read' -%]
  [%- IF count -%]
-   [%|loc(count)%]The %1 most recent shared documents[%END%] 
+   [%|loc(count)%]The %1 most recent shared documents[%END%]
  [%- ELSE -%]
-   [%|loc%]Most recent shared documents[%END%] 
+   [%|loc%]Most recent shared documents[%END%]
  [%- END -%]
  [%- IF for -%]
-   [%|loc(for)%]for %1 days [%END%] 	
+   [%|loc(for)%]for %1 days [%END%]
  [%- END -%]
 [%- END -%]</description>
   <language>[% lang %]</language>
   <lastBuildDate>[% date %]</lastBuildDate>
   <generator>Sympa[% version %]</generator>
-  <webMaster>listmaster@[% conf.host %]</webMaster>
+  <webMaster>[% conf.listmaster_email %]@[% domain %]</webMaster>
   <docs>http://web.resource.org/rss/1.0/spec</docs>
 
 
 [% IF action == 'latest_lists' -%]
  [% FOREACH l = latest_lists -%]
   <item>
-    <title>[% l.name %]@[% l.host %] - [% l.subject | xml %]</title>
+    <title>[% l.name %]@[% domain %] - [% l.subject | xml %]</title>
     <link>[% 'info' | url_abs([l.name]) %]</link>
   </item>
  [% END -%]
 [% ELSIF action == 'active_lists' -%]
  [% FOREACH l = active_lists -%]
   <item>
-    <title>[%|loc(l.name,l.host,l.subject,l.msg_count)%]%1@%2 - %3: %4 messages[%END%]	[% IF l.average -%] - [%|loc(l.average)%]%1 by day [%END%][%END%]</title>
+    <title>[%|loc(l.name,domain,l.subject,l.msg_count)%]%1@%2 - %3: %4 messages[%END%] [% IF l.average -%] - [%|loc(l.average)%]%1 by day [%END%][%END%]</title>
     <link>[% 'info' | url_abs([l.name]) %]</link>
   </item>
  [% END -%]
@@ -81,21 +81,19 @@
  [% FOREACH a = archives -%]
   <item>
     <title>[% a.subject | xml %] - [% a.from | xml %]</title>
-    <link>[% 'arcsearch_id' | url_abs([list,a.year_month,a.message_id]) %]</link>
-    <pubDate>[% a.date_smtp %]</pubDate>
+    <link>[% 'msg' | url_abs([list,a.year_month,a.permalink_id]) %]</link>
+    <pubDate>[% a.date_smtp | xml %]</pubDate>
   </item>
  [% END -%]
 [% ELSIF action == 'latest_d_read' -%]
- [% FOREACH d = documents -%]
+  [% FOREACH d = shared_doc.children -%]
   <item>
-   [% IF d.url -%]
-    <title>[%|loc(d.anchor)%]Bookmark %1[%END%]</title>
+  [% IF d.type == 'url' -%]
+    <title>[%|loc(d.label)%]Bookmark %1[%END%]</title>
     <link>[% d.url %]</link>
-    [% ELSE -%]
-     <title>[% d.name %]</title>
-     <link>[%# FIXME:path would be percent-encoded. ~%]
-      [% 'd_read' | url_abs([list]) %][% d.escaped_content_dir %]/[% d.escaped_name ~%]
-     </link>
+  [% ELSE -%]
+    <title>[% d.name %]</title>
+    <link>[% 'd_read' | url_abs([list,d.paths_d]) %]</link>
     [% END -%]
   </item>
   [% END -%]

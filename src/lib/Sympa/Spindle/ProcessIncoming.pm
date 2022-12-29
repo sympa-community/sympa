@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2019, 2020, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,13 +31,13 @@ use warnings;
 use File::Copy qw();
 
 use Sympa;
-use Sympa::Alarm;
 use Conf;
 use Sympa::Language;
 use Sympa::List;
 use Sympa::Log;
 use Sympa::Mailer;
 use Sympa::Process;
+use Sympa::Spool::Listmaster;
 use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
@@ -55,9 +57,8 @@ sub _init {
         $self->{_msgid}         = {};
         $self->{_msgid_cleanup} = time;
     } elsif ($state == 1) {
-        Sympa::List::init_list_cache();
-        # Process grouped notifications
-        Sympa::Alarm->instance->flush;
+        # Process grouped notifications.
+        Sympa::Spool::Listmaster->instance->flush;
 
         # Cleanup in-memory msgid table, only in a while.
         if (time > $self->{_msgid_cleanup} +
@@ -65,9 +66,9 @@ sub _init {
             $self->_clean_msgid_table();
             $self->{_msgid_cleanup} = time;
         }
-    } elsif ($state == 2) {
-        ## Free zombie sendmail process.
-        #Sympa::Process->instance->reap_child;
+
+        # Clear "quiet" flag set by AuthorizeMessage spindle.
+        delete $self->{quiet};
     }
 
     1;
@@ -84,7 +85,7 @@ sub _on_success {
                 $self->{distaff}->{directory} . '/' . $handle->basename,
                 $self->{keepcopy} . '/' . $handle->basename
             )
-            ) {
+        ) {
             $log->syslog(
                 'notice',
                 'Could not rename %s/%s to %s/%s: %m',
@@ -129,7 +130,7 @@ sub _twist {
     # They should be migrated.
     if ($message and $message->{checksum}) {
         $log->syslog('err',
-            '%s: Message with old format.  Run upgrade_send_spool.pl',
+            '%s: Message with old format.  Run \'sympa upgrade incoming\'',
             $message);
         return 0;    # Skip
     }
@@ -197,8 +198,8 @@ sub _twist {
 
     # Load spam status.
     $message->check_spam_status;
-    # Check DKIM signatures.
-    $message->check_dkim_signature;
+    # Check Authentication-Results fields, DKIM signatures and/or ARC seals.
+    $message->aggregate_authentication_results;
     # Check S/MIME signature.
     $message->check_smime_signature;
     # Decrypt message.  On success, check nested S/MIME signature.
@@ -228,14 +229,18 @@ sub _twist {
         : undef;
 
     my $list_address;
-    if ($message->{'listtype'} and $message->{'listtype'} eq 'listmaster') {
-        $list_address =
-              Conf::get_robot_conf($robot, 'listmaster_email') . '@'
-            . Conf::get_robot_conf($robot, 'host');
+    if ($message->{'listtype'} and $message->{'listtype'} eq 'sympaowner') {
+        # Discard messages for sympa-request address to avoid loop caused by
+        # misconfiguration.
+        $log->syslog('err',
+            'Don\'t forward sympa-request to Sympa. Check configuration of MTA'
+        );
+        return undef;
+    } elsif ($message->{'listtype'}
+        and $message->{'listtype'} eq 'listmaster') {
+        $list_address = Sympa::get_address($robot, 'listmaster');
     } elsif ($message->{'listtype'} and $message->{'listtype'} eq 'sympa') {
-        $list_address =
-              Conf::get_robot_conf($robot, 'email') . '@'
-            . Conf::get_robot_conf($robot, 'host');
+        $list_address = Sympa::get_address($robot);
     } else {
         unless (ref $list eq 'Sympa::List') {
             $log->syslog('err', 'List %s does not exist', $listname);
@@ -254,8 +259,8 @@ sub _twist {
             );
             return undef;
         }
-        $list_address = $list->get_list_address($message->{listtype})
-            || $list->get_list_address;
+        $list_address = Sympa::get_address($list, $message->{listtype})
+            || Sympa::get_address($list);
     }
 
     ## Loop prevention
@@ -263,7 +268,7 @@ sub _twist {
         and Sympa::Tools::Data::smart_eq(
             $list->{'admin'}{'reject_mail_from_automates_feature'}, 'on'
         )
-        ) {
+    ) {
         my $conf_loop_prevention_regex;
         $conf_loop_prevention_regex =
             $list->{'admin'}{'loop_prevention_regex'};
@@ -404,7 +409,7 @@ sub _splicing_to {
         subscribe   => 'Sympa::Spindle::DoCommand',
         sympa       => 'Sympa::Spindle::DoCommand',
         unsubscribe => 'Sympa::Spindle::DoCommand',
-        }->{$message->{listtype} || ''}
+    }->{$message->{listtype} || ''}
         || 'Sympa::Spindle::DoMessage';
 }
 
@@ -430,7 +435,7 @@ L<Sympa::Spindle::ProcessIncoming> defines workflow to process incoming
 messages.
 
 When spin() method is invoked, it reads the messages in incoming spool and
-rejects, quarantines or modifyes them.
+rejects, quarantines or modifies them.
 Processing are done in the following order:
 
 =over
@@ -471,6 +476,25 @@ Splices message to appropriate class according to the type of message:
 L<Sympa::Spindle::DoCommand> for command message;
 L<Sympa::Spindle::DoForward> for message bound for administrator;
 L<Sympa::Spindle::DoMessage> for ordinal post.
+
+=back
+
+Order to process messages in source spool are controlled by modification time
+of files and delivery date.
+Some messages are skipped according to these priorities
+(See L<Sympa::Spool::Incoming>):
+
+=over
+
+=item *
+
+Messages with lowest priority (C<z> or C<Z>) are skipped.
+
+=item *
+
+Messages with possibly higher priority are chosen.
+This is done by skipping messages with lower priority than those already
+found.
 
 =back
 

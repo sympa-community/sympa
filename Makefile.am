@@ -1,11 +1,12 @@
-# $Id$
-
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,28 +21,41 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = src default doc po www
-if SMTPC
-SUBDIRS += src/smtpc
-endif
+SUBDIRS = src default doc po service www
 
 check_SCRIPTS = \
+	t/01_Conf.t \
+	t/Config_XML.t \
+	t/DataSource_LDAP2.t \
+	t/DatabaseManager.t \
+	t/Database_LDAP.t \
+	t/Database_SQLite.t \
 	t/Language.t \
 	t/LockedFile.t \
+	t/Message_smime.t \
+	t/Message_urlize.t \
 	t/Regexps.t \
-	t/compile_modules.t \
-	t/compile_executables.t \
-	t/Database_SQLite.t \
-	t/Database_LDAP.t \
-	t/parse_templates.t \
-	t/pod-syntax.t \
-	t/tools_data.t \
-	t/tools_file.t \
+	t/Request_Handler_add+del.t \
+	t/Request_Handler_set.t \
+	t/Scenario.t \
+	t/Tools_Data.t \
+	t/Tools_File.t \
 	t/Tools_Password.t \
 	t/Tools_SMIME.t \
 	t/Tools_Text.t \
-	t/tools_time.t
+	t/Tools_Time.t \
+	t/WWW_Tools.t \
+	t/compile_executables.t \
+	t/compile_modules.t \
+	t/compile_scenarios.t \
+	t/parse_templates.t \
+	t/pod-syntax.t
 check_DATA = \
+	src/lib/Sympa/Test/MockLDAP.pm \
+	t/data/list_data/test/config \
+	t/data/sympa.conf \
+	t/data/sympa.sqlite \
+	t/data/etc/auth.conf \
 	t/locale/cs/LC_MESSAGES/sympa.mo \
 	t/locale/cs/LC_MESSAGES/web_help.mo \
 	t/locale/zh_TW/LC_MESSAGES/sympa.mo \
@@ -52,47 +66,61 @@ check_DATA = \
 	t/pki/key/ca.pem \
 	t/pki/key/rousse_nopassword.pem \
 	t/pki/key/rousse_password.pem \
+	t/samples/urlize-deep-nested-mixed.eml \
+	t/samples/urlize-encoding.eml \
+	t/samples/urlize-nested-alternative-and-related.eml \
+	t/samples/urlize-nested-alternative.eml \
+	t/samples/urlize-nested-mixed.eml \
+	t/samples/urlize-nested-mutiple-attachments.eml \
+	t/samples/urlize-simple-mutiple-attachments.eml \
+	t/samples/urlize-simple.eml \
+	t/samples/signed.eml \
+	t/samples/unsigned.eml \
 	t/stub/Sympa/Constants.pm \
-	xt/perlcriticrc
+	xt/perlcriticrc \
+	xt/tidyallrc
 noinst_SCRIPTS = \
 	xt/critic.t \
 	xt/fixme.t \
 	xt/fixme-todo.t \
 	xt/pod-coverage.t \
-	xt/pod-spelling.t
+	xt/pod-spelling.t \
+	xt/perltidy.t
+nobase_modules_DATA = \
+	cpanfile
 
 EXTRA_DIST = \
-	important_changes.pl \
-	META.json.pl \
-	META.json \
-	sympa.spec.pl \
-	sympa.spec \
+	AUTHORS.md \
+	CONTRIBUTING.md \
+	INSTALL.md \
+	NEWS.md \
+	ONEWS \
+	README.md \
 	etc_README \
 	$(check_SCRIPTS) $(check_DATA) \
-	$(noinst_SCRIPTS)
+	$(noinst_SCRIPTS) \
+	$(nobase_modules_DATA)
 
-CLEANFILES = META.json previous_sympa_version sympa.spec sympa_wizard.pl.inst
+CLEANFILES =
 
 MSGFMT=@MSGFMT@
 .po.mo:
 	$(MSGFMT) -o $@ $<
 
-check-local:
-	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
-	PERL5LIB=src/lib; export PERL5LIB; \
-	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
+# Skip this with "make distcheck"
+check-local: $(check_DATA)
+	if test -d t; then \
+		[ -z "$(TEST_FILES)" ] && TEST_FILES="$(check_SCRIPTS)"; \
+		PERL5LIB=src/lib:$(PERL5LIB); export PERL5LIB; \
+		$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES; \
+	fi
 
 authorcheck:
 	[ -z "$(TEST_FILES)" ] && TEST_FILES="$(noinst_SCRIPTS)"; \
-	PERL5LIB=src/lib; export PERL5LIB; \
+	PERL5LIB=src/lib:$(PERL5LIB); export PERL5LIB; \
 	$(PERL) -MTest::Harness -e 'runtests @ARGV' $$TEST_FILES
 
-install-data-hook: installdir installconfig nextstep importantchanges
-if SMTPC
-	-chown $(USER) $(DESTDIR)$(libexecdir)/sympa_smtpc
-	-chgrp $(GROUP) $(DESTDIR)$(libexecdir)/sympa_smtpc
-	-chmod 750 $(DESTDIR)$(libexecdir)/sympa_smtpc
-endif
+install-data-hook: installdir installconfig nextstep
 
 installdir:
 	@echo "Creating plugin directory"
@@ -103,109 +131,99 @@ installdir:
 		fi; \
 	done
 	@echo "Creating writable directories"
-	@for dir in $(expldir) $(spooldir) $(spooldir)/msg $(spooldir)/digest \
-		$(spooldir)/moderation $(spooldir)/auth \
-		$(spooldir)/outgoing $(spooldir)/tmp $(spooldir)/task \
-		$(spooldir)/bulk \
-		$(bouncedir) $(arcdir) $(piddir) $(staticdir) $(staticdir)/js $(sysconfdir); do \
+	-@for dir in $(expldir) $(spooldir) $(bouncedir) $(arcdir) $(piddir) \
+		$(confdir) $(sysconfdir); do \
 		if [ ! -d $(DESTDIR)$$dir ] ; then \
 			echo "Creating $(DESTDIR)$$dir"; \
 			$(INSTALL) -d -m 755 $(DESTDIR)$$dir; \
 		fi; \
-		chown $(USER) $(DESTDIR)$$dir || /bin/true; \
-		chgrp $(GROUP) $(DESTDIR)$$dir || /bin/true; \
+		chown $(USER) $(DESTDIR)$$dir; \
+		chgrp $(GROUP) $(DESTDIR)$$dir; \
+	done
+	-@for subdir in automatic bounce msg task tmp; do \
+		if [ ! -d $(DESTDIR)$(spooldir)/$$subdir ] ; then \
+			echo "Creating $(DESTDIR)$(spooldir)/$$subdir"; \
+			$(INSTALL) -d -m 750 $(DESTDIR)$(spooldir)/$$subdir; \
+		fi; \
+		chown $(USER) $(DESTDIR)$(spooldir)/$$subdir; \
+		chgrp $(GROUP) $(DESTDIR)$(spooldir)/$$subdir; \
 	done
 
-sympa_wizard.pl.inst: $(top_srcdir)/src/sbin/sympa_wizard.pl.in Makefile
-	$(SED) \
-		-e 's|--PERL--|$(PERL)|' \
-		-e 's|--modulesdir--|$(top_srcdir)/src/lib|' \
-		< $(top_srcdir)/src/sbin/sympa_wizard.pl.in > $@
-
-installconfig: installdir sympa_wizard.pl.inst
+installconfig: installdir
 	@echo "Installing basic configuration ..."
-	export PERL5LIB=$(DESTDIR)$(modulesdir); \
-	if [ ! -f  $(DESTDIR)$(confdir)/sympa.conf ]; then \
-		echo "This looks like your first Sympa installation. The following wizard will assist you to create your first Sympa configuration.";\
-		if [ ! -d $(DESTDIR)$(confdir) ]; then \
-			$(INSTALL) -d -m 755 $(DESTDIR)$(confdir); \
-		fi; \
-		chown $(USER) $(DESTDIR)$(confdir) || /bin/true; \
-		chgrp $(GROUP) $(DESTDIR)$(confdir) || /bin/true; \
-		$(PERL) sympa_wizard.pl.inst \
-			--create sympa.conf \
-			--target $(DESTDIR)$(confdir)/sympa.conf \
-			|| /bin/true; \
-		chown $(USER) $(DESTDIR)$(confdir)/sympa.conf || /bin/true; \
-		chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf || /bin/true; \
-	fi; \
-	if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
+	-@if [ ! -f  $(DESTDIR)$(confdir)/sympa.conf ]; then \
+		echo "installing sympa.conf"; \
+		$(INSTALL) -m 640 sympa.conf $(DESTDIR)$(confdir); \
+		chown $(USER) $(DESTDIR)$(confdir)/sympa.conf; \
+		chgrp $(GROUP) $(DESTDIR)$(confdir)/sympa.conf; \
+	fi
+	-@if [ ! -f $(DESTDIR)$(sysconfdir)/data_structure.version ]; then \
 		cd $(DESTDIR)$(sysconfdir); \
 		echo "# automatically created file" >> data_structure.version; \
 		echo "# you should not modify it" >> data_structure.version; \
 		echo $(VERSION) >> data_structure.version; \
-		chown $(USER) data_structure.version || /bin/true; \
-		chgrp $(GROUP) data_structure.version || /bin/true; \
+		chown $(USER) data_structure.version; \
+		chgrp $(GROUP) data_structure.version; \
 	fi
-	@for dir in create_list_templates custom_actions custom_conditions \
-		data_sources families global_task_models list_task_models \
+	-@for dir in create_list_templates custom_actions custom_conditions \
+		data_sources families tasks \
 		mail_tt2 scenari search_filters web_tt2; do \
 		if [ ! -d $(DESTDIR)$(sysconfdir)/$$dir ] ; then \
 			echo "Creating $(DESTDIR)$(sysconfdir)/$$dir"; \
 			$(INSTALL) -d -m 755 $(DESTDIR)$(sysconfdir)/$$dir; \
 		fi; \
-		chown $(USER) $(DESTDIR)$(sysconfdir)/$$dir || /bin/true; \
-		chgrp $(GROUP) $(DESTDIR)$(sysconfdir)/$$dir || /bin/true; \
+		chown $(USER) $(DESTDIR)$(sysconfdir)/$$dir; \
+		chgrp $(GROUP) $(DESTDIR)$(sysconfdir)/$$dir; \
 	done
 	@if [ ! -e $(DESTDIR)$(sysconfdir)/README ]; then \
 		echo "Creating $(DESTDIR)$(sysconfdir)/README"; \
 		$(SED) \
 			-e 's|--sysconfdir--|$(sysconfdir)|' \
 			-e 's|--defaultdir--|$(defaultdir)|' \
-			etc_README > $(DESTDIR)$(sysconfdir)/README; \
-		chmod 444 $(DESTDIR)$(sysconfdir)/README; \
+			$(srcdir)/etc_README > $(DESTDIR)$(sysconfdir)/README; \
+		chmod 644 $(DESTDIR)$(sysconfdir)/README; \
 	fi
 
 nextstep: 
 	@echo ""
 	@echo "** You can find documentation at:"
-	@echo "** http://www.sympa.org/documentation/manual/sympa-$(VERSION).pdf"
+	@echo "** https://www.sympa.community/manual/"
 	@echo ""
 	@echo "#########################################################"
 	@echo "# CHECK YOU HAVE ALL THE NEEDED MODULES:"
-	@echo "#    * Check the required perl modules are installed:"
-	@echo "#        $(sbindir)/sympa_wizard.pl --check"
+	@echo "#    * Install or upgrade required perl modules. If you have cpanminus:"
+	@echo "#        cpanm --installdeps --with-recommends ."
 	@echo "#"
 	@echo "# FIRST INSTALLATION:"
-	@echo "#    * Check the INSTALL file."
-	@echo "#    * Run the wizard to define some required parameters that can't be guessed."
-	@echo "#        $(sbindir)/sympa_wizard.pl"
+	@echo "#    * Edit this file to define initial configuration:"
+	@echo "#        $(confdir)/sympa.conf"
 	@echo "#"
 	@echo "# UPGRADING"
 	@echo "#    * Run this script to upgrade your data structures:"
-	@echo "#        $(sbindir)/sympa.pl --upgrade"
+	@echo "#        $(sbindir)/sympa upgrade"
 	@echo "#######################################################"
 
-importantchanges:
-	if test -f $(top_srcdir)/previous_sympa_version; then \
-		export PREVIOUS=`$(CAT) $(top_srcdir)/previous_sympa_version`; \
-	fi; \
-	$(PERL) $(top_srcdir)/important_changes.pl \
-		--current=$(VERSION) \
-		--previous=$${PREVIOUS};
-
 uninstall-hook:
-	rm -f $(DESTDIR)$(confdir)/sympa.conf
-	rm -f $(DESTDIR)$(confdir)/wwsympa.conf
+	cd $(DESTDIR)$(confdir) && rm -f sympa.conf
+	cd $(DESTDIR)$(confdir) && rm -f wwsympa.conf
+	cd $(DESTDIR)$(sysconfdir) && rm -f data_structure.version
+	cd $(DESTDIR)$(sysconfdir) && rm -f README
+
+DISTCHECK_CONFIGURE_FLAGS = --enable-fhs --with-perl=$(PERL)
 
 dist-hook:
 	$(MAKE) check
 
-META.json: META.json.pl Makefile src/lib/Sympa/ModDef.pm
-	cd src/lib; $(MAKE) Sympa/Constants.pm
-	$(PERL) META.json.pl > META.json
+distcheck-hook:
+	-md5sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).md5
+	-sha256sum $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha256
+	-openssl sha512 $(DIST_ARCHIVES) > $(DIST_ARCHIVES).sha512
 
-sympa.spec: sympa.spec.pl Makefile src/lib/Sympa/ModDef.pm
-	cd src/lib; $(MAKE) Sympa/Constants.pm
-	$(PERL) sympa.spec.pl > sympa.spec
+# tidyall --conf-file xt/tidyallrc --root-dir . --recursive src t xt
+tidyall:
+	@ ( echo 'exit 1 if grep { $$_->error }'; \
+	    echo 'Code::TidyAll->new_from_conf_file('; \
+	    echo '  "xt/tidyallrc", root_dir => ".", recursive => 1'; \
+	    echo ')->process_paths(qw(src t xt))' \
+	) | $(PERL) -MCode::TidyAll
 

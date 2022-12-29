@@ -1,5 +1,6 @@
+[%# list_unknown.tt2 ~%]
 To: [% to %]
-Subject: [% FILTER qencode %][%|loc%]List unknown[%END%][%END%]
+Subject: [%"List unknown"|loc|qencode%]
 Content-Type: multipart/report; report-type=delivery-status; 
 	boundary="[% boundary %]"
 
@@ -10,26 +11,28 @@ Content-Description: Notification
 
 [%|loc%]The following address is not a known mailing list:[%END%]
 
-	[% list %]
+    [% list %]
 
-[%|loc%]To find out the correct listname, ask for this server's lists directory:[%END%]
+[%|loc%]To find out the correct list name, ask for this server's lists directory:[%END%]
 
-	[% | mailtourl({subject => 'WHICH'}) ~%]
-	  [% conf.email %]@[% conf.host %]
-	[%~ END %]
+[% IF conf.wwsympa_url -%]
+    [% 'my' | url_abs %]
+[%- ELSE -%]
+    [% "${conf.email}@${domain}" | mailtourl({subject => 'WHICH'}) %]
+[%- END %]
 
-[%|loc(conf.listmaster_email,conf.host)%]For further information, please contact %1@%2[%END%]
+[%|loc(conf.listmaster_email,domain)%]For further information, please contact %1@%2[%END%]
 
 --[% boundary %]
 Content-Type: message/delivery-status
 
-Reporting-MTA: dns; [% conf.host %]
+Reporting-MTA: dns; [% domain %]
 Arrival-Date: [% date %]
 
 Final-Recipient: rfc822; [% list %]
 Action: failed
 Status: 5.1.1
-Remote-MTA: dns; [% conf.host %]
+Remote-MTA: dns; [% domain %]
 Diagnostic-Code: List unknown
 
 --[% boundary %]
@@ -38,3 +41,5 @@ Content-Type: text/rfc822-headers
 [% header %]
 
 --[% boundary %]--
+
+[%# end list_unknown.tt2 ~%]

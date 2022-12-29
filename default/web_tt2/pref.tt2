@@ -1,58 +1,97 @@
-<!-- $Id$ -->
+<!-- pref.tt2 -->
 <div class="block">
-<h2><i class="fa fa-user"></i> [%|loc%]User preferences[%END%] <a href="[% 'nomenu/help/user' | url_rel %]#global_pref" title="[%|loc%]Open in a new window[%END%]" onclick="window.open('','wws_help','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=800,height=400')" target="wws_help"><i class="fa fa-question-circle" title="[%|loc%]Help[%END%]"></i></a></h2>
+    <h2>
+        <i class="fa fa-user"></i>
+        [%|loc%]User preferences[%END%]
+        <a class="openInNewWindow" href="[% 'nomenu/help' | url_rel(['user-pref.html']) %]" target="wws_help">
+            <i class="fa fa-info-circle" title="[%|loc%]Help[%END%]" target="true"></i>
+        </a>
+    </h2>
 
-<form action="[% path_cgi %]" method="post">
-  <fieldset>
-  <label>[%|loc%]Email:[%END%]  </label>[% user.email %]
-  <label for="gecos">[%|loc%]Name:[%END%]  </label><input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" />
-  <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label>
-  <div>
-  <select id="lang" name="lang" class="neutral">
-    [% FOREACH l = languages %]
-      <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]" [% l.value.selected %]>[% l.value.complete %]</option>
+    <form action="[% path_cgi %]" method="post">
+        <fieldset>
+            <label>[%|loc%]Email:[%END%]  </label>[% user.email %]
+            <label for="gecos">[%|loc%]Name:[%END%]  </label>
+            <input type="text" id="gecos" name="gecos" size="30" value="[% user.gecos %]" />
+            <label for="lang" style="vertical-align:top;">[%|loc%]Language:[%END%]  </label>
+            <div>
+                <select id="lang" name="lang" class="neutral">
+                    [% FOREACH l = languages %]
+                        <option value="[% l.key %]" lang="[% l.key %]" xml:lang="[% l.key %]"
+                                [%~ IF l.value.selected %] selected="selected"[% END %]>
+                            [%~ l.key | optdesc('lang') %]
+                        </option>
+                    [% END %]
+                </select>
+            </div>
+            <label for="cookie_delay">[%|loc%]Connection expiration period:[%END%]  </label>
+            <div>
+                <select name="cookie_delay" id="cookie_delay">
+                    [% FOREACH period = cookie_periods %]
+                        <option value="[% period.value %]"
+                                [%~ IF period.selected %] selected="selected"[% END %]>
+                            [%~ period.desc %]
+                        </option>
+                    [% END %]
+                </select>
+            </div>
+
+            <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
+
+        </fieldset>
+    </form>
+    <br />
+
+
+    <h3 id="pref-change-email">[%|loc%]Changing your email address[%END%]</h3>
+
+    <p>[%|loc%]You can update your email address for all your list memberships at once. Any list owner or list moderator email addresses will also be updated.[%END%]</p>
+    <form action="[% path_cgi %]" method="post">
+        <fieldset>
+            <div>
+                <label for="new_email">[%|loc%]New email address:[%END%] </label>
+                <input id="new_email" name="email" size="25" />
+            </div>
+            <input type="hidden" name="current_email" value="[% user.email %]" />
+            <input class="MainMenuLinks" type="submit" name="action_move_user" value="[%|loc%]Change Email[%END%]" />
+        </fieldset>
+    </form>
+    <br />
+
+    [% UNLESS sso.size %]
+        <h3 id="pref-change-password">[%|loc%]Changing your password[%END%]</h3>
+
+        <form action="[% path_cgi %]" method="post">
+            <fieldset>
+                <label for="newpasswd1">[%|loc%]New password:[%END%]  </label>
+                <input type="password" name="newpasswd1" id="newpasswd1" size="25" />
+                <label for="newpasswd2">[%|loc%]Re-enter your new password:[%END%]  </label>
+                <input type="password" name="newpasswd2" id="newpasswd2" size="25" />
+                <input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
+            </fieldset>
+        </form>
     [% END %]
-  </select>
-  </div>
-  <label for="cookie_delay">[%|loc%]Connection expiration period:[%END%]  </label>
-  <div>
-  <select name="cookie_delay" id="cookie_delay">
-    [% FOREACH period = cookie_periods %]
-      <option value="[% period.value %]" [% period.selected %]>[% period.desc %]</option>
+
+    [% IF session.auth == 'classic' AND conf.allow_account_deletion == 'on' %]
+        <h3 id="pref-delete-account">[%|loc%]Deleting your account[%END%]</h3>
+        <p>
+            [%|loc%]Deleting your account will unsubscribe you from all your lists, remove your ownership of your lists and permanently delete your account.[%END%]
+            <br />
+            [%|loc%]Please, note that you will not be able to delete your account if you are the only owner of one or more lists.[%END%]
+        </p>
+        <form action="[% path_cgi %]" method="post">
+            <fieldset>
+                <label for="password_for_account_deletion">[%|loc%]Enter your password:[%END%]</label>
+                <input type="password" name="passwd" id="password_for_account_deletion" size="25" />
+                <input type="checkbox" name="i_understand_the_consequences" id="i_understand_the_consequences" required>
+                <label for="i_understand_the_consequences">
+                    [%|loc%]I understand that I will be unsubscribed from all my lists and that my account will be permanently deleted.[%END%]
+                </label>
+                <br />
+                <input class="MainMenuLinks" type="submit" name="action_delete_account" value="[%|loc%]Submit[%END%]" />
+            </fieldset>
+        </form>
     [% END %]
-  </select>
-  </div>
-
-  <input class="MainMenuLinks" type="submit" name="action_setpref" value="[%|loc%]Submit[%END%]" />
-
-  </fieldset>
-</form>
-<br />
-
-
-<h3>[%|loc%]Changing your email address[%END%]</h3>
-
-<p>[%|loc%]You can update your email address for all your list memberships at once. If you are also list owner or list moderator your email address for these roles will also be updated.[%END%]</p>
-<form action="[% path_cgi %]" method="post">
-<fieldset>
-<label for="new_email">[%|loc%]New email address:[%END%]  </label><input id="new_email" name="new_email" size="25" />
-<input class="MainMenuLinks" type="submit" name="action_change_email_request" value="[%|loc%]Change Email[%END%]" />
-</fieldset>
-</form>
-<br /> 
-
-[% UNLESS use_sso %]
-<h4>[%|loc%]Changing your password[%END%]</h4>
-  
-<form action="[% path_cgi %]" method="post">
-<fieldset>
-<label for="newpasswd1">[%|loc%]New password:[%END%]  </label><input type="password" name="newpasswd1" id="newpasswd1" size="25" />
-<label for="newpasswd2">[%|loc%]Re-enter your new password:[%END%]  </label><input type="password" name="newpasswd2" id="newpasswd2" size="25" />
-<input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
-</fieldset>          
-</form>
-[% END %]
-
 </div>
 
 <!-- end pref.tt2 -->

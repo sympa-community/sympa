@@ -1,5 +1,7 @@
+# unsubscribe.owner
 title.gettext owners approval
 
-!equal ([sender],[email])            smtp             -> request_auth([email])
-is_subscriber([listname],[sender])   smtp,dkim,smime,md5  -> owner
-true()                               smtp,dkim,smime,md5  -> do_it
+!equal([sender],[email])           smtp,md5,smime -> request_auth([email])
+!is_subscriber([listname],[email]) smtp,md5,smime -> do_it
+is_owner([listname],[email])       smtp,md5,smime -> do_it
+true()                             smtp,md5,smime -> owner

@@ -1,8 +1,0 @@
-title.gettext restricted to local domain users
-
-is_subscriber([listname],[sender])  md5,smime  -> do_it
-is_listmaster([sender])             md5,smime  -> do_it
-match ([env->remote_host],/[conf->host]$/)      md5,smime  -> do_it
-match([sender],/[conf->host]$/)            md5,smime    -> do_it
-true()				md5,smime -> reject(reason='web_archive_local_user_sub')
-

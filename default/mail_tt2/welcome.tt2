@@ -1,8 +1,8 @@
-[%# $Id$ ~%]
+[%# welcome.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Welcome to list %1[%END%][%END%]
+Subject: [%"Welcome to list %1"|loc(list.name)|qencode%]
 
-[%|loc(list.name,list.host)%]Welcome to list %1@%2[%END%]
+[%|loc(list.name,domain)%]Welcome to list %1@%2[%END%]
 [%|loc(user.email)%]Your subscription email is %1[%END%]
 
 [% TRY %]
@@ -10,6 +10,7 @@ Subject: [% FILTER qencode %][%|loc(list.name)%]Welcome to list %1[%END%][%END%]
 [% CATCH %]
 [% END %]
 
+[% IF conf.wwsympa_url -%]
 [%|loc%]The list homepage:[%END%] [% 'info' | url_abs([list.name]) %]
-[%|loc%]General informations about mailing lists:[%END%] [% 'help/introduction' | url_abs %]
-
+[%|loc%]General information about mailing lists:[%END%] [% 'help' | url_abs(['introduction.html']) %]
+[% END -%]

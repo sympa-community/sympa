@@ -1,5 +1,4 @@
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc%]Your document has been rejected.[%END%][%END%]
+Subject: [%"Your document has been rejected"|loc|qencode%]
 
-[%|loc(filename,list.name,list.host,rejected_by)%]Your document %1  for list %2@%3
-has been rejected by %4 list editor.[%END%]
+[%|loc(filename,list.name,domain,rejected_by)%]Your document %1 for list %2@%3 has been rejected by %4 list moderator.[%END%]

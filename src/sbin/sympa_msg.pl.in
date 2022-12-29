@@ -1,14 +1,16 @@
 #!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2019, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,7 +33,6 @@ use Getopt::Long;
 use Pod::Usage;
 use POSIX qw();
 
-use Sympa::Alarm;
 use Conf;
 use Sympa::Constants;
 use Sympa::Crash;    # Show traceback.
@@ -42,6 +43,7 @@ use Sympa::Mailer;
 use Sympa::Process;
 use Sympa::Spindle::ProcessDigest;
 use Sympa::Spindle::ProcessIncoming;
+use Sympa::Spool::Listmaster;
 use Sympa::Tools::Data;
 
 my $process = Sympa::Process->instance;
@@ -62,7 +64,7 @@ unless (
         'config|f=s',    'lang|l=s', 'mail|m',      'keepcopy|k=s',
         'help|h',        'version|v',
     )
-    ) {
+) {
     pod2usage(-exitval => 1, -output => \*STDERR);
 }
 if ($main::options{'help'}) {
@@ -264,7 +266,7 @@ while (not $spindle->{finish} or $spindle->{finish} ne 'term') {
 }
 
 # Purge grouped notifications
-Sympa::Alarm->instance->flush(purge => 1);
+Sympa::Spool::Listmaster->instance->flush(purge => 1);
 
 $log->syslog('notice', 'Sympa/msg exited normally due to signal');
 $process->remove_pid;
@@ -274,7 +276,7 @@ exit(0);
 # Load configuration.
 sub _load {
     ## Load sympa.conf.
-    unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {    #Site and Robot
+    unless (Conf::load(Conf::get_sympa_conf())) {    #Site and Robot
         die sprintf
             "Unable to load sympa configuration, file %s or one of the vhost robot.conf files contain errors. Exiting.\n",
             Conf::get_sympa_conf();
@@ -304,24 +306,11 @@ sub _load {
         );
     }
 
-    if (Conf::cookie_changed()) {
-        die sprintf
-            'sympa.conf/cookie parameter has changed. You may have severe inconsitencies into password storage. Restore previous cookie or write some tool to re-encrypt password in database and check spools contents (look at %s/cookies.history file).',
-            $Conf::Conf{'etc'};
-    }
-
     # Check database connectivity.
     unless (Sympa::DatabaseManager->instance) {
         die sprintf
             "Database %s defined in sympa.conf is unreachable. verify db_xxx parameters in sympa.conf\n",
             $Conf::Conf{'db_name'};
-    }
-
-    # Now trying to load full config (including database)
-    unless (Conf::load()) {    #FIXME: load Site, then robot cache
-        die sprintf
-            "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
-            Conf::get_sympa_conf();
     }
 
     ## Set locale configuration
@@ -390,7 +379,7 @@ sub sighup {
 #sub process_message;
 
 #sub DoSendMessage($message);
-#DEPRECATED: Run upgrade_send_spool.pl to migrate message with old format.
+#DEPRECATED: Run 'sympa upgrade incoming' to migrate message with old format.
 
 # Moved to Sympa::Spindle::DoForward::_twist().
 #sub DoForward;
@@ -422,17 +411,18 @@ sympa_msg, sympa_msg.pl - Daemon to handle incoming messages
 
 =head1 SYNOPSIS
 
-S<B<sympa_msg.pl> [ B<-d, --debug> ] [ B<-f, --file>=I<another.sympa.conf> ]>
-      S<[ B<-k, --keepcopy>=I<directory> ]>
-      S<[ B<-l, --lang>=I<lang> ]> [ B<-m, --mail> ]
-      S<[ B<-h, --help> ]> [ B<-v, --version> ]
+C<sympa_msg.pl> S<[ C<-d>, C<--debug> ]>
+S<[ C<-f>, C<--file>=I<another.sympa.conf> ]>
+S<[ C<-k>, C<--keepcopy>=I<directory> ]>
+S<[ C<-l>, C<--lang>=I<lang> ]> S<[ C<-m>, C<--mail> ]>
+S<[ C<-h>, C<--help> ]> S<[ C<-v>, C<--version> ]>
 
 =head1 DESCRIPTION
 
 Sympa_msg.pl is a program which scans permanently the incoming message spool
 and processes each message.
 
-Messages bound for the lists and authorized sending are modified as neccesity
+Messages bound for the lists and authorized sending are modified as necessity
 and at last stored into digest spool, archive spool and outgoing spool.
 Those bound for command addresses are interpreted and appropriate actions are
 taken.
@@ -446,22 +436,22 @@ options is included below.
 
 =over 4
 
-=item B<-d>, B<--debug>
+=item C<-d>, C<--debug>
 
 Enable debug mode.
 
-=item B<-f>, B<--config=>I<file>
+=item C<-f>, C<--config=>I<file>
 
 Force Sympa to use an alternative configuration file instead
 of F<--CONFIG-->.
 
-=item B<-l>, B<--lang=>I<lang>
+=item C<-l>, C<--lang=>I<lang>
 
 Set this option to use a language for Sympa. The corresponding
-gettext catalog file must be located in F<--localedir-->
+gettext catalog file must be located in F<$LOCALEDIR>
 directory.
 
-=item B<--log_level=>I<level>
+=item C<--log_level=>I<level>
 
 Sets Sympa log level.
 
@@ -471,29 +461,30 @@ F<sympa_msg.pl> may run in daemon mode with following options.
 
 =over 4
 
-=item B<--foreground>
+=item C<--foreground>
 
 The process remains attached to the TTY.
 
-=item B<-k>, B<--keepcopy=>F<directory>
+=item C<-k>, C<--keepcopy=>F<directory>
 
 This option tells Sympa to keep a copy of every incoming message, 
 instead of deleting them. `directory' is the directory to 
 store messages.
 
-=item B<-m>, B<--mail>
+=item C<-m>, C<--mail>
 
 Sympa will log calls to sendmail, including recipients. This option is
 useful for keeping track of each mail sent (log files may grow faster
 though).
 
-=item B<--service=process_command>|B<process_message>|B<process_creation>
+=item C<--service=>I<service>
 
 B<Note>:
 This option was deprecated.
 
-Process is dedicated to messages distribution, commands or to automatic lists
-creation (default three of them).
+Process is dedicated to messages distribution (C<process_message>),
+commands (C<process_command>) or to automatic lists
+creation (C<process_creation>, default three of them).
 
 =back
 
@@ -501,11 +492,11 @@ With following options F<sympa_msg.pl> will print some information and exit.
 
 =over 4
 
-=item B<-h>, B<--help>
+=item C<-h>, C<--help>
 
 Print this help message.
 
-=item B<-v>, B<--version>
+=item C<-v>, C<--version>
 
 Print the version number.
 
@@ -515,7 +506,7 @@ Print the version number.
 
 F<--CONFIG--> main configuration file.
 
-F<--piddir--/sympa_msg.pid> this file contains the process ID
+F<$PIDDIR/sympa_msg.pid> this file contains the process ID
 of F<sympa_msg.pl>.
 
 =head1 SEE ALSO
@@ -545,7 +536,8 @@ ComitE<233> RE<233>seau des UniversitE<233>s
 =back
 
 As of Sympa 6.2b.4, it was split into three programs:
-F<sympa.pl> command line utility, F<sympa_automatic.pl> daemon and
+F<sympa.pl> (later renamed to F<sympa>) command line utility,
+F<sympa_automatic.pl> daemon and
 F<sympa_msg.pl> daemon.
 
 =cut

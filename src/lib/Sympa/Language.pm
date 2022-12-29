@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +30,7 @@ use strict;
 use warnings;
 use base qw(Class::Singleton);
 
+use Encode qw();
 use Locale::Messages;
 use POSIX qw();
 
@@ -224,6 +227,9 @@ sub implicated_langs {
 ## NOTE: This might be moved to utility package such as tools.pm.
 sub parse_http_accept_string {
     my $accept_string = shift || '';
+
+    # Strip comments.
+    1 while $accept_string =~ s/\s*[(][^()]*[)]\s*/ /g;
 
     $accept_string =~ s/^\s+//;
     $accept_string =~ s/\s+$//;
@@ -574,14 +580,18 @@ sub dgettext {
         return '8bit';
     }
 
-    return $msgid unless $self->{lang} and $self->{lang} ne 'en';
+    my $gettext_locale;
+    unless ($self->{lang} and $self->{lang} ne 'en') {
+        $gettext_locale = 'en_US';
+    } else {
+        $gettext_locale = $self->{locale};
 
-    ## Workaround for nb/nn.
-    my $locale = $self->{locale};
-    $locale =~ s/^(nb|nn)\b/${1}_NO/;
+        # Workaround for nb/nn.
+        $gettext_locale =~ s/^(nb|nn)\b/${1}_NO/;
+    }
 
     local %ENV;
-    $ENV{'LANGUAGE'} = $locale;
+    $ENV{'LANGUAGE'} = $gettext_locale;
     return Locale::Messages::dgettext($textdomain, $msgid);
 }
 
@@ -681,6 +691,7 @@ sub gettext_strftime {
         POSIX::setlocale(POSIX::LC_TIME(), $self->{locale_time});
     }
     my $ret = POSIX::strftime($format, @args);
+    Encode::_utf8_off($ret);
 
     POSIX::setlocale(POSIX::LC_TIME(), $orig_locale);
     return $ret;
@@ -970,10 +981,10 @@ Parameter:
 
 =item $lang, ...
 
-Language tags or similer things.
+Language tags or similar things.
 Old style "locale" by Sympa (see also L</Compatibility>) will also be
 accepted.
-If multiple tags are specified, this function trys each of them in order.
+If multiple tags are specified, this function tries each of them in order.
 
 Note that C<'en'> will always succeed.  Thus, putting it at the end of
 argument list may be useful.
@@ -997,7 +1008,7 @@ This function of Sympa 6.2a or earlier returned old style "locale" names.
 =item native_name ( )
 
 I<Instance method>.
-Get the name of the language, ie the one defined in the catalog.
+Get the name of the language, i.e. the one defined in the catalog.
 
 Parameters:
 
@@ -1203,7 +1214,7 @@ RFC 5646 I<Tags for Identifying Languages>.
 L<http://tools.ietf.org/html/rfc5646>.
 
 I<Translating Sympa>.
-L<http://www.sympa.org/translating_sympa>.
+L<https://translate.sympa.community/pages/help>.
 
 =head1 HISTORY
 

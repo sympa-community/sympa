@@ -1,13 +1,15 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,25 +29,22 @@ package Sympa::ListOpt;
 use strict;
 use warnings;
 
-use Sympa::Language;
-
-my $language = Sympa::Language->instance;
-
 # List parameter values except for parameters below.
-my %list_option = (
+our %list_option = (
 
     # reply_to_header.apply
     'forced'  => {'gettext_id' => 'overwrite Reply-To: header field'},
     'respect' => {'gettext_id' => 'preserve existing header field'},
 
-    # reply_to_header.value
+    # reply_to_header.value, antivirus_notify
     'sender' => {'gettext_id' => 'sender'},
 
     # reply_to_header.value, include_remote_sympa_list.cert
     'list' => {'gettext_id' => 'list'},
 
     # include_ldap_2level_query.select2, include_ldap_2level_query.select1,
-    # include_ldap_query.select, reply_to_header.value, dmarc_protection.mode
+    # include_ldap_query.select, reply_to_header.value, dmarc_protection.mode,
+    # personalization.web_apply_on, personalization.mail_apply_on
     'all' => {'gettext_id' => 'all'},
 
     # reply_to_header.value
@@ -56,15 +55,21 @@ my %list_option = (
     'body'             => {'gettext_id' => 'message body'},
     'subject_and_body' => {'gettext_id' => 'subject and body'},
 
+    # personalization.web_apply_on, personalization.mail_apply_on
+    'footer' => {'gettext_id' => 'header and footer'},
+
     # bouncers_level2.notification, bouncers_level2.action,
     # bouncers_level1.notification, bouncers_level1.action,
     # spam_protection, dkim_signature_apply_on, web_archive_spam_protection,
-    # dmarc_protection.mode
+    # dmarc_protection.mode, automatic_list_removal,
+    # personalization.web_apply_on, personalization.mail_apply_on
     'none' => {'gettext_id' => 'do nothing'},
 
+    # automatic_list_removal
+    'if_epmty' => {'gettext_id' => 'if no list members contained'},
+
     # bouncers_level2.notification, bouncers_level1.notification,
-    # welcome_return_path, remind_return_path, rfc2369_header_fields,
-    # archive.mail_access
+    # rfc2369_header_fields, archive.mail_access
     'owner' => {'gettext_id' => 'owner'},
 
     # bouncers_level2.notification, bouncers_level1.notification
@@ -77,8 +82,13 @@ my %list_option = (
     # pictures_feature, dkim_feature, merge_feature,
     # inclusion_notification_feature, tracking.delivery_status_notification,
     # tracking.message_disposition_notification
-    'on'  => {'gettext_id' => 'enabled'},
+    'on' => {'gettext_id' => 'enabled'},
+    # pictures_feature, dkim_feature, merge_feature,
+    # inclusion_notification_feature, tracking.delivery_status_notification,
+    # tracking.message_disposition_notification, update_db_field_types
     'off' => {'gettext_id' => 'disabled'},
+    # update_db_field_types
+    'auto' => {'gettext_id' => 'automatic'},
 
     # include_remote_sympa_list.cert
     'robot' => {'gettext_id' => 'robot'},
@@ -106,11 +116,13 @@ my %list_option = (
     #'no'  => {'gettext_id' => 'no'},
 
     # include_ldap_2level_query.ssl_version, include_ldap_query.ssl_version
+    'ssl_any' => {'gettext_id' => 'any versions'},
     'sslv2'   => {'gettext_id' => 'SSL version 2'},
     'sslv3'   => {'gettext_id' => 'SSL version 3'},
     'tlsv1'   => {'gettext_id' => 'TLS version 1'},
     'tlsv1_1' => {'gettext_id' => 'TLS version 1.1'},
     'tlsv1_2' => {'gettext_id' => 'TLS version 1.2'},
+    'tlsv1_3' => {'gettext_id' => 'TLS version 1.3'},
 
     # editor.reception, owner_include.reception, owner.reception,
     # editor_include.reception
@@ -122,8 +134,8 @@ my %list_option = (
     'conceal'   => {'gettext_id' => 'concealed from list menu'},
     'noconceal' => {'gettext_id' => 'listed on the list menu'},
 
-    # welcome_return_path, remind_return_path
-    'unique' => {'gettext_id' => 'bounce management'},
+    # antivirus_notify
+    'delivery_status' => {'gettext_id' => 'send back DSN'},
 
     # owner_include.profile, owner.profile
     'privileged' => {'gettext_id' => 'privileged owner'},
@@ -185,7 +197,7 @@ my %list_option = (
         {'gettext_id' => 'authenticated by S/MIME signature'},
     'dkim_authenticated_messages' =>
         {'gettext_id' => 'authenticated by DKIM signature'},
-    'editor_validated_messages' => {'gettext_id' => 'approved by editor'},
+    'editor_validated_messages' => {'gettext_id' => 'approved by moderator'},
     'any'                       => {'gettext_id' => 'any messages'},
 
     # archive.period
@@ -196,7 +208,8 @@ my %list_option = (
     'year'    => {'gettext_id' => 'yearly'},
 
     # web_archive_spam_protection
-    'cookie' => {'gettext_id' => 'use HTTP cookie'},
+    'cookie'    => {'gettext_id' => 'use HTTP cookie'},
+    'concealed' => {'gettext_id' => 'never show address'},
 
     # verp_rate
     '100%' => {'gettext_id' => '100% - always'},
@@ -224,30 +237,32 @@ my %list_option = (
     'name_email_via_list' => {'gettext_id' => '"Name" (e-mail via List)'},
     'list_for_email'      => {'gettext_id' => '"List" (on behalf of e-mail)'},
     'list_for_name'       => {'gettext_id' => '"List" (on behalf of Name)'},
+
+    # cache_list_config
+    'binary_file' => {'gettext_id' => 'use binary file'},
 );
 
 # Values for subscriber reception mode.
-my %reception_mode = (
+our %reception_mode = (
     'mail'        => {'gettext_id' => 'standard (direct reception)'},
     'digest'      => {'gettext_id' => 'digest MIME format'},
     'digestplain' => {'gettext_id' => 'digest plain text format'},
     'summary'     => {'gettext_id' => 'summary mode'},
     'notice'      => {'gettext_id' => 'notice mode'},
     'txt'         => {'gettext_id' => 'text-only mode'},
-    'html'        => {'gettext_id' => 'html-only mode'},
     'urlize'      => {'gettext_id' => 'urlize mode'},
     'nomail'      => {'gettext_id' => 'no mail'},
-    'not_me'      => {'gettext_id' => 'you do not receive your own posts'}
+    'not_me'      => {'gettext_id' => 'not receiving your own posts'}
 );
 
 # Values for subscriber visibility mode.
-my %visibility_mode = (
+our %visibility_mode = (
     'noconceal' => {'gettext_id' => 'listed in the list review page'},
     'conceal'   => {'gettext_id' => 'concealed'}
 );
 
 # Values for list status.
-my %list_status = (
+our %list_status = (
     'open'          => {'gettext_id' => 'in operation'},
     'pending'       => {'gettext_id' => 'list not yet activated'},
     'error_config'  => {'gettext_id' => 'erroneous configuration'},
@@ -255,28 +270,16 @@ my %list_status = (
     'closed'        => {'gettext_id' => 'closed list'},
 );
 
-# Old name: Sympa::List::get_option_title().
-sub get_title {
-    my $option  = shift;
-    my $type    = shift || '';
-    my $withval = shift || 0;
+our %list_status_capital = (
+    'open'          => {'gettext_id' => 'In operation'},
+    'pending'       => {'gettext_id' => 'List not activated yet'},
+    'error_config'  => {'gettext_id' => 'Erroneous configuration'},
+    'family_closed' => {'gettext_id' => 'Closed family instance'},
+    'closed'        => {'gettext_id' => 'Closed list'},
+);
 
-    my $map = {
-        'reception'  => \%reception_mode,
-        'visibility' => \%visibility_mode,
-        'status'     => \%list_status,
-        }->{$type}
-        || \%list_option;
-    my $t = $map->{$option} || {};
-    if ($t->{'gettext_id'}) {
-        my $ret = $language->gettext($t->{'gettext_id'});
-        $ret =~ s/^\s+//;
-        $ret =~ s/\s+$//;
-        return sprintf '%s (%s)', $ret, $option if $withval;
-        return $ret;
-    }
-    return $option;
-}
+# Deprecated: Moved to Sympa::Template::_get_option_description().
+#sub get_option_description;
 
 1;
 __END__
@@ -296,7 +299,9 @@ configuration.
 
 =over
 
-=item get_title ( $value, [ $type, [ $withval ] ] )
+=item get_option_description ( $that, $value, [ $type, [ $withval ] ] )
+
+B<Deprecated>.
 
 I<Function>.
 Gets i18n-ed title of option.
@@ -306,16 +311,18 @@ Parameters:
 
 =over
 
+=item $that
+
+Context, instance of L<Sympa::List>, Robot or Site.
+
 =item $value
 
 Value of option.
 
 =item $type
 
-Type of option.
-C<'reception'> (reception mode of list member),
-C<'visibility'> (visibility mode of list memeber),
-C<'status'> (status of list)
+Type of option:
+field_type (see L<Sympa::ListDef>)
 or other (list config option, default).
 
 =item $withval
@@ -332,7 +339,6 @@ I18n-ed title of option value.
 
 =head1 SEE ALSO
 
-L<Sympa::Language>,
 L<Sympa::ListDef>.
 
 =head1 HISTORY

@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -30,6 +33,14 @@ use warnings;
 use Conf;
 
 use base qw(Sympa::Spool);
+
+sub new {
+    my $class   = shift;
+    my %options = @_;
+
+    return undef unless ref $options{context} eq 'Sympa::List';
+    $class->SUPER::new(%options);
+}
 
 sub _directories {
     my $self    = shift;
@@ -56,10 +67,7 @@ sub _init {
         my $metadatas = $self->_load || [];
         my $metadata;
         while (my $marshalled = shift @$metadatas) {
-            $metadata = Sympa::Spool::unmarshal_metadata(
-                $self->{directory},     $marshalled,
-                $self->_marshal_regexp, $self->_marshal_keys
-            );
+            $metadata = $self->unmarshal($marshalled);
             last if $metadata;
         }
         $self->{time} = $metadata ? $metadata->{time} : undef;
@@ -71,6 +79,8 @@ sub _init {
 use constant _marshal_format => '%ld.%f,%ld,%d';
 use constant _marshal_keys   => [qw(date TIME PID RAND)];
 use constant _marshal_regexp => qr{\A(\d+)\.(\d+\.\d+)(?:,.*)?\z};
+
+use constant _no_glob_pattern => 1;
 
 sub next {
     my $self = shift;
@@ -143,7 +153,7 @@ Creates new instance of L<Sympa::Spool::Digest> related to the list $list.
 
 =item next ( )
 
-Order is controled by delivery date, then by reception date.
+Order is controlled by delivery date, then by reception date.
 
 =back
 

@@ -1,10 +1,11 @@
-[%# $Id: $ -%]
+[%# ko/css.tt2 ~%]
+@charset "UTF-8";
+
 [%#
 This style sheet will override any portion of main CSS, not fully replacing it.
 So this may be used for locale-specific customization.
--%]
-/* begin ko/css.tt2 */
-@media screen {  }
+~%]
+
 [%# Overriding default font family. %]
 *,
 body,
@@ -18,4 +19,3 @@ kbd,
 samp {
     font-family:monospace,"나눔명조", "Nanum Myeongjo", AppleMyungjo, "바탕 Regular", Batang, UnBatang, "백묵 바탕 Regular", "Baekmuk Batang", "은 바탕 Regular", "Un Batang", serif;
 }
-/* end ko/css.tt2 */

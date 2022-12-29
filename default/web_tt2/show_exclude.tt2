@@ -1,13 +1,61 @@
-<!-- $Id$ -->
+<!-- show_exclude.tt2 -->
 <div class="block">
-<h2>[%|loc%]Exclusion table[%END%]</h2>
+    <h2>[%|loc%]Exclusion table[%END%]</h2>
 
-[%|loc%]Users listed below are excluded from the list. Beware, that this feature is different from the blacklist. Exclusion makes sense
-when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though 
-he should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. 
-They get off the exclusion table with the standard subscribe/add functions.[%END%]
-<br />
+    <p>
+        [%|loc%]Users listed below are excluded from the list. Beware, that this feature is different from the blocklist. Exclusion makes sense when a list is based on external data sources ; thanks to exclusion, a user can unsubscribe (or being removed by list owner) even though they should be included via an external data source. Users get into the exclusion table, through the standard unsubscribe/delete functions. They get off the exclusion table with the standard subscribe/add functions.[%END%]
+    </p>
 
-[% PROCESS exclusion_table.tt2 %]
+    [% IF exclude_users ~%]
+        <form class="noborder toggleContainer" data-toggle-selector="input[name='email']" action="[% path_cgi %]" method="POST" name="show_exclude">
+            <fieldset>
+                <input type="hidden" name="previous_list" value="[% list %]" />
+                <input type="hidden" name="list" value="[% list %]" />
+                <table  class="responsive listOfItems">
+                    <caption>[%|loc%]List of exclude[%END%]</caption>
+                    <tr>
+                        [% IF is_listmaster || is_owner  || may_add ~%]
+                            <th>
+                                <a href="#" data-tooltip aria-haspopup="true" title="[%|loc%]Toggle Selection[%END%]" class="toggleButton">
+                                    <i class="fa fa-check-square-o"></i>
+                                </a>
+                            </th>
+                        [%~ END %]
+                        <th>[%|loc%]Email[%END%]</th>
+                        <th>[%|loc%]Since[%END%]</th>
+                    </tr>
+                    [% FOREACH exc = exclude_users ~%]
+                        <tr class="color0">
+                            [% IF is_listmaster || is_owner || may_add ~%]
+                                <td>
+                                    <input type="checkbox" name="email" value="[% exc.email %]" />
+                                </td>
+                            [%~ END %]
+                            <td>&nbsp;[% exc.email %]&nbsp;</td>
+                            <td>&nbsp;[% exc.since %]&nbsp;</td>
+                        </tr>
+                    [%~ END %]
+                </table>
 
+                [% IF may_add ~%]
+                    [%# If a list is not 'open' and allow_subscribe_if_pending has been set to
+                        'off', add cannot be performed. ~%]
+                    [% IF list_status == 'open' || conf.allow_subscribe_if_pending == 'on' ~%]
+                        <div>
+                            <input class="MainMenuLinks disableUnlessChecked" data-selector="input[name='email']"
+                                   type="submit" name="action_add" value="[%|loc%]Restore selected email addresses[%END%]" />
+                            <input id="quiet_exclusion" type="checkbox" name="quiet"/>
+                            <label for="quiet_exclusion">[%|loc%]quiet[%END%] </label>
+                            <input type="hidden" name="previous_action" value="[% action %]" />
+                        </div>
+                    [%~ END %]
+                [%~ END %]
+            </fieldset>
+        </form>
+    [%~ ELSE ~%]
+        <p class="small-8 small-centered columns alert-box info text-center">
+            [%|loc%]No user excluded.[% END %]
+        </p>
+    [%~ END %]
+</div>
 <!-- end show_exclude.tt2 -->

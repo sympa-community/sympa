@@ -1,10 +1,11 @@
-[%# $Id: $ -%]
+[%# ja/css.tt2 ~%]
+@charset "UTF-8";
+
 [%#
 This style sheet will override any portion of main CSS, not fully replacing it.
 So this may be used for locale-specific customization.
--%]
-/* begin ja/css.tt2 */
-@media screen {  }
+~%]
+
 [%#
 Overriding font families.  Problems such as below will be solved:
 
@@ -33,4 +34,3 @@ kbd,
 samp {
     font-family: monospace, "游明朝", YuMincho, "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "ヒラギノ明朝 Pro W3", "Hiragino Mincho Pro", "Yu Mincho", "ＭＳ Ｐ明朝", "さざなみ明朝", "Sazanami Mincho", "TakaoEx明朝", TakaoExMincho, "IPAex明朝", IPAexMincho, "IPA P明朝", IPAPMincho, serif;
 }
-/* end ja/css.tt2 */

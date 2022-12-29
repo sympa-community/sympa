@@ -1,9 +1,14 @@
+[%# removed.tt2 ~%]
 From: [% fromlist %]
-Subject: [% FILTER qencode %][%|loc(list.name)%]Removed from %1[%END%][%END%]
+Subject: [%"Removed from %1"|loc(list.name)|qencode%]
 
-[%|loc(user.email,list.name,list.host)%]Your email address (%1) has been removed from list %2@%3[%END%]
+[%|loc(user.email,list.name,domain)%]Your email address (%1) has been removed from list %2@%3[%END%]
 
 [%|loc%]You can subscribe again:[%END%]
-[% | mailtourl({subject => "sub ${list.name}"}) ~%]
-  [% conf.email %]@[% conf.host %]
-[%~ END %]
+[% IF conf.wwsympa_url -%]
+[% 'subscribe' | url_abs([list.name]) %]
+[%- ELSE -%]
+[% "${conf.email}@${domain}" | mailtourl({subject => "sub ${list.name}"}) %]
+[%- END %]
+
+[%# end removed.tt2 ~%]

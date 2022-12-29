@@ -1,9 +1,0 @@
-[Unit]
-Description=Sympa mailing list manager (archiving)
-After=syslog.target
-BindTo=sympa.service
- 
-[Service]
-Type=forking
-PIDFile=--piddir--/archived.pid
-ExecStart=--sbindir--/archived.pl

@@ -7,7 +7,10 @@
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016 GIP RENATER
+# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,6 +35,7 @@ use Scalar::Util qw();
 use URI;
 
 use Sympa;
+use Conf;
 use Sympa::Tools::Text;
 
 # Returns a specialized HTML::StripScripts::Parser object built with the
@@ -41,12 +45,46 @@ sub new {
     my $robot_id = shift || '*';
 
     my $self = $class->SUPER::new(
-        {   Context  => 'Document',
-            AllowSrc => 1,
+        {   Context        => 'Document',
+            AllowSrc       => 1,
+            AllowHref      => 1,
+            AllowRelURL    => 1,
+            EscapeFiltered => 0,
         }
     );
-    $self->{_shsURLPrefix} =
-        URI->new(Sympa::get_url($robot_id))->canonical->as_string;
+
+    my @allowed_origins = (
+        Sympa::get_url($robot_id),
+        split /\s*,\s*/,
+        (Conf::get_robot_conf($robot_id, 'allowed_external_origin') || '')
+    );
+    $self->{_shsAllowedOriginRe} = '\A(?:' . join(
+        '|',
+        map {
+            my $uri;
+            unless (defined $_ and length $_) {
+                ;
+            } elsif (m{\A[-+\w]+:}) {
+                $uri = URI->new($_)->canonical;
+            } elsif ($_ =~ m{\A//}) {
+                $uri = URI->new('http:' . $_)->canonical;
+            } else {
+                $uri = URI->new('http://' . $_)->canonical;
+            }
+
+            if ($uri
+                and ($uri->scheme eq 'http' or $uri->scheme eq 'https')) {
+                my $regexp = $uri->authority;
+                # Escape metacharacters except wildcard '*'.
+                $regexp =~
+                    s/([^\s\w\x80-\xFF])/($1 eq '*') ? '.*' : "\\$1"/eg;
+
+                ($regexp);
+            } else {
+                ();
+            }
+        } @allowed_origins
+    ) . ')\z';
 
     return $self;
 }
@@ -56,18 +94,19 @@ sub validate_src_attribute {
     my $self = shift;
     my $text = shift;
 
-    # Allow only cid URLs and local links in src attribute.
-    $text = URI->new($text)->canonical->as_string;
-    return $text if 0 == index $text, 'cid:';
-    if (my $url_prefix = $self->{_shsURLPrefix}) {
-        return $text
-            if $text eq $url_prefix
-                or 0 == index($text, $url_prefix . '/')
-                or 0 == index($text, $url_prefix . '?')
-                or 0 == index($text, $url_prefix . '#');
-    }
+    my $uri = URI->new($text)->canonical;
+    # Allow only cid URLs, local URLs and links with the same origin, i.e.
+    # URLs with the same host etc.
+    return $text if $uri->scheme and $uri->scheme eq 'cid';
+    return $text unless $uri->can('authority') and $uri->authority;
+    return $text if $uri->authority =~ $self->{_shsAllowedOriginRe};
 
     return undef;
+}
+
+# Overridden method.
+sub validate_href_attribute {
+    goto &validate_src_attribute;    # "&" required.
 }
 
 # This method is specific to this subclass.

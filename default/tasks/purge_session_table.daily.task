@@ -1,0 +1,5 @@
+title.gettext daily termination of outdated sessions
+
+/ACTION
+purge_session_table ()
+next ([execution_date]+1d, ACTION)

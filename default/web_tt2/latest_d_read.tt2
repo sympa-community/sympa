@@ -1,56 +1,63 @@
-<!-- $Id$ -->
+<!-- latest_d_read.tt2 -->
 
 <h2>
- [% IF count %]
-   [%|loc(count)%] The %1 most recent shared documents [%END%] 
- [% ELSE %]
-   [%|loc%] Most recent shared documents [%END%] 
- [% END %]
-
- [% IF for %]
-   [%|loc(for)%] for %1 days [%END%] 	
- [% END %]
-</h2> 	
-<br /> 
- 
-<table class="responsive table_style" >
-<caption>[%|loc%]Most recent documents for this list [%END%] </caption>
- <tr class="color_light">
-   <th>[%|loc%]Last update[%END%]</th>
-   <th>[%|loc%]Name[%END%]</th>
-   <th>[%|loc%]Author[%END%]</th>
-   <th>[%|loc%]Directory[%END%]</th>
- </tr>
-
- [% FOREACH d = documents %]
- <tr>
-   <td> [% d.last_update %] </td>
-   <td>
-    [% IF d.html %]
-      [%# FIXME:path would be percent-encoded. ~%]
-      <a href="[% 'd_read' | url_rel([list]) %][% d.escaped_content_dir %]/[% d.escaped_name %]" title="[%|loc%]Open in a new window[%END%]" target="html_window">
-      <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
-    [% ELSIF d.url %]
-      <a href="[% d.url %]" title="[%|loc%]Open in a new window[%END%]" target="html_window">
-      <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.anchor %] </a>
+    [% IF count %]
+        [%|loc(count)%] The %1 most recent shared documents [%END%]
     [% ELSE %]
-      [%# FIXME:path would be encoded. ~%]
-      <a href="[% 'd_read' | url_rel([list]) ~%]
-      [% d.escaped_content_dir %]/[% d.escaped_name ~%]">
-	  <img src="[% d.icon %]" alt="[% d.escaped_title %]" /> [% d.name %] </a>
-    [% END %] 
+        [%|loc%] Most recent shared documents [%END%]
+    [% END %]
 
-   <td> [% IF d.author %] 
-           [% d.author %] 
-	[% ELSE %]
-	   [%|loc%]Unknown[%END%] 
-	[% END %] 
-   </td>
-   [%# FIXME:path would be percent-encoded. ~%]
-   <td> <a href="[% 'd_read' | url_rel([list]) %][% d.escaped_content_dir %]"/> [% d.content_dir %] </td>
- </tr>
- 
- [% END %]  
+    [% IF for %]
+        [%|loc(for)%] for %1 days [%END%]
+    [% END %]
+</h2>
+<br />
 
+<table class="responsive table_style" >
+    <caption>[%|loc%]Most recent documents for this list [%END%] </caption>
+    <tr class="color_light">
+        <th>[%|loc%]Last update[%END%]</th>
+        <th>[%|loc%]Name[%END%]</th>
+        <th>[%|loc%]Author[%END%]</th>
+        <th>[%|loc%]Directory[%END%]</th>
+    </tr>
+
+    [% FOREACH d = shared_doc.children %]
+        <tr>
+            <td> [% d.date %] </td>
+            <td>
+                [% IF d.html ~%]
+                    <a href="[% 'd_read' | url_rel([list,d.paths_d]) %]"
+                       title="[%|loc%]Open in a new window[%END%]" target="html_window">
+                        <img src="[% d.icon %]" alt="[% d.title %]" />
+                        [% d.name %]
+                    </a>
+                [%~ ELSIF d.type == 'url' ~%]
+                    <a href="[% d.url %]"
+                       title="[%|loc%]Open in a new window[%END%]" target="html_window">
+                        <img src="[% d.icon %]" alt="[% d.title %]" />
+                        [% d.label %]
+                    </a>
+                [%~ ELSE ~%]
+                    <a href="[% 'd_read' | url_rel([list,d.paths_d]) %]">
+                        <img src="[% d.icon %]" alt="[% d.title %]" />
+                        [% d.name %]
+                    </a>
+                [%~ END %]
+            </td>
+            <td>
+                [%~ IF d.owner ~%]
+                    [% d.owner %]
+                [%~ ELSE ~%]
+                    [%|loc%]Unknown[%END%]
+                [%~ END ~%]
+            </td>
+            <td>
+                <a href="[% 'd_read' | url_rel([list,d.parent.paths_d]) %]">
+                    [% d.parent.name %]
+                </a>
+            </td>
+        </tr>
+    [% END %]
 </table>
 <!-- end latest_d_read.tt2 -->

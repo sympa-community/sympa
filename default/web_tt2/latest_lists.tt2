@@ -1,45 +1,45 @@
-<!-- $Id$ -->
+<!-- latest_lists.tt2 -->
 
 <h2>
- [% IF count %]
-   [%|loc(count)%]The %1 newest lists[%END%] 
- [% ELSE %]
-   [%|loc%]New lists[%END%] 
- [% END %]
+    [% IF count %]
+        [%|loc(count)%]The %1 newest lists[%END%]
+    [% ELSE %]
+        [%|loc%]New lists[%END%]
+    [% END %]
 
- [% IF for %]
-   [%|loc(for)%] for %1 days [%END%] 	
- [% END %]
-</h2> 	
+    [% IF for %]
+        [%|loc(for)%] for %1 days [%END%]
+    [% END %]
+</h2>
 
-<br /> 
+<br />
 
 <table class="responsive table_style" >
-<caption>[%|loc%] The latest lists of this robot[%END%] </caption>
-<tr class="color_light">
-   <th>[%|loc%]Listname[%END%]</th>
-   <th>[%|loc%]Creation date[%END%]</th>
-   <th>[%|loc%]Subject[%END%]</th>
- </tr>
+    <caption>[%|loc%] The latest lists of this robot[%END%] </caption>
+    <tr class="color_light">
+        <th>[%|loc%]List name[%END%]</th>
+        <th>[%|loc%]Creation date[%END%]</th>
+        <th>[%|loc%]Subject[%END%]</th>
+    </tr>
 
-[% FOREACH l = latest_lists %]
-
-[% IF dark == '1' %]
-  <tr valign="top">[% SET dark = 0 %]
-[% ELSE %]
-  <tr class="color0">[% SET dark = 1 %]
-[% END %]
-   <td>
-     <a href="[% 'info' | url_rel([l.name]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.name %]@[% l.host %][% END %]</strong></a>
-   </td>
-
-  <td> [% l.date %] </td>
-  <td> [% l.subject %] </td>
- </tr>
- 
- [% END %] 
- 
- <br />
+    [% FOREACH l = latest_lists %]
+        [% IF dark == '1' %]
+            <tr valign="top">
+            [% SET dark = 0 %]
+        [% ELSE %]
+            <tr class="color0">[% SET dark = 1 %]
+        [% END %]
+                <td>
+                    <a href="[% 'info' | url_rel([l.name]) %]" >
+                        <strong>
+                            [%|obfuscate(conf.spam_protection) %][% l.name %]@[% domain %][% END %]
+                        </strong>
+                    </a>
+                </td>
+                <td> [% l.date %] </td>
+                <td> [% l.subject %] </td>
+            </tr>
+    [% END %]
 </table>
 
 <!-- end latest_lists.tt2 -->
