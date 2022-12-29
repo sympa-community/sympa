@@ -51,6 +51,25 @@ sub AS_BLOB {
     return ();
 }
 
+sub delete_field {
+    my $self    = shift;
+    my $options = shift;
+
+    unless ($self->can('drop_field')) {
+        return 'Removal of column from table does not supported.';
+    }
+
+    my $table  = $options->{table};
+    my $field  = $options->{field};
+    my $fields = $self->get_fields({table => $table});
+    unless (defined $fields->{$field}) {
+        return sprintf 'The field %s does not exist in the table %s',
+            $table, $field;
+    }
+
+    return $self->drop_field($table, $field);
+}
+
 1;
 __END__
 
@@ -352,7 +371,13 @@ Returns:
 A character string report of the operation done or C<undef> if something
 went wrong.
 
-=item delete_field ( { table => $table, field => $field } )
+=item delete_field ( { table => $table, field => $column } );
+
+I<Overridable>.
+If the column exists in the table, remove it using drop_field().
+Otherwise do nothing.
+
+=item drop_field ( $table, $field )
 
 I<Required to update database structure>.
 Deletes a field from a table in the database.
@@ -375,6 +400,9 @@ Returns:
 
 A character string report of the operation done or C<undef> if something
 went wrong.
+
+Note:
+On Sympa 6.2.71b.1 or earlier, delete_field() was defined instead of this.
 
 =item get_primary_key ( { table => $table } )
 

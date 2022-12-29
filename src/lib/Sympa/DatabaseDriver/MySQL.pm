@@ -285,28 +285,23 @@ sub add_field {
     return $report;
 }
 
-sub delete_field {
+sub drop_field {
+    $log->syslog('debug', '(%s, %s, %s)', @_);
     my $self  = shift;
-    my $param = shift;
-    $log->syslog('debug', 'Deleting field %s from table %s',
-        $param->{'field'}, $param->{'table'});
+    my $table = shift;
+    my $field = shift;
 
     unless (
-        $self->do_query(
-            "ALTER TABLE %s DROP COLUMN `%s`", $param->{'table'},
-            $param->{'field'}
-        )
+        $self->do_query("ALTER TABLE %s DROP COLUMN `%s`", $table, $field)
         ) {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
-            $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+            $field, $table, $self->{'db_name'});
         return undef;
     }
 
-    my $report = sprintf('Field %s removed from table %s',
-        $param->{'field'}, $param->{'table'});
-    $log->syslog('info', 'Field %s removed from table %s',
-        $param->{'field'}, $param->{'table'});
+    my $report = sprintf 'Field %s removed from table %s', $field, $table;
+    $log->syslog('info', '%s', $report);
 
     return $report;
 }
