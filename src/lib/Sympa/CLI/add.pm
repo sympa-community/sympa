@@ -97,7 +97,7 @@ C<sympa add> S<[ C<--force> ]> S<[ C<--notify> ]> S<[ C<--quiet> ]> S<[ C<role=>
 
 =head1 DESCRIPTION
 
-Add email(s) from the list. Data are read from standard input.
+Add email(s) to the list. Data are read from standard input.
 The data should contain one email address per line.
 
 Sample:
