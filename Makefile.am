@@ -31,6 +31,7 @@ check_SCRIPTS = \
 	t/Regexps.t \
 	t/compile_modules.t \
 	t/compile_executables.t \
+	t/Database_SQLite.t \
 	t/Database_LDAP.t \
 	t/parse_templates.t \
 	t/pod-syntax.t \

@@ -311,19 +311,33 @@ sub add_field {
     return $report;
 }
 
-sub delete_field {
+sub drop_field {
+    $log->syslog('debug', '(%s, %s, %s)', @_);
     my $self  = shift;
-    my $param = shift;
-    my $table = $param->{'table'};
-    my $field = $param->{'field'};
+    my $table = shift;
+    my $field = shift;
 
     return '' if $field eq 'temporary';
+    # SQLite prior to 3.35 does not support removal of columns.
+    # (Additionally, the versions prior to 3.35.5 looks buggy.)
+    unless (3035005 <= $DBD::SQLite::sqlite_version_number) {
+        my $report =
+            "Could not remove field $field from table $table since SQLite does not support removal of columns";
+        $log->syslog('info', '%s', $report);
 
-    $log->syslog('debug', 'Deleting field %s from table %s', $field, $table);
+        return $report;
+    }
 
-    ## SQLite does not support removal of columns
-    my $report =
-        "Could not remove field $field from table $table since SQLite does not support removal of columns";
+    unless (
+        $self->do_query("ALTER TABLE %s DROP COLUMN %s", $table, $field)
+    ) {
+        $log->syslog('err',
+            'Could not delete field %s from table %s in database %s',
+            $field, $table, $self->{'db_name'});
+        return undef;
+    }
+
+    my $report = sprintf 'Field %s removed from table %s', $field, $table;
     $log->syslog('info', '%s', $report);
 
     return $report;
