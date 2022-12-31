@@ -40,12 +40,15 @@ use constant _need_priv => 1;
 sub _run {
     my $class         = shift;
     my $options       = shift;
-    my $email     = shift;
+    my $email         = shift;
+
+    my @robots = Sympa::List::get_robots();
 
     my $spindle = Sympa::Spindle::ProcessRequest->new(
-        context          => [Sympa::List::get_robots()],
+        context          => \@robots,
         action           => 'del_user',
         email            => $email,
+        last_robot       => $robots[-1],
         sender           => Sympa::get_address('*', 'listmaster'),
         scenario_context => {skip => 1},
     );
@@ -74,7 +77,7 @@ C<sympa user del> I<email>
 
 =head1 DESCRIPTION
 
-Deletes a user email address in all Sympa  databases (subscriber_table,
+Deletes a user email address in all Sympa databases (subscriber_table,
 list config, etc) for all virtual robots.
 
 =cut

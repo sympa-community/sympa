@@ -48,29 +48,21 @@ sub _twist {
 
     my $robot_id = $request->{context};
     my $email = $request->{email};
+    my $last_robot = $request->{last_robot};
 
-    unless ($email and $robot_id) {
+    unless ($email and $robot_id and $last_robot) {
         die 'Missing incoming parameters';
     }
 
-    # Check whether user already exists
+    # Determine if user exists
     my $user_hash = Sympa::User::get_global_user($email);
 
     unless ($user_hash) {
         $self->add_stash($request, 'user', 'no_entry',
                          {email => $email});
-
-        $log->syslog('err', 'No such user');
         $self->{finish} = 1;
-        return undef;
+        return 1;
     }
-
-    my $user_object = Sympa::User->new($email);
-
-    $log->syslog(
-        'err',
-        'About to delete user %s.', $email,
-    );
 
     # Unsubscribe
     for my $list (Sympa::List::get_which($email, $robot_id, 'member')) {
@@ -83,16 +75,20 @@ sub _twist {
     # Remove from the editors
     for my $role (qw/editor owner/) {
         for my $list (Sympa::List::get_which($email, $robot_id, $role)) {
-            $list->delete_list_admin('editor', [$email]);
+            $list->delete_list_admin($role, [$email]);
             $self->add_stash($request, 'notice', 'removed',
                              {'email' => $email, 'listname' => $list->get_id});
         }
     }
 
-    # Remove the user
-    $user_object->expire;
-    $self->add_stash($request, 'notice', 'user_removed',
-                     {'email' => $email, });
+    # Remove the user on the final run
+    if ($robot_id eq $last_robot) {
+        my $user_object = Sympa::User->new($email);
+        $user_object->expire;
+        $self->add_stash($request, 'notice', 'user_removed',
+                         {'email' => $email, });
+    }
+
     return 1;
 
     # Change email as list OWNER/MODERATOR.
