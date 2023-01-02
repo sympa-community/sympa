@@ -125,7 +125,8 @@ if ($options{'add'}) {
     exit 1;
 } elsif ($options{'instantiate_family'}) {
     Sympa::CLI->run(
-        \%options, 'instantiate',
+        {%options, ($options{quiet} ? (noout => 1) : ())},
+        'instantiate',
         sprintf '%s@@%s',
         $options{instantiate_family},
         $options{robot} || $Conf::Conf{'domain'}

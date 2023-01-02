@@ -36,7 +36,7 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(close-unknown input-file=s quiet);
+use constant _options => qw(close-unknown input-file=s);
 use constant _args    => qw(family);
 
 my $log = Sympa::Log->instance;
@@ -61,7 +61,7 @@ sub _run {
             $family,
             $options->{input_file},
             close_unknown => $options->{close_unknown},
-            quiet         => $options->{quiet},
+            noout         => ($options->{noout} or not $class->istty(2)),
         )
     ) {
         print STDERR "\nImpossible family instantiation : action stopped \n";
@@ -71,7 +71,7 @@ sub _run {
     my %result;
     my $err = get_instantiation_results($family, \%result);
 
-    unless ($options->{quiet}) {
+    unless ($options->{noout}) {
         print STDOUT "@{$result{'info'}}";
         print STDOUT "@{$result{'warn'}}";
     }
@@ -130,7 +130,8 @@ sub instantiate {
         $progress = Term::ProgressBar->new(
             {   name  => 'Creating lists',
                 count => $total,
-                ETA   => 'linear'
+                ETA   => 'linear',
+                silent => $options{noout},
             }
         );
         $progress->max_update_rate(1);
@@ -606,13 +607,13 @@ sympa-instantiate - Instantiate the lists in a family
 
 =head1 SYNOPSIS
 
-C<sympa instantiate> C<--input-file=>I</path/to/file.xml> [ C<--close-unknown> ] [ C<--quiet> ] I<family>C<@@>I<domain>
+C<sympa instantiate> C<--input-file=>I</path/to/file.xml> [ C<--close-unknown> ] [ C<--noout> ] I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 
 Instantiate the lists described in the file.xml in specified family.
 The family directory must exist; automatically close undefined lists in a
 new instantiation if C<--close_unknown> is specified; do not print report if
-C<--quiet> is specified.
+C<--noout> is specified.
 
 =cut
