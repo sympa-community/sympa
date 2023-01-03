@@ -92,6 +92,14 @@ sub _twist {
         return undef;
     }
 
+    # Remove the user on the final run
+    if ($robot_id eq $last_robot) {
+        my $user_object = Sympa::User->new($email);
+        $user_object->expire;
+        $self->add_stash($request, 'notice', 'user_removed',
+                         {'email' => $email, });
+    }
+
     return 1;
 }
 
