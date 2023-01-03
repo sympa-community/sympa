@@ -202,8 +202,8 @@ sub instantiate {
                 $list->{'name'}, $created, $total
             )
         );
-        $next_update = $progress->update($created)
-            if ($created > $next_update);
+        $next_update = $progress->update($created) // 0
+            if $created > $next_update;
     }
 
     $progress->update($total) if $progress;
