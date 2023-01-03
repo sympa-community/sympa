@@ -72,7 +72,7 @@ sub _twist {
                          {email => $email, listname => $list->{'name'}});
     }
 
-    # Remove from the editors
+    # Remove from the editors/owners
     for my $role (qw/editor owner/) {
         for my $list (Sympa::List::get_which($email, $robot_id, $role)) {
             $list->delete_list_admin($role, [$email]);
@@ -81,123 +81,6 @@ sub _twist {
         }
     }
 
-    # Remove the user on the final run
-    if ($robot_id eq $last_robot) {
-        my $user_object = Sympa::User->new($email);
-        $user_object->expire;
-        $self->add_stash($request, 'notice', 'user_removed',
-                         {'email' => $email, });
-    }
-
-    return 1;
-
-    # Change email as list OWNER/MODERATOR.
-    my %updated_lists;
-    foreach my $role ('owner', 'editor') {
-        foreach my $list (
-            Sympa::List::get_which($email, $robot_id, $role)) {
-            my ($admin_user) =
-                grep { $_->{role} eq $role and $_->{email} eq $email }
-                @{$list->get_current_admins || []};
-
-            # Check the type of data sources.
-            # If only include_sympa_list of local mailing lists, then no
-            # problem.  Otherwise, notify listmaster.
-            #FIXME: Consider the case source list is included from external
-            #       data source.
-            if ($admin_user and defined $admin_user->{'inclusion_ext'}) {
-                Sympa::send_notify_to_listmaster(
-                    $list,
-                    'failed_to_change_included_admin',
-                    {   email => $email,
-                        new_email     => $email,
-                        role          => $role,
-                        datasource    => '',
-                    }
-                );
-                $self->add_stash(
-                    $request, 'user',
-                    'change_admin_email_failed_included',
-                    {   email    => $email,
-                        listname => $list->{'name'},
-                        role     => $role
-                    }
-                );
-                $log->syslog(
-                    'err',
-                    'Could not change %s email %s for list %s to %s because admin is included',
-                    $role,
-                    $email,
-                    $list,
-                    $email
-                );
-                next;
-            }
-
-            # Check if user is already user of the list with their new address
-            # then we just need to remove the old address.
-            if (grep { $_->{role} eq $role and $_->{email} eq $email }
-                @{$list->get_current_admins || []}) {
-                my @stash;
-                $list->delete_list_admin($role, [$email],
-                    stash => \@stash);
-                foreach my $report (@stash) {
-                    next
-                        unless
-                        grep { $_->[0] eq 'user' or $_->[0] eq 'intern' }
-                        @stash;
-                    $log->syslog('info',
-                        'Could not remove email %s from list %s',
-                        $email, $list);
-                    $self->add_stash(
-                        $request, 'user',
-                        'change_member_email_failed_deleting',
-                        {   email    => $email,
-                            listname => $list->{'name'},
-                            role     => $role
-                        }
-                    );
-                }
-                next
-                    if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' }
-                    @stash;
-            } else {
-                unless (
-                    $list->update_list_admin(
-                        $email, $role,
-                        {email => $email, update_date => time}
-                    )
-                ) {
-                    $self->add_stash(
-                        $request, 'user',
-                        'change_admin_email_failed',
-                        {   email    => $email,
-                            listname => $list->{'name'},
-                            role     => $role
-                        }
-                    );
-                    $log->syslog('err',
-                        'Could not change email %s for list %s to %s',
-                        $email, $list, $email);
-                    next;
-                }
-            }
-            $updated_lists{$list->{'name'}} = 1;
-        }
-    }
-    # Notify listmasters that list owners/moderators email have changed.
-    if (keys %updated_lists) {
-        Sympa::send_notify_to_listmaster(
-            $robot_id,
-            'listowner_email_changed',
-            {   'previous_email' => $email,
-                'new_email'      => $email,
-                'updated_lists'  => [sort keys %updated_lists]
-            }
-        );
-    }
-
-  
     # Update netidmap_table.
     unless (
         Sympa::Robot::update_email_netidmap_db(
