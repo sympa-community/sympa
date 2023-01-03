@@ -53,7 +53,7 @@ sub _run {
         scenario_context => {skip => 1},
     );
     unless ($spindle and $spindle->spin and $class->_report($spindle)) {
-        printf STDERR "Failed to delete user email address %s\n",
+        printf STDERR "Failed to delete user %s\n",
             $email;
 
         exit 1;
