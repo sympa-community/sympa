@@ -488,11 +488,7 @@ sub update_global_user {
     my @set_list;
 
     while (($field, $value) = each %{$values}) {
-        unless ($map_field{$field}) {
-            $log->syslog('err',
-                'Unknown field %s in map_field internal error', $field);
-            next;
-        }
+        next unless $map_field{$field};
         my $set;
 
         if ($numeric_field{$map_field{$field}}) {
