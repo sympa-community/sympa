@@ -60,7 +60,7 @@ do {
 };
 
 like $sdm->delete_field({table => 'subscriber_table', field => 'field1'}),
-    qr/does not exist/, 'delete_field(nonexisting)';
+    qr/not exist/, 'delete_field(nonexisting)';
 ok $sdm->add_field(
     {table => 'subscriber_table', field => 'field1', type => 'int'}),
     'add_field(nonexisting)';
@@ -75,7 +75,7 @@ if (3035005 <= $DBD::SQLite::sqlite_version_number) {
         'delete_field(existing)';
 } else {
     like $sdm->delete_field({table => 'subscriber_table', field => 'field1'}),
-        qr/does not support/, 'delete_field(unsupported)';
+        qr/not support/, 'delete_field(unsupported)';
 }
 
 done_testing();

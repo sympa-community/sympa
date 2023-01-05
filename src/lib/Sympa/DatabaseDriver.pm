@@ -58,7 +58,7 @@ sub delete_field {
     my $options = shift;
 
     unless ($self->can('drop_field')) {
-        return 'Removal of column from table does not supported.';
+        return 'Removal of column from table is not supported.';
     }
 
     my $table  = $options->{table};
