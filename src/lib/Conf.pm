@@ -813,6 +813,8 @@ sub get_sso_by_id {
     }
 
     foreach my $sso (@{$Conf{'auth_services'}{$param{'robot'}}}) {
+        next unless $sso->{'service_id'};
+
         $log->syslog('notice', 'SSO: %s', $sso->{'service_id'});
         next unless ($sso->{'service_id'} eq $param{'service_id'});
 

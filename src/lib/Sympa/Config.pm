@@ -93,7 +93,8 @@ sub _init_schema_item {
 
     my $default = $pitem->{default};
 
-    if ($pitem->{occurrence} =~ /n$/) {    # The set or the array of scalars
+    # The set or the array of scalars.
+    if (($pitem->{occurrence} // '0-1') =~ /n$/) {
         if (ref $default) {
             ;
         } elsif (defined $default) {
@@ -205,7 +206,7 @@ sub _apply_defaults {
         } elsif (ref $pii->{format} eq 'HASH') {    # Not a scalar
             next;
         } elsif (exists $pii->{default}) {
-            if ($options{init} or $pii->{occurrence} =~ /^1/) {
+            if ($options{init} or ($pii->{occurrence} // '0-1') =~ /^1/) {
                 if (ref $pii->{default}) {
                     $cur->{$key} =
                         Sympa::Tools::Data::clone_var($pii->{default});
@@ -333,7 +334,7 @@ sub _sanitize_changes {
             my $curi = $cur->{$k};
 
             my @r;
-            if ($pii->{occurrence} =~ /n$/) {
+            if (($pii->{occurrence} // '0-1') =~ /n$/) {
                 if (ref $pii->{format} eq 'ARRAY') {
                     @r =
                         $self->_sanitize_changes_set($curi, $newi, $pii,
@@ -500,7 +501,7 @@ sub _sanitize_changes_paragraph {
             my $curi = $cur->{$k};
 
             my @r;
-            if ($pii->{occurrence} =~ /n$/) {
+            if (($pii->{occurrence} // '0-1') =~ /n$/) {
                 if (ref $pii->{format} eq 'ARRAY') {
                     @r =
                         $self->_sanitize_changes_set($curi, $newi, $pii,
@@ -533,7 +534,7 @@ sub _sanitize_changes_paragraph {
     return (_pname($ppaths) => undef)
         if grep {
                 not $pitem->{format}->{$_}->{obsolete}
-            and $pitem->{format}->{$_}->{occurrence} =~ /^1/
+            and ($pitem->{format}->{$_}->{occurrence} // '0-1') =~ /^1/
             and not defined $cur->{$_}
         } _keys($pitem->{format});
     # If all children are removed, remove parent.
@@ -652,7 +653,7 @@ sub _validate_changes {
         my $ppi  = [$pname];
 
         my $r;
-        if ($pii->{occurrence} =~ /n$/) {
+        if (($pii->{occurrence} // '0-1') =~ /n$/) {
             $r =
                 $self->_validate_changes_multiple($newi, $pii, $ppi, $errors);
         } elsif (ref $pii->{format} eq 'HASH') {
@@ -692,7 +693,7 @@ sub _validate_changes_multiple {
     my $ppaths = shift;
     my $errors = shift;
 
-    if (not defined $new and $pitem->{occurrence} =~ /^1/) {
+    if (not defined $new and ($pitem->{occurrence} // '0-1') =~ /^1/) {
         push @$errors,
             [
             'user', 'mandatory_parameter',
@@ -739,7 +740,7 @@ sub _validate_changes_paragraph {
     my $ppaths = shift;
     my $errors = shift;
 
-    if (not defined $new and $pitem->{occurrence} =~ /^1/) {
+    if (not defined $new and ($pitem->{occurrence} // '0-1') =~ /^1/) {
         push @$errors,
             [
             'user', 'mandatory_parameter',
@@ -756,7 +757,7 @@ sub _validate_changes_paragraph {
             my $newi = $new->{$key};
 
             my $r;
-            if ($pii->{occurrence} =~ /n$/) {
+            if (($pii->{occurrence} // '0-1') =~ /n$/) {
                 $r =
                     $self->_validate_changes_multiple($newi, $pii, $ppi,
                     $errors);
@@ -796,7 +797,7 @@ sub _validate_changes_leaf {
         $new = $new->{name} if defined $new;
     }
 
-    if (not defined $new and $pitem->{occurrence} =~ /^1/) {
+    if (not defined $new and ($pitem->{occurrence} // '0-1') =~ /^1/) {
         push @$errors,
             [
             'user', 'mandatory_parameter',
@@ -863,7 +864,7 @@ sub commit {
 
         unless (defined $newi) {
             delete $cur->{$pname};
-        } elsif ($pii->{occurrence} =~ /n$/) {
+        } elsif (($pii->{occurrence} // '0-1') =~ /n$/) {
             $curi = $cur->{$pname} = [] unless defined $curi;
             $self->_merge_changes_multiple($curi, $newi, $pii,
                 loading => $loading);
@@ -946,7 +947,7 @@ sub _merge_changes_paragraph {
 
         unless (defined $newi) {
             delete $cur->{$key};
-        } elsif ($pii->{occurrence} =~ /n$/) {
+        } elsif (($pii->{occurrence} // '0-1') =~ /n$/) {
             $curi = $cur->{$key} = [] unless defined $curi;
             $self->_merge_changes_multiple($curi, $newi, $pii,
                 loading => $options{loading});
