@@ -1,4 +1,4 @@
 title.gettext listmaster only
 
-is_listmaster([sender])             md5,smime           -> do_it
-true()                              smtp,dkim,md5,smime -> reject(reason='move_user_listmaster')
+is_listmaster([sender])             md5,smime      -> do_it
+true()                              smtp,md5,smime -> reject(reason='move_user_listmaster')

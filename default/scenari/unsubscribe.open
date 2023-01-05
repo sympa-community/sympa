@@ -1,5 +1,5 @@
 # unsubscribe.open
 title.gettext open
 
-!equal([sender],[email])           smtp,dkim,md5,smime -> request_auth([email])
-true()                             smtp,dkim,md5,smime -> do_it
+!equal([sender],[email])           smtp,md5,smime -> request_auth([email])
+true()                             smtp,md5,smime -> do_it

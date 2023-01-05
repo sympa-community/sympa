@@ -1,7 +1,7 @@
 <?php 
 // Just a simple example of a PHP SOAP client for Sympa. 
 // You can check the Sympa SOAP API definition to design more complex code:
-// https://sympa-community.github.io/manual/customize/soap-api.html
+// https://www.sympa.community/manual/customize/soap-api.html
 //
 // You need to install the php-soap module. 
 // If you are on a Fedora Core server, you can run "yum install php-soap"
@@ -12,7 +12,7 @@ $soapclient->debug_flag=true;
 global $userEmail;
 global $md5;
 global $soapServer;
-$soapServer = "http://demo.sympa.org/sympa/wsdl";
+$soapServer = "https://web.example.org/sympa/wsdl";
 
 $soapclient = new SoapClient($soapServer);
 
@@ -54,7 +54,7 @@ if ($_GET['viewSource']) {
     echo "[<A HREF=\"".$_SERVER['PHP_SELF']."?logout=1\">logout</A>]\n";
     
   }else {
-    echo "You need to login first?\n Use your email address and the password obtained from <a href=\"http://demo.sympa.org/sympa\">demo.sympa.org</a> :<BR><BR>\n";
+    echo "You need to login first?\n Use your email address and the password obtained from <a href=\"https://web.example.org/sympa\">web.example.org</a> :<BR><BR>\n";
     echo "<form action=\"".$_SERVER['PHP_SELF']."\" method=\"post\">
     Email:  <input type=\"text\" name=\"email\"><br>
     Password: <input type=\"password\" name=\"pwd\">
@@ -146,7 +146,7 @@ echo "<P ALIGN=\"right\">
 <TR><TD ALIGN=\"left\">
 <I><center>This is a sample PHP interface for Sympa using SOAP (<A HREF=\"".$_SERVER['PHP_SELF']."?viewSource=1\">View source</A>)</center></I>
 </TD><TD ALIGN=\"right\">
-<A HREF=\"http://www.sympa.org\"><IMG BORDER=\"0\" SRC=\"http://demo.sympa.org/static-sympa/icons/logo_sympa.png\"></A></TD>
+<A HREF=\"https://web.example.org\"><IMG BORDER=\"0\" SRC=\"https://web.example.org/static-sympa/icons/logo_sympa.png\"></A></TD>
 </TABLE>
 </P>";
 

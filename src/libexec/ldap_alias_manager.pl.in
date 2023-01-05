@@ -304,11 +304,11 @@ sub already_defined {
 ## Parse the alias_ldap.conf config file
 sub GetLdapParameter {
     #read the config file
-    open(LDAPCONFIG, $manager_conf_file)
-        or print STDERR "Can't read the config file $manager_conf_file\n"
+    open my $ifh, '<', $manager_conf_file
+        or printf STDERR "Can't read the config file %s\n", $manager_conf_file
         and return 0;
-    my @ldap_conf = <LDAPCONFIG>;
-    close LDAPCONFIG;
+    my @ldap_conf = <$ifh>;
+    close $ifh;
     foreach (@ldap_conf) {
         #we skip the comments
         if ($_ =~ /^\s*\#/) {

@@ -1,0 +1,22 @@
+[Unit]
+Description=Sympa mailing list manager
+After=syslog.target
+Wants=sympa-outgoing.service
+Before=sympa-outgoing.service
+Wants=sympa-archive.service
+Before=sympa-archive.service
+Wants=sympa-bounce.service
+Before=sympa-bounce.service
+Wants=sympa-task.service
+Before=sympa-task.service
+ 
+[Service]
+Type=forking
+PIDFile=--piddir--/sympa_msg.pid
+ExecStartPre=/bin/mkdir -p --piddir--
+ExecStartPre=/bin/chown --USER--:--GROUP-- --piddir--
+ExecStartPre=--sbindir--/sympa check
+ExecStart=--sbindir--/sympa_msg.pl
+ 
+[Install]
+WantedBy=multi-user.target

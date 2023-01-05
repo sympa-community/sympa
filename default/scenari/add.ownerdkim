@@ -1,7 +1,0 @@
-title.gettext add performed by list owner does not need authentication if DKIM signature OK
-
-is_owner([listname],[sender])  smtp -> request_auth
-is_owner([listname],[sender])  dkim,md5,smime -> do_it
-is_listmaster([sender])        smtp -> request_auth
-is_listmaster([sender])        dkim,md5,smime -> do_it
-true()                         smtp,dkim,md5,smime -> reject(reason='add_owner')	

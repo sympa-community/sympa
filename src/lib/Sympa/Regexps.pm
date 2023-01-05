@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -29,6 +28,9 @@ package Sympa::Regexps;
 
 use strict;
 use warnings;
+
+# domain name.
+use constant domain => qr'[-\w]+(?:[.][-\w]+)+';
 
 # These are relaxed variants of the syntax for mailbox described in RFC 5322.
 # See also RFC 5322, 3.2.3 & 3.4.1 for details on format.
@@ -62,7 +64,12 @@ use constant multiple_host_or_url =>
 use constant listname => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 
 use constant ldap_attrdesc => qr'\w[-\w]*(?:;[-\w]+)*';    # RFC2251, 4.1.5
-use constant sql_query     => qr'(SELECT|select).*';
+
+# "value" defined in RFC 2045, 5.1.
+use constant rfc2045_parameter_value =>
+    qr'[^\s\x00-\x1F\x7F-\xFF()<>\@,;:\\/\[\]?=\"]+';
+
+use constant sql_query => qr'(SELECT|select).*';
 
 # "scenario" was deprecated. Use "scenario_name".
 # "scenario_config" is used for compatibility to earlier list config files.

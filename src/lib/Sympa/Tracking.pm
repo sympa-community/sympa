@@ -407,7 +407,7 @@ sub _update_subscriber_bounce_history {
 #   find_notification_id_by_message
 ##############################################
 # return the tracking_id find by recipeint,message-id,listname and robot
-# tracking_id areinitialized by sympa.pl by Sympa::List::distribute_msg
+# tracking_id are initialized by sympa_msg.pl by Sympa::List::distribute_msg
 #
 # used by bulk.pl in order to set return_path when tracking is required.
 #

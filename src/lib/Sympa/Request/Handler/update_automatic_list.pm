@@ -219,12 +219,13 @@ sub _twist {
                 );
                 next;    #FIXME: Abort processing and rollback.
             }
-            unless (open FILE, '>', "$list->{'dir'}/$file") {
-                $log->syslog('err', 'Impossible to create %s/%s: %s',
-                    $list->{'dir'}, $file, $!);
+            my $ofh;
+            unless (open $ofh, '>', $list->{'dir'} . '/' . $file) {
+                $log->syslog('err', 'Impossible to create %s/%s: %m',
+                    $list->{'dir'}, $file);
             }
-            print FILE $file_content;
-            close FILE;
+            print $ofh $file_content;
+            close $ofh;
         }
     }
 
