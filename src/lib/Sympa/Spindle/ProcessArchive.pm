@@ -460,10 +460,11 @@ sub _mail2arc {
             }
         }
     }
-
-    unless ($archive->store($message) and $archive->html_store($message)) {
-        return undef;
-    }
+    eval { 
+        unless ($archive->store($message) and $archive->html_store($message)) {
+            return undef;
+        }
+    } or return undef;
     return 1;
 }
 
