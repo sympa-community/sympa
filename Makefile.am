@@ -29,6 +29,7 @@ check_SCRIPTS = \
 	t/DataSource_LDAP2.t \
 	t/DatabaseManager.t \
 	t/Database_LDAP.t \
+	t/HTMLSanitizer.t \
 	t/Language.t \
 	t/LockedFile.t \
 	t/Message_smime.t \

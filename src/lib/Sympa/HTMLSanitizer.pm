@@ -38,6 +38,51 @@ use Sympa;
 use Conf;
 use Sympa::Tools::Text;
 
+BEGIN {
+    # Patch HTML::StripScripts to avoid ReDoS.
+    $HTML::StripScripts::_AttVal{style} = sub {
+        my ($filter, undef, undef, $attrval) = @_;
+        my @clean;
+
+        pos $attrval = 0;
+        while (
+            $attrval =~ m{
+              \G
+              [;\s]*
+              (
+                (?:
+                  [^;'"()]+
+                | ' [^']* '
+                | " [^"]* "
+                #FIXME:Handle nested parentheses
+                | [(]
+                  (?:
+                    [^'"()]+
+                  | ' [^']* '
+                  | " [^"]* "
+                  )*
+                  [)]
+                )+
+              )
+            }cgx
+        ) {
+            my ($key, $val) = split /\s*:\s*/, $1, 2;
+            next unless defined $val;
+            $key =~ s{\A ([-\w]+) \s* \z}{lc $1}ex
+                or next;
+            $val =~ s{\s+\z}{};
+
+            my $sub = $filter->{_hssAttVal}{$filter->{_hssStyle}{$key} // ''}
+                or next;
+            if (defined $sub->($filter, 'style-psuedo-tag', $key, $val)) {
+                push @clean, "$key:$val";
+            }
+        }
+
+        return join '; ', @clean;
+    };
+}
+
 # Returns a specialized HTML::StripScripts::Parser object built with the
 # parameters provided as arguments.
 sub new {
