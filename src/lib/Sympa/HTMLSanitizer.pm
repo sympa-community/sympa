@@ -45,35 +45,51 @@ BEGIN {
         my ($filter, undef, undef, $attrval) = @_;
         my @clean;
 
+        my $rule  = '';
+        my $paren = 0;
         pos $attrval = 0;
         while (
             $attrval =~ m{
               \G
-              [;\s]*
-              (
-                (?:
-                  [^;'"()]+
-                | ' [^']* '
-                | " [^"]* "
-                #FIXME:Handle nested parentheses
-                | [(]
-                  (?:
-                    [^'"()]+
-                  | ' [^']* '
-                  | " [^"]* "
-                  )*
-                  [)]
-                )+
+              (?:
+                ( [^;'"()]+ | ' [^']* ' | " [^"]* " )
+              | ( [(] )
+              | ( [)] )
+              | ( [;] )
+              | \z
               )
             }cgx
         ) {
-            my ($key, $val) = split /\s*:\s*/, $1, 2;
-            next unless defined $val;
-            $key =~ s{\A ([-\w]+) \s* \z}{lc $1}ex
-                or next;
-            $val =~ s{\s+\z}{};
+            if (defined $1) {
+                $rule .= $1;
+                next;
+            } elsif ($2) {
+                $rule .= $2;
+                $paren++;
+                next;
+            } elsif ($3) {
+                $rule .= $3;
+                $paren--;
+                last if $paren < 0;    # unbalanced parentheses
+                next;
+            } elsif ($4) {
+                if (0 < $paren) {      # allow semicolons within parentheses
+                    $rule .= $4;
+                    next;
+                }
+            } else {
+                last if $paren != 0;    # unbalanced parentheses
+            }
 
-            my $sub = $filter->{_hssAttVal}{$filter->{_hssStyle}{$key} // ''}
+            $rule =~ s/\A\s+//;
+            $rule =~ s/\s+\z//;
+            my ($key, $val) = split /\s*:\s*/, $rule, 2;
+            $rule = '';
+
+            next unless defined $val;
+            $key =~ s/\A([-\w]+)\z/lc $1/e
+                or next;
+            my $sub = $filter->{_hssAttVal}{$filter->{_hssStyle}{$key} || ''}
                 or next;
             if (defined $sub->($filter, 'style-psuedo-tag', $key, $val)) {
                 push @clean, "$key:$val";
