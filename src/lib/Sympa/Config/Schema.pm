@@ -1389,7 +1389,7 @@ our %pinfo = (
         gettext_id => 'Allowed external links in sanitized HTML',
         gettext_comment =>
             'When the HTML content of a message must be sanitized, links ("href" or "src" attributes) with the hosts listed in this parameter will not be scrubbed. If "*" character is included, it matches any subdomains. Single "*" allows any hosts.',
-        format     => '[-\w*]+(?:[.][-\w*]+)+',
+        format     => '(?:[^\@]+\@)?[-\w*]+(?:[.][-\w*]+)*(?:[:][\d*]+)?',
         split_char => ',',
         sample     => '*.example.org,www.example.com',
         not_before => '6.2.19b.2',

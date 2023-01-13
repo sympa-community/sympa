@@ -37,13 +37,6 @@ if ($EVAL_ERROR) {
 }
 
 is $sanitizer->sanitize_html(
-    sprintf
-        '<html><body><a href="https://web.example.org/%s"></a></body></html>',
-    'x' x 9977
-    ),
-    '<html><body><a></a></body></html>',
-    'filter long URI';
-is $sanitizer->sanitize_html(
     '<html><body><a href="CiD:foobar"></a></body></html>'),
     '<html><body><a href="cid:foobar"></a></body></html>',
     'not filter cid URI';
@@ -55,10 +48,6 @@ is $sanitizer->sanitize_html(
     '<html><body><a href="../%E2%99%A5"></a></body></html>',
     'not filter relative URI reference';
 is $sanitizer->sanitize_html(
-    '<html><body><a href="https://"></a></body></html>'),
-    '<html><body><a></a></body></html>',
-    'filter URI with empty host';
-is $sanitizer->sanitize_html(
     '<html><body><a href="https://web.example.org"></a></body></html>'),
     '<html><body><a href="https://web.example.org/"></a></body></html>',
     'not filter https URI with the same origin';
@@ -66,6 +55,20 @@ is $sanitizer->sanitize_html(
     '<html><body><a href="https://web.example.com"></a></body></html>'),
     '<html><body><a></a></body></html>',
     'filter https URI with the other origin';
+
+$Conf::Conf{allowed_external_origin} = '*';
+$sanitizer = Sympa::HTMLSanitizer->new('*');
+is $sanitizer->sanitize_html(
+    sprintf
+        '<html><body><a href="https://web.example.org/%s"></a></body></html>',
+    'x' x 9977
+    ),
+    '<html><body><a></a></body></html>',
+    'filter long URI';
+is $sanitizer->sanitize_html(
+    '<html><body><a href="https://user:secret@:8443"></a></body></html>'),
+    '<html><body><a></a></body></html>',
+    'filter URI with empty host';
 
 done_testing();
 

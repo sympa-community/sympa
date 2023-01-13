@@ -176,7 +176,7 @@ sub validate_src_attribute {
         # Relative ref.
         ;
     } elsif (($uri->scheme // '') !~ /\Ahttps?\z/
-        or not length($uri->authority // '')) {
+        or not length($uri->host // '')) {
         return undef;
     } elsif ($uri->authority !~ $self->{_shsAllowedOriginRe}) {
         # Allow links with the same origin, i.e. URLs with the same host etc.
