@@ -2199,6 +2199,9 @@ sub send_html {
     # No longer needed: Workaround for Internet Explorer 8 or later.
     #print "X-UA-Compatible: IE=100\n";
 
+    # Calculate CSP nonce.
+    $param->{'csp_nonce'} = Sympa::Tools::Text::nonce();
+
     ## Notify crash to client.
     if ($param->{'action'} eq 'crash') {
         print "Status: 503 Service Unavailable\n";
