@@ -342,6 +342,46 @@ $(function(){
     });
 });
 
+$(function() {
+    $('span.decoText').each(function(){
+        var elm = $(this);
+        try {
+            var chars = String(elm.data('text')).split(',').map(
+                function(val) {
+                    if (isNaN(val)) {
+                        throw new Error('Non-numeric data');
+                    }
+                    return val.toString(10);
+                }
+            );
+            elm.text(String.fromCharCode.apply(null, chars));
+            elm.attr('data-text', null);
+        } catch(e) {
+            return false;
+        }
+        return true;
+    });
+
+    $("a[href='mailto:decoText']").each(function(){
+        var elm = $(this);
+        try {
+            var chars = String(elm.data('text')).split(',').map(
+                function(val) {
+                    if (isNaN(val)) {
+                        throw new Error('Non-numeric data');
+                    }
+                    return val.toString(10);
+                }
+            );
+            elm.attr('href', 'mailto:' + String.fromCharCode.apply(null, chars));
+            elm.attr('data-text', null);
+        } catch(e) {
+            return false;
+        }
+        return true;
+    });
+});
+
 /* Align the scrollable calendar. */
 $(function() {
     $('.calendarLinksCurrentPage').each(function(){
