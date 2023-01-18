@@ -15,8 +15,12 @@
             <input type="hidden" name="html_news_letter" value="[% subaction %]" />
         [% END %]
         <input type="hidden" name="action" value="send_mail"/>
-        <input class="MainMenuLinks" type="submit" name="sub_action_sendmailtolist" value="[%|loc%]Send to list[%END%]" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
-        <input class="MainMenuLinks" type="submit" name="sub_action_sendmailtome" value="[%|loc%]Send to me[%END%]" [%- IF topic_required -%] onclick="return checkbox_check_topic(compose_mail)" [% END %]/>
+        <input class="MainMenuLinks[%IF topic_required%] topicChecked[%END%]"
+         type="submit"
+         name="sub_action_sendmailtolist" value="[%|loc%]Send to list[%END%]" />
+        <input class="MainMenuLinks[%IF topic_required%] topicChecked[%END%]"
+         type="submit"
+         name="sub_action_sendmailtome" value="[%|loc%]Send to me[%END%]" />
         <br />
 
         <input type="hidden" name="in_reply_to" value="[% in_reply_to %]" />

@@ -15,8 +15,9 @@
         [% END %]
         <br />
         [%- IF topic_required -%]
-            <input class="MainMenuLinks" type="submit" name="action_tag_topic_by_sender" value="[%|loc%]Tag this mail[%END%]"
-                   onclick="return checkbox_check_topic(select_topic_msg)" />
+            <input class="MainMenuLinks topicChecked" type="submit"
+             name="action_tag_topic_by_sender"
+             value="[%|loc%]Tag this mail[%END%]" />
         [%- ELSE -%]
             <input class="MainMenuLinks" type="submit" name="action_tag_topic_by_sender" value="[%|loc%]Tag this mail[%END%]" />
         [%- END -%]
