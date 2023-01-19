@@ -15733,14 +15733,15 @@ sub do_arc_download {
             next unless $message;
 
             my ($rv, $az);
+            my $string = $message->as_string =~ s/\r?\n/\r\n/gr;
             if ($Archive::Zip::SimpleZip::VERSION) {
-                $rv = $zip->addString($message->as_string,
-                    Name => sprintf('%s/%s', $arc_dirname, $handle->basename)
+                $rv = $zip->addString($string,
+                    Name => sprintf('%s/%s.eml', $arc_dirname, $handle->basename)
                 );
                 $az = $Archive::Zip::SimpleZip::SimpleZipError;
             } else {
-                $rv = $zip->addString($message->as_string,
-                    sprintf('%s/%s', $arc_dirname, $handle->basename));
+                $rv = $zip->addString($string,
+                    sprintf('%s/%s.eml', $arc_dirname, $handle->basename));
                 $az = 'unknown error';
             }
             unless ($rv) {
