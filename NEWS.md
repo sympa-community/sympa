@@ -1,20 +1,24 @@
 # Change Log
 
-## [6.2.XX](https://github.com/sympa-community/sympa/tree/6.2.XX) (202X-XX-XX)
+## [6.2.72](https://github.com/sympa-community/sympa/tree/6.2.72) (2023-0X-XX)
 
-[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.71b.1...6.2.XX)
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.71b.1...6.2.72)
 
-**Incompatible changes:**
+**Incompatible changes** (from 6.2.70) **:**
+
+- The `dkim` authentication method for scenarios was obsoleted.  Now it is a synonym of `smtp` method [\#1483](https://github.com/sympa-community/sympa/issues/1483).
+- The `antispam_feature` parameter was deprecated.  Instead, choose appropriate scenario with `spam_status` parameter [\#1470](https://github.com/sympa-community/sympa/pull/1470).  In particular, if you wish to disable this feature, set "`spam_status none`".
+- The Command line tools under `$SCRIPTDIR` either were deprecated or were integrated into the `sympa` command line tool.  See [\#1386](https://github.com/sympa-community/sympa/issues/1386) for details.
 
 **Implemented enhancements:**
 
 **Fixed bugs:**
 
-- `sympa.wsdl` is incomplete [\#1548](https://github.com/sympa-community/sympa/issues/1548)
+- sympa.wsdl is incomplete [\#1548](https://github.com/sympa-community/sympa/issues/1548)
 
 **Merged pull requests:**
 
-- Improve wording in README.support document [\#1553](https://github.com/sympa-community/sympa/pull/1553)
+- Improve wording in README.support document. [\#1553](https://github.com/sympa-community/sympa/pull/1553)
 - Update copyright notices, add documentation and correct some typos [\#1552](https://github.com/sympa-community/sympa/pull/1552)
 
 ## [6.2.71b.1](https://github.com/sympa-community/sympa/tree/6.2.71b.1) (2022-12-15)
