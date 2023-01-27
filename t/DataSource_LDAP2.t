@@ -12,6 +12,8 @@ unless (eval 'Test::Net::LDAP::Util->can("ldap_mockify")') {
     plan skip_all => 'Test::Net::LDAP required';
 }
 
+use Sympa::List;
+
 $Data::Dumper::Terse  = 1;
 $Data::Dumper::Indent = 0;
 

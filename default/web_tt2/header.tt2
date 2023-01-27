@@ -47,7 +47,7 @@
                             [% PROCESS 'user_menu.tt2' %]
                         </ul>
                     </li>
-                [%~ ELSIF use_passwd || use_sso || authentication_info_url ~%]
+                [%~ ELSIF use_passwd || sso.size || authentication_info_url ~%]
                     [% PROCESS 'login_menu.tt2' %]
                 [%~ END %]
             </ul>

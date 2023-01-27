@@ -62,10 +62,11 @@ html
 
 [% top_menu = 1 ~%]
 
-/**
- * CSS Reset (extended)
- * Base : http://meyerweb.com/eric/tools/css/reset/ | v2.0 | 20110126
- */
+[%# CSS Reset: Don't edit this section. ~%]
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
 
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -84,34 +85,40 @@ time, mark, audio, video {
     padding: 0;
     border: 0;
     font-size: 100%;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
     font: inherit;
     vertical-align: baseline;
 }
-
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
-footer, header, hgroup, nav, section {
+footer, header, hgroup, menu, nav, section {
     display: block;
 }
-
 body {
     line-height: 1;
 }
-
 ol, ul {
     list-style: none;
 }
-
 blockquote, q {
     quotes: none;
 }
-
 blockquote:before, blockquote:after,
 q:before, q:after {
     content: '';
     content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+[%~# End of CSS Reset %]
+
+/***
+  * Foundation 6: Expand width of tooltip (See GH issue #1262)
+  */
+
+.tooltip {
+    max-width: 20rem;
 }
 
 /***
@@ -149,12 +156,12 @@ q:before, q:after {
 
 /* Proportional fonts */
 * {
-    font-family: 'Raleway', sans-serif;
+    font-family: sans-serif;
     font-size: 1em;
 }
 
 body {
-    font-family: 'Raleway', sans-serif;
+    font-family: sans-serif;
     font-size: 0.85em;
     -webkit-text-size-adjust:100%;
     line-height: 1.4;
@@ -221,6 +228,10 @@ dfn {
     font-style: italic;
 }
 
+em {
+    font-style: italic;
+}
+
 hr {
     display: block;
     height: 1px;
@@ -242,9 +253,12 @@ mark {
 }
 
 pre, code, kbd, samp {
-    font-family: monospace, serif;
-    _font-family: 'courier new', monospace;
+    color: inherit;
+    [%# Workaround for size of monospace font.
+        cf. https://github.com/necolas/normalize.css/issues/519 ~%]
+    font-family: monospace, monospace;
     font-size: 1em;
+    font-weight: inherit;
 }
 
 pre {
@@ -284,14 +298,18 @@ sub {
 ul, ol, dl {
     margin: 1em 0;
     padding: 0 0 0 1rem;
-    font-size: 13px;
     color: [% color_3 %];
     list-style-position: outside;
 }
 
 nav ul, nav ol {
+    font-size: 13px;
     list-style: none;
     list-style-image: none;
+}
+
+ul.styled-list {
+    list-style: disc;
 }
 
 img {
@@ -328,7 +346,7 @@ main form form{
 label {
     color: [% color_4 %];
     margin-top:0.5rem;
-    /*display: inline-block;*/    padding-left:0!important;
+    padding-left:0!important;
     font-weight:700;
     cursor: pointer;
 }
@@ -345,15 +363,6 @@ label[for="connected_only"] {
     display: inline;
 }
 
-input {
-    /*border: 1px solid [% color_12 %];
-    border-radius: 3px;
-    font-size: 16px;
-    padding: 10px 9px;
-    margin-right: 10px;
-    outline:none;*/
-}
-
 input[type="checkbox"], input[type="radio"] {
     border: none;
     box-sizing: border-box;
@@ -367,14 +376,7 @@ input[type="file"]{
     display: block;
         margin-top:0.5rem;
 }
-select {
-    /*border: 1px solid [% color_12 %];
-    border-radius: 3px;
-    font-size: 16px;
-    padding: 6px 4px;
-    margin-right: 10px;
-    outline:none;*/
-}
+
 [%# 641px ~%]
 @media only screen and (min-width: 40em) {
     select, input {
@@ -383,17 +385,6 @@ select {
 }
 select[name="size"] {
    max-width: 60px;
-}
-textarea {
-    /*font-size: 13px;
-    color: [% color_4 %];
-    min-height: 60px;
-    padding: 6px 9px;
-    border: 1px solid [% color_12 %];
-    border-radius: 3px;
-    width: 94%;
-    line-height: 20px;
-    outline:none;*/
 }
 
 legend {
@@ -696,38 +687,6 @@ table tr th, table tr td {
     max-width: 100%;
 }
 
-[% IF 0 # No longer used ~%]
-#nav {
-    position:relative;
-    top:-1px;
-}
-
-#nav li {
-    list-style: none;
-    float:left;
-    height:32px;
-    margin-right:5px;
-    background-image:none; /*overrides Massey default */
-}
-
-#nav a span {
-    display:block;
-    font-weight:bold;
-    padding:7px 15px 2px 15px;
-}
-
-#nav a {
-    display:block;
-    height:32px;
-    background-image:none;
-    background-color: transparent;
-    border:1px solid [% color_9 %];
-    color: [% color_7 %];
-    border: none;
-    border-radius: 3px 3px 0px 0px;
-}
-[%~ END # IF 0 ~%]
-
 p {
     word-wrap:break-word;
 }
@@ -817,13 +776,6 @@ main h1.robot_name {
     aside nav menu.connect ul li > ul.menu li input{
         height:1.5rem;
     }
-    [% IF 0 # No longer used. ~%]
-    aside nav menu li.divider, aside nav menu [role="separator"] {
-        display:block;
-        margin:0!important;
-        border-bottom: 1px solid [% color_5 %];
-    }
-    [%~ END # IF 0 ~%]
     #sympa-sub-bar menu {
         width:98%;
         max-width:250px;
@@ -966,12 +918,6 @@ menu.shared li{
 }
 /****End Top button***/
 
-[% IF 0 # No longer used. ~%]
-.remember{
-   line-height: 2em;
-}
-[%~ END # IF 0 ~%]
-
 /* Initials in list of lists */
 main nav menu ul li.letter,
 main nav menu ul li.letter a,
@@ -1024,12 +970,13 @@ h4.letter {
     padding-left: 0;
 }
 
-.item_list .item .item_content ul.my li{
+.item_list .item .item_content ul.my li {
     display:inline;
+    padding-left: 1.5rem;
 }
 
-.item_list .item .item_content ul.my li:nth-child(2){
-    padding-left: 1.5rem;
+.item_list .item .item_content ul.my li:first-child {
+    padding-left: 0;
 }
 
 .item_list .item .item_content p {
@@ -1046,27 +993,6 @@ h4.letter {
     padding:0;
     margin:0.5rem 0;
 }
-
-[% IF 0 # No longer used. ~%]
-.prefs {
-    line-height: 2em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-}
-
-.form_row {
-    margin-top: 1em;
-    float: left;
-    clear: left;
-    width: 100%;
-}
-
-.form_row label {
-    display: block;
-    float: left;
-    width: 150px;
-}
-[%~ END # IF 0 ~%]
 
 #list_create form label[for="owner"]{
 
@@ -1087,12 +1013,6 @@ h4.letter {
     margin: 0;
 }
 
-[% IF 0 # No longer used. ~%]
-.navBar li {
-    line-height: 2em;
-}
-[%~ END # IF 0 ~%]
-
 #bold_label label {
    display: inline-block;
    width: 100px;
@@ -1101,40 +1021,6 @@ h4.letter {
 #bold_label em {
    font-style: normal;
 }
-
-[% IF 0 # No longer used. ~%]
-form#logs_form label,
-form.bold_label label {
-}
-#Canvas {
-    min-height: 95%;
-    width: 98%;
-    margin: 0 0.8em -5em 0.8em;
-    overflow: hidden;
-}
-
-#Menus {
-    float:left;
-    width: 23.5em;
-    border: 0px solid;
-    margin-top:1em;
-    padding-top: 0px;
-    text-align: left;
-}
-
-#Paint {
-    vertical-align:top;
-    text-align: center;
-}
-
-#Title {
-    text-align: left;
-    font-size:1.8em;
-    font-weight: bold;
-    padding:1em 0 0 0;
-    z-index:520;
-}
-[%~ END # IF 0 ~%]
 
 .menuInactive2 {
     font-size: 1em;
@@ -1146,41 +1032,6 @@ form.bold_label label {
 ul#MainMenuLinks li {
    line-height: 1.7em;
 }
-
-[% IF 0 # No longer used. ~%]
-#toggleMenu {
-    float: right;
-    padding-right: 3px;
-}
-
-td.adminmenu {
-    text-align: center;
-}
-
-.text_left {
-    text-align: left;
-}
-
-.text_right {
-    text-align: right!important;
-}
-
-td.text_right {
-    text-align: right;
-}
-
-.text_justify {
-    text-align: justify;
-}
-
-.without_padding {
-    padding:0!important;
-}
-
-.list_panel li {
-   list-style-type: none;
-}
-[%~ END # IF 0 ~%]
 
 #list_type {
     list-style-type: none;
@@ -1198,12 +1049,6 @@ td.text_right {
     font-size: larger;
 }
 
-[% IF 0 # No longer used. ~%]
-span.center {
-    text-align: center;
-}
-[%~ END # IF 0 ~%]
-
 table td.review_cels {
     text-align: center;
     padding:0 0.2em;
@@ -1213,92 +1058,6 @@ table td.review_cels_mail {
     text-align: left;
     padding:0 0 0 0.2em;
 }
-
-[% IF 0 # No longer used. ~%]
-#home_rss_news {
-    float: right;
-}
-
-#home_rss_news input {
-    border: 1px solid;
-    padding:0.05em 1em;
-    text-decoration: none;
-    font-size: 0.9em;
-    font-weight: 600;
-    letter-spacing:0.1em;
-    /* if IE zoom:1;*/
-    zoom: 1;
-    -moz-border-radius:10px;
-    -webkit-border-radius:10px;
-    -KHTML-border-radius:10px;
-    -icab-border-radius:10px;
-    border-radius:10px;
-}
-
-#home_search_list {
-    clear: both;
-}
-
-#home_search_list form fieldset {
-    display: inline;
-    vertical-align: top;
-}
-
-#home_container {
-    padding: 10px;
-    border: 1px dashed;
-    -moz-border-radius:4px;
-    -webkit-border-radius:4px;
-    -KHTML-border-radius:4px;
-    -icab-border-radius:4px;
-    border-radius:4px;
-}
-
-.home_page_list{
-    width:100%;
-}
-.home_page_list li{
-    padding-bottom: 1rem;
-    line-height:2.5rem;
-}
-.home_page_list li a span:nth-of-type(2){
-    padding:0 0.5rem;
-    font-size:1.5rem;
-}
-.home_page_list li > span:nth-of-type(1){
-    display: block;
-    margin-top: -1rem;
-    font-size:1rem;
-}
-
-[%# No longer used.
-.edit_list_request_enum{
-    margin: 0 0 1rem;
-    padding-left: 1em;
-    text-align: left;
-    font-size: 1em;
-}
-
-~%]
-[%# No longer used.
-.edit_list_request_enum span.divider:first-child {
-    display:none;
-}
-~%]
-
-[%# No longer used.
- /*.edit_list_request_enum label{
-    display: block;
-    float: left;
-    width: 150px;
-}
-*/
-~%]
-
-.list_admin {
-    font-size: 1em;
-}
-[%~ END # IF 0 ~%]
 
 .mailing_lists_menu {
     padding: 10px;
@@ -1334,28 +1093,6 @@ ul.no_style {
     background-color: [% color_7 %]!important;
 }
 
-[% IF 0 # No longer used. ~%]
-#help {
-    padding-left: 10px;
-    padding-top: 5px;
-    margin-bottom: 20px;
-}
-
-#help li {
-    padding: 1px;
-}
-
-#help_editfile, #blaklist {
-    margin: 1em;
-}
-
-#help_editfile ul, #blacklist ul {
-    padding-left: 1em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-}
-[%~ END # IF 0 ~%]
-
 ul#set_pending_radio {
     display: inline;
     list-style-type: none;
@@ -1377,27 +1114,6 @@ form input[type="checkbox"] {
     vertical-align: inherit;
     border:none;
 }
-
-[% IF 0 # No longer used. ~%]
-#global_mailing_lists {
-    text-align: center;
-}
-
-#show_cert {
-    border: 1px solid;
-}
-
-#show_cert ul {
-    list-style-type: none;
-    padding-top: 5px;
-    margin-bottom: 5px;
-}
-
-#show_cert ul li {
-    line-height: 1em;
-    padding-left: 3px;
-}
-[%~ END # IF 0 ~%]
 
 #cp_template {
     border: 1px solid;
@@ -1428,40 +1144,17 @@ footer {
     width:100%;
     height:1.5em;
     margin: 0;
-    font-size: 1.1em;
+    font-size: x-small;
     text-align: center;
     padding-top:0.5rem;
     padding-bottom:2.5rem;
         clear:both;
 }
 
-footer a {
-    font-weight: normal;
-    font-size: 11px;
-}
-
 footer img {
     margin:0 0.5em 0 0;
     vertical-align:middle;
 }
-
-[% IF 0 # No longer used. ~%]
-#Identity {
-    text-align: left;
-    padding-top: 1em;
-}
-
-.Help {
-    display: none;
-    position: absolute;
-    border: 1px dotted;
-    z-index: 1000;
-}
-
-#rows_nb {
-    font-size: 0.8em;
-}
-[%~ END # IF 0 ~%]
 
 #page_size {
     margin: 2rem 0;
@@ -1471,37 +1164,10 @@ footer img {
     width:100px;
 }
 
-[% IF 0 # No longer used. ~%]
-.ContentBlock {
-    margin-top:1rem;
-    text-align: left;
-}
-[%~ END # IF 0 ~%]
-
 .nomenu{
     width:100%;
     padding:0.5rem;
 }
-
-[% IF 0 # No longer used. ~%]
-.nomenu .ContentBlock {
-    margin: 1em auto;
-    float:none;
-    width: 90%;
-}
-
-.ContentBlock h2 {
-    margin-top:0;
-}
-
-.ContentBlock > * {
-
-}
-
-.ContentBlock * a {
-    text-align: left;
-}
-[%~ END # IF 0 ~%]
 
 a img.Pictures {
     height:30px;
@@ -1534,64 +1200,6 @@ a img.Pictures {
     display: none;
     height:0px;
     width:0px;
-}
-
-/*
-.title {
-    position: absolute;
-    top: 60px;
-    font-size: 1.6em;
-    text-indent: 30px;
-}
-*/
-
-[% IF 0 # No longer used. ~%]
-.customMenu {
-    text-indent: 0px;
-}
-
-a.dingbat {
-    text-align: center;
-}
-
-.dingbat {
-    text-indent: 0px;
-    text-align: center;
-    font-weight: 100;
-}
-
-.smalltext {
-    font-size: 0.8em;
-}
-
-.smalltext a {
-    font-size: 0.8em;
-}
-
-.smallblacktext {
-    font-size: 1.2em;
-}
-
-.mediumtext {
-    font-size: 1.2em;
-}
-
-.largetext {
-    font-size: 1.6em;
-}
-[%~ END # IF 0 ~%]
-
-[%# No longer used. ~%]
-a.actionMenuLinksCurrentPage {
-    border: none;
-    text-decoration: none;
-    padding: 5px;
-    margin: 0 0.5em 0 0;
-    cursor:pointer;
-    background-color: [% color_10 %];
-    color: [% color_7 %];
-    font-size: 0.9em;
-    border-radius:2px;
 }
 
 a.actionMenuLinks,
@@ -1697,40 +1305,11 @@ h7 strong {
     font-size: 1em;
 }
 
-[% IF 0 # No longer used. ~%]
-.listTitle {
-    font-size: 1.6em;
-    padding-bottom: 0.5em;
-}
-
-.listTitle.description  {
-    font-size:1em;
-    font-weight:bold;
-    margin-top:0em;
-    margin-bottom:1.3em;
-    border:none;
-}
-[%~ END # IF 0 ~%]
-
-/*
-#ErrorBlock {
-    position:absolute;
-    left:0;
-    top:0;
-    z-index:600;
-    opacity:0.4;
-    width:100%;
-    height:100%;
-    background: none repeat scroll 0 0 [% color_1 %]
-}
- */
-
 #ErrorMsg {
     position:absolute;
     width:60%;
     margin:20% 19%;
     padding:0;
-    /* z-index:610!important; */
     font-size: 1.4em;
     font-weight: bold;
     text-align:center;
@@ -1851,26 +1430,7 @@ span.divider{
     padding-bottom:0.5rem;
 }
 
-[% IF 0 # No longer used. ~%]
-div.admin_cmd {
-    float:left;
-    margin: 0em 0.3em 0.1em 0;
-    padding: 0 0.3em;
-    border: 1px solid;
-    -moz-border-radius:6px;
-    -webkit-border-radius:6px;
-    -KHTML-border-radius:6px;
-    -icab-border-radius:6px;
-    border-radius:6px;
-}
-
-div.admin_cmd a {
-    font-size:0.7em!important;
-    font-weight:bold;
-}
-[%~ END # IF 0 ~%]
-
-/* Calendar in mhonarc-ressources.tt2 */
+/* Calendar in mhonarc_rc.tt2 */
 ul.calendar {
     margin-left:0!important;
     padding-left:0!important;
@@ -1916,7 +1476,7 @@ ul li.calendarLinksInactive {
 ul li.calendarYear {
     border: 1px solid;
 }
-/* end calendar in mhonarc-ressources.tt2 */
+/* end calendar in mhonarc_rc.tt2 */
 
 abbr,
 acronym,
@@ -1931,10 +1491,6 @@ p {
 
 p.spacer {
     clear: both;
-}
-
-code {
-    font-weight: bold;
 }
 
 a.input {
@@ -1979,44 +1535,6 @@ input.button {
     margin:2px;
 }
 
-[% IF 0 # No longer used. ~%]
-#subnav {
-    float:left;
-    width:99.9%;
-    z-index:400!important;
-}
-
-#subnav ul {
-    font-size:0.9em;
-    margin:1em 0 0;
-    list-style:none;
-}
-
-#subnav ul li {
-    float:left;
-    display:inline;
-    margin:0 0.5em 0.2em 0.2em;
-}
-
-#subnav ul li.MainMenuLinks{
-    background-color: [% color_10 %];
-    padding: 0.2em 0.5em;
-}
-
-#subnav ul li.MainMenuLinks a {
-    color: [% color_7 %];
-}
-
-#subnav ul li.MainMenuLinksCurrentPage {
-    background-color: [% color_13 %];
-    padding: 0.2em 0.5em;
-}
-
-#subnav ul li.MainMenuLinksCurrentPage a {
-    color: [% color_7 %];
-}
-[%~ END # IF 0 ~%]
-
 span.bottom_page, p.bottom_page{
     font-size: 0.8em;
     font-weight:bold;
@@ -2030,74 +1548,6 @@ span.bottom_page, p.bottom_page{
 .noborder {
     border: none!important;
 }
-
-[% IF 0 # No longer used: for microCal ~%]
-.divCal {
-    position:absolute;
-    border:1px;
-    z-index:500;
-}
-
-.divCal a{
-    text-decoration:none;
-    width:100%;
-}
-
-.divCal table {
-    font-size:12px;
-    font-family:Tahoma;
-    text-align:center;
-    max-width:500px;
-}
-
-.divCal table tr td.zoneTitre {
-    text-align:center;
-    font-weight:bold;
-}
-
-.divCal .zoneNav {
-    text-align:center;
-    font-size:10px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.divCal .zoneMois {
-    text-align:center;
-    font-weight:bold;
-}
-
-.divCal .zoneAnnee {
-    font-weight:bold;
-    text-align:right;
-    width:100%;
-}
-
-.divCal .nSemaine {
-    text-align:center;
-    font-family:Tahoma;
-    width:30px;
-}
-
-.divCal .tdx .enMois {
-    text-align:center;
-}
-
-.divCal .tdx .aujourdhui {
-    border:2px solid;
-    text-align:center;
-    font-weight:bold;
-}
-
-.divCal .tdxNow {
-    text-align:center;
-    font-weight:bold;
-}
-
-.divCal .tdx:hover .enMois {
-    text-align:center;
-}
-[%~ END # IF 0 ~%]
 
 .viewmod {
     display: none;
@@ -2147,12 +1597,6 @@ nav menu form{
 }
 
 [%# Color of submenu icons ~%]
-[% IF 0 # We use default of F6 for accordion menu. ~%]
-.accordion-menu .is-accordion-submenu-parent:not(.has-submenu-toggle) > a:after,
-.submenu-toggle:after {
-    border-color: rgba(255, 255, 255, 0.4) transparent transparent;
-}
-[%~ END # IF 0 ~%]
 .drilldown .is-drilldown-submenu-parent > a:after,
 .drilldown.align-left .is-drilldown-submenu-parent > a:after {
     border-color: transparent transparent transparent rgba(255, 255, 255, 0.4);
@@ -2224,73 +1668,6 @@ nav menu form{
       padding-left: 15px;
     }
 
-    [% IF 0 # No longer used --- login menu embeded in top bar. ~%]
-    #sympa-top-bar menu ul li label {
-        margin-top:0;
-        display:inline;
-        color:[% color_7 %];
-        font-weight:normal;
-    }
-
-    #sympa-top-bar menu ul li > ul.menu li label {
-        display:block;
-        color:[% color_7 %];
-        background-color: transparent;
-        margin:0;
-        padding-top: 0.5rem;
-        padding-bottom: 1rem;
-        padding-left: 10px !important;
-        line-height:1.2;
-    }
-
-    #sympa-top-bar menu ul li > ul.menu li input{
-        height:1.5rem;
-        margin: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        width:15rem;
-    }
-
-    #sympa-top-bar menu ul li > ul.menu li.role{
-        line-height:1rem;
-    }
-
-    [%# Not used ~%]
-    .top-bar .title-area {
-        text-align:right;
-    }
-
-    .top-bar .dropdown form fieldset {
-        display:block;
-    }
-
-    /*
-    .top-bar form#use-sso fieldset {
-        height: 45px;
-        padding-top: 0.3rem;
-    }
-    */
-
-    .top-bar form#use-sso fieldset label[for="auth_service_name"] {
-            display: inline-block;
-            line-height: normal;
-            vertical-align: top;
-            max-width: 290px;
-    }
-
-    .top-bar form#use-sso fieldset select#auth_service_name {
-            max-width: 150px;
-            padding: 0;
-            color: [% color_5 %];
-            height: 2rem;
-    }
-
-    .top-bar form#use-sso fieldset button[name="action_sso_login"] {
-            padding: 0.3rem;
-    /*        vertical-align: top;*/
-    }
-    [%~ END # IF 0 ~%]
-
     #sympa-top-bar menu ul li > span,
     #sympa-top-bar menu ul li form fieldset > span {
         padding: 0 1rem;
@@ -2350,7 +1727,6 @@ main .top-bar {
 
 [%# Compat. with Foundation 5 ~%]
 #sympa-nav-bar menu ul li a {
-    /* padding: 0 10px; */
     padding-top: 0;
     padding-bottom: 0;
 }
@@ -2503,17 +1879,6 @@ span.fa-stack i.fa-plus-circle {
 .doc li {
     padding: 0;
 }
-[% IF 0 ~%]
-.doc h1 { font-size: 2em;      margin: 0.6667em 0; }
-.doc h2 { font-size: 1.5em;    margin: 0.8333em 0; }
-.doc h3 { font-size: 1.1667em; margin: 1em 0; }
-.doc h4 { font-size: 1em;      margin: 1.3333em 0; }
-.doc h5 { font-size: 0.8333em; margin: 1.6667em 0; }
-.doc h6 { font-size: 0.6667em; margin: 2.3333em 0; }
-.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6 {
-    font-weight: bold; break-after: avoid; -ms-page-break-after: avoid;
-}
-[% END ~%]
 .doc p, .doc ul, .doc menu, .doc dir, .doc ol, .doc dl {
     margin: 1em 0;
 }
@@ -2553,7 +1918,6 @@ span.fa-stack i.fa-plus-circle {
 .doc li {
     display: list-item;
     margin: 0;
-    /* text-align: -webkit-match-parent; */
 }
 
 p.retraitita, span.retraitita {
@@ -2572,7 +1936,6 @@ p.retraitita, span.retraitita {
     }
     h2 {
             font-size: 1.3em;
-            [%~IF 0%]margin-top: 0;[%END%]
     }
     h3 {
             font-size: 1.1em;
@@ -2590,8 +1953,6 @@ p.retraitita, span.retraitita {
     }
     .item_list .item .item_content ul.my li{
         display:block;
-    }
-    .item_list .item .item_content ul.my li:nth-child(2){
         padding-left:0;
     }
 }
@@ -2603,7 +1964,6 @@ p.retraitita, span.retraitita {
     }
     h2 {
             font-size: 1.3em;
-            [%~IF 0%]margin-top: 0;[%END%]
     }
     h3 {
             font-size: 1.1em;
@@ -2624,16 +1984,9 @@ p.retraitita, span.retraitita {
 [%# 641px ~%]
 @media only screen and (min-width: 40em) {
     #sympa-top-bar menu ul li a:not(.button) {
-      /* padding: 0 10px; */
         padding-top: 0;
         padding-bottom: 0;
     }
-    [% IF 0 # Maybe no longer used ~%]
-    nav menu ul.menu li > span {
-      display: block;
-      padding-left: 10px;
-    }
-    [%~ END # IF 0 ~%]
     #sympa-top-bar menu .menu li:not(.active) > a:not(.button) {
         background-color: [% color_6 %];
     }
@@ -2656,7 +2009,6 @@ p.retraitita, span.retraitita {
         height: 45px;
         line-height: 45px;
         padding: 0 1rem;
-        /* text-align:left; */
     }
     .title-bar .menu-text {
         font-size: 13px;

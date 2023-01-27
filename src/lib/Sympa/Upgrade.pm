@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,6 +36,7 @@ use MIME::Base64 qw();
 use Time::Local qw();
 
 use Sympa;
+use Sympa::CLI;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -65,18 +65,19 @@ sub get_previous_version {
     my $previous_version;
 
     if (-f $version_file) {
-        unless (open VFILE, $version_file) {
+        my $ifh;
+        unless (open $ifh, '<', $version_file) {
             $log->syslog('err', 'Unable to open %s: %m', $version_file);
             return undef;
         }
-        while (<VFILE>) {
+        while (<$ifh>) {
             next if /^\s*$/;
             next if /^\s*\#/;
             chomp;
             $previous_version = $_;
             last;
         }
-        close VFILE;
+        close $ifh;
 
         return $previous_version;
     }
@@ -88,19 +89,20 @@ sub update_version {
     my $version_file = "$Conf::Conf{'etc'}/data_structure.version";
 
     ## Saving current version if required
-    unless (open VFILE, ">$version_file") {
+    my $ofh;
+    unless (open $ofh, '>', $version_file) {
         $log->syslog(
             'err',
-            'Unable to write %s; sympa.pl needs write access on %s directory: %m',
+            'Unable to write %s; Sympa needs write access on %s directory: %m',
             $version_file,
             $Conf::Conf{'etc'}
         );
         return undef;
     }
-    printf VFILE
-        "# This file is automatically created by sympa.pl after installation\n# Unless you know what you are doing, you should not modify it\n";
-    printf VFILE "%s\n", Sympa::Constants::VERSION;
-    close VFILE;
+    printf $ofh
+        "# This file is automatically created by sympa after installation\n# Unless you know what you are doing, you should not modify it\n";
+    printf $ofh "%s\n", Sympa::Constants::VERSION;
+    close $ofh;
 
     return 1;
 }
@@ -180,15 +182,16 @@ sub upgrade {
 
     ## Migration to tt2
     if (lower_version($previous_version, '4.2b')) {
-
-        $log->syslog('notice', 'Migrating templates to TT2 format...');
-
-        my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
-        unless (open EXEC, "$tpl_script|") {
-            $log->syslog('err', 'Unable to run %s', $tpl_script);
-            return undef;
-        }
-        close EXEC;
+        # Orgranization of templates has been changed and migration is no use.
+        #$log->syslog('notice', 'Migrating templates to TT2 format...');
+        #
+        #my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
+        #my $pipein;
+        #unless (open $pipein, '-|', $tpl_script) {    #FIXME
+        #    $log->syslog('err', 'Unable to run %s', $tpl_script);
+        #    return undef;
+        #}
+        #close $pipein;
 
         $log->syslog('notice', 'Rebuilding web archives...');
         my $all_lists = Sympa::List::get_lists('*');
@@ -247,25 +250,26 @@ sub upgrade {
         ## Search in V. Robot Lists
         my $all_lists = Sympa::List::get_lists('*');
         foreach my $list (@$all_lists) {
-            if (-d "$list->{'dir'}/web_tt2") {
-                push @directories, "$list->{'dir'}/web_tt2";
+            if (-d ($list->{'dir'} . '/web_tt2')) {
+                push @directories, $list->{'dir'} . '/web_tt2';
             }
         }
 
         my @templates;
 
         foreach my $d (@directories) {
-            unless (opendir DIR, $d) {
+            my $dh;
+            unless (opendir $dh, $d) {
                 printf STDERR "Error: Cannot read %s directory: %s", $d,
                     $ERRNO;
                 next;
             }
 
-            foreach my $tt2 (sort grep(/\.tt2$/, readdir DIR)) {
+            foreach my $tt2 (sort grep {/\.tt2$/} readdir $dh) {
                 push @templates, "$d/$tt2";
             }
 
-            closedir DIR;
+            closedir $dh;
         }
 
         foreach my $tpl (@templates) {
@@ -344,12 +348,13 @@ sub upgrade {
 
         my $root_dir =
             Conf::get_robot_conf($Conf::Conf{'domain'}, 'arc_path');
-        unless (opendir ARCDIR, $root_dir) {
+        my $dh;
+        unless (opendir $dh, $root_dir) {
             $log->syslog('err', 'Unable to open %s: %m', $root_dir);
             return undef;
         }
 
-        foreach my $dir (sort readdir(ARCDIR)) {
+        foreach my $dir (sort readdir $dh) {
             ## Skip files and entries starting with '.'
             next
                 if (($dir =~ /^\./o) || (!-d $root_dir . '/' . $dir));
@@ -389,7 +394,7 @@ sub upgrade {
                 }
             }
         }
-        close ARCDIR;
+        closedir $dh;
 
     }
 
@@ -487,12 +492,13 @@ sub upgrade {
 
         my $root_dir =
             Conf::get_robot_conf($Conf::Conf{'domain'}, 'bounce_path');
-        unless (opendir BOUNCEDIR, $root_dir) {
+        my $dh;
+        unless (opendir $dh, $root_dir) {
             $log->syslog('err', 'Unable to open %s: %m', $root_dir);
             return undef;
         }
 
-        foreach my $dir (sort readdir(BOUNCEDIR)) {
+        foreach my $dir (sort readdir $dh) {
             ## Skip files and entries starting with '.'
             next
                 if (($dir =~ /^\./o) || (!-d $root_dir . '/' . $dir));
@@ -527,7 +533,7 @@ sub upgrade {
                     $old_path, $new_path);
             }
         }
-        close BOUNCEDIR;
+        closedir $dh;
     }
 
     # Update lists config using 'include_sympa_list'
@@ -616,9 +622,7 @@ sub upgrade {
     ## encoding
     if (lower_version($previous_version, '5.3a.8')) {
         $log->syslog('notice', 'Q-Encoding web documents filenames...');
-        system Sympa::Constants::SCRIPTDIR()
-            . '/upgrade_shared_repository.pl',
-            '--all_lists';
+        Sympa::CLI->run({}, 'upgrade', 'shared', '*');
     }
 
     ## We now support UTF-8 only for custom templates, config files, headers
@@ -704,36 +708,38 @@ sub upgrade {
         ## Search language directories
         foreach my $pair (@directories) {
             my ($d, $lang) = @$pair;
-            unless (opendir DIR, $d) {
+            my $dh;
+            unless (opendir $dh, $d) {
                 next;
             }
 
             if ($d =~ /(mail_tt2|web_tt2)$/) {
                 foreach
-                    my $subdir (grep(/^[a-z]{2}(_[A-Z]{2})?$/, readdir DIR)) {
+                    my $subdir (grep {/^[a-z]{2}(_[A-Z]{2})?$/} readdir $dh) {
                     if (-d "$d/$subdir") {
                         push @directories, ["$d/$subdir", $subdir];
                     }
                 }
-                closedir DIR;
+                closedir $dh;
 
             } elsif ($d =~ /(create_list_templates|families)$/) {
-                foreach my $subdir (grep(/^\w+$/, readdir DIR)) {
+                foreach my $subdir (grep {/^\w+$/} readdir $dh) {
                     if (-d "$d/$subdir") {
                         push @directories,
                             ["$d/$subdir", $Conf::Conf{'lang'}];
                     }
                 }
-                closedir DIR;
+                closedir $dh;
             }
         }
 
         foreach my $pair (@directories) {
             my ($d, $lang) = @$pair;
-            unless (opendir DIR, $d) {
+            my $dh;
+            unless (opendir $dh, $d) {
                 next;
             }
-            foreach my $file (readdir DIR) {
+            foreach my $file (readdir $dh) {
                 next
                     unless (
                     (   $d =~
@@ -744,7 +750,7 @@ sub upgrade {
                     );
                 push @files, [$d . '/' . $file, $lang];
             }
-            closedir DIR;
+            closedir $dh;
         }
 
         ## Do the encoding modifications
@@ -778,16 +784,9 @@ sub upgrade {
                     $list->{'dir'} . '/member.dump'
                 ) {
                     $list->restore_users('member');
-
-                    my $total = $list->{'add_outcome'}{'added_members'};
-                    if (defined $list->{'add_outcome'}{'errors'}) {
-                        $log->syslog('err', 'Failed to add users: %s',
-                            $list->{'add_outcome'}{'errors'}{'error_message'}
-                        );
-                    }
-                    $log->syslog('notice',
-                        '%d subscribers have been loaded into the database',
-                        $total);
+                    #$log->syslog('notice',
+                    #    '%d subscribers have been loaded into the database',
+                    #    $total);
                 }
 
                 $list->{'admin'}{'user_data_source'} = 'include2';
@@ -804,7 +803,15 @@ sub upgrade {
                     $list->{'name'}
                 );
 
-                unless ($list->update_list_member('*', {'subscribed' => 1})) {
+                my $sdm = Sympa::DatabaseManager->instance;
+                unless (
+                    $sdm and $sdm->do_prepared_query(
+                        q{UPDATE subscriber_table
+                          SET subscribed_subscriber = 1
+                          WHERE list_subscriber = ? AND robot_subscriber = ?},
+                        $list->{'name'}, $list->{'domain'}
+                    )
+                ) {
                     $log->syslog('err',
                         'Failed to update subscribed DB field');
                 }
@@ -851,9 +858,7 @@ sub upgrade {
         ## We change encoding of shared documents according to new algorithm
         $log->syslog('notice',
             'Fixing Q-encoding of web document filenames...');
-        system Sympa::Constants::SCRIPTDIR()
-            . '/upgrade_shared_repository.pl',
-            '--all_lists', '--fix_qencode';
+        Sympa::CLI->run({fix_qencode => 1}, 'upgrade', 'shared', '*');
     }
     if (lower_version($previous_version, '6.1.11')) {
         ## Exclusion table was not robot-enabled.
@@ -1212,14 +1217,15 @@ sub upgrade {
         }
     }
 
-    # Create HTML view of pending messages
-    if (lower_version($previous_version, '6.2b.1')) {
-        $log->syslog('notice', 'Creating HTML view of moderation spool...');
-        my $status =
-            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
-        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
-            if $status;
-    }
+    # 6.2.70: Now HTML view of held messages will be created on demand.
+    ## Create HTML view of pending messages
+    #if (lower_version($previous_version, '6.2b.1')) {
+    #    $log->syslog('notice', 'Creating HTML view of moderation spool...');
+    #    my $status =
+    #        system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+    #    $log->syslog('err', 'mod2html.pl failed with status %s', $status)
+    #        if $status;
+    #}
 
     # Rename files in automatic spool with older format created by
     # sympa-milter 0.6 or earlier: <family_name>.<date>.<rand> to
@@ -1287,6 +1293,7 @@ sub upgrade {
             if ($list->{'admin'}{'archive'}{'access'}) {
                 $list->{'admin'}{'archive'}{'mail_access'} =
                     {'name' => $list->{'admin'}{'archive'}{'access'}};
+                delete $list->{'admin'}{'defaults'}{'archive'};
             }
             delete $list->{'admin'}{'archive'}{'access'};
 
@@ -1305,6 +1312,7 @@ sub upgrade {
                 $list->{'admin'}{'archive'}{'max_month'} =
                     $list->{'admin'}{'web_archive'}{'max_month'}
                     if $list->{'admin'}{'web_archive'}{'max_month'};
+                delete $list->{'admin'}{'defaults'}{'archive'};
             }
             delete $list->{'admin'}{'web_archive'};
 
@@ -1366,9 +1374,12 @@ sub upgrade {
                     and length $msg_string
                     and $recipient) {
                     $msg_string = MIME::Base64::decode_base64($msg_string);
+                    # Note: See also upgrading from versions later than 6.2b.3
+                    # to version 6.2.63b.1 in below.
+                    # below.
                     my $bounce_path = sprintf '%s/%s_%08s',
                         $list->get_bounce_dir,
-                        Sympa::Tools::Text::escape_chars($recipient),
+                        _escape_chars($recipient),
                         $info->{'pk_notification'};
                     if (open my $fh, '>', $bounce_path) {
                         print $fh $msg_string;
@@ -1684,11 +1695,12 @@ sub upgrade {
             closedir $dh;
         }
 
-        $log->syslog('notice', 'Creating HTML view of moderation spool...');
-        my $status =
-            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
-        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
-            if $status;
+        # 6.2.70: Now HTML view of held messages will be created on demand.
+        #$log->syslog('notice', 'Creating HTML view of moderation spool...');
+        #my $status =
+        #    system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+        #$log->syslog('err', 'mod2html.pl failed with status %s', $status)
+        #    if $status;
     }
 
     # Upgrading moderation spool on subscription.
@@ -1742,7 +1754,7 @@ sub upgrade {
                     $lock_fh->close;
                 }
             }
-            close $dh;
+            closedir $dh;
         }
     }
 
@@ -2070,6 +2082,149 @@ sub upgrade {
         }
     }
 
+    if (lower_version($previous_version, '6.2.61b.1')) {
+        # Variable tags "($tag$% ... %$tag$)" no longer used in
+        # mhonarc_rc.tt2 (ex. mhonarc-ressources.tt2) and were replaced with
+        # "<% ... %>".
+        $log->syslog('notice', 'Converting mhonarc-ressources.tt2...');
+        _process_all_files(
+            'mhonarc-ressources.tt2',
+            sub {
+                my $that    = shift;
+                my $dir     = shift;
+                my $oldfile = shift;
+                my $newfile = 'mhonarc_rc.tt2';
+
+                open my $ifh, '<', $dir . '/' . $oldfile
+                    or die sprintf '%s: %s', $oldfile, $ERRNO;
+                my $text = do { local $RS; <$ifh> };
+                close $ifh;
+
+                $text =~ s{[(]\$tag\$%}{<%}g;
+                $text =~ s{%\$tag\$[)]}{%>}g;
+
+                open my $ofh, '>', $dir . '/' . $newfile
+                    or die sprintf '%s: %s', $newfile, $ERRNO;
+                print $ofh $text;
+                close $ofh;
+            }
+        );
+        $log->syslog('notice', '...Done. Use new file(s) mhonarc_rc.tt2.');
+
+        # blocklist.txt will be used instead of blacklist.txt
+        $log->syslog('notice', 'Rename blacklist.txt to blocklist.txt...');
+        _process_all_files(
+            'search_filters/blacklist.txt',
+            sub {
+                my $that    = shift;
+                my $dir     = shift;
+                my $oldfile = shift;
+                my $newfile = 'search_filters/blocklist.txt';
+
+                rename($dir . '/' . $oldfile, $dir . '/' . $newfile)
+                    or
+                    $log->syslog('err', 'Cannot rename file %s/%s to %s: %m',
+                    $dir, $oldfile, $newfile);
+            }
+        );
+        $log->syslog('notice', '...Done.');
+    }
+
+    if (lower_version($previous_version, '6.2.63b.1')) {
+        $log->syslog('notice', 'Moving bounce information and so on...');
+        _process_all_files(
+            'config',
+            sub {
+                my $that = shift;
+                my $dir  = shift;
+                my $file = shift;
+
+                return unless ref $that eq 'Sympa::List';
+
+                # Note: See also upgrading to version 6.2b.3 in above.
+                my $bounce_dir = $that->get_bounce_dir;
+                my $dh;
+                return unless -d $bounce_dir and opendir $dh, $bounce_dir;
+
+                foreach my $old (readdir $dh) {
+                    next if 0 == index $old, '.';
+
+                    next unless $old =~ /\A(.+)(?:_(\w+))?\z/;
+                    my ($escaped_email, $envid) = ($1, $2);
+
+                    my $new;
+                    if (defined $envid) {
+                        $new = sprintf '%s/%s__%08s',
+                            Sympa::Tools::Text::encode_filesystem_safe(
+                            _unescape_chars($escaped_email)), $envid;
+                    } else {
+                        $new =
+                            Sympa::Tools::Text::encode_filesystem_safe(
+                            _unescape_chars($escaped_email));
+                    }
+
+                    next if $old eq $new;
+
+                    rename sprintf('%s/%s', $bounce_dir, $old),
+                        sprintf('%s/%s', $bounce_dir, $new);
+
+                }
+            }
+        );
+
+        my $dh;
+        if (opendir $dh, $Conf::Conf{'ssl_cert_dir'}) {
+            foreach my $old (readdir $dh) {
+                next if 0 == index $old, '.';
+
+                my ($escaped_email, $ext) = ($old =~ /\A(.+)(?:(\@\w+)?)\z/);
+                my $new =
+                    Sympa::Tools::Text::encode_filesystem_safe(
+                    _unescape_chars($escaped_email))
+                    . ($ext // '');
+                next if $old eq $new;
+
+                rename sprintf('%s/%s', $Conf::Conf{'ssl_cert_dir'}, $old),
+                    sprintf('%s/%s', $Conf::Conf{'ssl_cert_dir'}, $new);
+            }
+        }
+
+        $log->syslog('notice', '...Done.');
+    }
+
+    if (lower_version($previous_version, '6.2.65b.1')) {
+        # Site/domain parameter "tracking" has been deprecated and
+        # should be renamed to "tracking.tracking" to avoid conflict with
+        # list config paragraph named "tracking".
+
+        _process_all_files(
+            '',
+            sub {
+                my $that    = shift;
+                my $dir     = shift;
+                my $oldfile = shift;
+
+                my $file;
+                if (ref $that eq 'Sympa::List') {
+                    return;
+                } elsif ($that and $that ne '*') {
+                    $file = sprintf '%s/robot.conf', $dir;
+                } else {
+                    $file = Sympa::Constants::CONFIG();
+                }
+
+                open my $fh, '<+', $file or next;
+
+                my $text = do { local $RS; <$fh> };
+                $text =~ s/(\A|\n)tracking(\s|\z)/${1}tracking.tracking$2/g;
+                seek $fh, 0, 0;
+                truncate $fh, 0;
+                print $fh $text;
+                close $fh;
+            }
+        );
+    }
+
     return 1;
 }
 
@@ -2101,8 +2256,9 @@ sub to_utf8 {
 
     foreach my $pair (@{$files}) {
         my ($file, $lang) = @$pair;
-        unless (open(TEMPLATE, $file)) {
-            $log->syslog('err', "Cannot open template %s", $file);
+        my $ifh;
+        unless (open $ifh, '<', $file) {
+            $log->syslog('err', 'Cannot open template %s', $file);
             next;
         }
 
@@ -2121,11 +2277,11 @@ sub to_utf8 {
         }
 
         # Add X-Sympa-Attach: headers if required.
-        if (($file =~ /mail_tt2/) && ($file =~ /\/($with_attachments)$/)) {
-            while (<TEMPLATE>) {
+        if ($file =~ /mail_tt2/ and $file =~ /\/($with_attachments)$/) {
+            while (<$ifh>) {
                 $text .= $_;
                 if (m/^Content-Type:\s*message\/rfc822/i) {
-                    while (<TEMPLATE>) {
+                    while (<$ifh>) {
                         if (m{^X-Sympa-Attach:}i) {
                             $text .= $_;
                             last;
@@ -2141,9 +2297,9 @@ sub to_utf8 {
                 }
             }
         } else {
-            $text = join('', <TEMPLATE>);
+            $text = do { local $RS; <$ifh> };
         }
-        close TEMPLATE;
+        close $ifh;
 
         # Check if template is encoded by UTF-8.
         if ($text =~ /[^\x20-\x7E]/) {
@@ -2172,12 +2328,13 @@ sub to_utf8 {
             $log->syslog('err', "Cannot rename old template %s", $file);
             next;
         }
-        unless (open(TEMPLATE, ">$file")) {
+        my $ofh;
+        unless (open $ofh, '>', $file) {
             $log->syslog('err', "Cannot open new template %s", $file);
             next;
         }
-        print TEMPLATE $text;
-        close TEMPLATE;
+        print $ofh $text;
+        close $ofh;
         unless (
             Sympa::Tools::File::set_file_rights(
                 file  => $file,
@@ -2264,10 +2421,11 @@ sub fix_colors {
             }
         }
     }
-    unless (open(FILE, "$file")) {
-        die sprintf("Unable to open %s : %s", $file, $ERRNO);
+    my $ifh;
+    unless (open $ifh, '<', $file) {
+        die sprintf "Unable to open %s : %s", $file, $ERRNO;
     }
-    foreach my $line (<FILE>) {
+    foreach my $line (<$ifh>) {
         chomp $line;
         if ($line =~ m{^\s*(color_\d+)}) {
             my $param_name = $1;
@@ -2291,7 +2449,8 @@ sub fix_colors {
         "$file.upgrade$date");
     ## Write new config file
     my $umask = umask 037;
-    unless (open(FILE, "> $file")) {
+    my $ofh;
+    unless (open $ofh, '>', $file) {
         umask $umask;
         $log->syslog(
             'err',
@@ -2305,8 +2464,8 @@ sub fix_colors {
     chown [getpwnam(Sympa::Constants::USER)]->[2],
         [getgrnam(Sympa::Constants::GROUP)]->[2], $file;
 
-    print FILE $new_conf;
-    close FILE;
+    print $ofh $new_conf;
+    close $ofh;
 }
 
 sub save_web_tt2 {
@@ -2381,6 +2540,68 @@ sub _get_cacnonical_write_date {
         # Unknown driver
         return $target;
     }
+}
+
+sub _process_all_files {
+    my $file = shift;
+    my $sub  = shift;
+
+    $sub->('*', $Conf::Conf{'etc'}, $file)
+        if -f $Conf::Conf{'etc'} . '/' . $file;
+
+    foreach my $robot (Sympa::List::get_robots()) {
+        my $dir = sprintf '%s/%s', $Conf::Conf{'etc'}, $robot;
+        $sub->($robot, $dir, $file)
+            if -f $dir . '/' . $file;
+
+        foreach my $list (@{Sympa::List::get_lists($robot) || []}) {
+            $sub->($list, $list->{'dir'}, $file)
+                if -f $list->{'dir'} . '/' . $file;
+        }
+    }
+}
+
+# Old name: tools::escape_chars(), Sympa::Tools::Text::escape_chars().
+sub _escape_chars {
+    my $s          = shift;
+    my $except     = shift;                            ## Exceptions
+    my $ord_except = ord $except if defined $except;
+
+    ## Escape chars
+    ##  !"#$%&'()+,:;<=>?[] AND accented chars
+    ## escape % first
+    foreach my $i (
+        0x25,
+        0x20 .. 0x24,
+        0x26 .. 0x2c,
+        0x3a .. 0x3f,
+        0x5b, 0x5d,
+        0x80 .. 0x9f,
+        0xa0 .. 0xff
+    ) {
+        next if defined $ord_except and $i == $ord_except;
+        my $hex_i = sprintf "%lx", $i;
+        $s =~ s/\x$hex_i/%$hex_i/g;
+    }
+    ## Special traetment for '/'
+    $s =~ s/\//%a5/g unless defined $except and $except eq '/';
+
+    return $s;
+}
+
+# Old name: tools::unescape_chars(), Sympa::Tools::Text::unescape_chars().
+sub _unescape_chars {
+    my $s = shift;
+
+    $s =~ s/%a5/\//g;    ## Special traetment for '/'
+    foreach my $i (0x20 .. 0x2c, 0x3a .. 0x3f, 0x5b, 0x5d, 0x80 .. 0x9f,
+        0xa0 .. 0xff) {
+        my $hex_i = sprintf "%lx", $i;
+        my $hex_s = sprintf "%c",  $i;
+        $s =~ s/%$hex_i/$hex_s/g;
+    }
+
+    return $s;
 }
 
 1;

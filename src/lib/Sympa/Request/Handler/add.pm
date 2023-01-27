@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -35,9 +34,6 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Tools::Domains;
-use Sympa::Tools::Password;
-use Sympa::Tools::Text;
 use Sympa::User;
 
 use base qw(Sympa::Request::Handler);
@@ -54,95 +50,88 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    my $list    = $request->{context};
-    my $which   = $list->{'name'};
-    my $robot   = $list->{'domain'};
-    my $sender  = $request->{sender};
-    my $email   = $request->{email};
-    my $comment = $request->{gecos};
-    my $ca      = $request->{custom_attribute};
+    my $list   = $request->{context};
+    my $sender = $request->{sender};
+    my $email  = $request->{email};
+    my $role   = $request->{role} || 'member';
+
+    die 'bug in logic. Ask developer'
+        unless grep { $role eq $_ } qw(member owner editor);
 
     $language->set_lang($list->{'admin'}{'lang'});
 
-    unless (Sympa::Tools::Text::valid_email($email)) {
-        $self->add_stash($request, 'user', 'incorrect_email',
-            {'email' => $email});
-        $log->syslog('err',
-            'ADD command rejected; incorrect email "%s"', $email);
-        return undef;
-    }
-
-    if (Sympa::Tools::Domains::is_blacklisted($email)) {
-        $self->add_stash($request, 'user', 'blacklisted_domain',
-            {'email' => $email});
-        $log->syslog('err',
-            'ADD command rejected; blacklisted domain for "%s"', $email);
-        return undef;
-    }
-
-    if ($list->is_list_member($email)) {
-        $self->add_stash($request, 'user', 'already_subscriber',
-            {'email' => $email, 'listname' => $list->{'name'}});
-        $log->syslog('err',
-            'ADD command rejected; user "%s" already member of list "%s"',
-            $email, $which);
-        return undef;
-    }
-
-    unless ($request->{force}) {
-        # If a list is not 'open' and allow_subscribe_if_pending has been set
-        # to 'off' returns undef.
-        unless (
-            $list->{'admin'}{'status'} eq 'open'
-            or Conf::get_robot_conf($list->{'domain'},
-                'allow_subscribe_if_pending') eq 'on'
-        ) {
-            $self->add_stash($request, 'user', 'list_not_open',
-                {'status' => $list->{'admin'}{'status'}});
+    my @stash;
+    if ($role eq 'member') {
+        unless ($request->{force} or $list->is_subscription_allowed) {
             $log->syslog('info', 'List %s not open', $list);
+            $self->add_stash($request, 'user', 'list_not_open',
+                {status => $list->{'admin'}{'status'}});
+            $self->{finish} = 1;
             return undef;
         }
+
+        $list->add_list_member(
+            {   email => $email,
+                (   defined $request->{custom_attribute}
+                    ? (attrib => $request->{custom_attribute})
+                    : ()
+                ),
+                map { ($_ => $request->{$_}) }
+                    grep { defined $request->{$_} }
+                    qw(gecos reception visibility)
+            },
+            stash => \@stash
+        );
+    } else {
+        $list->add_list_admin(
+            $role,
+            {   email => $email,
+                map { ($_ => $request->{$_}) }
+                    grep { defined $request->{$_} }
+                    qw(gecos profile reception visibility info)
+            },
+            stash => \@stash
+        );
     }
-
-    my $u;
-    my $defaults = $list->get_default_user_options();
-    %{$u} = %{$defaults};
-    $u->{'email'} = $email;
-    $u->{'gecos'} = $comment;
-    $u->{'date'}  = $u->{'update_date'} = time;
-    $u->{custom_attribute} = $ca if $ca;
-
-    $list->add_list_member($u);
-    if (defined $list->{'add_outcome'}{'errors'}) {
-        if (defined $list->{'add_outcome'}{'errors'}
-            {'max_list_members_exceeded'}) {
-            $self->add_stash($request, 'user', 'max_list_members_exceeded',
-                {max_list_members => $list->{'admin'}{'max_list_members'}});
-        } else {
-            my $error =
-                sprintf 'Unable to add user %s in list %s : %s',
-                $u, $list->get_id,
-                $list->{'add_outcome'}{'errors'}{'error_message'};
+    foreach my $report (@stash) {
+        $self->add_stash($request, @$report);
+        if ($report->[0] eq 'intern') {
             Sympa::send_notify_to_listmaster(
                 $list,
                 'mail_intern_error',
-                {   error  => $error,
+                {   error  => $report->[1],      #FIXME: Update listmaster tt2
                     who    => $sender,
                     action => 'Command process',
                 }
             );
-            $self->add_stash($request, 'intern');
         }
-        return undef;
+    }
+    return undef if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' } @stash;
+
+    if ($role eq 'member') {
+        _report_member($self, $request);
+    } else {
+        _report_user($self, $request);
     }
 
-    $self->add_stash($request, 'notice', 'now_subscriber',
-        {'email' => $email, listname => $list->{'name'}});
+    return 1;
+}
 
+sub _report_member {
+    my $self    = shift;
+    my $request = shift;
+
+    my $list    = $request->{context};
+    my $sender  = $request->{sender};
+    my $email   = $request->{email};
+    my $comment = $request->{gecos};
+
+    $self->add_stash($request, 'notice', 'now_subscriber',
+        {email => $email, listname => $list->{'name'}});
+
+    # FIXME: Required?
     my $user = Sympa::User->new($email);
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;
-    $user->password(Sympa::Tools::Password::tmp_passwd($email))
-        unless $user->password;
     $user->save;
 
     ## Now send the welcome file to the user if it exists and notification
@@ -159,7 +148,7 @@ sub _twist {
     $log->syslog(
         'info',
         'ADD %s %s from %s accepted (%.2f seconds, %d subscribers)',
-        $which,
+        $list->{'name'},
         $email,
         $sender,
         Time::HiRes::time() - $self->{start_time},
@@ -175,7 +164,34 @@ sub _twist {
             }
         );
     }
-    return 1;
+}
+
+sub _report_user {
+    my $self    = shift;
+    my $request = shift;
+
+    my $list   = $request->{context};
+    my $role   = $request->{role};
+    my $email  = $request->{email};
+    my $sender = $request->{sender};
+
+    # Notify the new list owner/editor
+    unless ($request->{quiet}) {
+        Sympa::send_notify_to_user($list, 'added_as_listadmin', $email,
+            {admin_type => $role, delegator => $sender});
+        $self->add_stash($request, 'notice', 'user_notified',
+            {'notified_user' => $email});
+    }
+
+    $log->syslog(
+        'info',
+        'request "add" %s %s to %s from %s accepted (%.2f seconds)',
+        $role,
+        $email,
+        $list,
+        $sender,
+        Time::HiRes::time() - $self->{start_time}
+    );
 }
 
 1;
@@ -194,6 +210,11 @@ the proper authorization and sends acknowledgements unless
 quiet add has been chosen (which requires the
 quiet_subscription setting to be "optional") or forced (which
 requires the quiet_subscription setting to be "on").
+
+B<Note>:
+The autharization secenario C<add.*> is applicable only when the {role}
+attribute is C<'member'> (default).
+In the other cases the scenario processing should be skipped.
 
 =head2 Attributes
 
@@ -216,6 +237,14 @@ users will be added even if the list is closed.
 
 I<Optional>.
 Display name of the user to be added.
+
+=item {role}
+
+I<Optional>.
+Role of the user to be added: C<'member'>, C<'owner'> or C<'editor'>.
+Default value is C<'member'>.
+
+This attribute was introduced on Sympa 6.2.67b.2.
 
 =item {quiet}
 

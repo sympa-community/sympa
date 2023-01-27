@@ -46,6 +46,9 @@
 [%~ ELSIF report_entry == 'create_list_listmaster' ~%]
 [%|loc()%]List creation is restricted to listmaster.[%END%]
 
+[%~ ELSIF report_entry == 'create_list_closed' ~%]
+[%|loc()%]List creation is not allowed.[%END%]
+
 [%~ ELSIF report_entry == 'd_edit_subscriber' ~%]
 [%|loc()%]Shared document edition is restricted to list subscribers.[%END%]
 [%|loc()%]If you are subscribed to the list with a different email address, you should either use that other email address or update your list membership with the new email address.[%END%]
@@ -203,6 +206,9 @@
 [%~ ELSIF report_entry == 'action_privileged_owner' ~%]
 [%|loc%]This action is restricted to privileged list owners.[%END%]
 
+[%~ ELSIF report_entry == 'action_super_listmaster' ~%]
+[%|loc%]This action is restricted to super-listmasters.[%END%]
+
 [%~ ELSIF report_entry == 'edit_right' ~%]
 [%|loc(role,right)%]Rights to this action are '%2' for a '%1'.[%END%]
 
@@ -229,9 +235,6 @@
 [%~ ELSIF report_type == 'intern' ~%]
 
 [% IF report_entry == '' ~%]
-
-[%~ ELSIF report_entry == 'month_not_found' ~%]
-  [%|loc(report_param.month)%]Unable to find month '%1'[%END%]
 
 [%~ ELSIF report_entry == 'inaccessible_archive' ~%]
   [%|loc(report_param.year_month)%]Archives from %1 are not accessible[%END%]
@@ -266,9 +269,6 @@
 [%~ ELSIF report_entry == 'no_identified_user' ~%]
   [%|loc%]Failed to get your email address from the authentication service.[%END%]
 
-[%~ ELSIF report_entry == 'err_404' ~%]
-  [%|loc(report_param.key)%]File not found.[%END%]
-
 [%~ ELSIF report_entry == 'db_error' ~%]
   [%|loc%]Database error.[%END%]
 
@@ -283,6 +283,12 @@
 
 [%~ ELSIF report_entry == 'unable_to_rename_list' ~%]
   [%|loc(report_param.listname,report_param.new_listname)%]Unable to rename list '%1' to '%2'.[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_add_to_database' ~%]
+  [%|loc(report_param.email)%]Attempts to add some users in database failed.[%END%]
+
+[%~ ELSIF report_entry == 'unable_to_delete_from_database' ~%]
+  [%|loc(report_param.email)%]Attempts to delete some users in database failed.[%END%]
 
 [%~ END ~%]
 
@@ -481,7 +487,7 @@
   [%|loc%]List name has been lowercased[%END%]
 
 [%~ ELSIF report_entry == 'auto_aliases' ~%]
-  [%|loc%]Aliases have been installed.[%END%]
+  [%|loc%]Aliases have been installed.[%END%] ([% report_param.listname %])
 
 [%~ ELSIF report_entry == 'user_notified' ~%]
   [%|loc(report_param.notified_user)%]User %1 has been notified[%END%]
@@ -533,24 +539,40 @@
 [%~ ELSIF report_entry == 'user_not_subscriber' ~%]
 [%|loc(report_param.email,report_param.listname)%]E-mail address %1 was not found in list %2.[%END%]
 
+[%~ ELSIF report_entry == 'not_list_user' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.email,report_param.listname)%]E-mail address %1 was not found in the owners of list %2.[%END%]
+  [%~ ELSIF report_param.role == 'editor' ~%]
+    [%|loc(report_param.email,report_param.listname)%]E-mail address %1 was not found in the moderators of list %2.[%END%]
+  [%~ END %]
+
 [%~ ELSIF report_entry == 'no_digest' ~%]
 [%|loc(report_param.listname)%]List %1 does not accept the DIGEST mode. Your configuration has not been changed.[%END%]
 
 [%~ ELSIF report_entry == 'not_available_reception_mode' ~%]
-  [%|loc(report_param.listname)%]List %1 allows only these reception modes: [%END%]
-  [%~ FOREACH m = report_param.reception_modes ~%]
-    [% IF loop.size >= 2 && loop.count == loop.size ~%]
-      [%|loc%], and [%END%][% m | optdesc('reception',1)%]
-    [%~ ELSIF loop.count > 1 ~%]
-      [%|loc%], [%END%][% m | optdesc('reception',1)%]
-    [%~ ELSE ~%]
-      [% m | optdesc('reception',1)%]
+  [% IF report_param.role == 'owner' || report_param.role == 'editor' ~%]
+    [%|loc(report_param.reception_mode)%]%1 is not an available reception mode[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.listname)%]List %1 allows only these reception modes: [%END%]
+    [%~ FOREACH m = report_param.reception_modes ~%]
+      [% IF loop.size >= 2 && loop.count == loop.size ~%]
+        [%|loc%], and [%END%][% m | optdesc('reception',1)%]
+      [%~ ELSIF loop.count > 1 ~%]
+        [%|loc%], [%END%][% m | optdesc('reception',1)%]
+      [%~ ELSE ~%]
+        [% m | optdesc('reception',1)%]
+      [%~ END %]
     [%~ END %]
   [%~ END %]
 
-[%~###~%]
-[%~ ELSIF report_entry == 'not_available_reception_mode' ~%]
-  [%|loc(report_param.reception_mode)%]%1 is not an available reception mode[%END%]
+[%~ ELSIF report_entry == 'not_available_visibility' ~%]
+  [%|loc(report_param.visibility)%]%1 is not an available visibility[%END%]
+
+[%~ ELSIF report_entry == 'not_available_profile' ~%]
+  [%|loc(report_param.profile)%]%1 is not an available owner profile[%END%]
+
+[%~ ELSIF report_entry == 'no_changed_propereties' ~%]
+  [%|loc%]no changed properties[%END%]
 
 [%~ ELSIF report_entry == 'empty_archives' ~%]
 [%|loc%]Archives are empty for this list[%END%]
@@ -632,6 +654,9 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'missing_arg' ~%]
   [%|loc(report_param.argument)%]Missing argument %1[%END%]
 
+[%~ ELSIF report_entry == 'prohibited_listname' ~%]
+  [%|loc(report_param.argument)%]The name you want to use for your list (%1) is prohibited by the configuration of the server.[%END%]
+
 [%~ ELSIF report_entry == 'missing_post_source' ~%]
   [%|loc()%]You didn't define the web page you want to use to create your newsletter. Please specify either an URL or a file to upload.[%END%]
 
@@ -651,8 +676,17 @@ Warning: this message may already have been sent by one of the list's moderators
 [%~ ELSIF report_entry == 'incorrect_email' ~%]
   [%|loc(report_param.email || report_param.value)%]Address "%1" is incorrect[%END%]
 
-[%~ ELSIF report_entry == 'blacklisted_domain' ~%]
-  [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blacklisted domain[%END%]
+[%~ ELSIF report_entry == 'blocklisted_domain' ~%]
+  [%|loc(report_param.email || report_param.value)%]Address "%1" belongs to a blocklisted domain[%END%]
+
+[%~ ELSIF report_entry == 'email_is_the_list' ~%]
+  [% IF report_param.role == 'owner' ~%]
+    [%|loc(report_param.email)%]Address "%1" is the address for the list owners[%END%]
+  [%~ ELSIF report_param.role == 'editor' ~%]
+    [%|loc(report_param.email)%]Address "%1" is the address for the list moderators[%END%]
+  [%~ ELSE ~%]
+    [%|loc(report_param.email)%]Address "%1" is the address of the list[%END%]
+  [%~ END %]
 
 [%~ ELSIF report_entry == 'incorrect_passwd' ~%]
   [%|loc%]Provided password is incorrect[%END%]
@@ -889,6 +923,30 @@ Warning: this message may already have been sent by one of the list's moderators
 
 [%~ ELSIF report_entry == 'no_classic_session' ~%]
   [%|loc()%]You are not authorized to delete your account if you are not using the built-in authentication (i.e. you are using a LDAP authentication, a SSO system, etc.).[%END%]
+
+[%~ ELSIF report_entry == 'unknown_authentication_service' ~%]
+  [%|loc(report_param.name)%]Unknown authentication service %1.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_send' ~%]
+  [%|loc()%]Unable to send archive: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_to_view' ~%]
+  [%|loc()%]Unable to view archived message: no message id found.[%END%]
+
+[%~ ELSIF report_entry == 'list_not_configured_for_tracking' ~%]
+  [%|loc()%]This list is not configured for tracking.[%END%]
+
+[%~ ELSIF report_entry == 'no_message_id_in_archive' ~%]
+  [%|loc(report_param.msgid)%]No message found in archives matching Message-ID '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'unknown_scenario' ~%]
+  [%|loc(report_param.msgid)%]Unknown scenario '%1'.[%END%]
+
+[%~ ELSIF report_entry == 'month_not_found' ~%]
+  [%|loc(report_param.month)%]Unable to find month '%1'[%END%]
+
+[%~ ELSIF report_entry == 'cannot_get_privilege' ~%]
+  [%|loc()%]You are not allowed to get the privilege of this user.[%END%]
 
 [%~ END ~%]
 

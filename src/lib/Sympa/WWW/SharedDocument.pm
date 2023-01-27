@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -37,7 +36,6 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Scenario;
-use Sympa::Tools::Data;
 use Sympa::Tools::File;
 use Sympa::Tools::Text;
 
@@ -503,25 +501,10 @@ sub _by_order {
 }
 
 # OBSOLETED.  Never used.
-sub dump {
-    my $self = shift;
-    my $fd   = shift;
-
-    Sympa::Tools::Data::dump_var($self, 0, $fd);
-}
+#sub dump;
 
 # OBSOLETED.  No longer used.
-sub dup {
-    my $self = shift;
-
-    my $copy = {};
-
-    foreach my $k (keys %$self) {
-        $copy->{$k} = $self->{$k};
-    }
-
-    return $copy;
-}
+#sub dup;
 
 sub count_moderated_descendants {
     my $self = shift;

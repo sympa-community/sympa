@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -44,7 +43,8 @@ our %list_option = (
     'list' => {'gettext_id' => 'list'},
 
     # include_ldap_2level_query.select2, include_ldap_2level_query.select1,
-    # include_ldap_query.select, reply_to_header.value, dmarc_protection.mode
+    # include_ldap_query.select, reply_to_header.value, dmarc_protection.mode,
+    # personalization.web_apply_on, personalization.mail_apply_on
     'all' => {'gettext_id' => 'all'},
 
     # reply_to_header.value
@@ -55,18 +55,21 @@ our %list_option = (
     'body'             => {'gettext_id' => 'message body'},
     'subject_and_body' => {'gettext_id' => 'subject and body'},
 
+    # personalization.web_apply_on, personalization.mail_apply_on
+    'footer' => {'gettext_id' => 'header and footer'},
+
     # bouncers_level2.notification, bouncers_level2.action,
     # bouncers_level1.notification, bouncers_level1.action,
     # spam_protection, dkim_signature_apply_on, web_archive_spam_protection,
-    # dmarc_protection.mode, automatic_list_removal
+    # dmarc_protection.mode, automatic_list_removal,
+    # personalization.web_apply_on, personalization.mail_apply_on
     'none' => {'gettext_id' => 'do nothing'},
 
     # automatic_list_removal
     'if_epmty' => {'gettext_id' => 'if no list members contained'},
 
     # bouncers_level2.notification, bouncers_level1.notification,
-    # welcome_return_path, remind_return_path, rfc2369_header_fields,
-    # archive.mail_access
+    # rfc2369_header_fields, archive.mail_access
     'owner' => {'gettext_id' => 'owner'},
 
     # bouncers_level2.notification, bouncers_level1.notification
@@ -130,9 +133,6 @@ our %list_option = (
     # editor_include.visibility
     'conceal'   => {'gettext_id' => 'concealed from list menu'},
     'noconceal' => {'gettext_id' => 'listed on the list menu'},
-
-    # welcome_return_path, remind_return_path
-    'unique' => {'gettext_id' => 'bounce management'},
 
     # antivirus_notify
     'delivery_status' => {'gettext_id' => 'send back DSN'},
@@ -208,8 +208,8 @@ our %list_option = (
     'year'    => {'gettext_id' => 'yearly'},
 
     # web_archive_spam_protection
-    'cookie' => {'gettext_id' => 'use HTTP cookie'},
-    'gecos'  => {'gettext_id' => 'only show gecos'},
+    'cookie'    => {'gettext_id' => 'use HTTP cookie'},
+    'concealed' => {'gettext_id' => 'never show address'},
 
     # verp_rate
     '100%' => {'gettext_id' => '100% - always'},

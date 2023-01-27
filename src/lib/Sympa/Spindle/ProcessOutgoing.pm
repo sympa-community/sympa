@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2019, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -176,15 +175,25 @@ sub _twist {
     my $message = shift;
 
     # Get list/robot context.
-    my ($list, $robot, $listname);
+    my ($list, $robot, $listname, $arc_enabled, $dkim_enabled);
     if (ref($message->{context}) eq 'Sympa::List') {
         $list     = $message->{context};
         $robot    = $message->{context}->{'domain'};
         $listname = $list->{'name'};
+
+        $arc_enabled = 'on' eq $list->{'admin'}{'arc_feature'};
+        $dkim_enabled =
+            'on' eq Conf::get_robot_conf($list->{'domain'}, 'dkim_feature');
     } elsif ($message->{context} and $message->{context} ne '*') {
         $robot = $message->{context};
+
+        $arc_enabled  = 'on' eq Conf::get_robot_conf($robot, 'arc_feature');
+        $dkim_enabled = 'on' eq Conf::get_robot_conf($robot, 'dkim_feature');
     } else {
         $robot = '*';
+
+        $arc_enabled  = 'on' eq $Conf::Conf{'arc_feature'};
+        $dkim_enabled = 'on' eq $Conf::Conf{'dkim_feature'};
     }
 
     if ($message->{serial} eq '0' or $message->{serial} eq 's') {
@@ -213,25 +222,25 @@ sub _twist {
     my @rcpts = @{$message->{rcpt}};
 
     # Message transformation should be done in the folowing order:
-    #  -1 headers modifications (done in sympa.pl)
+    #  -1 headers modifications (done in sympa_msg.pl)
     #  -2 DMARC protection
-    #  -3 personalize (a.k.a. "merge")
+    #  -3 personalization ("merge") and decoration (adding footer/header)
     #  -4 S/MIME signing
     #  -5 S/MIME encryption
     #  -6 remove existing signature if altered
-    #  -7 DKIM signing
-    #  -8 ARC seal
+    #  -7 DKIM signing and ARC sealing
 
     if ($message->{shelved}{dmarc_protect}) {
         $message->dmarc_protect;
     }
 
-    my ($dkim, $arc);
-    if ($message->{shelved}{dkim_sign}) {
-        $dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context});
-        $arc  = Sympa::Tools::DKIM::get_arc_parameters($message->{context})
-            if $message->{shelved}->{arc_cv};
-    }
+    my %arc =
+        Sympa::Tools::DKIM::get_arc_parameters($message->{context},
+        $message->{shelved}{arc_cv})
+        if $arc_enabled and $message->{shelved}{arc_cv};
+    my %dkim = Sympa::Tools::DKIM::get_dkim_parameters($message->{context})
+        if %arc
+        or $message->{shelved}{dkim_sign};
 
     if (   $message->{shelved}{merge}
         or $message->{shelved}{smime_encrypt}
@@ -281,7 +290,17 @@ sub _twist {
                 $return_path = Sympa::get_address($robot, 'owner');
             }
 
-            if ($new_message->{shelved}{merge}) {
+            # If message is personalized and DKIM signature is available,
+            # Add One-Click Unsubscribe header field.
+            if (    $new_message->{shelved}{merge}
+                and (%arc or $new_message->{shelved}{dkim_sign} and %dkim)
+                and grep { 'unsubscribe' eq $_ }
+                @{$list->{'admin'}{'rfc2369_header_fields'}}) {
+                $list->add_list_header($new_message, 'unsubscribe',
+                    oneclick => $rcpt);
+            }
+            if (    $new_message->{shelved}{merge}
+                and $new_message->{shelved}{merge} ne 'footer') {
                 unless ($new_message->personalize($list, $rcpt)) {
                     $log->syslog('err', 'Erreur d appel personalize()');
                     Sympa::send_notify_to_listmaster($list, 'bulk_failed',
@@ -289,7 +308,12 @@ sub _twist {
                     # Quarantine packet into bad spool.
                     return undef;
                 }
-                delete $new_message->{shelved}{merge};
+                $new_message->{shelved}{merge} = 'footer';
+            }
+            if ($new_message->{shelved}{decorate}) {
+                $new_message->decorate($list, $rcpt,
+                    mode => $new_message->{shelved}{merge});
+                delete $new_message->{shelved}{decorate};
             }
 
             if ($new_message->{shelved}{smime_sign}) {
@@ -324,27 +348,16 @@ sub _twist {
                 delete $new_message->{shelved}{smime_encrypt};
             }
 
-            if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
-                $new_message->remove_invalid_dkim_signature;
-            }
-            if ($new_message->{shelved}{dkim_sign} and $dkim) {
+            $new_message->remove_invalid_dkim_signature
+                if $arc_enabled or $dkim_enabled;
+
+            my $arc_sealed = $new_message->arc_seal(%arc) if %arc;
+
+            if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
                 # apply DKIM signature AFTER any other message
                 # transformation.
-                $new_message->dkim_sign(
-                    'dkim_d'          => $dkim->{'d'},
-                    'dkim_i'          => $dkim->{'i'},
-                    'dkim_selector'   => $dkim->{'selector'},
-                    'dkim_privatekey' => $dkim->{'private_key'},
-                );
-
-                $new_message->arc_seal(
-                    'arc_d'          => $arc->{'d'},
-                    'arc_selector'   => $arc->{'selector'},
-                    'arc_srvid'      => $arc->{'srvid'},
-                    'arc_privatekey' => $arc->{'private_key'},
-                    'arc_cv'         => $message->{shelved}->{arc_cv}
-
-                ) if $arc;
+                # Note that when ARC seal was added, DKIM signature is forced.
+                $new_message->dkim_sign(%dkim) if %dkim;
 
                 delete $new_message->{shelved}{dkim_sign};
             }
@@ -379,29 +392,24 @@ sub _twist {
             $return_path = Sympa::get_address($robot, 'owner');
         }
 
+        if ($new_message->{shelved}{decorate}) {
+            $new_message->decorate($list, undef);
+            delete $new_message->{shelved}{decorate};
+        }
+
         if ($new_message->{shelved}{smime_sign}) {
             $new_message->smime_sign;
             delete $new_message->{shelved}{smime_sign};
         }
 
-        if (Conf::get_robot_conf($robot, 'dkim_feature') eq 'on') {
-            $new_message->remove_invalid_dkim_signature;
-        }
+        $new_message->remove_invalid_dkim_signature
+            if $arc_enabled or $dkim_enabled;
+
+        my $arc_sealed = $new_message->arc_seal(%arc) if %arc;
+
         # Initial message
-        if ($new_message->{shelved}{dkim_sign} and $dkim) {
-            $new_message->dkim_sign(
-                'dkim_d'          => $dkim->{'d'},
-                'dkim_i'          => $dkim->{'i'},
-                'dkim_selector'   => $dkim->{'selector'},
-                'dkim_privatekey' => $dkim->{'private_key'},
-            );
-            $new_message->arc_seal(
-                'arc_d'          => $arc->{'d'},
-                'arc_selector'   => $arc->{'selector'},
-                'arc_srvid'      => $arc->{'srvid'},
-                'arc_privatekey' => $arc->{'private_key'},
-                'arc_cv'         => $message->{shelved}->{arc_cv}
-            ) if $arc;
+        if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
+            $new_message->dkim_sign(%dkim) if %dkim;
 
             delete $new_message->{shelved}{dkim_sign};
         }
@@ -471,6 +479,7 @@ Processing for tracking and VERP (see also <Sympa::Tracking>)
 =item *
 
 Personalization (a.k.a. "merge")
+and decoration (adding footer/header)
 
 =item *
 
@@ -488,6 +497,7 @@ preceding transformations.
 =item *
 
 DKIM signing
+and ARC sealing
 
 =back
 
@@ -540,5 +550,8 @@ L<Sympa::Spool::Outgoing>.
 =head1 HISTORY
 
 L<Sympa::Spindle::ProcessOutgoing> appeared on Sympa 6.2.13.
+
+Message decoration was moved from L<Sympa::Spindle::ToList>
+to this module on Sympa 6.2.59b.
 
 =cut

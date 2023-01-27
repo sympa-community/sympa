@@ -22,41 +22,37 @@
     </ul>
 [% ELSE %]
     <ul class="mailing_lists_menu">
-        [% SET topic_other = 0 %]
-        [% FOREACH topic = topics %]
-            [% IF topic.id == 'other' || topic.id == 'topicsless' %]
-                [% UNLESS topic_other %]
-                    <li>
-                        <a class="heavyWork" href="[% 'lists' | url_rel([topic.id]) %]">
-                            <strong>[% IF topic.current_title %][% topic.current_title %][% ELSE %][%|loc%]Others[%END%][% END %]</strong>
-                        </a>
-                    </li>
-                    [% SET topic_other = 1 %]
-                [% END %]
-            [% ELSE %]
-                <li>
-                    <a class="heavyWork" href="[% 'lists' | url_rel([topic.id]) %]">
-                        <strong>[% topic.current_title %]</strong>
-                    </a>
-                </li>
-            [% END %]
+    [% FOREACH topic = topics ~%]
+        [% NEXT IF topic.id == 'other' || topic.id == 'topicsless' ~%]
+        <li>
+            <a class="heavyWork" href="[% 'lists' | url_rel([topic.id]) %]">
+                <strong>[% topic.id | optdesc('listtopic') %]</strong>
+            </a>
 
-            [% IF topic.sub.size %]
+            [% IF topic.sub.size ~%]
                 <ul class="no_style">
-                    [% FOREACH subtopic = topic.sub %]
+                    [% FOREACH subtopic = topic.sub ~%]
                         <li class="smaller">
                             <a class="heavyWork" href="[% 'lists' | url_rel([topic.id,subtopic.key]) %]">
-                                [% subtopic.value.current_title %]
+                                [% "${topic.id}/${subtopic.key}" | optdesc('listtopic:leaf') %]
                             </a>
                         </li>
-                    [% END %]
+                    [%~ END %]
                 </ul>
-            [% END %]
-            [% IF topic.next %]
+            [%~ END %]
+        </li>
+
+        [% IF topic.next ~%]
     </ul>
     <ul class="mailing_lists_menu">
-            [% END %]
-        [% END %]
+        [%~ END %]
+    [%~ END %]
+
+        <li>
+            <a class="heavyWork" href="[% 'lists' | url_rel(['topicsless']) %]">
+                <strong>[%|loc%]Others[%END%]</strong>
+            </a>
+        </li>
     </ul>
 [% END %]
 <!-- end lists_categories.tt2 -->

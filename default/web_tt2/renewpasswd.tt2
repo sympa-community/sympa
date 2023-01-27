@@ -31,7 +31,7 @@
         [%|loc%]You will receive an email that will allow you to choose your password.[%END%]
     </p>
 [% ELSE %]
-    [% IF requestpasswd_context == 'firstpasswd' %]
+    [% IF reason == 'firstpasswd' %]
         <p>
             [%|loc%]Please enter your email address to begin the registration process.[%END%]
         </p>
@@ -42,11 +42,12 @@
     [% END %]
 [% END %]
 [% IF SAFE_TO_REVEAL_EMAIL %]
-    <form class="bold_label" action="[% path_cgi %]" method="post">
+    <form class="bold_label" action="[% path_cgi %]" method="post" autocomplete="on">
         <fieldset>
             <input type="hidden" name="previous_action" value="[% previous_action %]" />
             <input type="hidden" name="previous_list" value="[% previous_list %]" />
             <input type="hidden" name="action" value="requestpasswd" />
+            <input type="hidden" name="reason" value="[% reason %]" />
 
             <div class="row">
                 <div class="columns">
@@ -57,7 +58,7 @@
             <div class="row">
                 <div class="columns">
                     <input class="MainMenuLinks" type="submit" name="action_requestpasswd"
-                           [% IF requestpasswd_context == 'firstpasswd' %]
+                           [% IF reason == 'firstpasswd' %]
                                value="[%|loc%]Request first password[%END%]" />
                            [% ELSE %]
                                value="[%|loc%]Request new password[%END%]" />

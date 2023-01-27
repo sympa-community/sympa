@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -292,12 +291,18 @@ sub _parse_scenario {
             /^\s*(.*?)\s+((\s*(md5|pgp|smtp|smime|dkim)\s*,?)*)\s*->\s*(.*)\s*$/gi
         ) {
             my ($condition, $auth_methods, $action) = ($1, $2 || 'smtp', $5);
-            $auth_methods =~ s/\s//g;
+
+            # 'dkim' became a synonym of 'smtp' on Sympa 6.2.71b.
+            my @auth_methods = sort keys %{
+                {   map { ($_ eq 'dkim') ? (smtp => 1) : $_ ? ($_ => 1) : () }
+                        split(/[\s,]+/, $auth_methods)
+                }
+            };
 
             push @rules,
                 {
                 condition   => $condition,
-                auth_method => [split /,/, $auth_methods],
+                auth_method => [@auth_methods],
                 action      => $action,
                 lineno      => $lineno,
                 };
@@ -383,6 +388,10 @@ sub authz {
             condition   => '',
         };
     }
+
+    # 'dkim' auth method was deprecated on Sympa 6.2.71b.
+    # Now it is a synonym of 'smtp'.
+    $auth_method = 'smtp' if $auth_method eq 'dkim';
 
     # Defining default values for parameters.
     $context->{'sender'}      ||= 'nobody';
@@ -535,12 +544,12 @@ sub _compile_scenario {
         }
     }
 
-    ## Include a Blacklist rules if configured for this action
-    if ($function and $Conf::Conf{'blacklist'}{$function}) {
+    ## Include a Blocklist rules if configured for this action
+    if ($function and $Conf::Conf{'blocklist'}{$function}) {
         ## Add rules at the beginning of the array
         unshift @rules,
             {
-            'condition'   => "search('blacklist.txt',[sender])",
+            'condition'   => "search('blocklist.txt',[sender])",
             'action'      => 'reject,quiet',
             'auth_method' => ['smtp', 'dkim', 'md5', 'pgp', 'smime'],
             };
@@ -607,7 +616,7 @@ sub _compile_rule {
         return %s if %s;
     }
 EOF
-    } elsif ($auth_methods eq join(' ', sort qw(smtp dkim md5 smime))) {
+    } elsif ($auth_methods eq join(' ', sort qw(smtp md5 smime))) {
         return (sprintf(<<'EOF', $result, $cond), @required);
     return %s if %s;
 EOF
@@ -1424,9 +1433,9 @@ sub do_search {
             'order' => 'all'
         );
 
-        ## Raise an error except for blacklist.txt
+        ## Raise an error except for blocklist.txt
         unless (@files) {
-            if ($filter_file eq 'blacklist.txt') {
+            if ($filter_file eq 'blocklist.txt') {
                 return 0;
             } else {
                 $log->syslog('err', 'Could not find search filter %s',
@@ -1445,7 +1454,9 @@ sub do_search {
             }
             while (my $pattern = <$ifh>) {
                 next if $pattern =~ /\A\s*\z/ or $pattern =~ /\A[#;]/;
-                chomp $pattern;
+                $pattern =~ s/\A\s+//;
+                $pattern =~ s/\s+\z//;
+
                 $pattern =~ s/([^\w\x80-\xFF])/\\$1/g;
                 $pattern =~ s/\\\*/.*/;
                 if ($sender =~ /^$pattern$/i) {
@@ -1526,11 +1537,7 @@ sub do_verify_custom {
 }
 
 # NEVER USED.
-sub dump_all_scenarios {
-    open my $ofh, '>', '/tmp/all_scenarios';
-    Sympa::Tools::Data::dump_var(\%all_scenarios, 0, $ofh);
-    close $ofh;
-}
+#sub dump_all_scenarios;
 
 sub get_current_title {
     my $self = shift;
@@ -1765,7 +1772,13 @@ Parameters:
 =item $auth_method
 
 'smtp', 'md5', 'pgp', 'smime' or 'dkim'.
-Note that `pgp` has not been implemented.
+
+Note:
+C<pgp> has not been implemented.
+
+Note:
+C<dkim> was deprecated on Sympa 6.2.71b.
+Now it is the synonym of C<smtp>.
 
 =item \%context
 

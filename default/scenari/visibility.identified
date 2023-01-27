@@ -1,0 +1,4 @@
+title.gettext conceal from anonymous users
+
+!equal([sender],'nobody')      smtp,md5,smime -> do_it
+true()                         smtp,md5,smime -> reject

@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -264,8 +264,8 @@ sub store {
         unless (_db_insert_notification($rcpt, %options)) {
             return undef;
         }
-        $filename = sprintf '%s_%08s',
-            Sympa::Tools::Text::escape_chars($rcpt),
+        $filename = sprintf '%s__%08s',
+            Sympa::Tools::Text::encode_filesystem_safe($rcpt),
             $options{envid};
     } else {
         unless (
@@ -275,7 +275,7 @@ sub store {
                 $rcpt, $self->{context});
             return undef;
         }
-        $filename = Sympa::Tools::Text::escape_chars($rcpt);
+        $filename = Sympa::Tools::Text::encode_filesystem_safe($rcpt);
     }
     unless (open $ofh, '>', $bounce_dir . '/' . $filename) {
         $log->syslog('err', 'Unable to write %s/%s', $bounce_dir, $filename);
@@ -407,7 +407,7 @@ sub _update_subscriber_bounce_history {
 #   find_notification_id_by_message
 ##############################################
 # return the tracking_id find by recipeint,message-id,listname and robot
-# tracking_id areinitialized by sympa.pl by Sympa::List::distribute_msg
+# tracking_id are initialized by sympa_msg.pl by Sympa::List::distribute_msg
 #
 # used by bulk.pl in order to set return_path when tracking is required.
 #
@@ -479,7 +479,7 @@ sub remove_message_by_email {
     return undef unless $email;
 
     my $bounce_dir    = $self->{directory};
-    my $escaped_email = Sympa::Tools::Text::escape_chars($email);
+    my $escaped_email = Sympa::Tools::Text::encode_filesystem_safe($email);
     my $ret           = unlink sprintf('%s/%s', $bounce_dir, $escaped_email);
 
     # Remove HTML view.
@@ -540,9 +540,9 @@ sub remove_message_by_id {
     while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
         my $bounce_dir = $self->{directory};
         my $escaped_email =
-            Sympa::Tools::Text::escape_chars($info->{'recipient'});
+            Sympa::Tools::Text::encode_filesystem_safe($info->{'recipient'});
         my $envid = $info->{'envid'};
-        unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
+        unlink sprintf('%s/%s__%08s', $bounce_dir, $escaped_email, $envid);
     }
     $sth->finish;
 
@@ -619,9 +619,9 @@ sub remove_message_by_period {
     while (my $info = $sth->fetchrow_hashref('NAME_lc')) {
         my $bounce_dir = $self->{directory};
         my $escaped_email =
-            Sympa::Tools::Text::escape_chars($info->{'recipient'});
+            Sympa::Tools::Text::encode_filesystem_safe($info->{'recipient'});
         my $envid = $info->{'envid'};
-        unlink sprintf('%s/%s_%08s', $bounce_dir, $escaped_email, $envid);
+        unlink sprintf('%s/%s__%08s', $bounce_dir, $escaped_email, $envid);
     }
     $sth->finish;
 

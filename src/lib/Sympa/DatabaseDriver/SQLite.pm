@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2021, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -30,6 +29,7 @@ package Sympa::DatabaseDriver::SQLite;
 use strict;
 use warnings;
 use DBI qw();
+use Digest::MD5;
 use English qw(-no_match_vars);
 use POSIX qw();
 
@@ -63,6 +63,17 @@ sub connect {
     } else {
         $self->__dbh->func(5000, 'busy_timeout');
     }
+    # Create a temoprarhy view "dual" for portable SQL statements.
+    $self->__dbh->do(q{CREATE TEMPORARY VIEW dual AS SELECT 'X' AS dummy;});
+
+    # Create a function MD5().
+    $self->__dbh->func(
+        'md5', -1,
+        sub {
+            Digest::MD5::md5_hex(map { $_ // '' } @_);
+        },
+        'create_function'
+    );
 
     return 1;
 }
@@ -189,7 +200,7 @@ sub get_fields {
     }
     while (my $field = $sth->fetchrow_hashref('NAME_lc')) {
         # http://www.sqlite.org/datatype3.html
-        my $type = $field->{'type'};
+        my $type = lc $field->{'type'};
         if ($type =~ /int/) {
             $type = 'integer';
         } elsif ($type =~ /char|clob|text/) {
@@ -606,6 +617,12 @@ sub AS_BLOB {
     return ({TYPE => DBI::SQL_BLOB()} => $_[1])
         if scalar @_ > 1;
     return ();
+}
+
+sub md5_func {
+    shift;
+
+    return sprintf 'md5(%s)', join ', ', @_;
 }
 
 # Private methods

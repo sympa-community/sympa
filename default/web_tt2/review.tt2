@@ -30,9 +30,9 @@
     <a class="actionMenuLinks" href="[% 'sigindex' | url_rel([list]) %]">
         [%|loc%]Pending unsubscriptions[%END%]
     </a>
-    [% IF conf.use_blacklist != 'none' %]
-        <a class="actionMenuLinks" href="[% 'blacklist' | url_rel([list]) %]">
-            [%|loc%]Blacklist[%END%]
+    [% IF conf.use_blocklist != 'none' %]
+        <a class="actionMenuLinks" href="[% 'blocklist' | url_rel([list]) %]">
+            [%|loc%]Blocklist[%END%]
         </a>
     [% END %]
     <a class="actionMenuLinks" href="[% 'reviewbouncing' | url_rel([list]) %]">
@@ -157,8 +157,8 @@
         [% SET thosesubscribers = members %]
         [% PROCESS subscriber_table.tt2 %]
         [% IF action == 'search' %]
-            [% IF similar_subscribers_occurence != 0 %]
-                <h2> [%|loc(similar_subscribers_occurence)%] Other similar subscriber's email(s) (%1)[%END%]</h2>
+            [% IF similar_subscribers_occurrence != 0 %]
+                <h2> [%|loc(similar_subscribers_occurrence)%] Other similar subscriber's email(s) (%1)[%END%]</h2>
                 [% SET thosesubscribers = similar_subscribers %]
                 [% PROCESS subscriber_table.tt2 %]
             [% END %]
@@ -207,7 +207,8 @@
 
             [% IF action != 'search' %]
                 <div class="search_form">
-                    <form class="noborder" action="[% path_cgi %]">
+                    <form class="noborder" action="[% path_cgi %]"
+                          method="post">
                         <fieldset>
                             <label for="size">[%|loc%]Page size[%END%]</label>
                             <input type="hidden" name="sortby" value="[% sortby %]" />
@@ -303,7 +304,7 @@
                     </div>
                 </div>
 
-                [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+                [% IF pS.privilege == 'write' ~%]
                     <div class="small-2 medium-1 columns" role="columnheader">
                         <label title="[%|loc%]Delete[%END%]">
                             <i class="fa fa-user-times"></i>
@@ -332,7 +333,7 @@
                                                 <i class="fa fa-fw" title="[%|loc%]Moderator[%END%]"></i>
                                             [%~ END %]
                                         </span>
-                                        [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+                                        [% IF pS.privilege == 'write' ~%]
                                             <a href="[% 'ajax/edit' | url_rel([list,role],{email=>oV.email,previous_action=>action}) %]"
                                                data-reveal-id="edit" data-reveal-ajax="true" class="MainMenuLinks">
                                                [% oV.email %]
@@ -354,7 +355,7 @@
                         </div>
 
                         <div class="small-2 medium-1 columns" role="cell">
-                            [% IF is_privileged_owner && oV.subscribed ~%]
+                            [% IF pS.privilege == 'write' && oV.subscribed ~%]
                                 [% PROCESS EditListArrayDel
                                     ppaths   = [pS.name,oI]
                                     pitem    = pS
@@ -385,10 +386,15 @@
                     LAST;
                 END;
             END ~%]
-            [% IF is_writable && is_privileged_owner ~%]
+            [% IF is_writable ~%]
+                [% IF pS.name == 'owner' ~%]
+                    [% SET defopt = listconf.default_owner_options %]
+                [%~ ELSIF pS.name == 'editor' ~%]
+                    [% SET defopt = listconf.default_editor_options %]
+                [%~ END ~%]
                 <h3>
                     [% IF pS.name == 'owner' ~%]
-                    [%|loc%]Add owners[%END%]
+                        [%|loc%]Add owners[%END%]
                     [%~ ELSIF pS.name == 'editor' ~%]
                         [%|loc%]Add moderators[%END%]
                     [%~ END %]
@@ -397,14 +403,23 @@
                 <div class="row" id="item.[% pS.name %].[% oI %]" role="row">
                     <div class="small-10 medium-11 columns">
                         [% IF pS.name == 'owner' ~%]
-                            <div class="columns show-for-medium" role="cell">
-                                <input type="checkbox"
-                                       name="single_param.[% pS.name %].[% oI %].profile"
-                                       id="param.[% pS.name %].[% oI %].profile"
-                                       value="privileged" />
+                            <div class="medium-3 columns show-for-medium" role="cell">
                                 <label for="param.[% pS.name %].[% oI %].profile">
-                                    [% 'privileged' | optdesc %]
+                                    [% 'profile' | loc %]
                                 </label>
+                                <select name="single_param.[% pS.name %].[% oI %].profile"
+                                        id="param.[% pS.name %].[% oI %].profile">
+                                    <option value="privileged"
+                                     [%~ IF defopt.profile == 'privileged' %] selected[% END %]>
+                                        [% 'privileged' | optdesc %]
+                                    </option>
+                                    <option value="normal"
+                                     [%~ IF defopt.profile == 'normal' %] selected[% END %]>
+                                        [% 'normal' | optdesc %]
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="columns show-for-medium" role="cell">
                             </div>
                         [%~ END %]
 
@@ -416,23 +431,37 @@
                                 [% UNLESS kS.privilege == 'write' ~%]
                                     &nbsp;
                                 [%~ ELSIF kS.name == 'reception' ~%]
-                                    <input type="checkbox"
-                                           name="single_param.[% pS.name %].[% oI %].reception"
-                                           id="param.[% pS.name %].[% oI %].reception"
-                                           value="nomail" />
                                     <label for="param.[% pS.name %].[% oI %].reception">
-                                        [% 'nomail' | optdesc %]
+                                        [% 'reception mode' | loc %]
                                     </label>
+                                    <select name="single_param.[% pS.name %].[% oI %].reception"
+                                            id="param.[% pS.name %].[% oI %].reception">
+                                        <option value="mail"
+                                         [%~ IF defopt.reception == 'mail' %] selected[% END %]>
+                                            [% 'mail' | optdesc %]
+                                        </option>
+                                        <option value="nomail"
+                                         [%~ IF defopt.reception == 'nomail' %] selected[% END %]>
+                                            [% 'nomail' | optdesc %]
+                                        </option>
+                                    </select>
                                 [%~ ELSIF kS.name == 'visibility' ~%]
-                                    <input type="checkbox"
-                                           name="single_param.[% pS.name %].[% oI %].visibility"
-                                           id="param.[% pS.name %].[% oI %].visibility"
-                                           value="conceal" />
                                     <label for="param.[% pS.name %].[% oI %].visibility">
-                                        [% 'conceal' | optdesc %]
+                                        [% 'visibility' | loc %]
                                     </label>
+                                    <select name="single_param.[% pS.name %].[% oI %].visibility"
+                                            id="param.[% pS.name %].[% oI %].visibility">
+                                        <option value="conceal"
+                                         [%~ IF defopt.visibility == 'conceal' %] selected[% END %]>
+                                            [% 'conceal' | optdesc %]
+                                        </option>
+                                        <option value="noconceal"
+                                         [%~ IF defopt.visibility == 'noconceal' %] selected[% END %]>
+                                            [% 'noconceal' | optdesc %]
+                                        </option>
+                                    </select>
                                 [%~ ELSE ~%]
-                                    <label for="param.[% pS.name %].[% oI %].[kS.name ]">
+                                    <label for="param.[% pS.name %].[% oI %].[% kS.name %]">
                                         [% IF kS.title ~%]
                                             [% kS.title %]
                                         [%~ ELSE ~%]
@@ -449,7 +478,7 @@
                 </div>
             [%~ END %]
 
-            [% IF pS.privilege == 'write' && is_privileged_owner ~%]
+            [% IF pS.privilege == 'write' ~%]
                 <input type="hidden" name="submit" value="submit" />
                 <input class="MainMenuLInks" type="submit" name="action_review"
                        value="[%|loc%]Apply modifications[%END%]" />

@@ -1,7 +1,0 @@
-# unsubscribe.authdkim
-title.gettext need authentication unless DKIM signature is OK
-
-!equal([sender],[email])           smtp,dkim,md5,smime -> request_auth([email])
-!is_subscriber([listname],[email]) smtp,dkim,md5,smime -> do_it
-true()                             smtp                -> request_auth([email])
-true()                             dkim,md5,smime      -> do_it

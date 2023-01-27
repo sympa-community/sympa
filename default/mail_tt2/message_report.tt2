@@ -5,9 +5,7 @@
 ~%]
 Subject: [%"Message distribution"|loc|qencode%]
 
-[% IF entry == 'moderating_message' -%]
-[%|loc(list.name)%]Your message to the list '%1' has been forwarded to the moderator(s)[%END%]
-[% ELSIF entry == 'message_distributed' -%]
+[% IF entry == 'message_distributed' -%]
 [%|loc(key,list.name)%]Message %1 for list '%2' has been distributed.[%END%]
 [% ELSIF entry == 'message_rejected' -%]
 [%|loc(key,list.name)%]Message %1 for list '%2' has been rejected.[%END%]

@@ -43,7 +43,7 @@
     <br />
 
 
-    <h3>[%|loc%]Changing your email address[%END%]</h3>
+    <h3 id="pref-change-email">[%|loc%]Changing your email address[%END%]</h3>
 
     <p>[%|loc%]You can update your email address for all your list memberships at once. Any list owner or list moderator email addresses will also be updated.[%END%]</p>
     <form action="[% path_cgi %]" method="post">
@@ -58,8 +58,8 @@
     </form>
     <br />
 
-    [% UNLESS use_sso %]
-        <h4>[%|loc%]Changing your password[%END%]</h4>
+    [% UNLESS sso.size %]
+        <h3 id="pref-change-password">[%|loc%]Changing your password[%END%]</h3>
 
         <form action="[% path_cgi %]" method="post">
             <fieldset>
@@ -73,7 +73,7 @@
     [% END %]
 
     [% IF session.auth == 'classic' AND conf.allow_account_deletion == 'on' %]
-        <h4>[%|loc%]Deleting your account[%END%]</h4>
+        <h3 id="pref-delete-account">[%|loc%]Deleting your account[%END%]</h3>
         <p>
             [%|loc%]Deleting your account will unsubscribe you from all your lists, remove your ownership of your lists and permanently delete your account.[%END%]
             <br />

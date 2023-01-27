@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -28,12 +28,12 @@ use warnings;
 use Conf;
 use Sympa::Tools::Text;
 
-sub is_blacklisted {
+sub is_blocklisted {
     my $email = shift;
 
-    if (defined($Conf::Conf{'domains_blacklist'})) {
+    if (defined($Conf::Conf{'domains_blocklist'})) {
         my @parts = split '@', Sympa::Tools::Text::canonic_email($email);
-        foreach my $f (split ',', lc($Conf::Conf{'domains_blacklist'})) {
+        foreach my $f (split ',', lc($Conf::Conf{'domains_blocklist'})) {
             if ($parts[1] && $parts[1] eq $f) {
                 return 1;
             }
@@ -60,12 +60,12 @@ This package provides some email's domains-related functions.
 
 =over
 
-=item is_blacklisted ( $email )
+=item is_blocklisted ( $email )
 
-Says if the domain of the given email is blacklisted (C<domains_blacklist>
+Says if the domain of the given email is blocklisted (C<domains_blocklist>
 setting).
 
-Returns 1 if it's blacklisted, 0 otherwise
+Returns 1 if it's blocklisted, 0 otherwise
 
 =back
 
