@@ -14,6 +14,9 @@
 
 **Fixed bugs:**
 
+- [CVE-2021-4243] Potential XSS in jquery-minicolors [\#1561](https://github.com/sympa-community/sympa/issues/1561)
+- Spurious error log adding subscriber [\#1532](https://github.com/sympa-community/sympa/issues/1532)
+- Spurious error log during upgrade on removing nonexisting column [\#939](https://github.com/sympa-community/sympa/issues/939)
 - [CVE-2023-24038] Sympa::HTMLSanitizer: Bug in HTML::StripScripts, ReDoS with style attribute [\#1573](https://github.com/sympa-community/sympa/issues/1573)
 - sympa.wsdl is incomplete [\#1548](https://github.com/sympa-community/sympa/issues/1548)
 
