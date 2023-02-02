@@ -14,6 +14,7 @@
 
 **Fixed bugs:**
 
+- [CVE-2023-24038] Sympa::HTMLSanitizer: Bug in HTML::StripScripts, ReDoS with style attribute [\#1573](https://github.com/sympa-community/sympa/issues/1573)
 - sympa.wsdl is incomplete [\#1548](https://github.com/sympa-community/sympa/issues/1548)
 
 **Merged pull requests:**
