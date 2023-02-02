@@ -122,7 +122,7 @@ sub probe_db {
     } else {
         $may_update = 1;
         foreach my $method (
-            qw(set_autoinc add_table update_field add_field delete_field
+            qw(set_autoinc add_table update_field add_field drop_field
             unset_primary_key set_primary_key unset_index set_index)
         ) {
             unless ($sdm->can($method)) {

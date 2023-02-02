@@ -1473,7 +1473,7 @@ sub upgrade {
 
         # As the field id_counter is no longer used but it has NOT NULL
         # constraint, it should be deleted.
-        if ($sdm and $sdm->can('delete_field')) {
+        if ($sdm and $sdm->can('drop_field')) {
             $sdm->delete_field(
                 {table => 'stat_counter_table', field => 'id_counter'});
         } else {
@@ -1503,7 +1503,7 @@ sub upgrade {
 
         # As the field id_stat is no longer used but it has NOT NULL
         # constraint, it should be deleted.
-        if ($sdm and $sdm->can('delete_field')) {
+        if ($sdm and $sdm->can('drop_field')) {
             $sdm->delete_field({table => 'stat_table', field => 'id_stat'});
         } else {
             $log->syslog('err',
@@ -1765,7 +1765,7 @@ sub upgrade {
 
         # As the field id_logs is no longer used but it has NOT NULL
         # constraint, it should be deleted.
-        if ($sdm and $sdm->can('delete_field')) {
+        if ($sdm and $sdm->can('drop_field')) {
             $sdm->delete_field({table => 'logs_table', field => 'id_logs'});
         } else {
             $log->syslog('err',
