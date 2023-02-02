@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2023 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -31,12 +31,74 @@ use strict;
 use warnings;
 use base qw(HTML::StripScripts::Parser);
 
+use HTML::Entities qw();
 use Scalar::Util qw();
 use URI;
 
 use Sympa;
 use Conf;
 use Sympa::Tools::Text;
+
+BEGIN {
+    # Patch HTML::StripScripts to avoid ReDoS.
+    $HTML::StripScripts::_AttVal{style} = sub {
+        my ($filter, undef, undef, $attrval) = @_;
+        my @clean;
+
+        my $rule  = '';
+        my $paren = 0;
+        pos $attrval = 0;
+        while (
+            $attrval =~ m{
+              \G
+              (?:
+                ( [^;'"()]+ | ' [^']* ' | " [^"]* " )
+              | ( [(] )
+              | ( [)] )
+              | ( [;] )
+              | \z
+              )
+            }cgx
+        ) {
+            if (defined $1) {
+                $rule .= $1;
+                next;
+            } elsif ($2) {
+                $rule .= $2;
+                $paren++;
+                next;
+            } elsif ($3) {
+                $rule .= $3;
+                $paren--;
+                last if $paren < 0;    # unbalanced parentheses
+                next;
+            } elsif ($4) {
+                if (0 < $paren) {      # allow semicolons within parentheses
+                    $rule .= $4;
+                    next;
+                }
+            } else {
+                last if $paren != 0;    # unbalanced parentheses
+            }
+
+            $rule =~ s/\A\s+//;
+            $rule =~ s/\s+\z//;
+            my ($key, $val) = split /\s*:\s*/, $rule, 2;
+            $rule = '';
+
+            next unless defined $val;
+            $key =~ s/\A([-\w]+)\z/lc $1/e
+                or next;
+            my $sub = $filter->{_hssAttVal}{$filter->{_hssStyle}{$key} || ''}
+                or next;
+            if (defined $sub->($filter, 'style-psuedo-tag', $key, $val)) {
+                push @clean, "$key:$val";
+            }
+        }
+
+        return join '; ', @clean;
+    };
+}
 
 # Returns a specialized HTML::StripScripts::Parser object built with the
 # parameters provided as arguments.
@@ -94,14 +156,34 @@ sub validate_src_attribute {
     my $self = shift;
     my $text = shift;
 
-    my $uri = URI->new($text)->canonical;
-    # Allow only cid URLs, local URLs and links with the same origin, i.e.
-    # URLs with the same host etc.
-    return $text if $uri->scheme and $uri->scheme eq 'cid';
-    return $text unless $uri->can('authority') and $uri->authority;
-    return $text if $uri->authority =~ $self->{_shsAllowedOriginRe};
+    # RFC 9110 recommends that "at a minimum, URIs with lengths of 8000
+    # octets" in HTTP is supported.  So we'd be better to reject much longer
+    # ones.
+    return undef unless length $text <= 10000;
 
-    return undef;
+    my $uri = URI->new(HTML::Entities::decode_entities($text))->canonical;
+
+    # Only these things are allowed:
+    # - cid URIs.
+    # - Relative URI references.
+    # - http or https URIs.
+    if (($uri->scheme // '') eq 'cid') {
+        ;
+    } elsif (not $uri->can('authority')) {
+        # Other schemes without authority part: data etc.
+        return undef;
+    } elsif (not defined $uri->scheme and not defined $uri->authority) {
+        # Relative ref.
+        ;
+    } elsif (($uri->scheme // '') !~ /\Ahttps?\z/
+        or not length($uri->host // '')) {
+        return undef;
+    } elsif ($uri->authority !~ $self->{_shsAllowedOriginRe}) {
+        # Allow links with the same origin, i.e. URLs with the same host etc.
+        return undef;
+    }
+
+    return HTML::Entities::encode_entities($uri->as_string);
 }
 
 # Overridden method.
