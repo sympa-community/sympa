@@ -65,7 +65,7 @@ git fetch --quiet --depth 50
 # Export recent translations under TRANS_DIRECTORY.
 # "pootle sync_stores" is the command to export them.
 
-pootle sync_stores -v 2 --traceback
+pootle sync_stores -v 2 --traceback |& grep -v Running:
 
 # Update translation catalog according to changes in source code.
 # This needs autoconf, automake and gettext packages.
