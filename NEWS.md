@@ -14,6 +14,7 @@
 
 **Fixed bugs:**
 
+- Fix description for add CLI command bug [\#1565](https://github.com/sympa-community/sympa/pull/1565)
 - [CVE-2021-4243] Potential XSS in jquery-minicolors [\#1561](https://github.com/sympa-community/sympa/issues/1561)
 - Spurious error log adding subscriber [\#1532](https://github.com/sympa-community/sympa/issues/1532)
 - Spurious error log during upgrade on removing nonexisting column [\#939](https://github.com/sympa-community/sympa/issues/939)
@@ -22,6 +23,8 @@
 
 **Merged pull requests:**
 
+- Update support/sync_translation.sh [\#1556](https://github.com/sympa-community/sympa/pull/1556)
+- Replace obsolete Ansible role in README [\#1558](https://github.com/sympa-community/sympa/pull/1558)
 - Improve wording in README.support document. [\#1553](https://github.com/sympa-community/sympa/pull/1553)
 - Update copyright notices, add documentation and correct some typos [\#1552](https://github.com/sympa-community/sympa/pull/1552)
 
