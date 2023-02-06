@@ -58,7 +58,7 @@ sub _twist {
     # Unsubscribe
     for my $list (Sympa::List::get_which($email, $robot_id, 'member')) {
         $log->syslog('info', 'List %s', $list->{name});
-        $list->delete_list_member([$email]);
+        $list->delete_list_member([$email], exclude => 1);
         $self->add_stash($request, 'notice', 'now_unsubscribed',
                          {email => $email, listname => $list->{'name'}});
     }
