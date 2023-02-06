@@ -49,19 +49,10 @@ sub _twist {
     my $robot_id = $request->{context};
     my $email = $request->{email};
     my $last_robot = $request->{last_robot};
+    my @stash;
 
     unless ($email and $robot_id and $last_robot) {
         die 'Missing incoming parameters';
-    }
-
-    # Determine if user exists
-    my $user_hash = Sympa::User::get_global_user($email);
-
-    unless ($user_hash) {
-        $self->add_stash($request, 'user', 'no_entry',
-                         {email => $email});
-        $self->{finish} = 1;
-        return 1;
     }
 
     # Unsubscribe
@@ -94,10 +85,13 @@ sub _twist {
 
     # Remove the user on the final run
     if ($robot_id eq $last_robot) {
-        my $user_object = Sympa::User->new($email);
-        $user_object->expire;
-        $self->add_stash($request, 'notice', 'user_removed',
-                         {'email' => $email, });
+        if (Sympa::User::is_global_user($email)) {
+            my $user_object = Sympa::User->new($email);
+
+            $user_object->expire;
+            $self->add_stash($request, 'notice', 'user_removed',
+                             {'email' => $email, });
+        }
     }
 
     return 1;
