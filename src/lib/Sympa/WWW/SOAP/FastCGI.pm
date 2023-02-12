@@ -1,15 +1,10 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 #
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2023 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::WWW::SOAP::Transport;
+package Sympa::WWW::SOAP::FastCGI;
 
 use strict;
 use warnings;
@@ -34,6 +29,7 @@ use SOAP::Transport::HTTP;
 
 use Sympa::Log;
 use Sympa::WWW::Session;
+use Sympa::WWW::SOAP::Lite;
 use Sympa::WWW::Tools;
 
 # 'base' pragma doesn't work here
@@ -46,7 +42,7 @@ sub new {
     return $class if ref $class;
     my %options = @_;
 
-    my $self = $class->SUPER::new();
+    my $self = $class->SUPER::new()->transport('Sympa::WWW::SOAP::Transport');
     $self->{_ss_birthday} = [stat $PROGRAM_NAME]->[9] if $PROGRAM_NAME;
     $self->{_ss_cookie_expire} = $options{cookie_expire} || 0;
 
@@ -135,3 +131,27 @@ sub handle {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::WWW::SOAP::FastCGI - HTTP/FastCGI transport for SOAP
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 HISTORY
+
+On Sympa 4.0.a8, the feature of SOAP server was introduced,
+and L<SOAP::Transport::HTTP::FCGI::Sympa> appeared.
+On Sympa 6.2a.41 it was renamed to L<Sympa::SOAP::Transport>,
+on Sympa 6.2.25b.3 renamed to L<Sympa::WWW::SOAP::Transport>,
+and on Sympa 6.2.73b renamed to L<Sympa::WWW::SOAP::FastCGI>.
+
+Note that L<Sympa::WWW::SOAP::Transport> in current release
+is a different module.
+
+=cut

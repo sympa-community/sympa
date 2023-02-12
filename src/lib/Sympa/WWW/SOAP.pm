@@ -8,9 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +29,6 @@ package Sympa::WWW::SOAP;
 
 use strict;
 use warnings;
-use Encode qw();
 
 use Sympa;
 use Conf;
@@ -73,7 +72,8 @@ sub checkCookie {
 
     $log->syslog('debug', 'SOAP checkCookie');
 
-    return SOAP::Data->name('result')->type('string')->value($sender);
+    return Sympa::WWW::SOAP::Data->name('result')->type('string')
+        ->value($sender);
 }
 
 sub lists {
@@ -144,7 +144,7 @@ sub lists {
         }
     }
 
-    return SOAP::Data->name('listInfo')->value(\@result);
+    return Sympa::WWW::SOAP::Data->name('listInfo')->value(\@result);
 }
 
 sub login {
@@ -200,7 +200,7 @@ sub login {
     $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     ## Also return the cookie value
-    return SOAP::Data->name('result')->type('string')
+    return Sympa::WWW::SOAP::Data->name('result')->type('string')
         ->value($ENV{SESSION_ID});
 }
 
@@ -286,7 +286,7 @@ sub casLogin {
     $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     ## Also return the cookie value
-    return SOAP::Data->name('result')->type('string')
+    return Sympa::WWW::SOAP::Data->name('result')->type('string')
         ->value($ENV{SESSION_ID});
 }
 
@@ -353,7 +353,7 @@ sub getUserEmailByCookie {
             ->faultstring('Could not get email from cookie')->faultdetail('');
     }
 
-    return SOAP::Data->name('result')->type('string')
+    return Sympa::WWW::SOAP::Data->name('result')->type('string')
         ->value($session->{'email'});
 
 }
@@ -442,13 +442,13 @@ sub amI {
 
     if ($list) {
         if ($function eq 'subscriber') {
-            return SOAP::Data->name('result')->type('boolean')
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
                 ->value($list->is_list_member($user));
         } elsif ($function eq 'editor') {
-            return SOAP::Data->name('result')->type('boolean')
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
                 ->value($list->is_admin('actual_editor', $user));
         } elsif ($function eq 'owner') {
-            return SOAP::Data->name('result')->type('boolean')
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
                 ->value($list->is_admin('owner', $user)
                     || Sympa::is_listmaster($list, $user));
         } else {
@@ -516,32 +516,34 @@ sub info {
         my $result_item;
 
         $result_item->{'listAddress'} =
-            SOAP::Data->name('listAddress')->type('string')
+            Sympa::WWW::SOAP::Data->name('listAddress')->type('string')
             ->value(Sympa::get_address($list));
         $result_item->{'subject'} =
-            SOAP::Data->name('subject')->type('string')
+            Sympa::WWW::SOAP::Data->name('subject')->type('string')
             ->value($list->{'admin'}{'subject'});
         $result_item->{'homepage'} =
-            SOAP::Data->name('homepage')->type('string')
+            Sympa::WWW::SOAP::Data->name('homepage')->type('string')
             ->value(Sympa::get_url($list, 'info'));
 
         ## determine status of user
         if ($list->is_admin('owner', $sender)
             or Sympa::is_listmaster($list, $sender)) {
             $result_item->{'isOwner'} =
-                SOAP::Data->name('isOwner')->type('boolean')->value(1);
+                Sympa::WWW::SOAP::Data->name('isOwner')->type('boolean')
+                ->value(1);
         }
         if ($list->is_admin('actual_editor', $sender)) {
             $result_item->{'isEditor'} =
-                SOAP::Data->name('isEditor')->type('boolean')->value(1);
+                Sympa::WWW::SOAP::Data->name('isEditor')->type('boolean')
+                ->value(1);
         }
         if ($list->is_list_member($sender)) {
             $result_item->{'isSubscriber'} =
-                SOAP::Data->name('isSubscriber')->type('boolean')->value(1);
+                Sympa::WWW::SOAP::Data->name('isSubscriber')->type('boolean')
+                ->value(1);
         }
 
-        #push @result, SOAP::Data->type('listType')->value($result_item);
-        return SOAP::Data->value([$result_item]);
+        return Sympa::WWW::SOAP::Data->value([$result_item]);
     }
     $log->syslog('info',
         'Info %s from %s aborted, unknown requested action in scenario',
@@ -651,13 +653,14 @@ sub createList {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub closeList {
@@ -730,13 +733,14 @@ sub closeList {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub add {
@@ -819,13 +823,14 @@ sub add {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub del {
@@ -901,13 +906,14 @@ sub del {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub review {
@@ -975,9 +981,10 @@ sub review {
             $log->syslog('err', 'No subscribers in list "%s"',
                 $list->{'name'});
             push @resultSoap,
-                SOAP::Data->name('result')->type('string')
+                Sympa::WWW::SOAP::Data->name('result')->type('string')
                 ->value('no_subscribers');
-            return SOAP::Data->name('return')->value(\@resultSoap);
+            return Sympa::WWW::SOAP::Data->name('return')
+                ->value(\@resultSoap);
         }
         do {
             ## Owners bypass the visibility option
@@ -987,13 +994,13 @@ sub review {
                 ## Lower case email address
                 $user->{'email'} =~ y/A-Z/a-z/;
                 push @resultSoap,
-                    SOAP::Data->name('item')->type('string')
+                    Sympa::WWW::SOAP::Data->name('item')->type('string')
                     ->value($user->{'email'});
             }
         } while ($user = $list->get_next_list_member());
         $log->syslog('info', 'Review %s from %s accepted', $listname,
             $sender);
-        return SOAP::Data->name('return')->value(\@resultSoap);
+        return Sympa::WWW::SOAP::Data->name('return')->value(\@resultSoap);
     }
     $log->syslog('info',
         'Review %s from %s aborted, unknown requested action in scenario',
@@ -1087,7 +1094,7 @@ sub fullReview {
 
     $log->syslog('info', 'FullReview %s from %s accepted', $listname,
         $sender);
-    return SOAP::Data->name('return')->value(\@result);
+    return Sympa::WWW::SOAP::Data->name('return')->value(\@result);
 }
 
 sub signoff {
@@ -1139,13 +1146,14 @@ sub signoff {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub subscribe {
@@ -1199,13 +1207,14 @@ sub subscribe {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 ## Which list the user is subscribed to
@@ -1317,9 +1326,7 @@ sub which {
         push @result, $listInfo;
     }
 
-#    return SOAP::Data->name('return')->type->('ArrayOfString')
-#    ->value(\@result);
-    return SOAP::Data->name('return')->value(\@result);
+    return Sympa::WWW::SOAP::Data->name('return')->value(\@result);
 }
 
 sub getDetails {
@@ -1374,7 +1381,7 @@ sub getDetails {
             ->faultdetail('Use : <list>');
     }
 
-    return SOAP::Data->name('return')->value(\%result);
+    return Sympa::WWW::SOAP::Data->name('return')->value(\%result);
 }
 
 sub setDetails {
@@ -1450,7 +1457,7 @@ sub setDetails {
         ->faultdetail("SOAP setDetails : update user failed")
         unless $list->update_list_member($sender, %user);
 
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub setCustom {
@@ -1490,16 +1497,11 @@ sub setCustom {
             ->faultstring('Not a subscriber to this list')
             ->faultdetail('Use : <list> <key> <value> ');
     }
-    %newcustom = %{$subscriber->{'custom_attribute'}};
-    #if(! defined $list->{'admin'}{'custom_attribute'}{$key} ) {
-    #	return SOAP::Data->name('result')->type('boolean')->value(0);
-    #}
-    if ($value eq '') {
-        undef $newcustom{$key};
+    %newcustom = %{$subscriber->{custom_attribute} // {}};
+
+    unless (length($value // '')) {
+        delete $newcustom{$key};
     } else {
-        # $newcustom{$key} = $list->{'admin'}{'custom_attribute'}{$key}
-        #     if !defined $newcustom{$key}
-        #         and defined $list->{'admin'}{'custom_attribute'};
         $newcustom{$key}{value} = $value;
     }
     die SOAP::Fault->faultcode('Server')
@@ -1508,7 +1510,7 @@ sub setCustom {
         unless $list->update_list_member($sender,
         custom_attribute => \%newcustom);
 
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 ## Return a structure in SOAP data format
@@ -1524,26 +1526,18 @@ sub struct_to_soap {
     }
 
     if ($format eq 'as_string') {
-        my @all;
-        my $formated_data;
-        foreach my $k (keys %$data) {
-            push @all, Encode::decode_utf8($k . '=' . $data->{$k});
-        }
-
-        $formated_data = join ';', @all;
-        $soap_data = SOAP::Data->type('string')->value($formated_data);
+        return Sympa::WWW::SOAP::Data->type('string')
+            ->value(join ';',
+            map { sprintf '%s=%s', $_, $data->{$_} } keys %$data);
     } else {
-        my $formated_data;
-        foreach my $k (keys %$data) {
-            $formated_data->{$k} =
-                SOAP::Data->name($k)->type($types{'listType'}{$k})
-                ->value($data->{$k});
-        }
-
-        $soap_data = SOAP::Data->value($formated_data);
+        return Sympa::WWW::SOAP::Data->value(
+            {   map {
+                    ($_ => Sympa::WWW::SOAP::Data->name($_)
+                            ->type($types{listType}{$_})->value($data->{$_}))
+                } keys %$data
+            }
+        );
     }
-
-    return $soap_data;
 }
 
 sub get_reason_string {
@@ -1574,3 +1568,23 @@ sub get_reason_string {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Sympa::WWW::SOAP - Dispatcher for SOAP
+
+=head1 DESCRIPTION
+
+TBD.
+
+=head1 HISTORY
+
+On Sympa 4.0.a8, the feature of SOAP server was introduced,
+and L<sympasoap> appeared.
+On Sympa 6.2a.41 it was renamed to L<Sympa::SOAP>,
+and on Sympa 6.2.25b.3 renamed to L<Sympa::WWW::SOAP>.
+
+=cut
