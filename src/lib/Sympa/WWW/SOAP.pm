@@ -1499,10 +1499,6 @@ sub setCustom {
     }
     %newcustom = %{$subscriber->{attrib} // {}};
 
-    # Workaround for possible bug in SOAP::Lite.
-    Encode::_utf8_off($key);
-    Encode::_utf8_off($value);
-
     unless (length($value // '')) {
         delete $newcustom{$key};
     } else {
