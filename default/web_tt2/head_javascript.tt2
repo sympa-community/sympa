@@ -14,6 +14,8 @@ var sympa = {
     calendarButtonText: '[%"Calendar"|loc|escape_cstr%]',
     calendarFirstDay:   0,
     closeText:          '[%"Close"|loc|escape_cstr%]',
+    copiedText:         '[%"Copied!"|loc|escape_cstr%]',
+    copyPermalinkText:  '[%"Copy permalink"|loc|escape_cstr%]',
     dayNames:           '[%"Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"|loc|escape_cstr%]'.split(":"),
     dayNamesMin:        '[%"Su:Mo:Tu:We:Th:Fr:Sa"|loc|escape_cstr%]'.split(":"),
     home_url:           '[% path_cgi | escape_cstr %]/',
@@ -40,7 +42,7 @@ var lang = '[% lang %]';
 <script src="[% static_content_url %]/js/jqplot/jqplot.canvasAxisTickRenderer.min.js?v1.0.8"></script>
 <script src="[% static_content_url %]/js/jqplot/jqplot.canvasTextRenderer.min.js?v1.0.8"></script>
 [%# Color picker ~%]
-<script src="[% static_content_url %]/js/jquery-minicolors/jquery.minicolors.min.js?v2.3.1"></script>
+<script src="[% static_content_url %]/js/jquery-minicolors/jquery.minicolors.min.js?v2.3.6"></script>
 [%# Sympa ~%]
 <script src="[% static_content_url %]/js/sympa.js?v[% version %]"></script>
 

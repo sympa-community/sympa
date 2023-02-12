@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2021 The Sympa Community. See the
+# Copyright 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -65,10 +65,10 @@ sub _run {
         }
         foreach my $role (@roles) {
             unless ($list->dump_users($role)) {
-                printf STDERR "%s: Could not dump list users (%s)\n",
+                warn sprintf "%s: Could not dump list users (%s)\n",
                     $list->get_id, $role;
             } else {
-                printf STDERR "%s: Dumped list users (%s)\n",
+                warn sprintf "%s: Dumped list users (%s)\n",
                     $list->get_id, $role;
             }
         }

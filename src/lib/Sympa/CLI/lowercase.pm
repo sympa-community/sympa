@@ -40,11 +40,11 @@ sub _run {
     my $class   = shift;
     my $options = shift;
 
-    print STDERR "Working on user_table...\n";
+    warn "Working on user_table...\n";
     my $total = _lowercase_field('user_table', 'email_user');
 
     if (defined $total) {
-        print STDERR "Working on subscriber_table...\n";
+        warn "Working on subscriber_table...\n";
         my $total_sub =
             _lowercase_field('subscriber_table', 'user_subscriber');
         if (defined $total_sub) {
@@ -57,7 +57,7 @@ sub _run {
         exit 1;
     }
 
-    printf STDERR "Total lowercased rows: %d\n", $total;
+    warn sprintf "Total lowercased rows: %d\n", $total;
 
     exit 0;
 }

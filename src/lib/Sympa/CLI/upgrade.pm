@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2021 The Sympa Community. See the
+# Copyright 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -108,6 +108,22 @@ To see detail of each sub-command,
 run 'C<sympal.pl help upgrade> I<sub-command>'.
 
 =over
+
+=item L<"sympa upgrade incoming ..."|sympa-upgrade-incoming(1)>
+
+Upgrade messages in incoming spool
+
+=item L<"sympa upgrade outgoing ..."|sympa-upgrade-outgoing(1)>
+
+Migrating messages in bulk tables
+
+=item L<"sympa upgrade password ...|sympa-upgrade-password(1)>
+
+Upgrading password in database
+
+=item L<"sympa upgrade shared ..."|sympa-upgrade-shared(1)>
+
+Encode file names in shared repositories.
 
 =back
 

@@ -106,7 +106,9 @@
                         [% SET class = '' %]
                     [% END %]
                     <li class="[% class %]">
-                        <a href="[% 'serveradmin/vhosts' | url_rel %]">[%|loc%]Virtual Robots[%END%]</a>
+                        <a href="[% 'serveradmin/vhosts' | url_rel %]">
+                            [%|loc%]Domains[%END%]
+                        </a>
                     </li>
                 [%~ END %]
                 [% IF main_robot ~%]
@@ -116,7 +118,9 @@
                         [% SET class = '' %]
                     [% END %]
                     <li class="[% class %]">
-                        <a href="[% 'edit_config' | url_rel %]">[%|loc%]Edit Robot Config[%END%]</a>
+                        <a href="[% 'edit_config' | url_rel %]">
+                            [%|loc%]View domain config[%END%]
+                        </a>
                     </li>
                 [%~ END %]
                 [% IF families -%]

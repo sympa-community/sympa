@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,9 +7,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,6 +36,7 @@ use MIME::Base64 qw();
 use Time::Local qw();
 
 use Sympa;
+use Sympa::CLI;
 use Conf;
 use Sympa::ConfDef;
 use Sympa::Constants;
@@ -182,16 +182,16 @@ sub upgrade {
 
     ## Migration to tt2
     if (lower_version($previous_version, '4.2b')) {
-
-        $log->syslog('notice', 'Migrating templates to TT2 format...');
-
-        my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
-        my $pipein;
-        unless (open $pipein, '-|', $tpl_script) {    #FIXME
-            $log->syslog('err', 'Unable to run %s', $tpl_script);
-            return undef;
-        }
-        close $pipein;
+        # Orgranization of templates has been changed and migration is no use.
+        #$log->syslog('notice', 'Migrating templates to TT2 format...');
+        #
+        #my $tpl_script = Sympa::Constants::SCRIPTDIR . '/tpl2tt2.pl';
+        #my $pipein;
+        #unless (open $pipein, '-|', $tpl_script) {    #FIXME
+        #    $log->syslog('err', 'Unable to run %s', $tpl_script);
+        #    return undef;
+        #}
+        #close $pipein;
 
         $log->syslog('notice', 'Rebuilding web archives...');
         my $all_lists = Sympa::List::get_lists('*');
@@ -622,9 +622,7 @@ sub upgrade {
     ## encoding
     if (lower_version($previous_version, '5.3a.8')) {
         $log->syslog('notice', 'Q-Encoding web documents filenames...');
-        system Sympa::Constants::SCRIPTDIR()
-            . '/upgrade_shared_repository.pl',
-            '--all_lists';
+        Sympa::CLI->run({}, 'upgrade', 'shared', '*');
     }
 
     ## We now support UTF-8 only for custom templates, config files, headers
@@ -860,9 +858,7 @@ sub upgrade {
         ## We change encoding of shared documents according to new algorithm
         $log->syslog('notice',
             'Fixing Q-encoding of web document filenames...');
-        system Sympa::Constants::SCRIPTDIR()
-            . '/upgrade_shared_repository.pl',
-            '--all_lists', '--fix_qencode';
+        Sympa::CLI->run({fix_qencode => 1}, 'upgrade', 'shared', '*');
     }
     if (lower_version($previous_version, '6.1.11')) {
         ## Exclusion table was not robot-enabled.
@@ -1221,14 +1217,15 @@ sub upgrade {
         }
     }
 
-    # Create HTML view of pending messages
-    if (lower_version($previous_version, '6.2b.1')) {
-        $log->syslog('notice', 'Creating HTML view of moderation spool...');
-        my $status =
-            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
-        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
-            if $status;
-    }
+    # 6.2.70: Now HTML view of held messages will be created on demand.
+    ## Create HTML view of pending messages
+    #if (lower_version($previous_version, '6.2b.1')) {
+    #    $log->syslog('notice', 'Creating HTML view of moderation spool...');
+    #    my $status =
+    #        system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+    #    $log->syslog('err', 'mod2html.pl failed with status %s', $status)
+    #        if $status;
+    #}
 
     # Rename files in automatic spool with older format created by
     # sympa-milter 0.6 or earlier: <family_name>.<date>.<rand> to
@@ -1476,7 +1473,7 @@ sub upgrade {
 
         # As the field id_counter is no longer used but it has NOT NULL
         # constraint, it should be deleted.
-        if ($sdm and $sdm->can('delete_field')) {
+        if ($sdm and $sdm->can('drop_field')) {
             $sdm->delete_field(
                 {table => 'stat_counter_table', field => 'id_counter'});
         } else {
@@ -1506,7 +1503,7 @@ sub upgrade {
 
         # As the field id_stat is no longer used but it has NOT NULL
         # constraint, it should be deleted.
-        if ($sdm and $sdm->can('delete_field')) {
+        if ($sdm and $sdm->can('drop_field')) {
             $sdm->delete_field({table => 'stat_table', field => 'id_stat'});
         } else {
             $log->syslog('err',
@@ -1698,11 +1695,12 @@ sub upgrade {
             closedir $dh;
         }
 
-        $log->syslog('notice', 'Creating HTML view of moderation spool...');
-        my $status =
-            system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
-        $log->syslog('err', 'mod2html.pl failed with status %s', $status)
-            if $status;
+        # 6.2.70: Now HTML view of held messages will be created on demand.
+        #$log->syslog('notice', 'Creating HTML view of moderation spool...');
+        #my $status =
+        #    system(Sympa::Constants::SCRIPTDIR() . '/' . 'mod2html.pl') >> 8;
+        #$log->syslog('err', 'mod2html.pl failed with status %s', $status)
+        #    if $status;
     }
 
     # Upgrading moderation spool on subscription.
@@ -1767,7 +1765,7 @@ sub upgrade {
 
         # As the field id_logs is no longer used but it has NOT NULL
         # constraint, it should be deleted.
-        if ($sdm and $sdm->can('delete_field')) {
+        if ($sdm and $sdm->can('drop_field')) {
             $sdm->delete_field({table => 'logs_table', field => 'id_logs'});
         } else {
             $log->syslog('err',

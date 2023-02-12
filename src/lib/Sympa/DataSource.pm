@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -317,7 +316,7 @@ Parameters:
 =item $type
 
 Type of data source.
-This corresponds to impemented subclasses.
+This corresponds to implemented subclasses.
 
 =item $role
 

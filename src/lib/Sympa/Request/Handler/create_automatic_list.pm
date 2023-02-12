@@ -1,11 +1,10 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2020, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -50,10 +49,9 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    my $family         = $request->{context};
-    my $param          = $request->{parameters};
-    my $abort_on_error = $request->{abort_on_error};
-    my $robot_id       = $family->{'domain'};
+    my $family   = $request->{context};
+    my $param    = $request->{parameters};
+    my $robot_id = $family->{'domain'};
 
     my $path;
 
@@ -95,15 +93,9 @@ sub _twist {
     my $config = '';
     my $template =
         Sympa::Template->new(undef, include_path => [$family->{'dir'}]);
-    my $tt_result = $template->parse($param, 'config.tt2', \$config);
-    if (not $tt_result and $abort_on_error) {
-        $log->syslog(
-            'err',
-            'Abort on template error. List %s from family %s, file config.tt2 : %s',
-            $listname,
-            $family,
-            $template->{last_error}
-        );
+    unless ($template->parse($param, 'config.tt2', \$config)) {
+        $log->syslog('err', 'Can\'t parse %s/config.tt2: %s',
+            $family->{'dir'}, $template->{last_error});
         $self->add_stash($request, 'intern');
         return undef;
     }

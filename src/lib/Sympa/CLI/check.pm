@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2021 The Sympa Community. See the
+# Copyright 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -44,7 +44,7 @@ sub _run {
 
     # Load configuration file. Ignoring database config for now: it avoids
     # trying to load a database that could not exist yet.
-    unless (Conf::load(Conf::get_sympa_conf(), 'no_db')) {
+    unless (Conf::load(Conf::get_sympa_conf())) {
         #FIXME: force reload
         die sprintf
             "Configuration file %s has errors.\n",
@@ -93,13 +93,6 @@ sub _run {
         die sprintf
             "Database %s defined in sympa.conf has not the right structure or is unreachable. Verify db_xxx parameters in sympa.conf\n",
             $Conf::Conf{'db_name'};
-    }
-
-    ## Now trying to load full config (including database)
-    unless (Conf::load()) {    #FIXME: load Site, then robot cache
-        die sprintf
-            "Unable to load Sympa configuration, file %s or any of the virtual host robot.conf files contain errors. Exiting.\n",
-            Conf::get_sympa_conf();
     }
 
     ## Change working directory.

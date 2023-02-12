@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2021 The Sympa Community. See the
+# Copyright 2018, 2021, 2022, 2023 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -33,10 +32,10 @@ use warnings;
 use base qw(Sympa::Database);
 
 use constant required_modules    => [];
-use constant required_parameters => [qw(db_name db_user)];
+use constant required_parameters => [qw(db_name)];
 use constant optional_modules    => [];
 use constant optional_parameters =>
-    [qw(db_host db_port db_passwd db_options db_env)];
+    [qw(db_host db_port db_user db_passwd db_options db_env)];
 
 sub translate_type {
     return $_[1];
@@ -52,6 +51,32 @@ sub AS_DOUBLE {
 sub AS_BLOB {
     return $_[1] if scalar @_ > 1;
     return ();
+}
+
+sub delete_field {
+    my $self    = shift;
+    my $options = shift;
+
+    unless ($self->can('drop_field')) {
+        return 'Removal of column from table is not supported.';
+    }
+
+    my $table  = $options->{table};
+    my $field  = $options->{field};
+    my $fields = $self->get_fields({table => $table});
+    unless (defined $fields->{$field}) {
+        return sprintf 'The field %s does not exist in the table %s',
+            $table, $field;
+    }
+
+    return $self->drop_field($table, $field);
+}
+
+sub md5_func {
+    shift;
+
+    return sprintf q{MD5(CONCAT(%s))}, join ', ',
+        map { sprintf q{COALESCE(%s, '')}, $_ } @_;
 }
 
 1;
@@ -87,9 +112,11 @@ By default, no packages are required.
 
 I<Overridable>.
 Returns an arrayref including names of required (not optional) parameters.
-By default, returns C<['db_name', 'db_user']>.
+By default, returns C<['db_name']>.
 
 I<Note>:
+On Sympa prior to 6.2.71b, it by default returned
+C<['db_name', 'db_user']>.
 On Sympa prior to 6.2.37b.2, it by default returned
 C<['db_host', 'db_name', 'db_user']>.
 
@@ -387,7 +414,13 @@ Returns:
 A character string report of the operation done or C<undef> if something
 went wrong.
 
-=item delete_field ( { table => $table, field => $field } )
+=item delete_field ( { table => $table, field => $column } );
+
+I<Overridable>.
+If the column exists in the table, remove it using drop_field().
+Otherwise do nothing.
+
+=item drop_field ( $table, $field )
 
 I<Required to update database structure>.
 Deletes a field from a table in the database.
@@ -410,6 +443,9 @@ Returns:
 
 A character string report of the operation done or C<undef> if something
 went wrong.
+
+Note:
+On Sympa 6.2.71b.1 or earlier, delete_field() was defined instead of this.
 
 =item get_primary_key ( { table => $table } )
 
@@ -565,14 +601,6 @@ provided by L<Sympa::Database> class:
 
 =over
 
-=item begin ( )
-
-I<Overridable>, I<only for SQL driver>.
-
-=item commit ( )
-
-I<Overridable>, I<only for SQL driver>.
-
 =item do_operation ( $operation, $parameters, ...)
 
 I<Overridable>, I<only for LDAP driver>.
@@ -582,10 +610,6 @@ I<Overridable>, I<only for LDAP driver>.
 I<Overridable>, I<only for SQL driver>.
 
 =item do_prepared_query ( $query, $parameters, ... )
-
-I<Overridable>, I<only for SQL driver>.
-
-=item rollback ( )
 
 I<Overridable>, I<only for SQL driver>.
 
@@ -635,6 +659,14 @@ value used by L</do_prepared_query>().
 Overridden by inherited classes.
 
 See L</AS_DOUBLE> for more details.
+
+=item md5_func ( $expression, ... )
+
+I<Required>.
+Given expressions, returns a SQL expression calculating MD5 digest of
+concatenated those expressions.  Among them, NULL values should be ignored
+and numeric values should be converted to textual type before concatenation.
+Value of the SQL expression should be lowercase 32 hexadigits.
 
 =back
 

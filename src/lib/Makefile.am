@@ -1,5 +1,3 @@
-# $Id$
-
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
@@ -30,9 +28,14 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 CLI_modules = \
 	Sympa/CLI/add.pm \
+	Sympa/CLI/bouncers.pm \
+	Sympa/CLI/bouncers/del.pm \
+	Sympa/CLI/bouncers/reset.pm \
 	Sympa/CLI/check.pm \
 	Sympa/CLI/close.pm \
-	Sympa/CLI/conf_2_db.pm \
+	Sympa/CLI/config.pm \
+	Sympa/CLI/config/create.pm \
+	Sympa/CLI/config/show.pm \
 	Sympa/CLI/copy.pm \
 	Sympa/CLI/create.pm \
 	Sympa/CLI/del.pm \
@@ -49,11 +52,21 @@ CLI_modules = \
 	Sympa/CLI/rebuildarc.pm \
 	Sympa/CLI/reload_list_config.pm \
 	Sympa/CLI/restore.pm \
+	Sympa/CLI/review.pm \
 	Sympa/CLI/send_digest.pm \
+	Sympa/CLI/set.pm \
 	Sympa/CLI/show_pending_lists.pm \
 	Sympa/CLI/sync_list_db.pm \
+	Sympa/CLI/test.pm \
+	Sympa/CLI/test/ldap.pm \
+	Sympa/CLI/test/soap.pm \
+	Sympa/CLI/test/syslog.pm \
 	Sympa/CLI/update.pm \
 	Sympa/CLI/upgrade.pm \
+	Sympa/CLI/upgrade/incoming.pm \
+	Sympa/CLI/upgrade/outgoing.pm \
+	Sympa/CLI/upgrade/password.pm \
+	Sympa/CLI/upgrade/shared.pm \
 	Sympa/CLI/upgrade_config_location.pm \
 	Sympa/CLI/user.pm \
 	Sympa/CLI/user/move.pm \

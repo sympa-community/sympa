@@ -11,6 +11,8 @@ use English qw(-no_match_vars);
 use File::Find qw();
 use HTML::Entities qw();
 
+use Sympa::Tools::Text;
+
 use base qw(Sympa::WWW::Marc);
 
 our $VERSION = "4.3+Sympa-6.2";
@@ -197,7 +199,7 @@ sub _find_match {
         }
     }
     if ($match == 1) {
-        $file =~ s,$self->{'search_base'},$self->{'base_href'},;
+        $file =~ s,\Q$self->{'search_base'}\E,$self->{'base_href'},;
         $res->{'file'}        = $file;
         $res->{'body_string'} = $body_string;
         $res->{'id'}          = $id;
@@ -247,6 +249,7 @@ sub search {
     my $body        = $self->body || 0;
 
     @MSGFILES = '';
+    $self->{res} = [];
 
     my @directories = split /\0/, $directories;
     foreach my $dir (@directories) {
@@ -482,6 +485,23 @@ sub match_this {
     my $string = join '\s+', @_;
     $string = '(?i)' . $string if ($self->case);
     my $code     = "sub { use utf8; /" . $string . "/ }";
+    my $function = eval $code;
+    die "bad pattern: $EVAL_ERROR" if $EVAL_ERROR;
+    return $function;
+}
+
+# Matches either message ID or permalink ID (a digest of former).
+sub match_permalink_id {
+    my $self  = shift;
+    my @words = @_;
+
+    my $string_q = join '|', @words;    # already escaped.
+    $string_q = '(?i)' . $string_q if ($self->case);
+
+    my $code = sprintf q{sub {
+            use utf8;
+            /%s/ or Sympa::Tools::Text::permalink_id($_) =~ /%s/
+        }}, $string_q, $string_q;
     my $function = eval $code;
     die "bad pattern: $EVAL_ERROR" if $EVAL_ERROR;
     return $function;

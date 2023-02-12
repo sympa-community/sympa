@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2020, 2021 The Sympa Community. See the
+# Copyright 2018, 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -30,10 +29,12 @@ package Sympa::Tools::Text;
 use strict;
 use warnings;
 use feature qw(fc);
+use Digest::MD5;
 use Encode qw();
 use English qw(-no_match_vars);
 use Encode::MIME::Header;    # 'MIME-Q' encoding.
 use HTML::Entities qw();
+use MIME::Base64 qw();       # encode_base64url() needs 3.11 or later.
 use MIME::EncWords;
 use Text::LineFold;
 use Unicode::GCString;
@@ -125,7 +126,7 @@ sub canonic_text {
     return undef unless defined $text;
 
     # Normalize text. See also discussion on
-    # https://listes.renater.fr/sympa/arc/sympa-developpers/2018-03/thrd1.html
+    # https://lists.sympa.community/msg/devel/2018-03/4QnaLDHkIC-7ZXa2e4npdQ
     #
     # N.B.: Corresponding modules are optional by now, and should be
     # mandatory in the future.
@@ -397,6 +398,13 @@ sub _url_query_string {
             } sort keys %$query
         );
     }
+}
+
+sub permalink_id {
+    my $message_id = shift;
+
+    $message_id =~ s/[\s<>]//g;
+    return MIME::Base64::encode_base64url(Digest::MD5::md5($message_id));
 }
 
 sub pad {
@@ -846,6 +854,10 @@ Otherwise, pads left.
 Returns:
 
 Padded string.
+
+=item permalink_id ( $message_id )
+
+Calculates permalink ID from mesage ID.
 
 =item qdecode_filename ( $filename )
 

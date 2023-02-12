@@ -5,8 +5,8 @@ on:
     tags-ignore:
       - '*'
   pull_request:
-    branches:
-      - '*'
+    branches-ignore:
+      - 'translation'
 
 jobs:
   make-check:
@@ -15,9 +15,10 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          #- 'macos-latest' # Crypt::OpenSSL::X509 doesn't support openssl@3
+          - 'macos-latest'
           - 'ubuntu-latest'
         perl:
+          - '5'
           - '5.34'
           - '5.32'
           - '5.30'
@@ -25,12 +26,12 @@ jobs:
           - '5.26'
           - '5.24'
           #- '5.22'
-          #- '5.20' # Fails with ubuntu: See below.
+          - '5.20'
           #- '5.18'
           - '5.16'
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install dependencies for Linux
         if: runner.os == 'Linux'
         run: |
@@ -40,13 +41,6 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install automake
-      #XXX This doesn't work, though I don't know why.
-      #- name: Workaround for rt.perl.org#116989
-      #  if: runner.os == 'Linux' && matrix.perl == '5.20'
-      #  # For Crypt::OpenSSL::X509
-      #  run: >
-      #    echo PERL_CPANM_OPT=--configure-args="CCFLAGS='-Wno-error=unused-function'"
-      #    >> $GITHUB_ENV
       - name: Workaround for macOS
         if: runner.os == 'macOS'
         # For Crypt::SMIME
@@ -70,9 +64,9 @@ jobs:
             # Workaround to avoid reference to older libcrypto by perl binary
             export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
           fi
-          autoreconf -i
+          PERL5LIB= autoreconf -i
           ./configure --with-defaultdir=`pwd`/default
           cd src; make; cd ..
-          make check-local TEST_FILES='xt/perltidy.t' || true
+          #make check-local TEST_FILES='xt/perltidy.t' || true
           make check-local
         shell: bash
