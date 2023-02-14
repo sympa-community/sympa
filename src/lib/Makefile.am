@@ -242,7 +242,7 @@ nonCLI_modules = \
 	Sympa/WWW/SharedDocument.pm \
 	Sympa/WWW/Session.pm \
 	Sympa/WWW/SOAP.pm \
-	Sympa/WWW/SOAP/Transport.pm \
+	Sympa/WWW/SOAP/FastCGI.pm \
 	Sympa/WWW/Tools.pm
 nobase_modules_DATA = $(CLI_modules) $(nonCLI_modules)
 

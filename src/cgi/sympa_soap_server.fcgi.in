@@ -39,7 +39,7 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Spool::Listmaster;
 use Sympa::WWW::SOAP;
-use Sympa::WWW::SOAP::Transport;
+use Sympa::WWW::SOAP::FastCGI;
 
 ## Load sympa config
 unless (Conf::load()) {
@@ -81,8 +81,7 @@ my $all_lists = Sympa::List::get_lists('*');
 #    Soap part
 ##############################################################################
 
-Sympa::WWW::SOAP::Transport->new(
-    cookie_expire => $Conf::Conf{'cookie_expire'})
+Sympa::WWW::SOAP::FastCGI->new(cookie_expire => $Conf::Conf{'cookie_expire'})
     ->dispatch_with({'urn:sympasoap' => 'Sympa::WWW::SOAP'})->handle;
 
 __END__
