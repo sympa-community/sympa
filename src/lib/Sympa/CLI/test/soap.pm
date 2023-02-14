@@ -24,6 +24,7 @@ package Sympa::CLI::test::soap;
 
 use strict;
 use warnings;
+use Encode qw();
 use Getopt::Long;
 use HTTP::Cookies;
 use SOAP::Lite;
@@ -72,8 +73,8 @@ sub _run {
         }
 
         play_soap_as_trusted($soap_url, $trusted_application,
-            $trusted_application_password, $service, $proxy_vars,
-            $service_parameters);
+            $trusted_application_password, $proxy_vars,
+            $service, $service_parameters);
     } elsif ($service eq 'getUserEmailByCookie') {
         play_soap(
             $soap_url,
@@ -110,8 +111,8 @@ sub play_soap_as_trusted {
     my $soap_url                     = shift;
     my $trusted_application          = shift;
     my $trusted_application_password = shift;
-    my $service                      = shift;
     my $proxy_vars                   = shift;
+    my $service                      = shift;
     my $service_parameters           = shift;
 
     my $soap = SOAP::Lite->new();
@@ -124,9 +125,8 @@ sub play_soap_as_trusted {
     } else {
         @parameters = ();
     }
-    my $p = join(',', @parameters);
-    printf
-        "calling authenticateRemoteAppAndRun( $trusted_application, $trusted_application_password, $proxy_vars,$service,$p)\n";
+    printf "calling authenticateRemoteAppAndRun( %s, ?, %s, %s, %s )\n",
+        $trusted_application, $proxy_vars, $service, join ',', @parameters;
 
     my $reponse =
         $soap->authenticateRemoteAppAndRun($trusted_application,
@@ -290,7 +290,8 @@ sub _dump_var {
     } elsif (ref $var) {
         printf "%s'%s'\n", "\t" x $level, ref $var;
     } elsif (defined $var) {
-        printf "%s'%s'\n", "\t" x $level, $var;
+        printf "%s'%s'\n", "\t" x $level,
+            Encode::is_utf8($var) ? Encode::encode_utf8($var) : $var;
     } else {
         printf "%sUNDEF\n", "\t" x $level;
     }
