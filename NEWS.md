@@ -23,6 +23,7 @@
 
 **Merged pull requests:**
 
+- Adding translation catalogs for Georgian (ka) by request [\#1596](https://github.com/sympa-community/sympa/pull/1596)
 - Update support/sync_translation.sh [\#1556](https://github.com/sympa-community/sympa/pull/1556)
 - Replace obsolete Ansible role in README [\#1558](https://github.com/sympa-community/sympa/pull/1558)
 - Improve wording in README.support document. [\#1553](https://github.com/sympa-community/sympa/pull/1553)
