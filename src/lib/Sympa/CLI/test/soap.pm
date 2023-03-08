@@ -261,28 +261,39 @@ sub play_soap {
 sub print_result {
     my $r = shift;
 
-# If we get a fault
-    if (defined $r && $r->fault) {
-        print "Soap error :\n";
-        my %fault = %{$r->fault};
-        foreach my $val (keys %fault) {
-            print "$val = $fault{$val}\n";
-        }
+    if ($r->fault) {
+        print "SOAP error :\n";
+        _dump_var($r->fault);
     } else {
-        my @ret;
-        if (ref($r->result) =~ /^ARRAY/) {
-            #printf "R: $r->result\n";
-            @ret = @{$r->result};
-        } elsif (ref $r->result) {
-            print "Pb " . ($r->result) . "\n";
-            return undef;
-        } else {
-            @ret = $r->result;
-        }
-        Sympa::Tools::Data::dump_var(\@ret, 0, \*STDOUT);
+        _dump_var($r->result);
     }
 
     return 1;
+}
+
+# Dump a variable's content
+# Old name: Sympa::Tools::Data::dump_var().
+sub _dump_var {
+    my $var = shift;
+    my $level = shift || 0;
+
+    if (ref $var eq 'ARRAY') {
+        foreach my $index (0 .. $#{$var}) {
+            printf "%s%d\n", "\t" x $level, $index;
+            _dump_var($var->[$index], $level + 1);
+        }
+    } elsif (ref $var eq 'HASH') {
+        foreach my $key (sort keys %{$var}) {
+            printf "%s_%s_\n", "\t" x $level, $key;
+            _dump_var($var->{$key}, $level + 1);
+        }
+    } elsif (ref $var) {
+        printf "%s'%s'\n", "\t" x $level, ref $var;
+    } elsif (defined $var) {
+        printf "%s'%s'\n", "\t" x $level, $var;
+    } else {
+        printf "%sUNDEF\n", "\t" x $level;
+    }
 }
 
 1;
