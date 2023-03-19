@@ -16,6 +16,7 @@
 
 **Fixed bugs:**
 
+- Skip initial notification email for new user with nomail reception [\#1550](https://github.com/sympa-community/sympa/pull/1550)
 - Fix "sympa test soap" crashes due to undefined subroutine [\#1593](https://github.com/sympa-community/sympa/pull/1593)
 - Fix description for add CLI command bug [\#1565](https://github.com/sympa-community/sympa/pull/1565)
 - [CVE-2021-32850] Potential XSS in jquery-minicolors [\#1561](https://github.com/sympa-community/sympa/issues/1561)
