@@ -12,6 +12,8 @@
 
 **Implemented enhancements:**
 
+- Delete user account completely [\#1564](https://github.com/sympa-community/sympa/pull/1564)
+
 **Fixed bugs:**
 
 - Fix "sympa test soap" crashes due to undefined subroutine [\#1593](https://github.com/sympa-community/sympa/pull/1593)
