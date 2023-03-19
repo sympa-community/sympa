@@ -342,6 +342,10 @@
 [%~ ELSIF report_entry == 'now_subscriber' ~%]
 [%|loc(report_param.email,report_param.listname)%]User %1 is now subscriber of list %2.[%END%]
 
+
+[%~ ELSIF report_entry == 'now_unsubscribed' ~%]
+[%|loc(report_param.email,report_param.listname)%]User %1 is now unsubscribed from list %2.[%END%]
+
 [%~ ELSIF report_entry == 'invite' ~%]
 [%|loc(report_param.email,report_param.listname)%]User %1 has been invited to subscribe in list %2.[%END%]
 
@@ -353,6 +357,9 @@
 
 [%~ ELSIF report_entry == 'removed' ~%]
 [%|loc(report_param.email,report_param.listname)%]The user %1 has been removed from the list %2.[%END%]
+
+[%~ ELSIF report_entry == 'user_removed' ~%]
+[%|loc(report_param.email)%]The user %1 has been removed.[%END%]
 
 [%~ ELSIF report_entry == 'config_updated' ~%]
 [%|loc(report_param.listname)%]Your configuration regarding list %1 has been updated.[%END%]

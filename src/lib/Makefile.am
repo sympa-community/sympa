@@ -69,6 +69,7 @@ CLI_modules = \
 	Sympa/CLI/upgrade/shared.pm \
 	Sympa/CLI/upgrade_config_location.pm \
 	Sympa/CLI/user.pm \
+	Sympa/CLI/user/del.pm \
 	Sympa/CLI/user/move.pm \
 	Sympa/CLI/version.pm
 nonCLI_modules = \
@@ -136,6 +137,7 @@ nonCLI_modules = \
 	Sympa/Request/Handler/create_list.pm \
 	Sympa/Request/Handler/decl.pm \
 	Sympa/Request/Handler/del.pm \
+	Sympa/Request/Handler/del_user.pm \
 	Sympa/Request/Handler/distribute.pm \
 	Sympa/Request/Handler/family_signoff.pm \
 	Sympa/Request/Handler/finished.pm \
