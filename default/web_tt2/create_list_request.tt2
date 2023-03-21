@@ -5,7 +5,7 @@
         <form action="[% path_cgi %]" method="post">
             <fieldset>
                 <label for="listname">[%|loc%]List name:[%END%]</label>
-                <input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" />
+                <input type="text" id="listname" name="listname" size="30" value="[% saved.listname %]" autofocus="autofocus"/>
 
                 <label for="owner">[%|loc%]Owner:[%END%]</label> <span>[% user.email %]</span>
                 <label for="list_type">[%|loc%]List type:[%END%]</label>
