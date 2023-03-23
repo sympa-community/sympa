@@ -87,10 +87,6 @@
                     <li class="[% class %]">
                         <a href="[% 'serveradmin/archives' | url_rel %]">[%|loc%]Archives[%END%]</a>
                     </li>
-                [% IF subaction == 'logs' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'serveradmin/logs' | url_rel %]">[%|loc%]System log[%END%]</a>
-                    </li>
                 [% IF subaction == 'templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
                     <li class="[% class %]">
                         <a href="[% 'serveradmin/templates' | url_rel %]">[%|loc%]Templates[%END%]</a>

@@ -225,7 +225,6 @@ our %comm = (
     'arc_download'      => 'do_arc_download',
     'arc_delete'        => 'do_arc_delete',
     'serveradmin'       => 'do_serveradmin',
-    'set_loglevel'      => 'do_set_loglevel',
     'set_dumpvars'      => 'do_set_dumpvars',
     'show_sessions'     => 'do_show_sessions',
     'unset_dumpvars'    => 'do_unset_dumpvars',
@@ -708,7 +707,6 @@ our %required_privileges = (
     'search_user'              => ['listmaster'],
     'serveradmin'              => ['listmaster'],
     'set_dumpvars'             => ['listmaster'],
-    'set_loglevel'             => ['listmaster'],
     'set_pending_list_request' => ['listmaster'],
     'set_session_email'        => ['listmaster'],
     'show_sessions'            => ['listmaster'],
@@ -804,7 +802,6 @@ my %action_type = (
     'show_exclude'        => 'admin',
     'rebuildarc'          => 'serveradmin',
     'set_session_email'   => 'serveradmin',
-    'set_loglevel'        => 'serveradmin',
     'editfile'            => 'serveradmin',    #FIXME: admin?
     'unset_dumpvars'      => 'serveradmin',
     'set_dumpvars'        => 'serveradmin',
@@ -1049,11 +1046,7 @@ $log->syslog('info', 'WWSympa started, process %d', $PID);
 #XXXbinmode STDIN, ":utf8";
 
 # Main loop.
-my $loop_count = 0;
-my $start_time = time;
 while ($query = Sympa::WWW::FastCGI->new) {
-    $loop_count++;
-
     undef $param;
     undef $list;
     undef $robot;
@@ -2757,12 +2750,6 @@ sub check_param_in {
 ## Prepare outgoing params
 sub check_param_out {
     wwslog('debug2', '');
-
-    $param->{'loop_count'} = $loop_count;
-    $param->{'start_time'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S",
-        localtime $start_time);
-    $param->{'process_id'} = $PID;
 
     # listmaster has owner and editor privileges for the list.
     $param->{'is_listmaster'} =
@@ -6043,12 +6030,8 @@ sub do_edit_config {
 }
 
 ## Change log_level for the current session
-sub do_set_loglevel {
-    wwslog('info', '');
-
-    $session->{'log_level'} = $in{'log_level'};
-    return 'serveradmin';
-}
+# Deprecated.
+#sub do_set_loglevel;
 
 ## activate dump var feature
 sub do_set_dumpvars {
