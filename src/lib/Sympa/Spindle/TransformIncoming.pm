@@ -266,13 +266,13 @@ Adds C<X-Sympa-Topic> header field, if any message topics
 =item *
 
 Anonymizes message,
-if L<C<anonymous_sender>|list_config(5)/anonymous_sender> list configuration
+if L<C<anonymous_sender>|sympa_config(5)/anonymous_sender> list configuration
 parameter is enabled.
 
 =item *
 
 Adds custom subject tag to C<Subject> field, if
-L<C<custom_subject>|list_config(5)/custom_subject> list configuration
+L<C<custom_subject>|sympa_config(5)/custom_subject> list configuration
 parameter is available.
 
 =item *
@@ -282,7 +282,7 @@ Enables message tracking (see L<Sympa::Tracking>) if necessary.
 =item *
 
 Removes header fields specified by
-L<C<remove_headers>|list_config(5)/remove_headers>.
+L<C<remove_headers>|sympa_config(5)/remove_headers>.
 
 =back
 

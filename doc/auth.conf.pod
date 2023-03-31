@@ -439,8 +439,8 @@ paragraph may also be used for C<generic_sso>.
 Note that Sympa will act as a CAS client to validate CAS tickets. During this 
 exchange, Sympa will check the CAS server X.509 certificate. Therefore you 
 should ensure that the certificate authority of the CAS server is known by
-Sympa ; this should be configured through the L<cafile|sympa.conf(5)/cafile> 
-or L<capath|sympa.conf(5)/capath> F<sympa.conf> configuration parameters.
+Sympa ; this should be configured through the L<cafile|sympa_config(5)/cafile>
+or L<C<capath>|sympa_config(5)/capath> F<sympa.conf> configuration parameter.
 
 =over
 

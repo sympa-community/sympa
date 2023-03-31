@@ -6496,11 +6496,11 @@ __END__
 
 =head1 NAME
 
-Sympa::ListDef - Definition of list configuration parameters
+Sympa::Config::Schema - Definition of configuration parameters
 
 =head1 DESCRIPTION
 
-This module keeps definition of configuration parameters for each list.
+This module keeps definition of configuration parameters.
 
 =head2 Global variable
 
@@ -6516,10 +6516,10 @@ TBD.
 
 =item %pinfo
 
-This hash COMPLETELY defines ALL list parameters.
-It is then used to load, save, view, edit list config files.
+This hash COMPLETELY defines ALL parameters.
+It is then used to load, save, view, edit config files.
 
-List parameters format accepts the following keywords :
+A parameter definition accepts the following keywords:
 
 =over
 
@@ -6745,11 +6745,9 @@ TBD.
 
 =head1 SEE ALSO
 
-L<list_config(5)>,
+L<sympa_config(5)>,
 L<Sympa::List::Config>,
 L<Sympa::ListOpt>.
-
-L<sympa.conf(5)>, L<robot.conf(5)>.
 
 =head1 HISTORY
 

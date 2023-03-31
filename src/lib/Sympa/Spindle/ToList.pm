@@ -452,10 +452,10 @@ Transforms message by each reception mode.
 =item *
 
 Enables DMARC protection (according to
-L<C<dmarc_protection>|list_config(5)/dmarc_protection>
+L<C<dmarc_protection>|sympa_config(5)/dmarc_protection>
 list configuration parameter),
 message personalization (according to
-L<C<merge_feature>|list_config(5)/merge_feature>
+L<C<personalization_feature>|sympa_config(5)/personalization_feature>
 list configuration parameter) and/or
 re-encryption by S/MIME (if original message was encrypted).
 
@@ -468,7 +468,7 @@ Alters envelope sender of the message to I<list>C<-owner> address.
 Then stores message into outgoing spool (see L<Sympa::Spool::Outgoing>)
 with classified packets of recipients.
 
-This cass updates statistics information of the list (with digest delivery,
+This class updates statistics information of the list (with digest delivery,
 L<Sympa::Spindle::ToOutgoing> will update it).
 
 
