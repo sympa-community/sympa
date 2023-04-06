@@ -266,9 +266,6 @@
 [%~ ELSIF report_entry == 'auth_msg_failed' ~%]
   [%|loc(report_param.key)%]Unable to access the message authenticated with key %1[%END%]
 
-[%~ ELSIF report_entry == 'no_identified_user' ~%]
-  [%|loc%]Failed to get your email address from the authentication service.[%END%]
-
 [%~ ELSIF report_entry == 'db_error' ~%]
   [%|loc%]Database error.[%END%]
 
@@ -931,6 +928,9 @@ Warning: this message may already have been sent by one of the list's moderators
 
 [%~ ELSIF report_entry == 'cannot_get_privilege' ~%]
   [%|loc()%]You are not allowed to get the privilege of this user.[%END%]
+
+[%~ ELSIF report_entry == 'no_identified_user' ~%]
+  [%|loc%]Failed to get your email address from the authentication service.[%END%]
 
 [%~ END ~%]
 
