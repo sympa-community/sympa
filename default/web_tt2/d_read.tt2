@@ -49,7 +49,7 @@
                 [% IF shared_doc.may_edit %]
                     <a class="actionMenuLinks"
                        href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
-                        <i class="fa fa-trash"></i> [%|loc%]delete[%END%]
+                        <i class="fas fa-trash-alt"></i> [%|loc%]delete[%END%]
                     </a>
                 [% END %]
                 [% IF shared_doc.may_control %]
@@ -143,7 +143,7 @@
                                 <a href="[% 'd_delete' | url_rel([list,s.paths_d],{previous_action=>action}) %]"
                                    class="tip-left" data-tooltip aria-haspopup="true"
                                    title="[%|loc%]delete[%END%]">
-                                    <i class="fa fa-trash fa-lg"></i>
+                                    <i class="fas fa-trash-alt fa-lg"></i>
                                 </a>
                             [%~ ELSE ~%]
 
@@ -265,7 +265,7 @@
                                     <a href="[% 'docindex' | url_rel([list]) %]"
                                        class="tip-left color_10" data-tooltip aria-haspopup="true"
                                        title="[%|loc%]moderate[%END%]">
-                                        <i class="fa fa-shield fa-lg"></i>
+                                        <i class="fas fa-shield-alt fa-lg"></i>
                                     </a>&nbsp;
                                 [%~ END %]
                             [%~ ELSE ~%]
@@ -277,12 +277,12 @@
                             <a href="[% 'd_editfile' | url_rel([list,f.paths_d]) %]"
                                class="tip-left" data-tooltip aria-haspopup="true"
                                title="[%|loc%]edit[%END%]">
-                                <i class="fa fa-pencil fa-lg"></i>
+                                <i class="fas fa-pencil-alt fa-lg"></i>
                             </a>&nbsp;
                             <a href="[% 'd_delete' | url_rel([list,f.paths_d],{previous_action=>action}) %]"
                                class="tip-left" data-tooltip aria-haspopup="true"
                                title="[%|loc%]delete[%END%]">
-                                <i class="fa fa-trash fa-lg"></i>
+                                <i class="fas fa-trash-alt fa-lg"></i>
                             </a>
                         [%~ ELSE ~%]
 
@@ -423,42 +423,42 @@
            [%~ ELSE %] title="Icon of bookmark"
            [%~ END %]></i>
     [%~ ELSIF shared_item.mime_type == 'application/pdf' ~%]
-        <i class="fa fa-file-pdf-o"
+        <i class="far fa-file-pdf"
            [%~ IF shared_item.title %] title="[% shared_item.title %]"
            [%~ ELSE %] title="Icon of PDF file"
            [%~ END %]></i>
     [%~ ELSIF shared_item.mime_type.search('application/') ~%]
-        <i class="fa fa-file-o"
+        <i class="far fa-file"
            [%~ IF shared_item.title %] title="[% shared_item.title %]"
            [%~ ELSE %] title="Icon of file"
            [%~ END %]></i>
     [%~ ELSIF shared_item.mime_type.search('audio/') ~%]
-        <i class="fa fa-file-audio-o"
+        <i class="far fa-file-audio"
            [%~ IF shared_item.title %] title="[% shared_item.title %]"
            [%~ ELSE %] title="Icon of audio file"
            [%~ END %]></i>
     [%~ ELSIF shared_item.mime_type.search('image/') ~%]
-        <i class="fa fa-file-image-o"
+        <i class="far fa-file-image"
            [%~ IF shared_item.title %] title="[% shared_item.title %]"
            [%~ ELSE %] title="Icon of image file"
            [%~ END %]></i>
     [%~ ELSIF shared_item.mime_type == 'text/html' ~%]
-        <i class="fa fa-file-code-o"
+        <i class="far fa-file-code"
            [%~ IF shared_item.title %] title="[% shared_item.title %]"
            [%~ ELSE %] title="Icon of HTML file"
            [%~ END %]></i>
     [%~ ELSIF shared_item.mime_type.search('text/') ~%]
-        <i class="fa fa-file-text-o"
+        <i class="far fa-file-alt"
            [%~ IF shared_item.title %] title="[% shared_item.title %]"
            [%~ ELSE %] title="Icon of text file"
            [%~ END %]></i>
     [%~ ELSIF shared_item.mime_type.search('video/') ~%]
-        <i class="fa fa-file-video-o"
+        <i class="far fa-file-video"
            [%~ IF shared_item.title %] title="[% shared_item.title %]"
            [%~ ELSE %] title="Icon of video file"
            [%~ END %]></i>
     [%~ ELSE ~%]
-        <i class="fa fa-file-o"
+        <i class="far fa-file"
            [%~ IF shared_item.title %] title="[% shared_item.title %]"
            [%~ ELSE %] title="Icon of file"
            [%~ END %]></i>
