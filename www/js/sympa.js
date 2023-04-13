@@ -348,7 +348,8 @@ $(function(){
             $('#ephemeralMsg').remove();
             var em = $('<div id="ephemeralMsg">' +
                 '<div data-alert class="alert-box success radius">' +
-                '<i class="fi-check"></i><p>' + sympa.copiedText + '</p>' +
+                '<i class="fa fa-check" aria-hidden="true"></i><p>' +
+                sympa.copiedText + '</p>' +
                 '</div></div>');
             $('body').append(em);
             em.delay(500).fadeOut(4000);

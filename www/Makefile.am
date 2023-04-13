@@ -39,9 +39,6 @@ nobase_static_DATA = \
 	fonts/font-awesome/webfonts/fa-regular-400.woff2 \
 	fonts/font-awesome/webfonts/fa-solid-900.ttf \
 	fonts/font-awesome/webfonts/fa-solid-900.woff2 \
-	fonts/foundation-icons/foundation-icons.css \
-	fonts/foundation-icons/foundation-icons.ttf \
-	fonts/foundation-icons/foundation-icons.woff \
 	fonts/Raleway/OFL.txt \
 	fonts/Raleway/Raleway-Regular.otf \
 	icons/favicon_sympa.png \
