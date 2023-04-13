@@ -1790,7 +1790,18 @@ main nav ~ h6{
     margin-top:1rem;
 }
 
-/*font-awesome specificity*/
+/* Font Awesome specificity */
+/* compatibility to 4.x */
+.fa.pull-left {
+    float: left;
+    margin-right: 0.3em;
+}
+.home-submenu .fa.fa-circle.fa-stack-2x {
+    font-size: 1.715em;
+}
+.home-submenu .fa.fa-circle.fa-stack-2x:before {
+    vertical-align: -.071em;
+}
 /* override prefers-reduced-motion media feature */
 .fa-spin-pulse {
   -webkit-animation-name: fa-spin;
@@ -1803,11 +1814,6 @@ main nav ~ h6{
           animation-iteration-count: var(--fa-animation-iteration-count, infinite);
   -webkit-animation-timing-function: var(--fa-animation-timing, steps(8));
           animation-timing-function: var(--fa-animation-timing, steps(8)); }
-/* home page */
-span.fa-stack i.fa-plus-circle {
-  top: 0.65rem;
-  left: 0.8rem;
-}
 
 /* classes for defined colors */
 .color_0{
