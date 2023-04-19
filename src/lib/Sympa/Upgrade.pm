@@ -2225,6 +2225,14 @@ sub upgrade {
         );
     }
 
+    if (lower_version($previous_version, '6.2.72')) {
+        # Web fonts have moved to Font Awesome 6 Free.
+        # Upgrade customized templates.
+        $log->syslog('notice', 'Upgrading web templates...');
+        Sympa::CLI->run({}, 'upgrade', 'webfont');
+        $log->syslog('notice', '...Done.');
+    }
+
     return 1;
 }
 

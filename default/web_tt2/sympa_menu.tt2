@@ -13,7 +13,7 @@
 [% END %]
     <li class="[% class %]">
         <a href="[% 'home' | url_rel %]">
-            <i class="fi-home"></i>  [%|loc%]Home[%END%]
+            <i class="fa fa-home"></i>  [%|loc%]Home[%END%]
         </a>
     </li>
 
@@ -92,7 +92,7 @@
 [% IF top_menu %]
     <li class="[% class %]">
         <a href="#">
-            <i class="fa fa-life-ring"></i> [%|loc%]Support[%END%]
+            <i class="far fa-life-ring"></i> [%|loc%]Support[%END%]
         </a>
         <ul class="vertical menu">
 [% END %]
@@ -171,7 +171,7 @@
                 [% family_li ~%]
                 <li class="[% class %]">
                     <a href="[% 'create_automatic_list_request' | url_rel([name]) %]" >
-                        <i class="fa fa-list-alt"></i> [% display %]
+                        <i class="far fa-list-alt"></i> [% display %]
                     </a>
                 </li>
             [%~ END %]
@@ -188,7 +188,7 @@
     [% IF owns_family %]
         <li class="[% class %]">
             <a href="#">
-                <i class="fa fa-list-alt"></i> [%|loc%]Lists Families[%END%]
+                <i class="far fa-list-alt"></i> [%|loc%]Lists Families[%END%]
             </a>
             <ul class="vertical menu">
                 [% family_li %]
