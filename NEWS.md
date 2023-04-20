@@ -12,6 +12,7 @@
 
 **Implemented enhancements:**
 
+- Switch Font Awesome from 4 to 6 Free [\#1656](https://github.com/sympa-community/sympa/issues/1656)
 - Delete user account completely [\#1564](https://github.com/sympa-community/sympa/pull/1564)
 
 **Fixed bugs:**
