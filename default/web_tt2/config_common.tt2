@@ -154,20 +154,22 @@
     [% IF pitem.privilege == 'write' ~%]
         <select name="single_param.[% ppaths.join('.') %].name"
                 id="param.[% ppaths.join('.') %]">
-            [% FOREACH scenario = pitem.format ~%]
-                <option value="[% scenario.value.name %]"
-                        [%~ IF scenario.value.name == val.name %] selected="selected"[% END %]>
-                    [%~ scenario.value.title %]
-                    [%~ IF is_listmaster %] ([% scenario.value.name %])[% END ~%]
+			[% SET all = pitem.format.values %]
+            [% FOREACH scenario = all.sort('title') ~%]
+                <option value="[% scenario.name %]"
+                        [%~ IF scenario.name == val.name %] selected="selected"[% END %]>
+                    [%~ scenario.title %]
+                    [%~ IF is_listmaster %] ([% scenario.name %])[% END ~%]
                 </option>
             [% END %]
         </select>
     [%~ ELSE ~%]
-        [% FOREACH scenario = pitem.format ~%]
-            [% IF scenario.value.name == val.name ~%]
-                [% scenario.value.title %]
+		[% SET all = pitem.format.values %]
+        [% FOREACH scenario = all.sort('title') ~%]
+            [% IF scenario.name == val.name ~%]
+                [% scenario.title %]
                 [%~ IF is_listmaster %]
-                    ([% scenario.value.name %])
+                    ([% scenario.name %])
                 [% END %]
             [%~ END %]
         [%~ END %]
