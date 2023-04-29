@@ -129,6 +129,18 @@
                         <a href="[% 'serveradmin/families' | url_rel %]">[%|loc%]Families[%END%]</a>
                     </li>
                 [% END %]
+
+                [% IF subaction == 'stats' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li class="[% class %]">
+                    <a href="[% 'serveradmin/stats' | url_rel %]">
+                        [%|loc%]Statistics[%END%]
+                    </a>
+                </li>
+
                 [% IF subaction == 'translation' %]
                     [% SET class = 'active' %]
                 [% ELSE %]
