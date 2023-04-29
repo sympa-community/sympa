@@ -15088,24 +15088,16 @@ sub do_decl_del {
 sub do_stats {
     wwslog('info', '');
 
+    $param->{'shared_size'} =
+        int((Sympa::WWW::SharedDocument->new($list)->get_size + 512) / 1024);
+    $param->{'arc_size'} =
+        int((Sympa::Archive->new(context => $list)->get_size + 512) / 1024);
+
     return _get_stats();
 }
 
 sub _get_stats {
-    my $that;
-
-    if (ref $list eq 'Sympa::List') {
-        $that = $list;
-
-        $param->{'shared_size'} =
-            int(
-            (Sympa::WWW::SharedDocument->new($that)->get_size + 512) / 1024);
-        $param->{'arc_size'} =
-            int(
-            (Sympa::Archive->new(context => $that)->get_size + 512) / 1024);
-    } else {
-        $that = $robot;
-    }
+    my $that = (ref $list eq 'Sympa::List') ? $list : $robot;
 
     my $stats = {
         send_mail => {title => $language->gettext("Mail sending")},
