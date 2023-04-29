@@ -160,6 +160,16 @@
     </h2>
 
     [% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] ~%]
+    [% SET orderedlist = {} ~%]
+    [% IF which && which.size ~%]
+        [% FOREACH l IN which ~%]
+            [% IF l.key.match('^[a-z]') ~%]
+                [% orderedlist.${l.key.substr(0,1)} = [1] %]
+            [%~ ELSE ~%]
+                [% orderedlist.others = [1] %]
+            [%~ END %]
+        [%~ END %]
+    [%~ END ~%]
 
     <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
         <span class="menu-text" aria-hidden="true">
@@ -177,7 +187,7 @@
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 [% FOREACH letter IN letters %]
-                    [% IF orderedlist.$letter.0 %]
+                    [% IF orderedlist.$letter %]
                         <li class="letter">
                             <a href="#[%letter%]">
                                 [%IF letter == 'others'%]

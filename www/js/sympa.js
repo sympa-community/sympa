@@ -359,3 +359,13 @@ $(function(){
     });
 });
 
+/* Filter list of lists. */
+$(function() {
+    $('li.letter a').on('click', function(e) {
+        id = $(this).attr('href').substr(1);
+        $('article.letter').hide();
+        $('#' + id).show();
+        return false;
+    });
+});
+
