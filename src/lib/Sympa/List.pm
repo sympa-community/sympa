@@ -3617,7 +3617,7 @@ sub is_included {
     unless (
         $sdm
         and $sth = $sdm->do_prepared_query(
-            q{SELECT COUNT(*)
+            q{SELECT DISTINCT target_inclusion
               FROM inclusion_table
               WHERE source_inclusion = ?},
             $self->get_id
@@ -3627,10 +3627,35 @@ sub is_included {
             $self);
         return 1;    # Fake positive result.
     }
-    my ($num) = $sth->fetchrow_array;
+    my $rows = $sth->fetchall_arrayref;
     $sth->finish;
+    unless (defined $rows) {
+        return 1;    # Fake positive result.
+    }
 
-    return $num;
+    foreach my $row (@$rows) {
+        my $id = $row->[0];
+        next unless length($id // '');
+        my $l = __PACKAGE__->new($id);
+        return 1 if $l;
+
+        # The target list could be deleted manually and fake entry remains in
+        # inclusion_table.  Delete it.
+        unless (
+            $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{DELETE FROM inclusion_table
+                  WHERE source_inclusion = ? AND target_inclusion = ?},
+                $self->get_id, $id
+            )
+        ) {
+            $log->syslog('err',
+                'Failed to delete inclusion information on list %s', $self);
+            return 1;    # Fake positive result.
+        }
+    }
+
+    return 0;
 }
 
 # If a list is not 'open' and allow_subscribe_if_pending has been set to
@@ -4165,7 +4190,7 @@ sub get_including_lists {
     unless (
         $sdm
         and $sth = $sdm->do_prepared_query(
-            q{SELECT target_inclusion AS "target"
+            q{SELECT target_inclusion
               FROM inclusion_table
               WHERE source_inclusion = ? AND role_inclusion = ?},
             $self->get_id, $role
@@ -4174,16 +4199,32 @@ sub get_including_lists {
         $log->syslog('err', 'Cannot get lists including %s', $self);
         return undef;
     }
+    my $rows = $sth->fetchall_arrayref;
+    $sth->finish;
+    unless (defined $rows) {
+        return undef;
+    }
 
     my @lists;
-    while (my $r = $sth->fetchrow_hashref('NAME_lc')) {
-        next unless $r and $r->{target};
-        my $l = __PACKAGE__->new($r->{target});
-        next unless $l;
+    foreach my $row (@$rows) {
+        my $id = $row->[0];
+        next unless length($id // '');
+        my $l = __PACKAGE__->new($id);
+        if ($l) {
+            push @lists, $l;
+            next;
+        }
 
-        push @lists, $l;
+        # The target list could be deleted manually and fake entry remains in
+        # inclusion_table.  Delete it.
+        $sdm and $sdm->do_prepared_query(
+            q{DELETE FROM inclusion_table
+              WHERE source_inclusion = ? AND role_inclusion = ? AND
+                    target_inclusion = ?},
+            $self->get_id, $role,
+            $id
+        );
     }
-    $sth->finish;
 
     return [@lists];
 }
