@@ -15124,6 +15124,8 @@ sub _get_stats {
                     sprintf "['%s',%d]", $formatted_date, $data->{$_}
                 } sort keys %$data
             ) . ']';
+            $stats->{$operation}{'max_value'} =
+                [sort { $b <=> $a } values %$data]->[0];
         }
     }
     $param->{'stats'} = $stats;
