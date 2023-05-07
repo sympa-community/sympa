@@ -144,6 +144,9 @@ requires 'Text::LineFold', '>= 2018.012';
 # Used to get time with sub-second precision
 requires 'Time::HiRes', '>= 1.29';
 
+# Used to get Unix time from local time
+requires 'Time::Local', '>= 1.23';
+
 # Used to create URI containing non URI-canonical characters.
 # Note: '3.28' is the version included in URI-1.35.
 requires 'URI::Escape', '>= 3.28';
