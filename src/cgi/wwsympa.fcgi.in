@@ -2289,8 +2289,8 @@ sub send_html {
     print "Cache-Control: no-store, max-age=0\n"
         unless $param->{'action'} eq 'arc';
     print "Content-Type: text/html; charset=utf-8\n";
-    ## Workaround for Internet Explorer 8 or later.
-    print "X-UA-Compatible: IE=100\n";
+    # No longer needed: Workaround for Internet Explorer 8 or later.
+    #print "X-UA-Compatible: IE=100\n";
 
     ## Notify crash to client.
     if ($param->{'action'} eq 'crash') {
