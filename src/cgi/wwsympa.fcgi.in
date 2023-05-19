@@ -2276,16 +2276,13 @@ sub send_html {
     my $tt2_file = shift;
 
     ## Send HTML headers
-    if ($param->{'date'}) {
-        printf "Date: %s\n",
-            DateTime->now->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
-    }
+    printf "Date: %s\n", DateTime->now->strftime("%a, %d %b %Y %H:%M:%S GMT");
     ## If we set the header indicating the last time the file to send was
     ## modified, add an HTTP header (limitate web harvesting).
     if ($param->{'header_date'}) {
         printf "Last-Modified: %s\n",
             DateTime->from_epoch(epoch => $param->{'header_date'})
-            ->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
+            ->strftime("%a, %d %b %Y %H:%M:%S GMT");
     }
     # Prevent caching responses except archives.
     # "max-age=0" is a workaround for very old HTTP/1.0 proxies.
