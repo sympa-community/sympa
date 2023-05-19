@@ -2287,7 +2287,10 @@ sub send_html {
             DateTime->from_epoch(epoch => $param->{'header_date'})
             ->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
     }
-    print "Cache-control: max-age=0\n" unless $param->{'action'} eq 'arc';
+    # Prevent caching responses except archives.
+    # "max-age=0" is a workaround for very old HTTP/1.0 proxies.
+    print "Cache-Control: no-store, max-age=0\n"
+        unless $param->{'action'} eq 'arc';
     print "Content-Type: text/html; charset=utf-8\n";
     ## Workaround for Internet Explorer 8 or later.
     print "X-UA-Compatible: IE=100\n";
