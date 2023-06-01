@@ -1,5 +1,39 @@
 # Change Log
 
+## [6.2.72](https://github.com/sympa-community/sympa/tree/6.2.72) (2023-06-01)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.71b.1...6.2.72)
+
+**Incompatible changes** (from 6.2.70) **:**
+
+- The `dkim` authentication method for scenarios was obsoleted.  Now it is a synonym of `smtp` method [\#1483](https://github.com/sympa-community/sympa/issues/1483).
+- The `antispam_feature` parameter was deprecated.  Instead, choose appropriate scenario with `spam_status` parameter [\#1470](https://github.com/sympa-community/sympa/pull/1470).  In particular, if you wish to disable this feature, set "`spam_status none`".
+- The Command line tools under `$SCRIPTDIR` either were deprecated or were integrated into the `sympa` command line tool.  See [\#1386](https://github.com/sympa-community/sympa/issues/1386) for details.
+
+**Implemented enhancements:**
+
+- Switch Font Awesome from 4 to 6 Free [\#1656](https://github.com/sympa-community/sympa/issues/1656)
+- Delete user account completely [\#1564](https://github.com/sympa-community/sympa/pull/1564)
+
+**Fixed bugs:**
+
+- Skip initial notification email for new user with nomail reception [\#1550](https://github.com/sympa-community/sympa/pull/1550)
+- Fix "sympa test soap" crashes due to undefined subroutine [\#1593](https://github.com/sympa-community/sympa/pull/1593)
+- Fix description for add CLI command bug [\#1565](https://github.com/sympa-community/sympa/pull/1565)
+- [CVE-2021-32850] Potential XSS in jquery-minicolors [\#1561](https://github.com/sympa-community/sympa/issues/1561)
+- Spurious error log adding subscriber [\#1532](https://github.com/sympa-community/sympa/issues/1532)
+- Spurious error log during upgrade on removing nonexisting column [\#939](https://github.com/sympa-community/sympa/issues/939)
+- [CVE-2023-24038] Sympa::HTMLSanitizer: Bug in HTML::StripScripts, ReDoS with style attribute [\#1573](https://github.com/sympa-community/sympa/issues/1573)
+- sympa.wsdl is incomplete [\#1548](https://github.com/sympa-community/sympa/issues/1548)
+
+**Merged pull requests:**
+
+- Adding translation catalogs for Georgian (ka) by request [\#1596](https://github.com/sympa-community/sympa/pull/1596)
+- Update support/sync_translation.sh [\#1556](https://github.com/sympa-community/sympa/pull/1556)
+- Replace obsolete Ansible role in README [\#1558](https://github.com/sympa-community/sympa/pull/1558)
+- Improve wording in README.support document. [\#1553](https://github.com/sympa-community/sympa/pull/1553)
+- Update copyright notices, add documentation and correct some typos [\#1552](https://github.com/sympa-community/sympa/pull/1552)
+
 ## [6.2.71b.1](https://github.com/sympa-community/sympa/tree/6.2.71b.1) (2022-12-15)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.70...6.2.71b.1)
