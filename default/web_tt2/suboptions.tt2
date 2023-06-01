@@ -14,7 +14,7 @@
     [%|locdt(subscriber.date)%]%d %b %Y[%END%]
     <label> [%|loc%]Last update:[%END%] </label>
     [%|locdt(subscriber.update_date)%]%d %b %Y[%END%]
-    <label for="reception"> [%|loc%]Receiving mode:[%END%] </label>
+    <label for="reception"> [%|loc%]Reception mode:[%END%] </label>
     <div>
         <select name="reception" id="reception">
             [% FOREACH r = reception ~%]
