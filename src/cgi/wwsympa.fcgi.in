@@ -1214,8 +1214,10 @@ while ($query = Sympa::WWW::FastCGI->new) {
     $param->{'wwsconf'} = Conf::_load_wwsconf;    #FXIME: no longer used?
 
     $param->{'version'} = Sympa::Constants::VERSION;
+    # No longer used.
     $param->{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
+    # No longer used.
     $param->{'time'} =
         $language->gettext_strftime("%H:%M:%S", localtime time);
 
@@ -1692,6 +1694,12 @@ while ($query = Sympa::WWW::FastCGI->new) {
         ## Send RSS
         print "Cache-control: no-cache\n";
         print "Content-Type: application/rss+xml; charset=utf-8\n\n";
+
+        # Current time in RFC 5322 form.
+        # If setting local timezone fails, fallback to UTC.
+        $param->{'date'} =
+            (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
+            ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
 
         ## Icons
         $param->{'icons_url'} =
