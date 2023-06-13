@@ -334,7 +334,13 @@
 [%~ END %]
 
 [%~ ELSIF report_entry == 'add_performed' ~%]
-[%|loc(report_param.total)%]%1 subscribers added[%END%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.total)%]%1 owners added[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.total)%]%1 moderators added[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.total)%]%1 subscribers added[%END%]
+    [%~ END %]
 
 [%~ ELSIF report_entry == 'updated_info' ~%]
 [%|loc(report_param.email,report_param.listname)%]Information regarding user %1 has been updated for list %2.[%END%]
