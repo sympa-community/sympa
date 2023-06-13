@@ -154,7 +154,7 @@ sub _render_paragraph {
         #$parameters .= "=over\n\n" x (scalar @$pnames);
 
         if ($pii->{obsolete}) {
-            _render_obsolete($pii);
+            _render_obsolete($pii, $ppi);
         } elsif ($pii->{occurrence} =~ /n$/ and ref $pii->{format} eq 'ARRAY')
         {
             _render_set($pii, $ppi);
@@ -213,14 +213,17 @@ sub _render_scalar {
 
 sub _render_obsolete {
     my $pii = shift;
+    my $ppi = shift;
 
     return unless $pii->{obsolete};
 
     if ($pii->{obsolete} eq '1') {
         $parameters .= "Deprecated.\n\n";
     } else {
-        $parameters .= sprintf "See L<C<%s>|/%s>.\n\n",
-            $pii->{obsolete}, $pii->{obsolete};
+        my @parag = @$ppi;
+        pop @parag;
+        my $param = join '.', @parag, $pii->{obsolete};
+        $parameters .= sprintf "See L<C<%s>|/%s>.\n\n", $param, $param;
     }
     $parameters .= "=over\n\n";
     _context($pii);
