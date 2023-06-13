@@ -196,7 +196,7 @@ our %list_option = (
     'smime_authenticated_messages' =>
         {'gettext_id' => 'authenticated by S/MIME signature'},
     'dkim_authenticated_messages' =>
-        {'gettext_id' => 'authenticated by DKIM signature'},
+        {'gettext_id' => 'with successfully verified DKIM signature'},
     'editor_validated_messages' => {'gettext_id' => 'approved by moderator'},
     'any'                       => {'gettext_id' => 'any messages'},
 
