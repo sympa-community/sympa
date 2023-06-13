@@ -625,11 +625,11 @@ sub aggregate_stat {
     unless (@res) {
         return 0;
     }
-    my $date_deb = $res[0] - ($res[0] % 3600);
+    my $date_deb = $res[0] - ($res[0] % 900);
 
-    # Hour to hour
+    # By each 15 minutes (some time zones have this time difference).
     my @slots;
-    for (my $i = $date_deb; $i <= $date_end; $i = $i + 3600) {
+    for (my $i = $date_deb; $i <= $date_end; $i += 900) {
         push @slots, $i;
     }
 
@@ -759,7 +759,7 @@ sub _aggregate_data {
 sub aggregate_daily_data {
     my $self = shift;
     $self->syslog('debug2', '(%s, %s)', @_);
-    my $list      = shift;
+    my $that      = shift;
     my $operation = shift;
 
     my $sdm;
@@ -769,42 +769,77 @@ sub aggregate_daily_data {
         return;
     }
 
-    my $result;
+    my $result = {};
+
+    my $cond;
+    my @vars;
+    if (ref $that eq 'Sympa::List') {
+        $cond = q{robot_counter = ? AND list_counter = ?};
+        @vars = ($that->{'domain'}, $that->{'name'});
+    } else {
+        $cond = q{robot_counter = ?};
+        @vars = ($that);
+    }
 
     my $sth;
-    my $row;
+
     unless (
         $sth = $sdm->do_prepared_query(
-            q{SELECT beginning_date_counter AS "date",
-                     count_counter AS "count"
-              FROM stat_counter_table
-              WHERE data_counter = ? AND
-                    robot_counter = ? AND list_counter = ?},
+            sprintf(
+                q{SELECT beginning_date_counter AS "date",
+                         count_counter AS "count"
+                  FROM stat_counter_table
+                  WHERE data_counter = ? AND %s}, $cond
+            ),
             $operation,
-            $list->{'domain'}, $list->{'name'}
+            @vars
         )
     ) {
         $self->syslog('err', 'Unable to get stat data %s for list %s',
-            $operation, $list);
+            $operation, $that);
         return;
     }
-    while ($row = $sth->fetchrow_hashref('NAME_lc')) {
-        my $midnight = Sympa::Tools::Time::get_midnight_time($row->{'date'});
-        $result->{$midnight} = 0 unless defined $result->{$midnight};
-        $result->{$midnight} += $row->{'count'};
+    while (my $row = $sth->fetchrow_hashref('NAME_lc')) {
+        _add_count($result, $row->{date}, $row->{count});
     }
     $sth->finish;
 
-    my @dates = sort { $a <=> $b } keys %$result;
-    return {} unless @dates;
-
-    for (my $date = $dates[0]; $date < $dates[-1]; $date += 86400) {
-        my $midnight = Sympa::Tools::Time::get_midnight_time($date);
-        $result->{$midnight} = 0 unless defined $result->{$midnight};
+    if (%{$result || {}}) {
+        # Fill in zeroes for missing days.
+        unless (
+            $sth = $sdm->do_prepared_query(
+                sprintf(
+                    q{SELECT MIN(beginning_date_counter),
+                             MAX(beginning_date_counter)
+                      FROM stat_counter_table
+                      WHERE %s}, $cond
+                ),
+                @vars
+            )
+        ) {
+            $self->syslog('err', 'Unable to get stat data %s for list %s',
+                $operation, $that);
+            return;
+        }
+        my ($min, $max) = $sth->fetchrow_array;
+        for (my $d = $min; $d <= $max; $d += 900) {
+            _add_count($result, $d, 0);
+        }
+        $sth->finish;
     }
+
     return $result;
 }
 
+sub _add_count {
+    my $result = shift;
+    my $date   = shift;
+    my $count  = shift;
+
+    my $midnight = Sympa::Tools::Time::get_midnight_time($date);
+    $result->{$midnight} //= 0;
+    $result->{$midnight} += $count;
+}
 1;
 __END__
 

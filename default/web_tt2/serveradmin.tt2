@@ -255,6 +255,15 @@
         [% close_table %]
     </div>
 [% END %]
+
+[% IF subaction == 'stats' ~%]
+    <h2>[%|loc(domain)%]Virtual domain %1 statistics[%END%]</h2>
+    <p>[%|loc%]This page displays overall information regarding the activity on this virtual domain.[%END%]</p>
+    <div class="columns">
+    [% PROCESS stats.tt2 %]
+    </div>
+[%~ END %]
+
 [% IF subaction == 'translation' %]
     <h2>[%|loc%]Translating Sympa[%END%]</h2>
     <p>[%|loc%]Sympa is designed to allow easy internationalization of its user interface (service email messages and web interface). All translations for a language are gathered into a single PO file that can be manipulated by the standard GNU gettext tools.[%END%]</p>

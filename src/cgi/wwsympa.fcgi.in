@@ -5964,6 +5964,9 @@ sub do_serveradmin {
 
     ## Checking families and other virtual hosts.
     get_server_details();
+    if ($in{'subaction'} eq 'stats') {
+        _get_stats();
+    }
 
     ## Server files
     foreach my $f (
@@ -15108,6 +15111,12 @@ sub do_stats {
     $param->{'arc_size'} =
         int((Sympa::Archive->new(context => $list)->get_size + 512) / 1024);
 
+    return _get_stats();
+}
+
+sub _get_stats {
+    my $that = (ref $list eq 'Sympa::List') ? $list : $robot;
+
     my $stats = {
         send_mail => {title => $language->gettext("Mail sending")},
         add_or_subscribe =>
@@ -15122,7 +15131,7 @@ sub do_stats {
     };
 
     foreach my $operation (keys %$stats) {
-        my $data = $log->aggregate_daily_data($list, $operation);
+        my $data = $log->aggregate_daily_data($that, $operation);
         if (%{$data || {}}) {
             $stats->{$operation}{'stats_values'} = '[' . join(
                 ',',
@@ -15133,6 +15142,8 @@ sub do_stats {
                     sprintf "['%s',%d]", $formatted_date, $data->{$_}
                 } sort keys %$data
             ) . ']';
+            $stats->{$operation}{'max_value'} =
+                [sort { $b <=> $a } values %$data]->[0];
         }
     }
     $param->{'stats'} = $stats;
