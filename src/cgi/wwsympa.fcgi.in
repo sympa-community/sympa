@@ -3610,7 +3610,7 @@ sub do_sso_login {
         }
 
         unless ($email) {
-            add_stash('intern', 'no_identified_user');
+            add_stash('user', 'no_identified_user');
             wwslog(
                 'err',
                 'User could not be identified, no %s HTTP header set',
