@@ -277,7 +277,7 @@ my %diag_messages = (
     '5.6.0' => 'Other or undefined media error',
     # no command found in message
     '5.6.1' => 'Media not supported',
-    # failed to personalize (merge_feature)
+    # failed to personalize (personalization_feature)
     '5.6.5' => 'Conversion Failed',
     # virus found
     '5.7.0' => 'Other or undefined security status',
