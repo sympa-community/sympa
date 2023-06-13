@@ -3821,11 +3821,9 @@ our %pinfo = (
         context    => [qw(list site)],
         order      => 60.12,
         group      => 'data_source',
-        gettext_id => "Inclusions timeout",
+        gettext_id => "TTL of user data",
         gettext_comment =>
             'Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600',
-        #gettext_comment =>
-        #    'Default timeout between two scheduled synchronizations of list members with data sources.',
         gettext_unit => 'seconds',
         format       => '\d+',
         default      => '3600',
@@ -3838,12 +3836,13 @@ our %pinfo = (
     },
 
     distribution_ttl => {
+        # Note: Unless defined, value of ttl parameter is used.
         context    => [qw(list site)],
         order      => 60.13,
         group      => 'data_source',
-        gettext_id => "Inclusions timeout for message distribution",
+        gettext_id => "TTL of user data for message distribution",
         gettext_comment =>
-            "This parameter defines the delay since the last synchronization after which the user's list will be updated before performing either of following actions:\n* Reviewing list members\n* Message distribution",
+            'This parameter defines the delay since the last synchronization after which the user data will be updated before performing message distribution',
         gettext_unit => 'seconds',
         format       => '\d+',
         length       => 6
