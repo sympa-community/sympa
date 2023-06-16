@@ -1808,27 +1808,21 @@ Sympa::Spool::Listmaster->instance->flush(purge => 1);
 ## Write to log
 sub wwslog {
     my $facility = shift;
+    my $msg      = shift;
 
-    my $msg    = shift;
     my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
-    my $wwsmsg = '';
+    my $bot = $session->{'is_a_crawler'} || undef if $session;
 
-    $wwsmsg = "[list $param->{'list'}] " . $wwsmsg
-        if $param->{'list'};
-
-    $wwsmsg = "[user $param->{'user'}{'email'}] " . $wwsmsg
-        if $param->{'user'}{'email'};
-
-    $wwsmsg = "[rss] " . $wwsmsg
-        if $rss;
-
-    $wwsmsg = "[client $remote] " . $wwsmsg
-        if $remote;
-
-    $wwsmsg = "[session $session->{'id_session'}] " . $wwsmsg
-        if $session;
-
-    $wwsmsg = "[robot $robot] " . $wwsmsg;
+    my $wwsmsg = join ' ',
+        grep {defined} (
+        "[robot $robot]",
+        ($session                  and "[session $session->{'id_session'}]"),
+        ($remote                   and "[client $remote]"),
+        ($bot                      and "[bot <$bot>]"),
+        ($rss                      and "[rss]"),
+        ($param->{'user'}{'email'} and "[user $param->{'user'}{'email'}]"),
+        ($param->{'list'}          and "[list $param->{'list'}]")
+        );
 
     push @_, $wwsmsg;
     if ($msg =~ /^([(][^)]*[)])\s*(.*)/s) {
@@ -8554,13 +8548,12 @@ sub do_arc {
         $param->{'file'} = $archive->{arc_directory} . '/' . $in{'arc_file'};
     }
 
-    $param->{'date'} = Sympa::Tools::File::get_mtime(
-        $archive->{arc_directory} . '/' . $in{'arc_file'});
-    # send page as static if client is a bot. That's prevent crawling all
-    # archices every weeks by google, yahoo and others bots
-    if ($session->{'is_a_crawler'}) {
-        $param->{'header_date'} = $param->{'date'};
-    }
+    # Send page as static if client is a bot.  That prevent crawling all
+    # archives every week by Google, Yahoo and other bots.
+    $param->{'header_date'} =
+        Sympa::Tools::File::get_mtime(
+        $archive->{arc_directory} . '/' . $in{'arc_file'})
+        if $session->{'is_a_crawler'};
     $param->{'archive_name'} = $in{'month'};
 
     #test pour différentier les action d'un robot et d'un simple abonné
