@@ -160,28 +160,6 @@
     </form>
 [% END %]
 
-[% IF subaction == 'logs' %]
-    <h2>[%|loc%]System log[%END%]</h2>
-    <h3>[%|loc%]Sympa log level[%END%]</h3>
-    <p>[%|loc%]Set debug level for logs written to disk.  This setting is temporary, applying only for the lifetime of the fastcgi session hosting this interface.[%END%]</p>
-    <form class="bold_label" action="[% path_cgi %]" method="post">
-        <fieldset>
-            [%|loc%]Log level:[%END%]
-            <input id="log_level_0" type="radio" name="log_level" value="0" [%IF log_level == 0 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_0">0 </label>
-            <input id="log_level_1" type="radio" name="log_level" value="1" [%IF log_level == 1 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_1">1 </label>
-            <input id="log_level_2" type="radio" name="log_level" value="2" [%IF log_level == 2 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_2">2 </label>
-            <input id="log_level_3" type="radio" name="log_level" value="3" [%IF log_level == 3 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_3">3 </label>
-            <input id="log_level_4" type="radio" name="log_level" value="4" [%IF log_level == 4 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_4">4 </label>
-            <input type="submit" name="action_set_loglevel" value="[%|loc%]Set log level[%END%]" />
-        </fieldset>
-    </form>
-[% END %]
-
 [% IF subaction == 'templates' %]
     <h2>[%|loc%]Templates[%END%]</h2>
     <form class="bold_label" action="[% path_cgi %]" method="post">
@@ -277,6 +255,15 @@
         [% close_table %]
     </div>
 [% END %]
+
+[% IF subaction == 'stats' ~%]
+    <h2>[%|loc(domain)%]Virtual domain %1 statistics[%END%]</h2>
+    <p>[%|loc%]This page displays overall information regarding the activity on this virtual domain.[%END%]</p>
+    <div class="columns">
+    [% PROCESS stats.tt2 %]
+    </div>
+[%~ END %]
+
 [% IF subaction == 'translation' %]
     <h2>[%|loc%]Translating Sympa[%END%]</h2>
     <p>[%|loc%]Sympa is designed to allow easy internationalization of its user interface (service email messages and web interface). All translations for a language are gathered into a single PO file that can be manipulated by the standard GNU gettext tools.[%END%]</p>
@@ -288,12 +275,4 @@
     <p>[%|loc%]You can submit a problem or request a new feature: [%END%]<a href="https://github.com/sympa-community/sympa/issues/new/choose">https://github.com/sympa-community/sympa/issues/new/choose</a></p>
 [% END %]
 
-
-[% IF subaction == 'logs' %]
-    [% IF loop_count %]
-        <p class="bottom_page">
-            [%|loc(process_id,loop_count,start_time)%]This FastCGI process (%1) has served %2 pages since %3.[%END%]
-        </p>
-    [% END %]
-[% END %]
 <!-- end serveradmin.tt2 (distrib) -->

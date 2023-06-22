@@ -303,6 +303,7 @@ my %diag_messages = (
     # Other or undefined media error
     # [Sympa] message contains commands
     '5.6.0' => 'Message contains a line that can be interpreted as a command',
+
     # Media not supported
     # [Sympa] no command found in message
     '5.6.1' => 'No command found in message',

@@ -225,7 +225,6 @@ our %comm = (
     'arc_download'      => 'do_arc_download',
     'arc_delete'        => 'do_arc_delete',
     'serveradmin'       => 'do_serveradmin',
-    'set_loglevel'      => 'do_set_loglevel',
     'set_dumpvars'      => 'do_set_dumpvars',
     'show_sessions'     => 'do_show_sessions',
     'unset_dumpvars'    => 'do_unset_dumpvars',
@@ -708,7 +707,6 @@ our %required_privileges = (
     'search_user'              => ['listmaster'],
     'serveradmin'              => ['listmaster'],
     'set_dumpvars'             => ['listmaster'],
-    'set_loglevel'             => ['listmaster'],
     'set_pending_list_request' => ['listmaster'],
     'set_session_email'        => ['listmaster'],
     'show_sessions'            => ['listmaster'],
@@ -804,7 +802,6 @@ my %action_type = (
     'show_exclude'        => 'admin',
     'rebuildarc'          => 'serveradmin',
     'set_session_email'   => 'serveradmin',
-    'set_loglevel'        => 'serveradmin',
     'editfile'            => 'serveradmin',    #FIXME: admin?
     'unset_dumpvars'      => 'serveradmin',
     'set_dumpvars'        => 'serveradmin',
@@ -1049,11 +1046,7 @@ $log->syslog('info', 'WWSympa started, process %d', $PID);
 #XXXbinmode STDIN, ":utf8";
 
 # Main loop.
-my $loop_count = 0;
-my $start_time = time;
 while ($query = Sympa::WWW::FastCGI->new) {
-    $loop_count++;
-
     undef $param;
     undef $list;
     undef $robot;
@@ -2758,12 +2751,6 @@ sub check_param_in {
 sub check_param_out {
     wwslog('debug2', '');
 
-    $param->{'loop_count'} = $loop_count;
-    $param->{'start_time'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S",
-        localtime $start_time);
-    $param->{'process_id'} = $PID;
-
     # listmaster has owner and editor privileges for the list.
     $param->{'is_listmaster'} =
         Sympa::is_listmaster($robot, $param->{'user'}{'email'}) ? 1 : undef;
@@ -3623,7 +3610,7 @@ sub do_sso_login {
         }
 
         unless ($email) {
-            add_stash('intern', 'no_identified_user');
+            add_stash('user', 'no_identified_user');
             wwslog(
                 'err',
                 'User could not be identified, no %s HTTP header set',
@@ -5977,6 +5964,9 @@ sub do_serveradmin {
 
     ## Checking families and other virtual hosts.
     get_server_details();
+    if ($in{'subaction'} eq 'stats') {
+        _get_stats();
+    }
 
     ## Server files
     foreach my $f (
@@ -6043,12 +6033,8 @@ sub do_edit_config {
 }
 
 ## Change log_level for the current session
-sub do_set_loglevel {
-    wwslog('info', '');
-
-    $session->{'log_level'} = $in{'log_level'};
-    return 'serveradmin';
-}
+# Deprecated.
+#sub do_set_loglevel;
 
 ## activate dump var feature
 sub do_set_dumpvars {
@@ -15125,6 +15111,12 @@ sub do_stats {
     $param->{'arc_size'} =
         int((Sympa::Archive->new(context => $list)->get_size + 512) / 1024);
 
+    return _get_stats();
+}
+
+sub _get_stats {
+    my $that = (ref $list eq 'Sympa::List') ? $list : $robot;
+
     my $stats = {
         send_mail => {title => $language->gettext("Mail sending")},
         add_or_subscribe =>
@@ -15139,7 +15131,7 @@ sub do_stats {
     };
 
     foreach my $operation (keys %$stats) {
-        my $data = $log->aggregate_daily_data($list, $operation);
+        my $data = $log->aggregate_daily_data($that, $operation);
         if (%{$data || {}}) {
             $stats->{$operation}{'stats_values'} = '[' . join(
                 ',',
@@ -15150,6 +15142,8 @@ sub do_stats {
                     sprintf "['%s',%d]", $formatted_date, $data->{$_}
                 } sort keys %$data
             ) . ']';
+            $stats->{$operation}{'max_value'} =
+                [sort { $b <=> $a } values %$data]->[0];
         }
     }
     $param->{'stats'} = $stats;

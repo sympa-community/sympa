@@ -3821,11 +3821,9 @@ our %pinfo = (
         context    => [qw(list site)],
         order      => 60.12,
         group      => 'data_source',
-        gettext_id => "Inclusions timeout",
+        gettext_id => "TTL of user data",
         gettext_comment =>
             'Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600',
-        #gettext_comment =>
-        #    'Default timeout between two scheduled synchronizations of list members with data sources.',
         gettext_unit => 'seconds',
         format       => '\d+',
         default      => '3600',
@@ -3838,12 +3836,13 @@ our %pinfo = (
     },
 
     distribution_ttl => {
+        # Note: Unless defined, value of ttl parameter is used.
         context    => [qw(list site)],
         order      => 60.13,
         group      => 'data_source',
-        gettext_id => "Inclusions timeout for message distribution",
+        gettext_id => "TTL of user data for message distribution",
         gettext_comment =>
-            "This parameter defines the delay since the last synchronization after which the user's list will be updated before performing either of following actions:\n* Reviewing list members\n* Message distribution",
+            'This parameter defines the delay since the last synchronization after which the user data will be updated before performing message distribution',
         gettext_unit => 'seconds',
         format       => '\d+',
         length       => 6
@@ -6496,11 +6495,11 @@ __END__
 
 =head1 NAME
 
-Sympa::ListDef - Definition of list configuration parameters
+Sympa::Config::Schema - Definition of configuration parameters
 
 =head1 DESCRIPTION
 
-This module keeps definition of configuration parameters for each list.
+This module keeps definition of configuration parameters.
 
 =head2 Global variable
 
@@ -6516,10 +6515,10 @@ TBD.
 
 =item %pinfo
 
-This hash COMPLETELY defines ALL list parameters.
-It is then used to load, save, view, edit list config files.
+This hash COMPLETELY defines ALL parameters.
+It is then used to load, save, view, edit config files.
 
-List parameters format accepts the following keywords :
+A parameter definition accepts the following keywords:
 
 =over
 
@@ -6745,11 +6744,9 @@ TBD.
 
 =head1 SEE ALSO
 
-L<list_config(5)>,
+L<sympa_config(5)>,
 L<Sympa::List::Config>,
 L<Sympa::ListOpt>.
-
-L<sympa.conf(5)>, L<robot.conf(5)>.
 
 =head1 HISTORY
 
