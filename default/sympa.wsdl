@@ -100,7 +100,7 @@
 			<element name="reception" minOccurs="0" type="string"/>
 			<element name="subscribeDate" minOccurs="0" type="string"/>
 			<element name="updateDate" minOccurs="0" type="string"/>
-			<element name="custom" minOccurs="0" type="ArrayOfCustom"/>
+			<element name="custom" minOccurs="0" type="tns:ArrayOfCustom"/>
 		</all>
 	</complexType>
 </schema>
@@ -293,14 +293,14 @@
 </message>
 
 <message name="getDetailsResponse">
-	<part name="return" type="xsd:detailsType"/>
+	<part name="return" type="tns:detailsType"/>
 </message>
 
 <message name="setDetailsRequest">
 	<part name="list" type="xsd:string"/>
 	<part name="gecos" type="xsd:string"/>
 	<part name="reception" type="xsd:string" xsd:minOccurs="0"/>
-	<part name="custom" type="xsd:ArrayOfCustom" xsd:minOccurs="0"/>
+	<part name="custom" type="tns:ArrayOfCustom" xsd:minOccurs="0"/>
 </message>
 
 <message name="setDetailsResponse">
