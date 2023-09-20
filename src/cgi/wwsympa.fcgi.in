@@ -3205,7 +3205,6 @@ sub do_login {
             return _do_login_exit($failure_referer || $ldap_auth_info,
                 'renewpasswd');
         } else {
-            #$param->{'login_error'} = 'wrong_password';
             return _do_login_exit($failure_referer, 1);
         }
 

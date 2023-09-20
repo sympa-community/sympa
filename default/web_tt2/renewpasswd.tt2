@@ -1,18 +1,7 @@
 <!-- renewpasswd.tt2 -->
 
-[% SET SAFE_TO_REVEAL_EMAIL = 1 %]
 [% IF account_creation %]
     <p>[%|loc%]You requested an account creation on this list server.[%END%]</p>
-[% ELSIF login_error == 'wrong_password' %]
-    [%# Perhaps currently not used. ~%]
-    <h2>
-        <i class="fa fa-user"></i>
-        [%|loc%]Login[%END%]
-    </h2>
-    <p>
-        [%|loc%]Unable to continue: The username / password combination provided was incorrect.[%END%]
-    </p>
-    [% SET SAFE_TO_REVEAL_EMAIL = 0 %]
 [% ELSIF login_error == 'password_reset' %]
     <h2>
         <i class="fa fa-user"></i>
@@ -21,51 +10,63 @@
     <p>
         [%|loc%]Too many wrong passwords were submitted for this account. Your account has been blocked in order to protect you against attacks. You must renew your password in order to login.[%END%]
     </p>
-[% ELSIF login_error == 'missing_password' %]
-    [%# Perhaps currently not used. ~%]
-    <p>
-        [%|loc%]The password was incorrect. Please try again. Perhaps you have forgotten it?[%END%]
-    </p>
 [% ELSIF login_error == 'ticket_sent' %]
     <p>
         [%|loc%]You will receive an email that will allow you to choose your password.[%END%]
     </p>
+[% ELSIF reason == 'firstpasswd' %]
+    <p>
+        [%|loc%]Please enter your email address to begin the registration process.[%END%]
+    </p>
 [% ELSE %]
-    [% IF reason == 'firstpasswd' %]
-        <p>
-            [%|loc%]Please enter your email address to begin the registration process.[%END%]
-        </p>
-    [% ELSE %]
-        <p>
-            [%|loc%]You have forgotten your password. You must renew it.[%END%]
-        </p>
-    [% END %]
+    <p>
+        [%|loc%]You have forgotten your password. You must renew it.[%END%]
+    </p>
 [% END %]
-[% IF SAFE_TO_REVEAL_EMAIL %]
-    <form class="bold_label" action="[% path_cgi %]" method="post" autocomplete="on">
-        <fieldset>
-            <input type="hidden" name="previous_action" value="[% previous_action %]" />
-            <input type="hidden" name="previous_list" value="[% previous_list %]" />
-            <input type="hidden" name="action" value="requestpasswd" />
-            <input type="hidden" name="reason" value="[% reason %]" />
 
-            <div class="row">
-                <div class="columns">
-                    <label for="email">[%|loc%]Your e-mail address:[%END%] </label>
-                    <input id="email" type="text" name="email" size="20" value="[% email %]" />
-                </div>
+<form class="bold_label" action="[% path_cgi %]" method="post"
+ autocomplete="on">
+    <fieldset>
+        <input type="hidden" name="previous_action"
+         value="[% previous_action %]" />
+        <input type="hidden" name="previous_list"
+         value="[% previous_list %]" />
+        <input type="hidden" name="action" value="requestpasswd" />
+        <input type="hidden" name="reason" value="[% reason %]" />
+
+        <div class="row">
+            <div class="columns">
+                <label for="email">[%|loc%]Your e-mail address:[%END%] </label>
+                <input id="email" type="text" name="email" size="20"
+                 value="[% email %]" />
             </div>
-            <div class="row">
-                <div class="columns">
-                    <input class="MainMenuLinks" type="submit" name="action_requestpasswd"
-                           [% IF reason == 'firstpasswd' %]
-                               value="[%|loc%]Request first password[%END%]" />
-                           [% ELSE %]
-                               value="[%|loc%]Request new password[%END%]" />
-                           [% END %]
-                </div>
+        </div>
+        <div class="row">
+            <div class="columns">
+                <input class="MainMenuLinks" type="submit"
+                 name="action_requestpasswd"
+                 [% IF reason == 'firstpasswd' ~%]
+                     value="[%|loc%]Request first password[%END%]"
+                 [%~ ELSE ~%]
+                     value="[%|loc%]Request new password[%END%]"
+                 [%~ END %] />
             </div>
-        </fieldset>
-    </form>
-[% END %]
+        </div>
+    </fieldset>
+</form>
+
+<hr>
+<ul>
+    <li>
+    [% IF !account_creation && !reason ~%]
+        <a href="[% 'firstpasswd' | url_rel %]">
+            [%|loc%]First login?[%END%]
+        </a>
+    [%~ ELSE ~%]
+        <a href="[% 'renewpasswd' | url_rel %]">
+            [%|loc%]Lost password?[%END%]
+        </a>
+    [%~ END %]
+    </li>
+</ul>
 <!-- end renewpasswd.tt2 -->
