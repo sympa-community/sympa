@@ -2,17 +2,13 @@
 
 [% IF account_creation %]
     <p>[%|loc%]You requested an account creation on this list server.[%END%]</p>
-[% ELSIF login_error == 'password_reset' %]
+[% ELSIF reason == 'resetpasswd' %]
     <h2>
         <i class="fa fa-user"></i>
         [%|loc%]Login[%END%]
     </h2>
     <p>
         [%|loc%]Too many wrong passwords were submitted for this account. Your account has been blocked in order to protect you against attacks. You must renew your password in order to login.[%END%]
-    </p>
-[% ELSIF login_error == 'ticket_sent' %]
-    <p>
-        [%|loc%]You will receive an email that will allow you to choose your password.[%END%]
     </p>
 [% ELSIF reason == 'firstpasswd' %]
     <p>
@@ -55,10 +51,11 @@
     </fieldset>
 </form>
 
+[% UNLESS reason == 'resetpasswd' ~%]
 <hr>
 <ul>
     <li>
-    [% IF !account_creation && !reason ~%]
+    [% UNLESS account_creation || reason == 'firstpasswd' ~%]
         <a href="[% 'firstpasswd' | url_rel %]">
             [%|loc%]First login?[%END%]
         </a>
@@ -69,4 +66,5 @@
     [%~ END %]
     </li>
 </ul>
+[%~ END %]
 <!-- end renewpasswd.tt2 -->
