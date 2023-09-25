@@ -1,5 +1,26 @@
 # Change Log
 
+## [6.2.74](https://github.com/sympa-community/sympa/tree/6.2.74) (2023-XX-XX)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.72...6.2.74)
+
+**Incompatible changes:**
+
+
+**Implemented enhancements:**
+
+- Overall statistics panel [\#1661](https://github.com/sympa-community/sympa/issues/1661)
+
+**Fixed bugs:**
+
+- WWSympa: Invalid input on sso\_login form floods listmaster notification [\#1654](https://github.com/sympa-community/sympa/issues/1654)
+- Deprecate "System log" setting in Listmaster Admin menu [\#1649](https://github.com/sympa-community/sympa/issues/1649)
+- Confusing labels for ttl and distribution\_ttl [\#896](https://github.com/sympa-community/sympa/issues/896)
+- Broken links in sympa\_config.pod [\#1675](https://github.com/sympa-community/sympa/pull/1675)
+- Some typos in docs and comments [\#1653](https://github.com/sympa-community/sympa/pull/1653)
+- Correct texts about obsoleted `dkim` authentication method for scenarios [\#1599](https://github.com/sympa-community/sympa/pull/1599)
+- When owners/moderators are added, "N subscribers added" is shown [\#1584](https://github.com/sympa-community/sympa/pull/1584)
+
 ## [6.2.72](https://github.com/sympa-community/sympa/tree/6.2.72) (2023-06-01)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.71b.1...6.2.72)
