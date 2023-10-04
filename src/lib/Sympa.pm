@@ -268,6 +268,7 @@ my %diag_messages = (
 
     # Other or undefined mail system status
     # [Sympa] held for moderation
+    # Currently 2.3.0 is used instead. See GH issue #1699.
     '4.3.0' => 'Message has been forwarded to the list moderator(s)',
 
     # Bad destination mailbox address
