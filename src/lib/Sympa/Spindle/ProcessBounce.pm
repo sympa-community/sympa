@@ -510,7 +510,7 @@ sub _twist {
         }
     }
 
-    if (%stata and $who and $unique) {
+    if ($unique and $who and grep {/\A[45][.]\d+[.]\d+/} values %stata) {
         # In this case the bounce result from a remind or a welcome
         # message; so try to remove the subscriber.
         $log->syslog('debug',
