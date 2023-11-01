@@ -46,7 +46,9 @@ sub _open {
     return undef unless $db and $db->connect;
     $self->{_db} = $db;
 
-    $self->{_page} = Net::LDAP::Control::Paged->new( size => 1000 );
+    if ($db->__dbh->root_dse->supported_control(LDAP_CONTROL_PAGED)) {
+        $self->{_page} = Net::LDAP::Control::Paged->new( size => 1000 );
+    }
 
     my $mesg = $self->_open_operation(%options);
     return undef unless $mesg;
@@ -164,8 +166,8 @@ sub _load_next {
     }
 
     if ($self->{_page}) {
-        my( $response ) = $mesg->control( LDAP_CONTROL_PAGED ) or undef;
-        my $cookie = $response->cookie or undef;
+        my( $response ) = $mesg->control( LDAP_CONTROL_PAGED );
+        my $cookie = $response->cookie;
 
         $self->{_page}->cookie( $cookie );
     }
