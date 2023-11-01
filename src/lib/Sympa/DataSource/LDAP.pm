@@ -25,6 +25,9 @@ package Sympa::DataSource::LDAP;
 use strict;
 use warnings;
 
+use Net::LDAP::Control::Paged;
+use Net::LDAP::Constant qw( LDAP_CONTROL_PAGED );
+
 use Sympa::Database;
 use Sympa::Log;
 
@@ -42,6 +45,8 @@ sub _open {
     my $db = Sympa::Database->new('LDAP', %$self, timeout => $timeout);
     return undef unless $db and $db->connect;
     $self->{_db} = $db;
+
+    $self->{_page} = Net::LDAP::Control::Paged->new( size => 1000 );
 
     my $mesg = $self->_open_operation(%options);
     return undef unless $mesg;
@@ -66,7 +71,8 @@ sub _open_operation {
         base   => $ldap_suffix,
         filter => $ldap_filter,
         attrs  => [split /\s*,\s*/, $ldap_attrs],
-        scope  => $ldap_scope
+        scope  => $ldap_scope,
+        control=> $self->{_page} ? [$self->{_page}] : []
     );
     unless ($mesg) {
         $log->syslog(
@@ -108,7 +114,13 @@ sub _load_next {
     }
 
     my @retrieved;
-    my $mesg = $self->__dsh;
+    my $mesg;
+    if ($self->{_page} and $self->{_page}->cookie) {
+        $mesg = $self->_open_operation(%options);
+    }
+    else {
+        $mesg = $self->__dsh;
+    }
     while (my $entry = $mesg->shift_entry) {
         my $key_values = $entry->get_value($key_attr, asref => 1);
         next unless $key_values and @$key_values;
@@ -149,6 +161,13 @@ sub _load_next {
 
             last if $ldap_select eq 'first';
         }
+    }
+
+    if ($self->{_page}) {
+        my( $response ) = $mesg->control( LDAP_CONTROL_PAGED ) or undef;
+        my $cookie = $response->cookie or undef;
+
+        $self->{_page}->cookie( $cookie );
     }
 
     return [@retrieved];
