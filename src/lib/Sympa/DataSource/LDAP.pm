@@ -68,20 +68,29 @@ sub _open_operation {
     my $ldap_attrs  = $options{attrs}  || $self->{attrs};
     my $ldap_scope  = $options{scope}  || $self->{scope};
 
-    my $mesg = $self->{_db}->do_operation(
-        'search',
+    my @args = (
         base   => $ldap_suffix,
         filter => $ldap_filter,
         attrs  => [split /\s*,\s*/, $ldap_attrs],
         scope  => $ldap_scope,
         control=> $self->{_page} ? [$self->{_page}] : []
     );
+
+    my $mesg = $self->{_db}->do_operation('search', @args);
+
     unless ($mesg) {
         $log->syslog(
             'err',
             'LDAP search (single level) failed: %s with data source %s',
             $self->{_db}->error, $self
         );
+
+        if ($self->{_page}) {
+            # We had an abnormal exit, so let the server know we do not want any more
+            $self->{_page}->size(0);
+            $self->do_operation('search', @args);
+        }
+
         return undef;
     }
 
@@ -166,9 +175,7 @@ sub _load_next {
     }
 
     if ($self->{_page}) {
-        my( $response ) = $mesg->control( LDAP_CONTROL_PAGED );
-        my $cookie = $response->cookie;
-
+        my $cookie = $mesg->control( LDAP_CONTROL_PAGED )->cookie;
         $self->{_page}->cookie( $cookie );
     }
 
