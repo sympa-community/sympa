@@ -78,6 +78,11 @@ sub _open_operation {
 
     my $mesg = $self->{_db}->do_operation('search', @args);
 
+    if ($self->{_page} and $mesg) {
+        my $cookie = $mesg->control( LDAP_CONTROL_PAGED )->cookie;
+        $self->{_page}->cookie( $cookie );
+    }
+
     unless ($mesg) {
         $log->syslog(
             'err',
@@ -172,11 +177,6 @@ sub _load_next {
 
             last if $ldap_select eq 'first';
         }
-    }
-
-    if ($self->{_page}) {
-        my $cookie = $mesg->control( LDAP_CONTROL_PAGED )->cookie;
-        $self->{_page}->cookie( $cookie );
     }
 
     return [@retrieved];
