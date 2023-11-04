@@ -26,7 +26,6 @@ use strict;
 use warnings;
 
 use Net::LDAP::Control::Paged;
-use Net::LDAP::Constant qw( LDAP_CONTROL_PAGED );
 
 use Sympa::Database;
 use Sympa::Log;
@@ -46,7 +45,9 @@ sub _open {
     return undef unless $db and $db->connect;
     $self->{_db} = $db;
 
-    if ($db->__dbh->root_dse->supported_control(LDAP_CONTROL_PAGED)) {
+    if ($db->__dbh->root_dse->supported_control(
+            Net::LDAP::Constant::LDAP_CONTROL_PAGED()
+        )) {
         $self->{_page} = Net::LDAP::Control::Paged->new( size => 1000 );
     }
 
@@ -79,7 +80,9 @@ sub _open_operation {
     my $mesg = $self->{_db}->do_operation('search', @args);
 
     if ($self->{_page} and $mesg) {
-        my $cookie = $mesg->control( LDAP_CONTROL_PAGED )->cookie;
+        my $cookie = $mesg->control(
+            Net::LDAP::Constant::LDAP_CONTROL_PAGED
+        )->cookie;
         $self->{_page}->cookie( $cookie );
     }
 
@@ -131,7 +134,10 @@ sub _load_next {
 
     my @retrieved;
     my $mesg;
-    if ($self->{_page} and $self->{_page}->cookie) {
+    my $cookie = $self->{_page} ? $self->{_page}->cookie : undef;
+    if (defined($cookie) and length($cookie)) {
+        # second page, or later one (but not post-last) of a paged search:
+        # load next page
         $mesg = $self->_open_operation(%options);
     }
     else {
