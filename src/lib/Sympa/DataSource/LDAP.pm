@@ -45,10 +45,11 @@ sub _open {
     return undef unless $db and $db->connect;
     $self->{_db} = $db;
 
-    if ($db->__dbh->root_dse->supported_control(
+    my $pagesize = $options{pagesize} || $self->{pagesize};
+    if ($pagesize and $db->__dbh->root_dse->supported_control(
             Net::LDAP::Constant::LDAP_CONTROL_PAGED()
         )) {
-        $self->{_page} = Net::LDAP::Control::Paged->new( size => 1000 );
+        $self->{_page} = Net::LDAP::Control::Paged->new( size => $pagesize );
     }
 
     my $mesg = $self->_open_operation(%options);

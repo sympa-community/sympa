@@ -3466,6 +3466,15 @@ our %pinfo = (
                 format_s   => '$time_ranges',
                 occurrence => '0-1',
                 not_before => '6.2a.16',
+            },
+            pagesize => {
+                context      => [qw(list)],
+                order        => 12,
+                gettext_comment =>
+                    'Number of records to fetch per page, for a LDAP server that supports paging. If not set or set to zero, do not use paging. Typically 1000 for an Active Directory server, to avoid "SizeLimit" errors if there are more than 1000 records',
+                gettext_id   => "Page size",
+                format       => '\d*',
+                length       => 6,
             }
         },
         occurrence => '0-n'
