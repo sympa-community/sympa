@@ -49,15 +49,22 @@ sub _open {
     my @values;
     while (
         my $entry = $self->SUPER::_next(
-            attrs  => $self->{attrs1},
-            select => $self->{select1},
-            regex  => $self->{regex1},
-            turn   => 'first'
+            filter  => $self->{filter1},
+            attrs   => $self->{attrs1},
+            select  => $self->{select1},
+            regex   => $self->{regex1},
+            timeout => $self->{timeout1},
+            suffix  => $self->{suffix1},
+            scope   => $self->{scope1},
+            turn    => 'first'
         )
     ) {
         push @values, $entry->[0] if defined $entry->[0];
     }
     $self->{_attr1values} = [@values];
+
+    # Don't paginate subsequent children searches, they return only one record
+    $self->{_page} = undef;
 
     return 1;
 }
