@@ -90,7 +90,7 @@ sub _open_operation {
         if ($self->{_page}) {
             # We had an abnormal exit, so let the server know we do not want any more
             $self->{_page}->size(0);
-            $self->do_operation('search', @args);
+            $self->{_db}->do_operation('search', @args);
         }
 
         return undef;
