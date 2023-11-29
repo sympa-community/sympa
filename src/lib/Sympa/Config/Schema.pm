@@ -871,7 +871,7 @@ our %pinfo = (
                 context    => [qw(list)],
                 order      => 2,
                 gettext_id => "hour",
-                format     => '\d+',
+                format     => '[01]?[0-9]|2[0-3]',
                 occurrence => '1',
                 length     => 2
             },
@@ -879,7 +879,7 @@ our %pinfo = (
                 context    => [qw(list)],
                 order      => 3,
                 gettext_id => "minute",
-                format     => '\d+',
+                format     => '[0-5]?[0-9]',
                 occurrence => '1',
                 length     => 2
             }
