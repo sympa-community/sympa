@@ -815,7 +815,7 @@ sub _validate_changes_leaf {
                 {p_info => $pitem, p_paths => $ppaths, value => $new}
                 ];
             return 'invalid';
-        } elsif (ref $format ne 'ARRAY' and not $new =~ /^$format$/) {
+        } elsif (ref $format ne 'ARRAY' and not $new =~ /\A(?:$format)\z/) {
             push @$errors,
                 [
                 'user', 'syntax_errors',
