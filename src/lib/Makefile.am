@@ -236,6 +236,7 @@ nonCLI_modules = \
 	Sympa/Upgrade.pm \
 	Sympa/User.pm \
 	Sympa/WWW/Auth.pm \
+	Sympa/WWW/Crawlers.pm \
 	Sympa/WWW/FastCGI.pm \
 	Sympa/WWW/Marc.pm \
 	Sympa/WWW/Marc/Search.pm \
