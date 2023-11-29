@@ -3468,13 +3468,14 @@ our %pinfo = (
                 not_before => '6.2a.16',
             },
             pagesize => {
-                context      => [qw(list)],
-                order        => 12,
+                context => [qw(list)],
+                order   => 12,
                 gettext_comment =>
                     'Number of records to fetch per batch (paging), for a LDAP server that supports paging. If not set or set to zero, do not use paging. Typically 1000 for an Active Directory server, to avoid "SizeLimit" errors',
-                gettext_id   => "Page size",
-                format       => '\d*',
-                length       => 6,
+                gettext_id => "Page size",
+                format     => '\d*',
+                length     => 6,
+                not_before => '6.2.74',
             },
         },
         occurrence => '0-n'
@@ -3702,13 +3703,14 @@ our %pinfo = (
                 not_before => '6.2a.16',
             },
             pagesize => {
-                context      => [qw(list)],
-                order        => 12,
+                context => [qw(list)],
+                order   => 19,
                 gettext_comment =>
                     'Number of records to fetch per batch (paging), for a LDAP server that supports paging. If not set or set to zero, do not use paging. Typically 1000 for an Active Directory server, to avoid "SizeLimit" errors',
-                gettext_id   => "Page size",
-                format       => '\d*',
-                length       => 6,
+                gettext_id => "Page size",
+                format     => '\d*',
+                length     => 6,
+                not_before => '6.2.74',
             },
         },
         occurrence => '0-n'
