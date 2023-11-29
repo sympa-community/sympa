@@ -9,6 +9,7 @@
 
 **Implemented enhancements:**
 
+- Support for LDAP paged queries [\#57](https://github.com/sympa-community/sympa/issues/57)
 - Overall statistics panel [\#1661](https://github.com/sympa-community/sympa/issues/1661)
 
 **Fixed bugs:**
