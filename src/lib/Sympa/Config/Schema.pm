@@ -3472,7 +3472,7 @@ our %pinfo = (
                 order   => 12,
                 gettext_comment =>
                     'Number of records to fetch per batch (paging), for a LDAP server that supports paging. If not set or set to zero, do not use paging. Typically 1000 for an Active Directory server, to avoid "SizeLimit" errors',
-                gettext_id => "Page size",
+                gettext_id => "LDAP page size",
                 format     => '\d*',
                 length     => 6,
                 not_before => '6.2.74',
@@ -3707,7 +3707,7 @@ our %pinfo = (
                 order   => 19,
                 gettext_comment =>
                     'Number of records to fetch per batch (paging), for a LDAP server that supports paging. If not set or set to zero, do not use paging. Typically 1000 for an Active Directory server, to avoid "SizeLimit" errors',
-                gettext_id => "Page size",
+                gettext_id => "LDAP page size",
                 format     => '\d*',
                 length     => 6,
                 not_before => '6.2.74',
