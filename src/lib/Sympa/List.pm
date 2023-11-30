@@ -3363,7 +3363,8 @@ sub add_list_admin {
 
     $self->_cache_publish_expiry('admin_user') if $total;
 
-    push @$stash_ref, ['notice', 'add_performed', {total => $total}]
+    push @$stash_ref,
+        ['notice', 'add_performed', {total => $total, role => $role}]
         if $total;
     return $total;
 }

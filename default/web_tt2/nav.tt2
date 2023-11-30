@@ -88,10 +88,6 @@
                     <li id="sm-archives" class="[% class %]">
                         <a href="[% 'serveradmin/archives' | url_rel %]#sm-archives">[%|loc%]Archives[%END%]</a>
                     </li>
-                [% IF subaction == 'logs' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-                    <li id="sm-logs" class="[% class %]">
-                        <a href="[% 'serveradmin/logs' | url_rel %]#sm-logs">[%|loc%]System log[%END%]</a>
-                    </li>
                 [% IF subaction == 'templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
                     <li id="sm-templates" class="[% class %]">
                         <a href="[% 'serveradmin/templates' | url_rel %]#sm-templates">[%|loc%]Templates[%END%]</a>
@@ -134,6 +130,18 @@
                         <a href="[% 'serveradmin/families' | url_rel %]#sm-families">[%|loc%]Families[%END%]</a>
                     </li>
                 [% END %]
+
+                [% IF subaction == 'stats' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li class="[% class %]">
+                    <a href="[% 'serveradmin/stats' | url_rel %]">
+                        [%|loc%]Statistics[%END%]
+                    </a>
+                </li>
+
                 [% IF subaction == 'translation' %]
                     [% SET class = 'active' %]
                 [% ELSE %]
