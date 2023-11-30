@@ -2113,4 +2113,11 @@ a, li {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+[%# Accessibility %]
+[%# See https://github.com/sympa-community/sympa/issues/1752 %]
+select[multiple] option {
+    overflow-x: scroll;
+}
+[%# End Accessibility %]
+
 [%# end css.tt2 %]
