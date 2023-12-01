@@ -7578,6 +7578,9 @@ sub do_reject {
         if (($in{'quiet'} ne '1') || ($in{'blocklist'})) {
             my $rejected_sender = $message->{'sender'};
             if ($rejected_sender) {
+                unless ($in{'message_template'}) {
+                    $in{'message_template'} = 'reject';
+                }
                 unless ($in{'message_template'} eq 'reject_quiet') {
                     my %context;
                     $context{'subject'}       = $message->{'decoded_subject'};
