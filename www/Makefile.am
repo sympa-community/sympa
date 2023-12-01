@@ -61,6 +61,7 @@ nobase_static_DATA = \
 	js/jquery-minicolors/jquery.minicolors.js \
 	js/jquery-minicolors/jquery.minicolors.min.js \
 	js/jquery-minicolors/jquery.minicolors.png \
+	js/jquery-ui/LICENSE.txt \
 	js/jquery-ui/images/ui-bg_flat_0_aaaaaa_40x100.png \
 	js/jquery-ui/images/ui-bg_flat_75_ffffff_40x100.png \
 	js/jquery-ui/images/ui-bg_glass_55_fbf9ee_1x400.png \
