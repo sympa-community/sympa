@@ -103,7 +103,7 @@ __END__
 
 =head1 NAME
 
-Sympa::DataSource::file - Data source based on local file
+Sympa::DataSource::File - Data source based on local file
 
 =head1 DESCRIPTION
 

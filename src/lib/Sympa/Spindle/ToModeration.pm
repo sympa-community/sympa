@@ -7,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2020, 2022 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2020, 2022, 2023 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -94,7 +94,8 @@ sub _twist {
         Time::HiRes::time() - $self->{start_time}
     );
 
-    Sympa::send_dsn($list, $message, {}, '4.3.0')
+    # Do not report to the sender if the message was tagged as a spam.
+    Sympa::send_dsn($list, $message, {}, '2.3.0')
         unless $self->{quiet}
         or $message->{'spam_status'} eq 'spam';
     return 1;

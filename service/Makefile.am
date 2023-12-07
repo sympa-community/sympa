@@ -67,7 +67,7 @@ sympa: sympa.in Makefile
 		< $(srcdir)/$@.in > $@
 	@chmod +x $@
 
-.servicein.service: Makefile
+.servicein.service:
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--USER--|$(USER)|' \
@@ -77,13 +77,13 @@ sympa: sympa.in Makefile
 		-e 's|--sbindir--|$(sbindir)|' \
 		< $(srcdir)/$@in > $@
 
-.socketin.socket: Makefile
+.socketin.socket:
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--piddir--|$(piddir)|' \
 		< $(srcdir)/$@in > $@
 
-.confin.conf: Makefile
+.confin.conf:
 	@rm -f $@
 	$(AM_V_GEN)$(SED) \
 		-e 's|--USER--|$(USER)|' \
