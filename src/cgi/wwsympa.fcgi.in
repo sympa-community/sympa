@@ -4708,10 +4708,7 @@ sub _review_user {
 }
 
 sub _review_member {
-    my $record;
-    my @users;
     my $size;
-    my $sortby = lc($in{'sortby'} || 'email');
 
     ## Access control
     return undef unless defined check_authz('do_review', 'review');
@@ -4764,6 +4761,10 @@ sub _review_member {
     my @additional_fields = split ',',
         $Conf::Conf{'db_additional_subscriber_fields'};
 
+    # Sort key.
+    # GH #1577: Default subscribers sorts preferences.
+    my $sortby = lc($in{'sortby'} || $session->{'review_sortby'} || 'email');
+
     # Members list
     # Some review pages may be empty while viewed by subscribers.
     my @members = $list->get_members(
@@ -4801,8 +4802,9 @@ sub _review_member {
         $param->{'next_page'} = $param->{'page'} + 1;
     }
 
-    $param->{'size'}   = $size;
-    $param->{'sortby'} = $sortby;
+    $param->{'size'}            = $size;
+    $param->{'sortby'}          = $sortby;
+    $session->{'review_sortby'} = $sortby;
 
     ######################
     if ($in{'exclude'} eq '1') {
