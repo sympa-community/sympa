@@ -30,7 +30,7 @@ package Sympa::Spindle::TransformIncoming;
 use strict;
 use warnings;
 use Encode qw();
-use English;    # FIXME: drop $POSTMATCH usage
+use English qw(-no_match_vars);
 use MIME::EncWords;
 
 use Conf;
@@ -158,13 +158,16 @@ sub _twist {
         }
         $subject_field =~ s/\s+$//;
 
-        # truncate multiple "Re:" and equivalents.
+        # Truncate multiple "Re:" and equivalents.
+        # Note that Unicode case-ignore match is performed.
         my $re_regexp = Sympa::Regexps::re();
-        if ($subject_field =~ /^\s*($re_regexp\s*)($re_regexp\s*)*/) {
-            ($before_tag, $after_tag) = ($1, $POSTMATCH);
+        $subject_field = Encode::decode_utf8($subject_field);
+        if ($subject_field =~ s/\A\s*($re_regexp\s*)($re_regexp\s*)*//i) {
+            $before_tag = Encode::encode_utf8($1);
         } else {
-            ($before_tag, $after_tag) = ('', $subject_field);
+            $before_tag = '';
         }
+        $after_tag = Encode::encode_utf8($subject_field);
 
         ## Encode subject using initial charset
 

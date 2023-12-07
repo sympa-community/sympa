@@ -83,9 +83,31 @@ use constant time        => qr'[012]?[0-9](?:\:[0-5][0-9])?';
 use constant time_range  => __PACKAGE__->time . '-' . __PACKAGE__->time;
 use constant time_ranges => time_range() . '(?:\s+' . time_range() . ')*';
 
-use constant re =>
-    qr'(?i)(?:AW|(?:\xD0\x9D|\xD0\xBD)(?:\xD0\x90|\xD0\xB0)|Re(?:\^\d+|\*\d+|\*\*\d+|\[\d+\])?|Rif|SV|VS|Antw|\xCE\x91(?:\xCE\xA0|\xCF\x80)|\xCE\xA3(?:\xCE\xA7\xCE\x95\xCE\xA4|\xCF\x87\xCE\xB5\xCF\x84)|Odp|YNT)\s*:';
-# (de | ru etc. | en, la etc. | it | da, sv | fi | nl | el | el | pl | tr).
+use constant re => qr{
+      (?:
+        Antw                                    # Dutch
+      | ATB                                     # Welsh
+      | ATB \.                                  # Latvian
+      | AW                                      # German
+      | Odp                                     # Polish
+      | R                                       # Italian
+      | Re (?: \s* \( \d+ \) | \s* \[ \d+ \] | \*{1,2} \d+ | \^ \d+ )?
+      | REF                                     # French
+      | RES                                     # Portuguese
+      | Rif                                     # Italian
+      | SV                                      # Scandinavian
+      | V\x{00E1}                               # Magyar, "VA"
+      | VS                                      # Finnish
+      | YNT                                     # Turkish
+      | \x{05D4}\x{05E9}\x{05D1}                # Hebrew, "hashev"
+      | \x{0391}\x{03A0}                        # Greek, "AP"
+      | \x{03A3}\x{03A7}\x{0395}\x{03A4}        # Greek, "SChET"
+      | \x{041D}\x{0410}                        # some Slavic in Cyrillic, "na"
+      | \x{56DE}\x{590D}                        # Simp. Chinese, "huifu"
+      | \x{56DE}\x{8986}                        # Trad. Chinese, "huifu"
+      )
+      \s* [:\x{FF1A}]
+    }ix;
 
 1;
 
