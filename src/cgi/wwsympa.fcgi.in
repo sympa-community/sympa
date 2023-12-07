@@ -2268,22 +2268,23 @@ sub check_action_parameters {
 sub send_html {
     my $tt2_file = shift;
 
-    ## Send HTML headers
-    if ($param->{'date'}) {
-        printf "Date: %s\n",
-            DateTime->now->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
-    }
-    ## If we set the header indicating the last time the file to send was
-    ## modified, add an HTTP header (limitate web harvesting).
+    # Send HTTP header
+
+    printf "Date: %s\n", DateTime->now->strftime("%a, %d %b %Y %H:%M:%S GMT");
+    # If we indicate the last time the file to send was modified, add it
+    # as an HTTP header field to limitate web harvesting.
     if ($param->{'header_date'}) {
         printf "Last-Modified: %s\n",
             DateTime->from_epoch(epoch => $param->{'header_date'})
-            ->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
+            ->strftime("%a, %d %b %Y %H:%M:%S GMT");
     }
-    print "Cache-control: max-age=0\n" unless $param->{'action'} eq 'arc';
+    # Prevent caching responses except archives.
+    # "max-age=0" is a workaround for very old HTTP/1.0 proxies.
+    print "Cache-Control: no-store, max-age=0\n"
+        unless $param->{'action'} eq 'arc';
     print "Content-Type: text/html; charset=utf-8\n";
-    ## Workaround for Internet Explorer 8 or later.
-    print "X-UA-Compatible: IE=100\n";
+    # No longer needed: Workaround for Internet Explorer 8 or later.
+    #print "X-UA-Compatible: IE=100\n";
 
     ## Notify crash to client.
     if ($param->{'action'} eq 'crash') {
