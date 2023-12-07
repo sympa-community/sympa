@@ -359,3 +359,15 @@ $(function(){
     });
 });
 
+/* Align the scrollable calendar. */
+$(function() {
+    $('.calendarLinksCurrentPage').each(function(){
+        var curmonth = $(this);
+        var container = $('#ArcCalendar');
+
+        container.scrollTop(
+            curmonth.position().top - container.position().top -
+            (container.height() - curmonth.height()) / 2);
+    });
+});
+
