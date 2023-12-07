@@ -200,14 +200,17 @@ $(function() {
 
 // Show "Please wait..." spinner icon.
 $(function() {
-	var loadingText =
-	$('<h1 id="loadingText"><i class="fa fa-spinner fa-spin-pulse"></i> ' +
-		sympa.loadingText + '</h1>');
-	$('#loading').append(loadingText);
+    var loadingText =
+        $('<h1 id="loadingText"><i class="fa fa-spinner fa-spin-pulse"></i> ' +
+        sympa.loadingText + '</h1>');
+    $('#loading').append(loadingText);
 
-	$('.heavyWork').on('click', function(){
-		$('#loading').show();
-	});
+    $(window).on('pagehide', function(){
+        $('#loading').hide();
+    });
+    $('.heavyWork').on('click', function(){
+        $('#loading').show();
+    });
 });
 
 // fade effect for notification boxes
