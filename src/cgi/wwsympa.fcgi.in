@@ -7537,29 +7537,38 @@ sub do_d_reject_shared {
 #
 ####################################################
 sub do_reject {
+    wwslog('info', '(%s)', $in{'id'});
 
-    # toggle selection javascript have a distinction of spam and ham base on
-    # the checkbox name . It is not useful here so join id list and idspam
-    # list.
-    $in{'id'} .= ',' . $in{'idspam'} if ($in{'idspam'});
-    $in{'id'} =~ s/^,//;
-    $in{'id'} =~ s/\0/,/g;
+    my @ids = split /\0/, $in{'id'};
+    push @ids, $in{'idspam'} if length($in{'idspam'} // '');    # compat.
+    $param->{'id'} = [@ids];
 
     ## The quiet information might either be provided by the 'quiet' variable
     ## or by the 'quiet' value of the 'message_template' variable
-    if ($in{'message_template'} eq 'quiet') {
-        $in{'quiet'} = 1;
-        delete $in{'message_template'};
-    }
-    if ($in{'blocklist'}) {
-        $in{'quiet'} = 1;
-    }
+    my $message_template = $in{'message_template'} || 'reject';
+    my $signal_spam      = $in{'signal_spam'};
+    my $blocklist        = $in{'blocklist'};
+    my $quiet =
+          ($message_template eq 'quiet' or $blocklist) ? 'quiet'
+        : $in{'quiet'} ? 'quiet'
+        :                undef;
+    $param->{'message_template'} = $message_template;
+    $param->{'signal_spam'}      = $signal_spam;
+    $param->{'blocklist'}        = $blocklist;
+    $param->{'quiet'}            = $quiet;
 
-    wwslog('info', '(%s)', $in{'id'});
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'},
+        $in{'response_action'},
+        arg             => join(',', @ids),
+        previous_action => ($in{'previous_action'} || 'modindex')
+    );
+    return $next_action unless $next_action eq '1';
 
     $param->{'blocklist_added'}   = 0;
     $param->{'blocklist_ignored'} = 0;
-    foreach my $id (split(/,/, $in{'id'})) {
+    foreach my $id (@ids) {
         next unless $id and $id =~ /\A\w+\z/;
 
         my $spool_mod =
@@ -7586,29 +7595,28 @@ sub do_reject {
 
         #  extract sender address is needed to report reject to sender and in
         #  case the sender is to be added to the blocklist
-        if (($in{'quiet'} ne '1') || ($in{'blocklist'})) {
+        if (not $quiet or $blocklist) {
             my $rejected_sender = $message->{'sender'};
             if ($rejected_sender) {
-                unless ($in{'message_template'}) {
-                    $in{'message_template'} = 'reject';
+                unless ($message_template) {
+                    $message_template = 'reject';
                 }
-                unless ($in{'message_template'} eq 'reject_quiet') {
+                unless ($message_template eq 'reject_quiet') {
                     my %context;
                     $context{'subject'}       = $message->{'decoded_subject'};
                     $context{'rejected_by'}   = $param->{'user'}{'email'};
-                    $context{'template_used'} = $in{'message_template'};
+                    $context{'template_used'} = $message_template;
                     unless (
                         Sympa::send_file(
-                            $list,            $in{'message_template'},  #FIXME
+                            $list,            $message_template,    #FIXME
                             $rejected_sender, \%context
                         )
                     ) {
-                        wwslog('notice',
-                            "Unable to send template $in{'message_template'} to $rejected_sender"
-                        );
+                        wwslog('notice', 'Unable to send template %s to %s',
+                            $message_template, $rejected_sender);
                     }
                 }
-                if ($in{'blocklist'}) {
+                if ($blocklist) {
                     if (_add_in_blocklist($rejected_sender, $robot, $list)) {
                         $param->{'blocklist_added'} += 1;
                         wwslog('info',
@@ -7631,7 +7639,7 @@ sub do_reject {
         }
 
         my $script = $Conf::Conf{'reporting_spam_script_path'};
-        if ($in{'signal_spam'} and length($script // '')) {
+        if ($signal_spam and length($script // '')) {
             my $pipeout;
             unless (open $pipeout, '|-', $script) {
                 $log->syslog('err', 'Could not execute %s: %m', $script);
@@ -7667,7 +7675,7 @@ sub do_reject {
 
     }
     web_db_log(
-        {   'parameters' => $in{'id'},
+        {   'parameters' => join(',', @ids),
             'status'     => 'success'
         }
     );
