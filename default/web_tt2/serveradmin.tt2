@@ -83,7 +83,9 @@
     <form action="[% path_cgi %]" method="post">
         <fieldset>
             <div style="padding-bottom:1.0em;">
-                <input type="text" name="email" size="30" value="[% email %]" />
+                <label for="user_email">[%|loc%]Email address:[%END%]</label>
+                <input type="text" id="user_email" name="email" size="30"
+                 value="[% email %]" />
             </div>
             <input type="hidden" name="action" value="search_user" />
             <input class="MainMenuLinks" type="submit" name="action_search_user" value="[%|loc%]Search User[%END%]" />
@@ -126,6 +128,7 @@
     <p>[%|loc%]Listmasters can switch context (impersonate) other users; this may be useful when providing assistance or when testing privileges.  Enter the email address of the user you'd like to switch context to:[%END%]</p>
     <form class="bold_label" action="[% path_cgi %]" method="post">
         <fieldset>
+            <label for="session_email">[%|loc%]Email address:[%END%]</label>
             <input id="session_email" type="text" name="email" size="50"/>
             <div style="padding-top:1.0em; clear:both;">
                 <input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]Switch User Context[%END%]" />
@@ -143,7 +146,7 @@
 
     <form action="[% path_cgi %]" method="post">
         <fieldset>
-            <label for="list"></label>
+            <label for="list">[%|loc%]List name:[%END%]</label>
             <input id="list" type="text" name="list" size="20" />
             <div style="padding-top:1.0em; padding-bottom:0.25em; float:clear;">
                 <input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
