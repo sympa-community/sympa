@@ -8,8 +8,9 @@
         [%|loc(mailto)%]To: %1[%END%]<br />
         <label for="subject">
             [%|loc%]Subject:[%END%]
-            <input id="subject" type="text" size="45" name="subject" value="[% subject %]" />
         </label>
+        <input id="subject" type="text" size="45" name="subject"
+         value="[% subject %]" />
         [% IF subaction == "html_news_letter" %]
             <input type="hidden" name="html_news_letter" value="[% subaction %]" />
         [% END %]
