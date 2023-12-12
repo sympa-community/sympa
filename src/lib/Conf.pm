@@ -629,6 +629,7 @@ sub get_auth_service {
         return [
             grep {
                         $_->{auth_type} eq $auth_type
+                    and $_->{auth_service_name}
                     and $_->{auth_service_name} eq $service_id
             } @{$Conf{'auth_services'}{$robot}}
         ]->[-1];
@@ -637,6 +638,7 @@ sub get_auth_service {
         return [
             grep {
                         $_->{auth_type} eq $auth_type
+                    and $_->{service_id}
                     and $_->{service_id} eq $service_id
             } @{$Conf{'auth_services'}{$robot}}
         ]->[-1];
