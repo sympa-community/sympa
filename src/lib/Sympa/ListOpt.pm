@@ -79,11 +79,11 @@ our %list_option = (
     'remove_bouncers' => {'gettext_id' => 'remove bouncing users'},
     'notify_bouncers' => {'gettext_id' => 'send notify to bouncing users'},
 
-    # pictures_feature, dkim_feature, merge_feature,
+    # pictures_feature, dkim_feature, personalization_feature,
     # inclusion_notification_feature, tracking.delivery_status_notification,
     # tracking.message_disposition_notification
     'on' => {'gettext_id' => 'enabled'},
-    # pictures_feature, dkim_feature, merge_feature,
+    # pictures_feature, dkim_feature, personalization_feature,
     # inclusion_notification_feature, tracking.delivery_status_notification,
     # tracking.message_disposition_notification, update_db_field_types
     'off' => {'gettext_id' => 'disabled'},
@@ -196,7 +196,7 @@ our %list_option = (
     'smime_authenticated_messages' =>
         {'gettext_id' => 'authenticated by S/MIME signature'},
     'dkim_authenticated_messages' =>
-        {'gettext_id' => 'authenticated by DKIM signature'},
+        {'gettext_id' => 'with successfully verified DKIM signature'},
     'editor_validated_messages' => {'gettext_id' => 'approved by moderator'},
     'any'                       => {'gettext_id' => 'any messages'},
 

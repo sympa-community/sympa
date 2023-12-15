@@ -58,7 +58,12 @@ sub addrencode {
 
     return undef unless $addr =~ /\S/;
 
+    # Eliminate hostile characters.
+    $phrase =~ s/(\r\n|\r|\n)(?=[ \t])//g;
+    $phrase =~ s/[\0\r\n]+//g;
+
     if ($phrase =~ /[^\s\x21-\x7E]/) {
+        # String containing Non-ASCII should be encoded.
         $phrase = MIME::EncWords::encode_mimewords(
             Encode::decode('utf8', $phrase),
             'Encoding'    => 'A',
@@ -67,10 +72,13 @@ sub addrencode {
             'Field'       => 'Resent-Sender', # almost longest
             'Minimal'     => 'DISPNAME',      # needs MIME::EncWords >= 1.012.
         );
-    } elsif ($phrase =~ /\S/) {
+    } elsif ($phrase =~ /[()<>\[\]:;\@\\,\"]/) {
+        # Otherwise, the string has to be quoted when it is not a
+        # dot-atom-text (RFC 5322 3.2.3).
         $phrase =~ s/([\\\"])/\\$1/g;
         $phrase = '"' . $phrase . '"';
     }
+
     if ($comment =~ /[^\s\x21-\x27\x2A-\x5B\x5D-\x7E]/) {
         $comment = MIME::EncWords::encode_mimewords(
             Encode::decode('utf8', $comment),

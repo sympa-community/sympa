@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Sympa-5.4.6, 6.0, 6.1a.1\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2022-12-15 00:48:24+0000\n"
-"PO-Revision-Date: 2019-11-19 03:03+0000\n"
+"POT-Creation-Date: 2023-10-03 23:57:36+0000\n"
+"PO-Revision-Date: 2023-03-06 02:05+0000\n"
 "Last-Translator: IKEDA Soji <ikeda@conversion.co.jp>\n"
 "Language-Team: 日本語\n"
 "Language: ja\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1503462890.000000\n"
+"X-POOTLE-MTIME: 1678068301.000000\n"
 
 #: default/web_tt2/help_admin-archives.tt2:2 default/web_tt2/help_admin.tt2:55
 msgid "Managing the message archive"
@@ -465,7 +465,8 @@ msgstr "リストの利用についてのとりきめ。"
 msgid ""
 "description of the typical subscribers (their occupations, the projects they "
 "manage, their nationalities, etc.)."
-msgstr "想定される読者像 (役職や地位、関わっているプロジェクト、国籍、など)。"
+msgstr ""
+"想定される読者対象 (役職や地位、関わっているプロジェクト、国籍、など)。"
 
 #: default/web_tt2/help_admin-createlist.tt2:52
 msgid ""
@@ -860,7 +861,7 @@ msgid ""
 "The '<strong>Quota</strong>' input box allows you to define a "
 "<strong>maximum size not to be exceeded for the message archive</strong>. "
 "This size is expressed in kilobytes. List owners are notified when the "
-"archive size reaches 95 % of the allowed size. When the maximum size is "
+"archive size reaches 95% of the allowed size. When the maximum size is "
 "reached, later messages are not archived."
 msgstr ""
 "「<strong>容量制限</strong>」のテキストボックスで、<strong>投稿保管庫の容量の"
@@ -875,8 +876,8 @@ msgid ""
 "Even though messages stop being archived, it is naturally still possible to "
 "send messages to the list."
 msgstr ""
-"メッセージを投稿保管庫に保管しなくなってしまっても、送られてくるメッセージは"
-"リストを通じて届けられます。"
+"メッセージが投稿保管庫に保存されない場合でも、送られてくるメッセージはリスト"
+"を通じて届けられます。"
 
 # # "Il est également possible d'<strong>accéder aux archives de la liste par "
 # # "e-mail</strong>, en envoyant à <strong>%1@%1</strong> la commande "
@@ -918,7 +919,7 @@ msgstr ""
 msgid ""
 "<strong>who is allowed</strong> to receive the list message archive by email;"
 msgstr ""
-"電子メールで<strong>リストの投稿保管書庫を受け取れるのは</strong>だれか。"
+"電子メールで<strong>リストの投稿保管庫を受け取れるのは</strong>だれか。"
 
 # # "la <strong>périodicité de création de ces archives</strong>. Par exemple, "
 # # "si la périodicité est 'month', l'ensemble des messages envoyés sur la "
@@ -1052,7 +1053,7 @@ msgid ""
 msgstr ""
 "配送エラーを起こしている電子メールアドレスの割合が<strong>警告レート</strong>"
 "に達すると、オーナーに<strong>「配送エラー率が高すぎます」という報告をを送り"
-"</strong>、その人をリストから登録解除するようすすめます。"
+"</strong>、その読者をリストから登録解除するようすすめます。"
 
 # # "Le <strong>seuil d'interruption</strong> indique le taux d'erreurs à "
 # # "partir duquel <strong>la distribution des messages de la liste sera "
@@ -1546,7 +1547,7 @@ msgstr ""
 # # "liste cachée sauf aux abonnés (conceal) - <em>option par défaut</em> ;"
 #: default/web_tt2/help_admin-editlist-description.tt2:11
 msgid "conceal except for subscribers (conceal) - <em>default option</em>;"
-msgstr "読者にしか見えない (conceal) - <em>初期値</em>。"
+msgstr "読者以外に非公開 (conceal) - <em>初期値</em>;"
 
 # # "liste visible (noconceal) ;"
 #: default/web_tt2/help_admin-editlist-description.tt2:14
@@ -1556,7 +1557,7 @@ msgstr "公開 (noconceal)。"
 # # "liste cachée même aux abonnés (secret) ;"
 #: default/web_tt2/help_admin-editlist-description.tt2:17
 msgid "conceal even for subscribers (secret);"
-msgstr "読者にも見えない (secret)。"
+msgstr "読者にも非公開 (secret);"
 
 # # "Si vous souhaitez restreindre la visibilité de la liste suivant d'autres "
 # # "critères, faites-en la demande aux listmasters : il est probable qu'ils "
@@ -2048,10 +2049,10 @@ msgid ""
 "<strong>invite nameofthelist emailaddress</strong> (example: <em "
 "class=\"example\">invite list_example john.doe(@)fai.com</em>)."
 msgstr ""
-"このように、あなたはメーリングリストに読者登録したいひとを読者登録することが"
-"できます。しかし、<strong>本人が必要な手続きを踏んで、自分でリストに読者登録"
-"するほうがずっとよいのです</strong>。INVITE コマンドで<strong>誰かをリストに"
-"読者登録するよう招待する</strong>こともできます。%1@%2 宛てに、本文に "
+"このように、あなたはメーリングリストに読者登録したい人を読者登録することがで"
+"きます。しかし、<strong>本人が必要な手続きを踏んで、自分でリストに読者登録す"
+"るほうがずっとよいのです</strong>。INVITE コマンドで<strong>誰かをリストに読"
+"者登録するよう招待する</strong>こともできます。%1@%2 宛てに、本文に "
 "<strong>invite リスト名 電子メールアドレス</strong> (例: <em "
 "class=\"example\">invite cri-exemple jean.dupond(@)fai.com</em>) というコマン"
 "ドを書いたメッセージを送ります。"
@@ -2083,12 +2084,12 @@ msgstr ""
 #: default/web_tt2/help_admin-members.tt2:66
 msgid ""
 "the <strong>name of the list</strong> to which the subscriber is subscribed;"
-msgstr "読者が読者登録している<strong>リストの名前</strong>。"
+msgstr "その読者が読者登録している<strong>リストの名前</strong>。"
 
 #: default/web_tt2/help_admin-members.tt2:69
 msgid ""
 "the <strong>email address</strong> with which the subscriber is subscribed;"
-msgstr "読者が読者登録に使っている<strong>電子メールアドレス</strong>。"
+msgstr "その読者が読者登録に使っている<strong>電子メールアドレス</strong>。"
 
 #: default/web_tt2/help_admin-members.tt2:72
 msgid "the subscriber's <strong>list password</strong>;"
@@ -2555,11 +2556,11 @@ msgstr "メッセージ送信の際のとりきめ (頻度、添付ファイル�
 
 #: default/web_tt2/help_admin-rules.tt2:23
 msgid "liabilities of subscribers regarding the netiquette;"
-msgstr "読者がネチケットを尊重すること、"
+msgstr "読者がネチケットを尊重すること"
 
 #: default/web_tt2/help_admin-rules.tt2:26
 msgid "rights and responsibilities of the subscribers;"
-msgstr "読者の権利と義務、"
+msgstr "読者の権利と義務"
 
 #: default/web_tt2/help_admin-rules.tt2:29
 msgid "information about retention of the messages sent to the list;"
@@ -2585,7 +2586,7 @@ msgid ""
 "to <a href=\"admin-editfile.html\">customize that message</a> through the "
 "'Customize' page of the list administration module."
 msgstr ""
-"読者みんながこのリスト利用約款を読めるようにするため、少なくとも歓迎メッセー"
+"全ての読者がこのリスト利用約款を読めるようにするため、少なくとも歓迎メッセー"
 "ジにはこれをいれておきましょう。歓迎メッセージは読者登録のときに届きます。こ"
 "れは、リスト運営の「リストの設定変更」ページの<a href=\"admin-editfile."
 "html\">メッセージ設定</a>で行います。"
@@ -2795,7 +2796,7 @@ msgstr "モデレータ。"
 
 #: default/web_tt2/help_admin.tt2:21
 msgid "subscriber."
-msgstr "読者。"
+msgstr "読者"
 
 #: default/web_tt2/help_admin.tt2:25
 msgid ""
@@ -3649,14 +3650,14 @@ msgstr ""
 msgid ""
 "<code>SET <em>list</em> CONCEAL</code>: become unlisted (hidden subscriber "
 "address)"
-msgstr "<code>SET <em>リスト</em> CONCEAL</code>: 読者一覧に自分を出さない"
+msgstr "<code>SET <em>リスト</em> CONCEAL</code>: 読者一覧に自分を表示させない"
 
 #: default/web_tt2/help_commands.tt2:82
 msgid ""
 "<code>SET <em>list</em> NOCONCEAL</code>: subscriber address visible via "
 "REView"
 msgstr ""
-"<code>SET <em>リスト</em> NOCONCEAL</code>: 読者一覧に登録アドレスを出す"
+"<code>SET <em>リスト</em> NOCONCEAL</code>: 読者一覧に登録アドレスを表示する"
 
 #: default/web_tt2/help_commands.tt2:90
 msgid "<code>INDEX <em>list</em></code>: receive the list of the archive files"
@@ -3697,7 +3698,7 @@ msgid ""
 "reminder with the address with which he/she is subscribed to the list"
 msgstr ""
 "<code>REMIND <em>リスト</em></code>: 読者それぞれに、本人が読者登録しているア"
-"ドレスを知らせるメッセージを送る"
+"ドレスを知らせるメッセージを送信する"
 
 #: default/web_tt2/help_commands.tt2:120
 msgid "Commands for list moderators"
@@ -3727,7 +3728,7 @@ msgstr "リストのオーナーがかかえる問題"
 
 #: default/web_tt2/help_faq-admin.tt2:5
 msgid "A subscriber does not receive the list messages"
-msgstr "リストのメッセージを受け取れない読者がいる"
+msgstr "リストのメッセージを受け取れない読者"
 
 #: default/web_tt2/help_faq-admin.tt2:7
 msgid "To find the cause of the problem, do as follows:"
@@ -4444,9 +4445,9 @@ msgid ""
 msgstr ""
 "使い方を調べても解決できないような問題が起こった場合など、メーリングリストシ"
 "ステムについて質問や意見があるとき、<strong>リストのオーナーやモデレータは、"
-"リストシステム管理者に問い合わせることができます</strong>。ですが読者の方は、"
-"リストシステム管理者を質問責めにあわせないために、まずリストのオーナーに問い"
-"合わせるようにしましょう。"
+"リストシステム管理者に問い合わせることができます</strong>。ですが読者は、リス"
+"トシステム管理者を質問責めにあわせないために、まずリストのオーナーに問い合わ"
+"せるようにしましょう。"
 
 #: default/web_tt2/help_introduction-roles.tt2:64
 msgid "Owners"
@@ -6709,7 +6710,7 @@ msgstr ""
 
 #: default/web_tt2/help_user-suboptions.tt2:2 default/web_tt2/help_user.tt2:66
 msgid "Changing your subscriber options"
-msgstr "読者登録の設定を変える"
+msgstr "読者の設定を変える"
 
 # # "<strong>Les options d'abonné sont relatives à chaque liste</strong> et "
 # # "peuvent donc différer d'une liste à l'autre. Pour modifier vos options "
@@ -7274,6 +7275,18 @@ msgstr ""
 #: default/web_tt2/help_user.tt2:63
 msgid "Managing your preferences"
 msgstr "個人設定"
+
+#~ msgid ""
+#~ "The '<strong>Quota</strong>' input box allows you to define a "
+#~ "<strong>maximum size not to be exceeded for the message archive</strong>. "
+#~ "This size is expressed in kilobytes. List owners are notified when the "
+#~ "archive size reaches 95 % of the allowed size. When the maximum size is "
+#~ "reached, later messages are not archived."
+#~ msgstr ""
+#~ "「<strong>容量制限</strong>」のテキストボックスで、<strong>投稿保管庫の容"
+#~ "量の上限</strong>を決めることができます。容量はキロバイトで表します。使え"
+#~ "る容量の 95 パーセントに達すると、リストのオーナーに報告します。容量の上限"
+#~ "に達すると、それ以降のメッセージを投稿保管庫に保管しません。"
 
 #~ msgid ""
 #~ "The '<strong>Quota</strong>' input box allows you to define a "

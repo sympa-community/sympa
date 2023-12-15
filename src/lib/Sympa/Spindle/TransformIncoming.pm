@@ -30,7 +30,7 @@ package Sympa::Spindle::TransformIncoming;
 use strict;
 use warnings;
 use Encode qw();
-use English;    # FIXME: drop $POSTMATCH usage
+use English qw(-no_match_vars);
 use MIME::EncWords;
 
 use Conf;
@@ -158,13 +158,16 @@ sub _twist {
         }
         $subject_field =~ s/\s+$//;
 
-        # truncate multiple "Re:" and equivalents.
+        # Truncate multiple "Re:" and equivalents.
+        # Note that Unicode case-ignore match is performed.
         my $re_regexp = Sympa::Regexps::re();
-        if ($subject_field =~ /^\s*($re_regexp\s*)($re_regexp\s*)*/) {
-            ($before_tag, $after_tag) = ($1, $POSTMATCH);
+        $subject_field = Encode::decode_utf8($subject_field);
+        if ($subject_field =~ s/\A\s*($re_regexp\s*)($re_regexp\s*)*//i) {
+            $before_tag = Encode::encode_utf8($1);
         } else {
-            ($before_tag, $after_tag) = ('', $subject_field);
+            $before_tag = '';
         }
+        $after_tag = Encode::encode_utf8($subject_field);
 
         ## Encode subject using initial charset
 
@@ -266,13 +269,13 @@ Adds C<X-Sympa-Topic> header field, if any message topics
 =item *
 
 Anonymizes message,
-if L<C<anonymous_sender>|list_config(5)/anonymous_sender> list configuration
+if L<C<anonymous_sender>|sympa_config(5)/anonymous_sender> list configuration
 parameter is enabled.
 
 =item *
 
 Adds custom subject tag to C<Subject> field, if
-L<C<custom_subject>|list_config(5)/custom_subject> list configuration
+L<C<custom_subject>|sympa_config(5)/custom_subject> list configuration
 parameter is available.
 
 =item *
@@ -282,7 +285,7 @@ Enables message tracking (see L<Sympa::Tracking>) if necessary.
 =item *
 
 Removes header fields specified by
-L<C<remove_headers>|list_config(5)/remove_headers>.
+L<C<remove_headers>|sympa_config(5)/remove_headers>.
 
 =back
 

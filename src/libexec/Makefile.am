@@ -122,7 +122,7 @@ alias_manager.pl: $(srcdir)/alias_manager.pl.in
 ldap_alias_manager.pl: $(srcdir)/ldap_alias_manager.pl.in
 mysql_alias_manager.pl: $(srcdir)/mysql_alias_manager.pl.in
 
-.pl.8: Makefile
+.pl.8:
 	@rm -f $@
 	$(AM_V_GEN)$(POD2MAN) --section=8 --center="sympa $(VERSION)" \
 		--lax --release="$(VERSION)" $*.pl $@

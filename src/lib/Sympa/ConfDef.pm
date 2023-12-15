@@ -152,7 +152,7 @@ See L<Sympa::Config::Schema> for details about the content.
 
 =head1 SEE ALSO
 
-L<sympa.conf(5)>, L<robot.conf(5)>.
+L<sympa_config(5)>.
 
 =head1 HISTORY
 

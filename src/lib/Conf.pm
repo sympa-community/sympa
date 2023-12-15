@@ -629,6 +629,7 @@ sub get_auth_service {
         return [
             grep {
                         $_->{auth_type} eq $auth_type
+                    and $_->{auth_service_name}
                     and $_->{auth_service_name} eq $service_id
             } @{$Conf{'auth_services'}{$robot}}
         ]->[-1];
@@ -637,6 +638,7 @@ sub get_auth_service {
         return [
             grep {
                         $_->{auth_type} eq $auth_type
+                    and $_->{service_id}
                     and $_->{service_id} eq $service_id
             } @{$Conf{'auth_services'}{$robot}}
         ]->[-1];
@@ -1541,20 +1543,6 @@ sub _infer_server_specific_parameter_values {
 
     $param->{'config_hash'}{'robot_name'} = '';
 
-    unless (
-        Sympa::Tools::Data::smart_eq(
-            $param->{'config_hash'}{'dkim_feature'}, 'on'
-        )
-    ) {
-        # dkim_signature_apply_ on nothing if dkim_feature is off
-        # Sets empty array.
-        $param->{'config_hash'}{'dkim_signature_apply_on'} = [''];
-    } else {
-        $param->{'config_hash'}{'dkim_signature_apply_on'} =~ s/\s//g;
-        my @dkim =
-            split(/,/, $param->{'config_hash'}{'dkim_signature_apply_on'});
-        $param->{'config_hash'}{'dkim_signature_apply_on'} = \@dkim;
-    }
     unless ($param->{'config_hash'}{'dkim_signer_domain'}) {
         $param->{'config_hash'}{'dkim_signer_domain'} =
             $param->{'config_hash'}{'domain'};
@@ -1733,6 +1721,9 @@ sub _infer_robot_parameter_values {
     $param->{'config_hash'}{'lang'} =
         Sympa::Language::canonic_lang($param->{'config_hash'}{'lang'})
         or delete $param->{'config_hash'}{'lang'};
+
+    $param->{'config_hash'}{'dkim_signature_apply_on'} =
+        [split /\s*,\s*/, $param->{'config_hash'}{'dkim_signature_apply_on'}];
 
     _parse_custom_robot_parameters(
         {'config_hash' => $param->{'config_hash'}});
