@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2021, 2022 The Sympa Community. See the
+# Copyright 2017, 2021, 2022, 2023 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -54,6 +54,8 @@ use constant hostport => qr{(?:
       | [:0-9a-f]*:[:0-9a-f]*:[:0-9a-f]*
       | \[ [:0-9a-f]*:[:0-9a-f]*:[:0-9a-f]* \] (?::\d+)?
     )}ix;
+use constant html_date =>
+    qr'[0-9]{4}[0-9]*-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])';
 use constant ipv6 => qr'[:0-9a-f]*:[:0-9a-f]*:[:0-9a-f]*'i;
 #FIXME: Cannot contain IPv6 address.
 use constant multiple_host_with_port =>

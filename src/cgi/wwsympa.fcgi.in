@@ -9,9 +9,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@ use IO::File qw();
 use MIME::EncWords;
 use MIME::Lite::HTML;
 use POSIX qw();
-use Time::Local qw();
 use URI;
 use Data::Dumper;    # tentative
 
@@ -4112,7 +4111,7 @@ sub do_my {
     wwslog('info', '');
 
     # Sets the date of the field "start date" to "today"
-    $param->{'d_day'} = POSIX::strftime('%d-%m-%Y', localtime time);
+    $param->{'d_day'} = POSIX::strftime('%Y-%m-%d', localtime time);
     _set_my_lists_info();
     return 1;
 }
@@ -8673,21 +8672,8 @@ sub do_latest_arc {
     return 1;
 }
 
-sub get_timelocal_from_date {
-    my ($mday, $mon, $yr, $hr, $min, $sec, $zone) = @_;
-    my ($time) = 0;
-
-    $yr -= 1900 if $yr >= 1900;    # if given full 4 digit year
-    $yr += 100 if $yr <= 37;       # in case of 2 digit years
-    if (($yr < 70) || ($yr > 137)) {
-        warn "Warning: Bad year (", $yr + 1900, ") using current\n";
-        $yr = (localtime(time))[5];
-    }
-
-    $time = Time::Local::timelocal($sec, $min, $hr, $mday, $mon, $yr);
-    return $time;
-
-}
+# No longer used.
+#sub get_timelocal_from_date;
 
 ####################################################
 #  do_remove_arc
@@ -13747,7 +13733,7 @@ sub do_suspend_request {
     wwslog('info', '');
 
     ## Sets the date of the field "start date" to "today"
-    $param->{'d_day'} = POSIX::strftime('%d-%m-%Y', localtime time);
+    $param->{'d_day'} = POSIX::strftime('%Y-%m-%d', localtime time);
     _set_my_lists_info();
 
     # Compatibility with Sympa <= 6.1b.1.
@@ -13929,6 +13915,12 @@ sub do_suspend_request_action {
 
     my $previous_action = $in{'previous_action'} || 'suspend_request';
 
+    # Compat. <= 6.2.72
+    $in{'date_deb'} =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$2-$1/
+        if $in{'date_deb'};
+    $in{'date_fin'} =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$2-$1/
+        if $in{'date_fin'};
+
     if ($in{'sub_action'} eq 'suspendsave') {
 
         # to retrieve the selected list
@@ -13953,59 +13945,23 @@ sub do_suspend_request_action {
             return $previous_action;
         }
 
-        if ($in{'date_deb'}) {
-            ($day1, $month1, $year1) = split(/\-/, $in{'date_deb'});
-            $month1 = $month1 - 1;
+        my $html_date_re = Sympa::Regexps::html_date();
+        if (($in{'date_deb'} // '') =~ /\A$html_date_re\z/) {
+            ($year1, $month1, $day1) = split /-/, $in{'date_deb'};
+            # Return an epoch date
+            $data->{'startdate'} =
+                POSIX::mktime(0, 0, 0, $day1 + 0, $month1 - 1, $year1 - 1900);
 
-            if (   ($day1 =~ /([0-9]*)/)
-                && ($month1 =~ /([0-9]*)/)
-                && ($year1 =~ /([0-9]*)/)) {
-                if (   ((1 <= $day1) && ($day1 <= 31))
-                    && ((0 <= $month1) && ($month1 <= 11))
-                    && (1900 <= $year1)) {
-                    ## Return an epoch date
-                    $data->{'startdate'} =
-                        Time::Local::timelocal(0, 0, 0, $day1, $month1,
-                        $year1);
-                } else {
-                    add_stash('user', 'missing_arg',
-                        {argument => 'Start Date doesn\'t exist.'});
-                    wwslog('info', 'Date doesn\'t exist');
-                    return $previous_action;
-                }
-            } else {
-                add_stash('user', 'missing_arg',
-                    {argument => 'Start Date doesn\'t exist.'});
-                wwslog('info', 'Date doesn\'t exist');
-                return $previous_action;
-            }
-            ## Case 1 : Start date & End date (without indefinite)
-            if (($in{'date_fin'}) && (!$in{'indefinite'})) {
-                ($day2, $month2, $year2) = split(/\-/, $in{'date_fin'});
-                $month2 = $month2 - 1;
-
-                if (   ($day2 =~ /([0-9]*)/)
-                    && ($month2 =~ /([0-9]*)/)
-                    && ($year2 =~ /([0-9]*)/)) {
-                    if (   ((1 <= $day2) && ($day2 <= 31))
-                        && ((0 <= $month2) && ($month2 <= 11))
-                        && (1900 <= $year2)) {
-                        ## Return an epoch date
-                        $data->{'enddate'} =
-                            Time::Local::timelocal(0, 0, 0, $day2, $month2,
-                            $year2);
-                    } else {
-                        add_stash('user', 'missing_arg',
-                            {argument => 'End Date doesn\'t exist.'});
-                        wwslog('info', 'Date doesn\'t exist');
-                        return $previous_action;
-                    }
-                } else {
-                    add_stash('user', 'missing_arg',
-                        {argument => 'End Date doesn\'t exist.'});
-                    wwslog('info', 'Date doesn\'t exist');
-                    return $previous_action;
-                }
+            if (($in{'date_fin'} // '') =~ /\A$html_date_re\z/
+                and not $in{'indefinite'}) {
+                # Case 1 : Start date & End date (without indefinite)
+                ($year2, $month2, $day2) = split /-/, $in{'date_fin'};
+                # Return an epoch date
+                $data->{'enddate'} = POSIX::mktime(
+                    0, 0, 0, $day2 + 0,
+                    $month2 - 1,
+                    $year2 - 1900
+                );
 
                 unless ($data->{'startdate'} <= $data->{'enddate'}) {
                     add_stash(
@@ -14019,27 +13975,27 @@ sub do_suspend_request_action {
                         'The start date must be less than the end date.');
                     return $previous_action;
                 }
-                ## Case 2 : Start date & without indefinite (without end date)
-            } elsif ((!$in{'date_fin'}) && ($in{'indefinite'})) {
+            } elsif ($in{'indefinite'}) {
+                # Case 2 : Start date & without indefinite (without end date)
                 $data->{'enddate'} = undef;
             } else {
                 add_stash(
                     'user',
                     'missing_arg',
                     {   argument =>
-                            'Choose end date (dd/mm/yyyy) or indefinite end date'
+                            'Choose end date (yyyy-mm-dd) or indefinite end date'
                     }
                 );
                 wwslog('info',
-                    'Missing argument for the end date or syntax error : dd/mm/yyyy or must choose a end date or indefinite end date'
+                    'Missing argument for the end date or syntax error : yyyy-mm-dd or must choose a end date or indefinite end date'
                 );
                 return $previous_action;
             }
         } else {
             add_stash('user', 'missing_arg',
-                {argument => 'Miss start date (dd/mm/yyyy)'});
+                {argument => 'Miss start date (yyyy-mm-dd)'});
             wwslog('info',
-                'Missing argument for the start date or syntax error : dd/mm/yyyy'
+                'Missing argument for the start date or syntax error : yyyy-mm-dd'
             );
             return $previous_action;
         }
@@ -15581,6 +15537,12 @@ sub do_viewlogs {
     $param->{'size'} = int($in{'size'}) || $Conf::Conf{'viewlogs_page_size'};
 
     $param->{'total_results'} = 0;
+
+    # Compat. <= 6.2.72
+    $in{'date_from'} =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$2-$1/
+        if $in{'date_from'};
+    $in{'date_to'} =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$2-$1/
+        if $in{'date_to'};
 
     my @dates = $log->get_log_date;
     ($param->{'date_from_formated'}, $param->{'date_to_formated'}) = @dates
