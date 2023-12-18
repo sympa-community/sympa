@@ -90,10 +90,12 @@
                 <label for="date_deb">[%|loc%]From:[%END%]</label>
                 <input type="date" id="date_deb" name="date_deb"
                        style="display: inline-block; max-width: 40%"
-                       value="[% d_day %]" />
+                       value="[% d_day %]"
+                       placeholder="[%|loc%]yyyy-mm-dd[%END%]" />
                 <label for="date_fin">[%|loc%]To:[%END%]</label>
                 <input type="date" id="date_fin" name="date_fin"
-                       style="display: inline-block; max-width: 40%" />
+                       style="display: inline-block; max-width: 40%"
+                       placeholder="[%|loc%]yyyy-mm-dd[%END%]" />
                 <input type="checkbox" name="indefinite" /> [%|loc%]Suspend my membership indefinitely[%END%]
             </div>
             [% IF suspended %]

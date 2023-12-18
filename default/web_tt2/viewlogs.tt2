@@ -27,11 +27,13 @@
             <label for="date_from">[%|loc%]Search by date from:[%END%]</label>
             <input type="date" id="date_from" name="date_from"
                    style="display: inline-block; max-width: 40%"
-                   value="[% date_from %]" />
+                   value="[% date_from %]"
+                   placeholder="[%|loc%]yyyy-mm-dd[%END%]" />
             <label for="date_to">[%|loc%]to:[%END%]</label>
             <input type="date" id="date_to" name="date_to"
                    style="display: inline-block; max-width: 40%"
-                   value="[% date_to %]" />
+                   value="[% date_to %]"
+                   placeholder="[%|loc%]yyyy-mm-dd[%END%]" />
             <noscript>([%|loc%]ex: 24-05-2006[%END%])</noscript>
         </div>
         <div>
