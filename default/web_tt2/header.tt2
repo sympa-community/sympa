@@ -12,14 +12,15 @@
             [%~ END %]
         </span>
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-top-bar-title">
                 <span>[%|loc%]Sympa Menu[%END%]</span>
             </div>
             <a class="menu-icon" href="#" data-toggle="sympa-top-bar"></a>
         </div>
     </div>
 
-    <nav class="top-bar" id="sympa-top-bar" role="navigation">
+    <nav class="top-bar" id="sympa-top-bar"
+     role="navigation" aria-labelledby="sympa-top-bar-title">
         <ul class="top-bar-left medium-2 columns show-for-medium">
             <li class="name">
                 <span class="menu-text">

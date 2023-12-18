@@ -13,14 +13,15 @@
                 <i class="fa fa-plus"></i>
             </span>
             <div class="title-bar-right">
-                <div class="title-bar-title">
+                <div class="title-bar-title" id="sympa-nav-bar-title">
                     <span>[%|loc%]Create list[%END%]</span>
                 </div>
                 <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
             </div>
         </div>
 
-        <nav class="top-bar" id="sympa-nav-bar">
+        <nav class="top-bar" id="sympa-nav-bar"
+         role="navigation" aria-labelledby="sympa-nav-bar-title">
             <menu class="top-bar-left">
                 <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                     <li>
@@ -48,14 +49,15 @@
             <i class="fa fa-wrench"></i>
         </span>
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>[%|loc%]Listmaster Admin[%END%]</span>
             </div>
             <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
     </div>
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-bar-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 [% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %]
@@ -166,14 +168,15 @@
             <i class="fa fa-list"></i>
         </span>
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>[%|loc%]Index of lists[%END%]</span>
             </div>
             <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
     </div>
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-var-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 [% FOREACH letter IN letters %]
@@ -220,7 +223,7 @@
 
     <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>[%|loc%]Basic Operations[%END%]</span>
             </div>
             <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
@@ -233,7 +236,8 @@
         [% SET class = '' %]
     [% END %]
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-bar-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Edit List Config[%END%]</a>
@@ -436,7 +440,7 @@
 
     <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>
                     [% IF subaction == "html_news_letter" ~%]
                         [%|loc%]Sending an HTML page to the list[%END%]
@@ -455,7 +459,8 @@
         [% SET class = '' %]
     [% END %]
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-bar-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 <li class="[% class %]">
@@ -488,14 +493,15 @@
 
     <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>[%|loc%]Shared documents[%END%]</span>
             </div>
             <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
     </div>
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-bar-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 <li class="[% UNLESS expert_page %]active not-click[%END%]">
