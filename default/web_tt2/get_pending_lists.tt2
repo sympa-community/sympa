@@ -5,13 +5,13 @@
         <h2>[%|loc%]Pending lists[%END%]</h2>
 
         [% IF pending.size %]
-            <table  class="responsive table_style">
+            <table class="responsive table_style">
                 <caption>[%|loc%]Pending lists[%END%]</caption>
                 <tr class="color_light">
-                    <th>[%|loc%]list name[%END%]</th>
-                    <th>[%|loc%]list subject[%END%]</th>
-                    <th>[%|loc%]Requested by[%END%]</th>
-                    <th>[%|loc%]Requested date[%END%]</th>
+                    <th id="h_name">[%|loc%]list name[%END%]</th>
+                    <th id="h_subject">[%|loc%]list subject[%END%]</th>
+                    <th id="h_owner">[%|loc%]Requested by[%END%]</th>
+                    <th id="h_date">[%|loc%]Requested date[%END%]</th>
                 </tr>
 
                 [% FOREACH list = pending %]
@@ -21,10 +21,14 @@
                         <tr class="color0">[% SET dark = 1 %]
                     [% END %]
 
-                            <td><a href="[% 'set_pending_list_request' | url_rel([list.key]) %]">[% list.key %]</a></td>
-                            <td>[% list.value.subject %]</td>
-                            <td>[% list.value.by %]</td>
-                            <td>[% list.value.date_epoch | optdesc('unixtime') %]</td>
+                            <td headers="h_name">
+                                <a href="[% 'set_pending_list_request' | url_rel([list.key]) %]">
+                                    [% list.key %]
+                                </a>
+                            </td>
+                            <td headers="h_subject">[% list.value.subject %]</td>
+                            <td headers="h_owner">[% list.value.by %]</td>
+                            <td headers="h_date">[% list.value.date_epoch | optdesc('unixtime') %]</td>
                         </tr>
                 [% END %]
             </table>

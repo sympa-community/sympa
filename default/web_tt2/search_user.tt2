@@ -6,18 +6,18 @@
         <table  class="responsive listOfItems toggleContainer" data-toggle-selector="input[name='lists']">
             <caption>[%|loc(email)%]Lists which %1 is subscribed to[%END%]</caption>
             <tr>
-                <th>
+                <th id="h_selection">
                     <a href="#" data-tooltip aria-haspopup="true"
                        title="[%|loc%]Toggle Selection[%END%]" class="toggleButton">
                         <i class="far fa-check-square"></i>
                     </a>
                 </th>
-                <th>[%|loc%]list[%END%]</th>
-                <th>[%|loc%]role[%END%]</th>
-                <th>[%|loc%]reception[%END%]</th>
-                <th>[%|loc%]topics[%END%]</th>
-                <th>[%|loc%]bounce[%END%]</th>
-                <th colspan="2"></th>
+                <th id="h_name">[%|loc%]list[%END%]</th>
+                <th id="h_role">[%|loc%]role[%END%]</th>
+                <th id="h_reception">[%|loc%]reception[%END%]</th>
+                <th id="h_topics">[%|loc%]topics[%END%]</th>
+                <th id="h_bounce">[%|loc%]bounce[%END%]</th>
+                <th id="h_actions" colspan="2">[%|loc%]operations[%END%]</th>
             </tr>
             [% FOREACH l = which %]
                 [% IF dark == '1' %]
@@ -27,32 +27,32 @@
                     [% SET dark = 1 %]
                     <tr class="color0">
                 [% END %]
-                        <td>
+                        <td headers="h_selection">
                             [% IF l.value.is_member %]
                                 <input type="checkbox" name="lists" value="[% l.key %]" form="mass_del"/>
                             [% END %]
                         </td>
-                        <td>
+                        <td headers="h_name">
                             <a href="[% 'info' | url_rel([l.key]) %]" >
                                 <strong>[%|obfuscate(conf.spam_protection) %][% l.key %]@[% domain %][% END %]</strong>
                             </a>
                         </td>
-                        <td>
+                        <td headers="h_role">
                             [% IF l.value.is_member %][%|loc%]member[%END%] [% END %]
                             [% IF l.value.is_owner %][%|loc%]owner[%END%] [% END %]
                             [% IF l.value.is_editor %][%|loc%]moderator[%END%] [% END %]
                         </td>
-                        <td>
+                        <td headers="h_reception">
                             [%|optdesc('reception')%][% l.value.reception %][% END %]
                         </td>
-                        <td>
+                        <td headers="h_topics">
                             [% l.value.topic %]
                         </td>
-                        <td>
+                        <td headers="h_bounce">
                             [% l.value.bounce %]
                         </td>
                         [% IF l.value.is_member %]
-                            <td>
+                            <td headers="h_actions">
                                 <form action="[% path_cgi %]" method="post">
                                     <fieldset>
                                         <input type="hidden" name="previous_action" value="search_user" />
@@ -63,7 +63,7 @@
                                     </fieldset>
                                 </form>
                             </td>
-                            <td>
+                            <td headers="h_actions">
                                 <form action="[% path_cgi %]" method="post">
                                     <fieldset>
                                         <input type="hidden" name="previous_action" value="search_user" />
@@ -74,7 +74,7 @@
                                 </form>
                             </td>
                         [% ELSE %]
-                            <td colspan="2"></td>
+                            <td headers="h_actions" colspan="2"></td>
                         [% END %]
                     </tr>
             [% END %]

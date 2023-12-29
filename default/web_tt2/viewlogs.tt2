@@ -105,56 +105,56 @@
                 <caption>[%|loc%]Logs table[%END%]</caption>
                 <tr>
                     [% IF sortby == 'date' %]
-                        <th class="sortby">
+                        <th id="h_date" class="sortby">
                             [%|loc%]Date[%END%]
                         </th>
                     [% ELSE %]
-                        <th>
+                        <th id="h_date">
                             <a href="[% 'viewlogs' | url_rel([list,1,size,'date'],{type=>type}) %]" >
                                 [%|loc%]Date[%END%]
                             </a>
                         </th>
                     [% END %]
-                        <th>
+                        <th id="h_name">
                             <a href="[% 'viewlogs' | url_rel([list,1,size,'list'],{type=>type}) %]">
                                 [%|loc%]List[%END%]
                             </a>
                         </th>
 
                     [% IF sortby == 'action' %]
-                        <th class="sortby">
+                        <th id="h_action" class="sortby">
                             [%|loc%]Action[%END%]
                         </th>
                     [% ELSE %]
-                        <th>
+                        <th id="h_action">
                             <a href="[% 'viewlogs' | url_rel([list,1,size,'action'],{type=>type}) %]">
                                 [%|loc%]Action[%END%]
                             </a>
                         </th>
                     [% END %]
 
-                        <th>
+                        <th id="h_params">
                             [%|loc%]Parameters[%END%]
                         </th>
-                        <th>
+                        <th id="h_email">
                             [%|loc%]Target Email[%END%]
                         </th>
-                        <th>
+                        <th id="h_id">
                             [%|loc%]Message ID[%END%]
                         </th>
-                        <th>
+                        <th id="h_status">
                             [%|loc%]Status[%END%]
                         </th>
-                        <th>
+                        <th id="h_type">
                             [%|loc%]Error type[%END%]
                         </th>
 
                     [% IF sortby == 'user_email' %]
-                        <th class="sortby">
+                        <th id="h_user" class="sortby">
                             [%|loc%]User Email[%END%]
                         </th>
                     [% ELSE %]
-                        <th>
+                        <th id="h_user">
                             <a href="[% 'viewlogs' | url_rel([list,1,size,'user_email'],{type=>type}) %]">
                                 [%|loc%]User Email[%END%]
                             </a>
@@ -162,11 +162,11 @@
                     [% END %]
 
                     [% IF is_listmaster || is_owner %]
-                        <th>
+                        <th id="h_host">
                             [%|loc%]User IP[%END%]
                         </th>
                     [% END %]
-                        <th>
+                        <th id="h_service">
                             [%|loc%]Service[%END%]
                         </th>
                 </tr>
@@ -181,24 +181,24 @@
                         <tr class="color0">
                     [%~ END %]
 
-                        <td>
+                        <td headers="h_date">
                             [% l.date %]
                         </td>
                         [% IF is_listmaster || is_owner %]
-                            <td>
+                            <td headers="h_name">
                                 [% l.list %]
                             </td>
                         [% END %]
-                        <td>
+                        <td headers="h_action">
                             [% l.action %]
                         </td>
-                        <td>
+                        <td headers="h_params">
                             [% l.parameters %]
                         </td>
-                        <td>
+                        <td headers="h_email">
                             [% l.target_email %]
                         </td>
-                        <td>
+                        <td headers="h_id">
                             [% IF l.msg_id %]
                                 <a href="[% 'viewlogs' | url_rel([list,page,size,sortby],{type=>type,target_type=>'msg_id',target=>l.msg_id}) %]"
                                    data-tooltip aria-haspopup="true"
@@ -207,21 +207,21 @@
                                 </a>
                             [% END %]
                         </td>
-                        <td>
+                        <td headers="h_status">
                             [% l.status %]
                         </td>
-                        <td>
+                        <td headers="h_type">
                             [% l.error_type %]
                         </td>
-                        <td>
+                        <td headers="h_user">
                             [% l.user_email %]</span>
                         </td>
                         [% IF is_listmaster || is_owner %]
-                            <td>
+                            <td headers="h_host">
                                 [% l.client %]
                             </td>
                         [% END %]
-                        <td>
+                        <td headers="h_service">
                             [% l.daemon %]
                         </td>
                     </tr>
