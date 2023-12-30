@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa 6.2\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2023-10-03 23:39:31+0000\n"
+"POT-Creation-Date: 2023-12-30 00:48:30+0000\n"
 "PO-Revision-Date: 2022-06-17 06:02+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Suomi\n"
@@ -109,8 +109,8 @@ msgid "string"
 msgstr "jakelu"
 
 # nlsref 16,27
-#: src/lib/Sympa/CLI.pm:423 src/lib/Sympa/Config/Schema.pm:6166
-#: src/lib/Sympa/Config/Schema.pm:6261
+#: src/lib/Sympa/CLI.pm:423 src/lib/Sympa/Config/Schema.pm:6186
+#: src/lib/Sympa/Config/Schema.pm:6281
 msgid "email address"
 msgstr "Sähköpostiosoite"
 
@@ -790,12 +790,12 @@ msgstr "Suljettu lista"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/lib/Sympa/Message.pm:1689 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1698 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d.%m.%Y  %H.%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:3094
+#: src/lib/Sympa/Message.pm:3103
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -803,11 +803,11 @@ msgstr ""
 "----- Epämuotoinen viesti jätetty huomiotta ------\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3104
+#: src/lib/Sympa/Message.pm:3113
 msgid "[Unknown]"
 msgstr "[Tuntematon]"
 
-#: src/lib/Sympa/Message.pm:3135
+#: src/lib/Sympa/Message.pm:3144
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -816,35 +816,35 @@ msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3137
+#: src/lib/Sympa/Message.pm:3146
 #, c-format
 msgid "Date: %s\n"
 msgstr "Päivämäärä: %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3138
+#: src/lib/Sympa/Message.pm:3147
 #, c-format
 msgid "From: %s\n"
 msgstr "Lähettäjä: %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3139
+#: src/lib/Sympa/Message.pm:3148
 #, c-format
 msgid "To: %s\n"
 msgstr "Vastaanottaja: %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3140
+#: src/lib/Sympa/Message.pm:3149
 #, c-format
 msgid "Cc: %s\n"
 msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3141
+#: src/lib/Sympa/Message.pm:3150
 #, c-format
 msgid "Subject: %s\n"
 msgstr "Aihe: %s\n"
@@ -852,7 +852,7 @@ msgstr "Aihe: %s\n"
 # nlsref 5,4
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3149
+#: src/lib/Sympa/Message.pm:3158
 #, c-format
 msgid ""
 "-----End of original message from %s-----\n"
@@ -863,7 +863,7 @@ msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3178 src/lib/Sympa/Message.pm:3243
+#: src/lib/Sympa/Message.pm:3187 src/lib/Sympa/Message.pm:3252
 #, c-format
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
@@ -876,20 +876,20 @@ msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3199
+#: src/lib/Sympa/Message.pm:3208
 #, c-format
 msgid ""
 "\n"
 "[An attachment of type %s was included here]\n"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3208
+#: src/lib/Sympa/Message.pm:3217
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3211
+#: src/lib/Sympa/Message.pm:3220
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -897,88 +897,88 @@ msgstr ""
 "\n"
 "-----Delivery Status Report päättyy-----\n"
 
-#: src/lib/Sympa/Message.pm:3225 src/lib/Sympa/Message.pm:3258
+#: src/lib/Sympa/Message.pm:3234 src/lib/Sympa/Message.pm:3267
 msgid ""
 "\n"
 "[** Unable to process HTML message part **]\n"
 msgstr ""
 
-#: src/lib/Sympa/Message.pm:3262
+#: src/lib/Sympa/Message.pm:3271
 msgid "[ Text converted from HTML ]\n"
 msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3402
+#: src/lib/Sympa/Message.pm:3411
 #, c-format
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s omistajan osoitteen kautta postituslistalla %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3406
+#: src/lib/Sympa/Message.pm:3415
 #, c-format
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s moderaattorin osoitteen kautta postituslistalla %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3410
+#: src/lib/Sympa/Message.pm:3419
 #, c-format
 msgid "%s via %s Mailing List"
 msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3418
+#: src/lib/Sympa/Message.pm:3427
 #, c-format
 msgid "via Owner Address of %s Mailing List"
 msgstr "omistajan osoitteen kautta postituslistalla %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3422
+#: src/lib/Sympa/Message.pm:3431
 #, c-format
 msgid "via Moderator Address of %s Mailing List"
 msgstr "moderaattorin osoitteen kautta postituslistalla %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3426
+#: src/lib/Sympa/Message.pm:3435
 #, c-format
 msgid "via %s Mailing List"
 msgstr "Postituslistan %s kautta"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3432 src/lib/Sympa/Message.pm:3448
+#: src/lib/Sympa/Message.pm:3441 src/lib/Sympa/Message.pm:3457
 #, c-format
 msgid "Owner Address of %s Mailing List"
 msgstr "Omistajan osoite postituslistalle %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3436 src/lib/Sympa/Message.pm:3452
+#: src/lib/Sympa/Message.pm:3445 src/lib/Sympa/Message.pm:3461
 #, c-format
 msgid "Moderator Address of %s Mailing List"
 msgstr "Moderaattorin osoite postituslistalle %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3439 src/lib/Sympa/Message.pm:3455
+#: src/lib/Sympa/Message.pm:3448 src/lib/Sympa/Message.pm:3464
 #, c-format
 msgid "%s Mailing List"
 msgstr "Postituslista %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3444 src/lib/Sympa/Message.pm:3460
+#: src/lib/Sympa/Message.pm:3453 src/lib/Sympa/Message.pm:3469
 #, c-format
 msgid "on behalf of %s"
 msgstr ""
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3477
+#: src/lib/Sympa/Message.pm:3486
 #, fuzzy
 msgid "Anonymous"
 msgstr "Anonyymi lähettäjä"
@@ -991,9 +991,9 @@ msgstr "(ei päiväystä)"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:1211 src/cgi/wwsympa.fcgi.in:3022
-#: src/cgi/wwsympa.fcgi.in:6076 src/cgi/wwsympa.fcgi.in:6079
-#: src/cgi/wwsympa.fcgi.in:8981 src/cgi/wwsympa.fcgi.in:9858
+#: src/cgi/wwsympa.fcgi.in:1212 src/cgi/wwsympa.fcgi.in:3031
+#: src/cgi/wwsympa.fcgi.in:6087 src/cgi/wwsympa.fcgi.in:6090
+#: src/cgi/wwsympa.fcgi.in:9003 src/cgi/wwsympa.fcgi.in:9880
 #: src/lib/Sympa/Template.pm:326 src/lib/Sympa/Upgrade.pm:1004
 #: src/lib/Sympa/Upgrade.pm:2050
 msgid "%d %b %Y at %H:%M:%S"
@@ -1051,15 +1051,15 @@ msgstr ""
 #. https://perldoc.perl.org/POSIX#strftime for details.
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:13803 src/cgi/wwsympa.fcgi.in:13807
-#: src/cgi/wwsympa.fcgi.in:14945 src/cgi/wwsympa.fcgi.in:15034
-#: src/cgi/wwsympa.fcgi.in:15140 src/cgi/wwsympa.fcgi.in:16335
-#: src/cgi/wwsympa.fcgi.in:16337 src/cgi/wwsympa.fcgi.in:4947
-#: src/cgi/wwsympa.fcgi.in:5018 src/cgi/wwsympa.fcgi.in:8635
-#: src/cgi/wwsympa.fcgi.in:9356 src/cgi/wwsympa.fcgi.in:9404
-#: src/cgi/wwsympa.fcgi.in:9671 src/cgi/wwsympa.fcgi.in:9674
-#: src/cgi/wwsympa.fcgi.in:9710 src/cgi/wwsympa.fcgi.in:9712
-#: src/cgi/wwsympa.fcgi.in:9991 src/cgi/wwsympa.fcgi.in:9994
+#: src/cgi/wwsympa.fcgi.in:10013 src/cgi/wwsympa.fcgi.in:10016
+#: src/cgi/wwsympa.fcgi.in:13825 src/cgi/wwsympa.fcgi.in:13829
+#: src/cgi/wwsympa.fcgi.in:14967 src/cgi/wwsympa.fcgi.in:15056
+#: src/cgi/wwsympa.fcgi.in:15162 src/cgi/wwsympa.fcgi.in:16358
+#: src/cgi/wwsympa.fcgi.in:16360 src/cgi/wwsympa.fcgi.in:4958
+#: src/cgi/wwsympa.fcgi.in:5029 src/cgi/wwsympa.fcgi.in:8657
+#: src/cgi/wwsympa.fcgi.in:9378 src/cgi/wwsympa.fcgi.in:9426
+#: src/cgi/wwsympa.fcgi.in:9693 src/cgi/wwsympa.fcgi.in:9696
+#: src/cgi/wwsympa.fcgi.in:9732 src/cgi/wwsympa.fcgi.in:9734
 #: src/lib/Sympa/Aliases/Template.pm:51 src/lib/Sympa/Message/Template.pm:105
 #: src/lib/Sympa/Message/Template.pm:108 src/lib/Sympa/Message/Template.pm:115
 msgid "%d %b %Y"
@@ -1131,7 +1131,7 @@ msgstr "Sulkulistan hallinnointi"
 msgid "Mail server"
 msgstr "Postilistapalvelin"
 
-#: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:256
+#: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:258
 #: src/lib/Sympa/Config/Schema.pm:68
 msgid "List definition"
 msgstr "Listan määritys"
@@ -1146,7 +1146,7 @@ msgstr "Vastaanotto:"
 msgid "Sending related"
 msgstr "Odottavat listat"
 
-#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/nav.tt2:266
+#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/nav.tt2:268
 #: src/lib/Sympa/Config/Schema.pm:79
 msgid "Sending/receiving setup"
 msgstr "Lähetys- ja vastaanottoasetukset"
@@ -1156,14 +1156,14 @@ msgstr "Lähetys- ja vastaanottoasetukset"
 msgid "Distribution"
 msgstr "Lähetä jaeltavaksi"
 
-#: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:276
+#: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:278
 #: src/lib/Sympa/Config/Schema.pm:89
 msgid "Privileges"
 msgstr "Oikeudet"
 
 #: default/web_tt2/edit_list_request.tt2:41 default/web_tt2/my.tt2:65
-#: default/web_tt2/nav.tt2:286 default/web_tt2/nav.tt2:88
-#: default/web_tt2/serveradmin.tt2:138 default/web_tt2/suspend_request.tt2:69
+#: default/web_tt2/nav.tt2:288 default/web_tt2/nav.tt2:89
+#: default/web_tt2/serveradmin.tt2:141 default/web_tt2/suspend_request.tt2:69
 #: src/lib/Sympa/Config/Schema.pm:1817 src/lib/Sympa/Config/Schema.pm:94
 msgid "Archives"
 msgstr "Arkistot"
@@ -1174,8 +1174,8 @@ msgstr "Arkistot"
 msgid "Bounce management and tracking"
 msgstr "Pomppuviestien käsittely"
 
-#: default/web_tt2/edit_list_request.tt2:48 default/web_tt2/nav.tt2:296
-#: default/web_tt2/nav.tt2:412 default/web_tt2/review.tt2:39
+#: default/web_tt2/edit_list_request.tt2:48 default/web_tt2/nav.tt2:298
+#: default/web_tt2/nav.tt2:414 default/web_tt2/review.tt2:39
 #: src/lib/Sympa/Config/Schema.pm:100
 msgid "Bounces"
 msgstr "Pomput"
@@ -1198,7 +1198,7 @@ msgstr ""
 msgid "Directories"
 msgstr "Hakemisto"
 
-#: default/web_tt2/edit_list_request.tt2:59 default/web_tt2/nav.tt2:346
+#: default/web_tt2/edit_list_request.tt2:59 default/web_tt2/nav.tt2:348
 #: src/lib/Sympa/Config/Schema.pm:126
 msgid "Miscellaneous"
 msgstr "Sekalaiset"
@@ -1229,7 +1229,7 @@ msgid ""
 "TLS client authentication. It requires an external module: IO-Socket-SSL."
 msgstr ""
 
-#: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:306
+#: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:308
 #: src/lib/Sympa/Config/Schema.pm:154
 msgid "Data sources setup"
 msgstr "Data-lähteiden asetukset"
@@ -1246,7 +1246,7 @@ msgstr ""
 msgid "DKIM and ARC"
 msgstr ""
 
-#: default/web_tt2/edit_list_request.tt2:57 default/web_tt2/nav.tt2:316
+#: default/web_tt2/edit_list_request.tt2:57 default/web_tt2/nav.tt2:318
 #: src/lib/Sympa/Config/Schema.pm:161
 msgid "DKIM/DMARC/ARC"
 msgstr ""
@@ -1284,7 +1284,7 @@ msgstr ""
 msgid "Antivirus plug-in"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:5929
+#: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:5949
 #, fuzzy
 msgid "Password validation"
 msgstr "Uusi salasana (uudelleen):"
@@ -1787,10 +1787,10 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:2331 src/lib/Sympa/Config/Schema.pm:2342
 #: src/lib/Sympa/Config/Schema.pm:2986 src/lib/Sympa/Config/Schema.pm:3063
 #: src/lib/Sympa/Config/Schema.pm:3246 src/lib/Sympa/Config/Schema.pm:3425
-#: src/lib/Sympa/Config/Schema.pm:3596 src/lib/Sympa/Config/Schema.pm:3650
-#: src/lib/Sympa/Config/Schema.pm:3827 src/lib/Sympa/Config/Schema.pm:3846
-#: src/lib/Sympa/Config/Schema.pm:3974 src/lib/Sympa/Config/Schema.pm:4151
-#: src/lib/Sympa/Config/Schema.pm:4205 src/lib/Sympa/Config/Schema.pm:837
+#: src/lib/Sympa/Config/Schema.pm:3606 src/lib/Sympa/Config/Schema.pm:3660
+#: src/lib/Sympa/Config/Schema.pm:3847 src/lib/Sympa/Config/Schema.pm:3866
+#: src/lib/Sympa/Config/Schema.pm:3994 src/lib/Sympa/Config/Schema.pm:4171
+#: src/lib/Sympa/Config/Schema.pm:4225 src/lib/Sympa/Config/Schema.pm:837
 msgid "seconds"
 msgstr "sekuntia"
 
@@ -1839,7 +1839,7 @@ msgstr ""
 #: src/lib/Sympa/Config/Schema.pm:2692 src/lib/Sympa/Config/Schema.pm:2703
 #: src/lib/Sympa/Config/Schema.pm:2714 src/lib/Sympa/Config/Schema.pm:2726
 #: src/lib/Sympa/Config/Schema.pm:2737 src/lib/Sympa/Config/Schema.pm:2748
-#: src/lib/Sympa/Config/Schema.pm:2760 src/lib/Sympa/Config/Schema.pm:4987
+#: src/lib/Sympa/Config/Schema.pm:2760 src/lib/Sympa/Config/Schema.pm:5007
 #: src/lib/Sympa/Config/Schema.pm:881
 msgid "days"
 msgstr "päivää"
@@ -1870,8 +1870,8 @@ msgstr "Vaihtoehtoiset tilausasetukset"
 # nlsref 16,19
 #: default/web_tt2/review.tt2:435 src/lib/Sympa/Config/Schema.pm:1024
 #: src/lib/Sympa/Config/Schema.pm:2866 src/lib/Sympa/Config/Schema.pm:2924
-#: src/lib/Sympa/Config/Schema.pm:2965 src/lib/Sympa/Config/Schema.pm:6183
-#: src/lib/Sympa/Config/Schema.pm:6278 src/lib/Sympa/Config/Schema.pm:926
+#: src/lib/Sympa/Config/Schema.pm:2965 src/lib/Sympa/Config/Schema.pm:6203
+#: src/lib/Sympa/Config/Schema.pm:6298 src/lib/Sympa/Config/Schema.pm:926
 #: src/lib/Sympa/Config/Schema.pm:954 src/lib/Sympa/Config/Schema.pm:996
 msgid "reception mode"
 msgstr "vastaanottotila"
@@ -1905,7 +1905,7 @@ msgstr "vastaanotto moodi"
 #: default/web_tt2/review.tt2:450 src/lib/Sympa/Config/Schema.pm:1005
 #: src/lib/Sympa/Config/Schema.pm:1033 src/lib/Sympa/Config/Schema.pm:2881
 #: src/lib/Sympa/Config/Schema.pm:2931 src/lib/Sympa/Config/Schema.pm:2972
-#: src/lib/Sympa/Config/Schema.pm:6190 src/lib/Sympa/Config/Schema.pm:6285
+#: src/lib/Sympa/Config/Schema.pm:6210 src/lib/Sympa/Config/Schema.pm:6305
 #: src/lib/Sympa/Config/Schema.pm:969
 msgid "visibility"
 msgstr "näkyvyys"
@@ -1929,7 +1929,7 @@ msgstr "Kuvasi tilaajalistassa"
 
 # nlsref 16,62
 #: default/web_tt2/review.tt2:408 src/lib/Sympa/Config/Schema.pm:2917
-#: src/lib/Sympa/Config/Schema.pm:6159 src/lib/Sympa/Config/Schema.pm:988
+#: src/lib/Sympa/Config/Schema.pm:6179 src/lib/Sympa/Config/Schema.pm:988
 msgid "profile"
 msgstr "profiili"
 
@@ -2131,7 +2131,7 @@ msgid "Maximum size of messages"
 msgstr "Viestin maksimikoko 8-bit tavuina."
 
 #: src/lib/Sympa/Config/Schema.pm:1242 src/lib/Sympa/Config/Schema.pm:1390
-#: src/lib/Sympa/Config/Schema.pm:5833
+#: src/lib/Sympa/Config/Schema.pm:5853
 #, fuzzy
 msgid "bytes"
 msgstr "näkemisiin !"
@@ -2504,7 +2504,7 @@ msgstr ""
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/list_menu.tt2:250 default/web_tt2/list_menu.tt2:253
-#: default/web_tt2/nav.tt2:491 default/web_tt2/nav.tt2:500
+#: default/web_tt2/nav.tt2:493 default/web_tt2/nav.tt2:502
 #: src/lib/Sympa/Config/Schema.pm:1701
 msgid "Shared documents"
 msgstr "Jaetut dokumentit"
@@ -2600,8 +2600,8 @@ msgstr ""
 msgid "Maximum number of month archived"
 msgstr "Arkistoitavien kuukausien enimmäismäärä"
 
-#: src/lib/Sympa/Config/Schema.pm:1868 src/lib/Sympa/Config/Schema.pm:4941
-#: src/lib/Sympa/Config/Schema.pm:4952
+#: src/lib/Sympa/Config/Schema.pm:1868 src/lib/Sympa/Config/Schema.pm:4961
+#: src/lib/Sympa/Config/Schema.pm:4972
 #, fuzzy
 msgid "months"
 msgstr "pistettä"
@@ -2611,7 +2611,7 @@ msgstr "pistettä"
 msgid "Archive encrypted mails as cleartext"
 msgstr "Arkistoi salatut viestit ilman salausta"
 
-#: src/lib/Sympa/Config/Schema.pm:1905 src/lib/Sympa/Config/Schema.pm:5843
+#: src/lib/Sympa/Config/Schema.pm:1905 src/lib/Sympa/Config/Schema.pm:5863
 msgid "email address protection method"
 msgstr "sähköpostiosoitteiden suojaustapa"
 
@@ -2844,7 +2844,7 @@ msgid ""
 "according to their scores."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:2230 src/lib/Sympa/Config/Schema.pm:4927
+#: src/lib/Sympa/Config/Schema.pm:2230 src/lib/Sympa/Config/Schema.pm:4947
 msgid "Task for cleaning tables"
 msgstr ""
 
@@ -3395,9 +3395,9 @@ msgstr "Ulkoisen tiedoston sisällyttäminen"
 # nlsref 16,209
 #: src/lib/Sympa/Config/Schema.pm:3031 src/lib/Sympa/Config/Schema.pm:3139
 #: src/lib/Sympa/Config/Schema.pm:3177 src/lib/Sympa/Config/Schema.pm:3313
-#: src/lib/Sympa/Config/Schema.pm:3485 src/lib/Sympa/Config/Schema.pm:3710
-#: src/lib/Sympa/Config/Schema.pm:3862 src/lib/Sympa/Config/Schema.pm:4039
-#: src/lib/Sympa/Config/Schema.pm:4270
+#: src/lib/Sympa/Config/Schema.pm:3495 src/lib/Sympa/Config/Schema.pm:3730
+#: src/lib/Sympa/Config/Schema.pm:3882 src/lib/Sympa/Config/Schema.pm:4059
+#: src/lib/Sympa/Config/Schema.pm:4290
 msgid "short name for this source"
 msgstr "lyhytnimi tälle lähteelle"
 
@@ -3407,17 +3407,17 @@ msgstr "tiedon sijainti-URL"
 
 # nlsref 16,38
 #: src/lib/Sympa/Config/Schema.pm:3046 src/lib/Sympa/Config/Schema.pm:3193
-#: src/lib/Sympa/Config/Schema.pm:3384 src/lib/Sympa/Config/Schema.pm:3556
-#: src/lib/Sympa/Config/Schema.pm:3769 src/lib/Sympa/Config/Schema.pm:3933
-#: src/lib/Sympa/Config/Schema.pm:4110 src/lib/Sympa/Config/Schema.pm:4329
+#: src/lib/Sympa/Config/Schema.pm:3384 src/lib/Sympa/Config/Schema.pm:3566
+#: src/lib/Sympa/Config/Schema.pm:3789 src/lib/Sympa/Config/Schema.pm:3953
+#: src/lib/Sympa/Config/Schema.pm:4130 src/lib/Sympa/Config/Schema.pm:4349
 msgid "remote user"
 msgstr "etäpalvelimen käyttäjätunnus"
 
 # nlsref 16,39
 #: src/lib/Sympa/Config/Schema.pm:3053 src/lib/Sympa/Config/Schema.pm:3201
-#: src/lib/Sympa/Config/Schema.pm:3396 src/lib/Sympa/Config/Schema.pm:3568
-#: src/lib/Sympa/Config/Schema.pm:3781 src/lib/Sympa/Config/Schema.pm:3945
-#: src/lib/Sympa/Config/Schema.pm:4122 src/lib/Sympa/Config/Schema.pm:4341
+#: src/lib/Sympa/Config/Schema.pm:3396 src/lib/Sympa/Config/Schema.pm:3578
+#: src/lib/Sympa/Config/Schema.pm:3801 src/lib/Sympa/Config/Schema.pm:3965
+#: src/lib/Sympa/Config/Schema.pm:4142 src/lib/Sympa/Config/Schema.pm:4361
 msgid "remote password"
 msgstr "etäpalvelimen salasana"
 
@@ -3429,29 +3429,29 @@ msgstr "Yhteyden aikaraja"
 
 # nlsref 16,45
 #: src/lib/Sympa/Config/Schema.pm:3071 src/lib/Sympa/Config/Schema.pm:3255
-#: src/lib/Sympa/Config/Schema.pm:3351 src/lib/Sympa/Config/Schema.pm:3523
-#: src/lib/Sympa/Config/Schema.pm:3900 src/lib/Sympa/Config/Schema.pm:4077
+#: src/lib/Sympa/Config/Schema.pm:3351 src/lib/Sympa/Config/Schema.pm:3533
+#: src/lib/Sympa/Config/Schema.pm:3920 src/lib/Sympa/Config/Schema.pm:4097
 msgid "SSL version"
 msgstr "SSL versio"
 
 #: src/lib/Sympa/Config/Schema.pm:3083 src/lib/Sympa/Config/Schema.pm:3268
-#: src/lib/Sympa/Config/Schema.pm:3363 src/lib/Sympa/Config/Schema.pm:3535
-#: src/lib/Sympa/Config/Schema.pm:3912 src/lib/Sympa/Config/Schema.pm:4089
+#: src/lib/Sympa/Config/Schema.pm:3363 src/lib/Sympa/Config/Schema.pm:3545
+#: src/lib/Sympa/Config/Schema.pm:3932 src/lib/Sympa/Config/Schema.pm:4109
 msgid "SSL ciphers used"
 msgstr "Käytetyt SSL salakirjoitustavat"
 
 #: src/lib/Sympa/Config/Schema.pm:3096 src/lib/Sympa/Config/Schema.pm:3281
-#: src/lib/Sympa/Config/Schema.pm:3372 src/lib/Sympa/Config/Schema.pm:3544
-#: src/lib/Sympa/Config/Schema.pm:3921 src/lib/Sympa/Config/Schema.pm:4098
+#: src/lib/Sympa/Config/Schema.pm:3372 src/lib/Sympa/Config/Schema.pm:3554
+#: src/lib/Sympa/Config/Schema.pm:3941 src/lib/Sympa/Config/Schema.pm:4118
 #, fuzzy
 msgid "Certificate verification"
 msgstr "Sertifikaatin voimassaolon päättymisaika"
 
 #: src/lib/Sympa/Config/Schema.pm:3108 src/lib/Sympa/Config/Schema.pm:3159
 #: src/lib/Sympa/Config/Schema.pm:3294 src/lib/Sympa/Config/Schema.pm:3465
-#: src/lib/Sympa/Config/Schema.pm:3690 src/lib/Sympa/Config/Schema.pm:3811
-#: src/lib/Sympa/Config/Schema.pm:4021 src/lib/Sympa/Config/Schema.pm:4252
-#: src/lib/Sympa/Config/Schema.pm:4378
+#: src/lib/Sympa/Config/Schema.pm:3700 src/lib/Sympa/Config/Schema.pm:3831
+#: src/lib/Sympa/Config/Schema.pm:4041 src/lib/Sympa/Config/Schema.pm:4272
+#: src/lib/Sympa/Config/Schema.pm:4398
 #, fuzzy
 msgid "Time ranges when inclusion is not allowed"
 msgstr "Ei oikeutta lisätä käyttäjää listalle."
@@ -3502,9 +3502,9 @@ msgstr ""
 
 # nlsref 16,36
 #: src/lib/Sympa/Config/Schema.pm:3211 src/lib/Sympa/Config/Schema.pm:3320
-#: src/lib/Sympa/Config/Schema.pm:3492 src/lib/Sympa/Config/Schema.pm:3724
-#: src/lib/Sympa/Config/Schema.pm:3869 src/lib/Sympa/Config/Schema.pm:4046
-#: src/lib/Sympa/Config/Schema.pm:4284
+#: src/lib/Sympa/Config/Schema.pm:3502 src/lib/Sympa/Config/Schema.pm:3744
+#: src/lib/Sympa/Config/Schema.pm:3889 src/lib/Sympa/Config/Schema.pm:4066
+#: src/lib/Sympa/Config/Schema.pm:4304
 msgid "remote host"
 msgstr "etäpalvelin"
 
@@ -3535,53 +3535,65 @@ msgid ""
 "subscribers. This feature requires the Net::LDAP (perlldap) PERL module."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:3333 src/lib/Sympa/Config/Schema.pm:3505
-#: src/lib/Sympa/Config/Schema.pm:3882 src/lib/Sympa/Config/Schema.pm:4059
+#: src/lib/Sympa/Config/Schema.pm:3333 src/lib/Sympa/Config/Schema.pm:3515
+#: src/lib/Sympa/Config/Schema.pm:3902 src/lib/Sympa/Config/Schema.pm:4079
 msgid "use TLS (formerly SSL)"
 msgstr ""
 
 # nlsref 16,40
-#: src/lib/Sympa/Config/Schema.pm:3410 src/lib/Sympa/Config/Schema.pm:3959
+#: src/lib/Sympa/Config/Schema.pm:3410 src/lib/Sympa/Config/Schema.pm:3979
 msgid "suffix"
 msgstr "jälkiliite(suffix)"
 
 # nlsref 16,97
-#: src/lib/Sympa/Config/Schema.pm:3416 src/lib/Sympa/Config/Schema.pm:3965
+#: src/lib/Sympa/Config/Schema.pm:3416 src/lib/Sympa/Config/Schema.pm:3985
 msgid "search scope"
 msgstr "haun laajuus"
 
 # nlsref 16,98
-#: src/lib/Sympa/Config/Schema.pm:3424 src/lib/Sympa/Config/Schema.pm:3973
+#: src/lib/Sympa/Config/Schema.pm:3424 src/lib/Sympa/Config/Schema.pm:3993
 msgid "connection timeout"
 msgstr "Yhteyden aikaraja"
 
 # nlsref 16,41
-#: src/lib/Sympa/Config/Schema.pm:3433 src/lib/Sympa/Config/Schema.pm:3982
+#: src/lib/Sympa/Config/Schema.pm:3433 src/lib/Sympa/Config/Schema.pm:4002
 msgid "filter"
 msgstr "suodatin"
 
 # nlsref 16,42
-#: src/lib/Sympa/Config/Schema.pm:3441 src/lib/Sympa/Config/Schema.pm:3990
+#: src/lib/Sympa/Config/Schema.pm:3441 src/lib/Sympa/Config/Schema.pm:4010
 msgid "extracted attribute"
 msgstr "purettu attribuutti"
 
 # nlsref 16,43
-#: src/lib/Sympa/Config/Schema.pm:3449 src/lib/Sympa/Config/Schema.pm:4005
+#: src/lib/Sympa/Config/Schema.pm:3449 src/lib/Sympa/Config/Schema.pm:4025
 msgid "selection (if multiple)"
 msgstr "valinta (jos useampia)"
 
 # nlsref 16,201
-#: src/lib/Sympa/Config/Schema.pm:3457 src/lib/Sympa/Config/Schema.pm:4013
+#: src/lib/Sympa/Config/Schema.pm:3457 src/lib/Sympa/Config/Schema.pm:4033
 #, fuzzy
 msgid "regular expression"
 msgstr "ykköstason regular expression"
 
+#: src/lib/Sympa/Config/Schema.pm:3474 src/lib/Sympa/Config/Schema.pm:3709
+msgid ""
+"Number of records to fetch per batch (paging), for a LDAP server that "
+"supports paging. If not set or set to zero, do not use paging. Typically "
+"1000 for an Active Directory server, to avoid \"SizeLimit\" errors"
+msgstr ""
+
+#: src/lib/Sympa/Config/Schema.pm:3475 src/lib/Sympa/Config/Schema.pm:3710
+#, fuzzy
+msgid "LDAP page size"
+msgstr "Sivun koko"
+
 # nlsref 16,135
-#: src/lib/Sympa/Config/Schema.pm:3478
+#: src/lib/Sympa/Config/Schema.pm:3488
 msgid "LDAP 2-level query inclusion"
 msgstr "LDAP 2 -tason kyselyn liittäminen"
 
-#: src/lib/Sympa/Config/Schema.pm:3480
+#: src/lib/Sympa/Config/Schema.pm:3490
 msgid ""
 "This paragraph defines parameters for a two-level query returning a list of "
 "subscribers. Usually the first-level query returns a list of DNs and the "
@@ -3590,125 +3602,125 @@ msgid ""
 msgstr ""
 
 # nlsref 16,140
-#: src/lib/Sympa/Config/Schema.pm:3582 src/lib/Sympa/Config/Schema.pm:4136
+#: src/lib/Sympa/Config/Schema.pm:3592 src/lib/Sympa/Config/Schema.pm:4156
 msgid "first-level suffix"
 msgstr "ykköstason jälkiliite"
 
 # nlsref 16,197
-#: src/lib/Sympa/Config/Schema.pm:3588 src/lib/Sympa/Config/Schema.pm:4142
+#: src/lib/Sympa/Config/Schema.pm:3598 src/lib/Sympa/Config/Schema.pm:4162
 msgid "first-level search scope"
 msgstr "ykköstason haun laajuus"
 
 # nlsref 16,198
-#: src/lib/Sympa/Config/Schema.pm:3595 src/lib/Sympa/Config/Schema.pm:4150
+#: src/lib/Sympa/Config/Schema.pm:3605 src/lib/Sympa/Config/Schema.pm:4170
 msgid "first-level connection timeout"
 msgstr "ykköstason yhteyden aikaraja"
 
 # nlsref 16,141
-#: src/lib/Sympa/Config/Schema.pm:3604 src/lib/Sympa/Config/Schema.pm:4159
+#: src/lib/Sympa/Config/Schema.pm:3614 src/lib/Sympa/Config/Schema.pm:4179
 msgid "first-level filter"
 msgstr "ykköstason suodatin"
 
 # nlsref 16,142
-#: src/lib/Sympa/Config/Schema.pm:3612 src/lib/Sympa/Config/Schema.pm:4167
+#: src/lib/Sympa/Config/Schema.pm:3622 src/lib/Sympa/Config/Schema.pm:4187
 msgid "first-level extracted attribute"
 msgstr "ykköstason purettu atribuutti"
 
 # nlsref 16,143
-#: src/lib/Sympa/Config/Schema.pm:3619 src/lib/Sympa/Config/Schema.pm:4174
+#: src/lib/Sympa/Config/Schema.pm:3629 src/lib/Sympa/Config/Schema.pm:4194
 msgid "first-level selection"
 msgstr "ykköstason valinta"
 
 # nlsref 16,201
-#: src/lib/Sympa/Config/Schema.pm:3627 src/lib/Sympa/Config/Schema.pm:4182
+#: src/lib/Sympa/Config/Schema.pm:3637 src/lib/Sympa/Config/Schema.pm:4202
 msgid "first-level regular expression"
 msgstr "ykköstason regular expression"
 
 # nlsref 16,144
-#: src/lib/Sympa/Config/Schema.pm:3635 src/lib/Sympa/Config/Schema.pm:4190
+#: src/lib/Sympa/Config/Schema.pm:3645 src/lib/Sympa/Config/Schema.pm:4210
 msgid "second-level suffix template"
 msgstr "kakkostason jälkiliite"
 
 # nlsref 16,199
-#: src/lib/Sympa/Config/Schema.pm:3641 src/lib/Sympa/Config/Schema.pm:4196
+#: src/lib/Sympa/Config/Schema.pm:3651 src/lib/Sympa/Config/Schema.pm:4216
 msgid "second-level search scope"
 msgstr "kakkostason haun laajuus"
 
 # nlsref 16,200
-#: src/lib/Sympa/Config/Schema.pm:3649 src/lib/Sympa/Config/Schema.pm:4204
+#: src/lib/Sympa/Config/Schema.pm:3659 src/lib/Sympa/Config/Schema.pm:4224
 msgid "second-level connection timeout"
 msgstr "kakkostason yhteyden aikaraja"
 
 # nlsref 16,145
-#: src/lib/Sympa/Config/Schema.pm:3658 src/lib/Sympa/Config/Schema.pm:4213
+#: src/lib/Sympa/Config/Schema.pm:3668 src/lib/Sympa/Config/Schema.pm:4233
 msgid "second-level filter template"
 msgstr "kakkostason suodatin"
 
 # nlsref 16,146
-#: src/lib/Sympa/Config/Schema.pm:3666 src/lib/Sympa/Config/Schema.pm:4221
+#: src/lib/Sympa/Config/Schema.pm:3676 src/lib/Sympa/Config/Schema.pm:4241
 msgid "second-level extracted attribute"
 msgstr "kakkostason purettu atribuutti"
 
 # nlsref 16,147
-#: src/lib/Sympa/Config/Schema.pm:3674 src/lib/Sympa/Config/Schema.pm:4229
+#: src/lib/Sympa/Config/Schema.pm:3684 src/lib/Sympa/Config/Schema.pm:4249
 msgid "second-level selection"
 msgstr "kakkostason valinta"
 
 # nlsref 16,202
-#: src/lib/Sympa/Config/Schema.pm:3682 src/lib/Sympa/Config/Schema.pm:4237
+#: src/lib/Sympa/Config/Schema.pm:3692 src/lib/Sympa/Config/Schema.pm:4257
 msgid "second-level regular expression"
 msgstr "kakkostason regular expression"
 
 # nlsref 16,45
-#: src/lib/Sympa/Config/Schema.pm:3703
+#: src/lib/Sympa/Config/Schema.pm:3723
 msgid "SQL query inclusion"
 msgstr "SQL kyselyn liittäminen"
 
-#: src/lib/Sympa/Config/Schema.pm:3705
+#: src/lib/Sympa/Config/Schema.pm:3725
 #, fuzzy
 msgid "This parameter is used to define the SQL query parameters. "
 msgstr "Css_path-parametri on määritelty, arvo on"
 
 # nlsref 16,46
-#: src/lib/Sympa/Config/Schema.pm:3717 src/lib/Sympa/Config/Schema.pm:4277
+#: src/lib/Sympa/Config/Schema.pm:3737 src/lib/Sympa/Config/Schema.pm:4297
 msgid "database type"
 msgstr "tietokannan tyyppi"
 
 # nlsref 16,46
-#: src/lib/Sympa/Config/Schema.pm:3738 src/lib/Sympa/Config/Schema.pm:4298
+#: src/lib/Sympa/Config/Schema.pm:3758 src/lib/Sympa/Config/Schema.pm:4318
 msgid "database port"
 msgstr "tietokannan portti"
 
 # nlsref 16,48
-#: src/lib/Sympa/Config/Schema.pm:3744 src/lib/Sympa/Config/Schema.pm:4304
+#: src/lib/Sympa/Config/Schema.pm:3764 src/lib/Sympa/Config/Schema.pm:4324
 msgid "database name"
 msgstr "tietokannan nimi"
 
 # nlsref 16,94
-#: src/lib/Sympa/Config/Schema.pm:3751 src/lib/Sympa/Config/Schema.pm:4311
+#: src/lib/Sympa/Config/Schema.pm:3771 src/lib/Sympa/Config/Schema.pm:4331
 msgid "connection options"
 msgstr "yhteysasetukset"
 
 # nlsref 16,148
-#: src/lib/Sympa/Config/Schema.pm:3763 src/lib/Sympa/Config/Schema.pm:4323
+#: src/lib/Sympa/Config/Schema.pm:3783 src/lib/Sympa/Config/Schema.pm:4343
 msgid "environment variables for database connection"
 msgstr "ympäristömuuttujat tietokantayhteydelle"
 
 # nlsref 16,51
-#: src/lib/Sympa/Config/Schema.pm:3794 src/lib/Sympa/Config/Schema.pm:4354
+#: src/lib/Sympa/Config/Schema.pm:3814 src/lib/Sympa/Config/Schema.pm:4374
 msgid "SQL query"
 msgstr "SQL kysely"
 
-#: src/lib/Sympa/Config/Schema.pm:3803 src/lib/Sympa/Config/Schema.pm:4363
+#: src/lib/Sympa/Config/Schema.pm:3823 src/lib/Sympa/Config/Schema.pm:4383
 msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Hakemisto, johon tietokanta on tallennettu (vain DBD::CSV)"
 
-#: src/lib/Sympa/Config/Schema.pm:3824
+#: src/lib/Sympa/Config/Schema.pm:3844
 #, fuzzy
 msgid "TTL of user data"
 msgstr "Tietokantapäivitys epäonnistui."
 
-#: src/lib/Sympa/Config/Schema.pm:3826
+#: src/lib/Sympa/Config/Schema.pm:3846
 msgid ""
 "Sympa caches user data extracted using the include parameter. Their TTL "
 "(time-to-live) within Sympa can be controlled using this parameter. The "
@@ -3716,210 +3728,210 @@ msgid ""
 msgstr ""
 
 # nlsref 15,4
-#: src/lib/Sympa/Config/Schema.pm:3843
+#: src/lib/Sympa/Config/Schema.pm:3863
 #, fuzzy
 msgid "TTL of user data for message distribution"
 msgstr "sisällyttämisen aikaraja viestiä jaettaessa"
 
-#: src/lib/Sympa/Config/Schema.pm:3845
+#: src/lib/Sympa/Config/Schema.pm:3865
 msgid ""
 "This parameter defines the delay since the last synchronization after which "
 "the user data will be updated before performing message distribution"
 msgstr ""
 
 # nlsref 16,35
-#: src/lib/Sympa/Config/Schema.pm:3855
+#: src/lib/Sympa/Config/Schema.pm:3875
 #, fuzzy
 msgid "LDAP query custom attribute"
 msgstr "LDAP kyselyn liittäminen"
 
-#: src/lib/Sympa/Config/Schema.pm:3998 src/lib/Sympa/Config/Schema.pm:4245
-#: src/lib/Sympa/Config/Schema.pm:4371
+#: src/lib/Sympa/Config/Schema.pm:4018 src/lib/Sympa/Config/Schema.pm:4265
+#: src/lib/Sympa/Config/Schema.pm:4391
 msgid "Name of email entry"
 msgstr ""
 
 # nlsref 16,135
-#: src/lib/Sympa/Config/Schema.pm:4032
+#: src/lib/Sympa/Config/Schema.pm:4052
 #, fuzzy
 msgid "LDAP 2-level query custom attribute"
 msgstr "LDAP 2 -tason kyselyn liittäminen"
 
 # nlsref 16,42
-#: src/lib/Sympa/Config/Schema.pm:4263
+#: src/lib/Sympa/Config/Schema.pm:4283
 #, fuzzy
 msgid "SQL query custom attribute"
 msgstr "purettu attribuutti"
 
-#: src/lib/Sympa/Config/Schema.pm:4392
+#: src/lib/Sympa/Config/Schema.pm:4412
 #, fuzzy
 msgid "Which service messages to be signed"
 msgstr "Palveluviestien kuvaus:"
 
-#: src/lib/Sympa/Config/Schema.pm:4394
+#: src/lib/Sympa/Config/Schema.pm:4414
 #, fuzzy
 msgid ""
 "Inserts a DKIM signature to service messages in context of robot, list or "
 "both"
 msgstr "Lähetetään viestiä listalle"
 
-#: src/lib/Sympa/Config/Schema.pm:4403
+#: src/lib/Sympa/Config/Schema.pm:4423
 msgid "The \"i=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4404
+#: src/lib/Sympa/Config/Schema.pm:4424
 #, fuzzy
 msgid "Default is null."
 msgstr "Oletusarvo:"
 
-#: src/lib/Sympa/Config/Schema.pm:4412
+#: src/lib/Sympa/Config/Schema.pm:4432
 msgid "Enable DKIM"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4415
+#: src/lib/Sympa/Config/Schema.pm:4435
 #, fuzzy
 msgid "Insert DKIM signature to messages sent to the list"
 msgstr "Lähetetään viestiä listalle"
 
-#: src/lib/Sympa/Config/Schema.pm:4417
+#: src/lib/Sympa/Config/Schema.pm:4437
 msgid ""
 "If set to \"on\", Sympa may verify DKIM signatures of incoming messages and/"
 "or insert DKIM signature to outgoing messages."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4427
+#: src/lib/Sympa/Config/Schema.pm:4447
 #, fuzzy
 msgid "DKIM configuration"
 msgstr "kopioi listan asetukset"
 
-#: src/lib/Sympa/Config/Schema.pm:4429
+#: src/lib/Sympa/Config/Schema.pm:4449
 msgid "A set of parameters in order to define outgoing DKIM signature"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4434
+#: src/lib/Sympa/Config/Schema.pm:4454
 msgid "File path for list DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4437
+#: src/lib/Sympa/Config/Schema.pm:4457
 msgid "File path for DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4439
+#: src/lib/Sympa/Config/Schema.pm:4459
 msgid "The file must contain a PEM encoded private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4446
+#: src/lib/Sympa/Config/Schema.pm:4466
 msgid "Selector for DNS lookup of DKIM public key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4450
+#: src/lib/Sympa/Config/Schema.pm:4470
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
 "public DKIM key for \"<selector>._domainkey.your_domain\""
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4459
+#: src/lib/Sympa/Config/Schema.pm:4479
 msgid "List of headers to be included into the message for signature"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4461
+#: src/lib/Sympa/Config/Schema.pm:4481
 msgid ""
 "You should probably use the default value which is the value recommended by "
 "RFC4871"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4472
+#: src/lib/Sympa/Config/Schema.pm:4492
 msgid "DKIM \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4474
+#: src/lib/Sympa/Config/Schema.pm:4494
 msgid ""
 "The DKIM \"d=\" tag, is the domain of the signing entity. The list domain "
 "MUST be included in the \"d=\" domain"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4475
+#: src/lib/Sympa/Config/Schema.pm:4495
 msgid "The \"d=\" tag as defined in rfc 4871"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4485
+#: src/lib/Sympa/Config/Schema.pm:4505
 msgid "DKIM \"i=\" tag, you should probably leave this parameter empty"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4487
+#: src/lib/Sympa/Config/Schema.pm:4507
 msgid ""
 "DKIM \"i=\" tag, you should probably not use this parameter, as recommended "
 "by RFC 4871, default for list broadcasted messages is i=<listname>-"
 "request@<domain>"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4521
+#: src/lib/Sympa/Config/Schema.pm:4541
 msgid ""
 "The categories of messages sent to the list that will be signed using DKIM."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4523
+#: src/lib/Sympa/Config/Schema.pm:4543
 msgid ""
 "This parameter controls in which case messages must be signed using DKIM, "
 "you may sign every message choosing 'any' or a subset. The parameter value "
 "is a comma separated list of keywords"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4524
+#: src/lib/Sympa/Config/Schema.pm:4544
 msgid "Which messages delivered via lists to be signed"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4542
+#: src/lib/Sympa/Config/Schema.pm:4562
 #, fuzzy
 msgid "Add ARC seals to messages sent to the list"
 msgstr "Lähetetään viestiä listalle"
 
-#: src/lib/Sympa/Config/Schema.pm:4544
+#: src/lib/Sympa/Config/Schema.pm:4564
 msgid ""
 "Enable/Disable ARC. This feature requires Mail::DKIM::ARC to be installed, "
 "and maybe some custom scenario to be updated"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4545
+#: src/lib/Sympa/Config/Schema.pm:4565
 msgid "Enable ARC"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4558
+#: src/lib/Sympa/Config/Schema.pm:4578
 msgid "SRV ID for Authentication-Results used in ARC seal"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4559
+#: src/lib/Sympa/Config/Schema.pm:4579
 msgid "Typically the domain of the mail server"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4568
+#: src/lib/Sympa/Config/Schema.pm:4588
 #, fuzzy
 msgid "ARC configuration"
 msgstr "kopioi listan asetukset"
 
-#: src/lib/Sympa/Config/Schema.pm:4570
+#: src/lib/Sympa/Config/Schema.pm:4590
 msgid "A set of parameters in order to define outgoing ARC seal"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4577
+#: src/lib/Sympa/Config/Schema.pm:4597
 msgid "File path for list ARC private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4580
+#: src/lib/Sympa/Config/Schema.pm:4600
 msgid "File path for ARC private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4582
+#: src/lib/Sympa/Config/Schema.pm:4602
 msgid ""
 "The file must contain a PEM encoded private key. Defaults to same file as "
 "DKIM private key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4595
+#: src/lib/Sympa/Config/Schema.pm:4615
 msgid "Selector for DNS lookup of ARC public key"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4599
+#: src/lib/Sympa/Config/Schema.pm:4619
 msgid ""
 "The selector is used in order to build the DNS query for public key. It is "
 "up to you to choose the value you want but verify that you can query the "
@@ -3927,27 +3939,27 @@ msgid ""
 "same selector as for DKIM signatures"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4613
+#: src/lib/Sympa/Config/Schema.pm:4633
 msgid "ARC \"d=\" tag, you should probably use the default value"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4615
+#: src/lib/Sympa/Config/Schema.pm:4635
 msgid ""
 "The ARC \"d=\" tag is the domain of the signing entity. The DKIM d= domain "
 "name is used as its default value"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4616
+#: src/lib/Sympa/Config/Schema.pm:4636
 msgid "The \"d=\" tag as defined in ARC"
 msgstr ""
 
 # nlsref 16,19
-#: src/lib/Sympa/Config/Schema.pm:4687
+#: src/lib/Sympa/Config/Schema.pm:4707
 #, fuzzy
 msgid "Protection modes"
 msgstr "vastaanottotila"
 
-#: src/lib/Sympa/Config/Schema.pm:4691
+#: src/lib/Sympa/Config/Schema.pm:4711
 msgid ""
 "Select one or more operation modes.  \"Domain matching regular "
 "expression\" (domain_regex) matches the specified Domain regular expression; "
@@ -3957,15 +3969,15 @@ msgid ""
 "messages."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4692
+#: src/lib/Sympa/Config/Schema.pm:4712
 msgid "Test mode(s) for DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4700
+#: src/lib/Sympa/Config/Schema.pm:4720
 msgid "Regular expression for domain name match"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4702
+#: src/lib/Sympa/Config/Schema.pm:4722
 #, fuzzy
 msgid "Regular expression match pattern for From domain"
 msgstr ""
@@ -3973,58 +3985,58 @@ msgstr ""
 "robottien kanssa"
 
 # nlsref 16,201
-#: src/lib/Sympa/Config/Schema.pm:4703
+#: src/lib/Sympa/Config/Schema.pm:4723
 #, fuzzy
 msgid "Match domain regular expression"
 msgstr "ykköstason regular expression"
 
-#: src/lib/Sympa/Config/Schema.pm:4712
+#: src/lib/Sympa/Config/Schema.pm:4732
 #, fuzzy
 msgid "New From address"
 msgstr "Uusi sähköpostiosoite:"
 
-#: src/lib/Sympa/Config/Schema.pm:4715
+#: src/lib/Sympa/Config/Schema.pm:4735
 msgid ""
 "This is the email address to use when modifying the From header.  It "
 "defaults to the list address.  This is similar to Anonymisation but "
 "preserves the original sender details in the From address phrase."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4730
+#: src/lib/Sympa/Config/Schema.pm:4750
 msgid "New From name format"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4735
+#: src/lib/Sympa/Config/Schema.pm:4755
 msgid ""
 "This is the format to be used for the sender name part of the new From "
 "header field."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4739
+#: src/lib/Sympa/Config/Schema.pm:4759
 msgid "DMARC Protection"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4742
+#: src/lib/Sympa/Config/Schema.pm:4762
 msgid ""
 "Parameters to define how to manage From address processing to avoid some "
 "domains' excessive DMARC protection"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4775
+#: src/lib/Sympa/Config/Schema.pm:4795
 msgid "SMTP HELO (EHLO) parameter used for address verification"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4777
+#: src/lib/Sympa/Config/Schema.pm:4797
 msgid "Default value is the host part of \"list_check_smtp\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4786
+#: src/lib/Sympa/Config/Schema.pm:4806
 msgid ""
 "SMTP server to verify existence of the same addresses as the list to be "
 "created"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4788
+#: src/lib/Sympa/Config/Schema.pm:4808
 msgid ""
 "This is needed if you are running Sympa on a host but you handle all your "
 "mail on a separate mail relay.\n"
@@ -4033,11 +4045,11 @@ msgid ""
 "standard port (25) will be used."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4795
+#: src/lib/Sympa/Config/Schema.pm:4815
 msgid "Address suffixes to verify"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4797
+#: src/lib/Sympa/Config/Schema.pm:4817
 msgid ""
 "List of suffixes you are using for list addresses, i.e. \"mylist-request\", "
 "\"mylist-owner\" and so on.\n"
@@ -4045,60 +4057,60 @@ msgid ""
 "used to check list names at list creation time."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4810
+#: src/lib/Sympa/Config/Schema.pm:4830
 msgid "Path to the antivirus scanner engine"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4812
+#: src/lib/Sympa/Config/Schema.pm:4832
 msgid ""
 "Supported antivirus: Clam AntiVirus/clamscan & clamdscan, McAfee/uvscan, "
 "Fsecure/fsav, Sophos, AVP and Trend Micro/VirusWall"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4820
+#: src/lib/Sympa/Config/Schema.pm:4840
 msgid "Antivirus plugin command line arguments"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4828
+#: src/lib/Sympa/Config/Schema.pm:4848
 msgid "Notify sender if virus checker detects malicious content"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4831
+#: src/lib/Sympa/Config/Schema.pm:4851
 msgid ""
 "\"sender\" to notify originator of the message, \"delivery_status\" to send "
 "delivery status, or \"none\""
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4842
+#: src/lib/Sympa/Config/Schema.pm:4862
 #, fuzzy
 msgid "Local part of Sympa email address"
 msgstr "Ole hyvä ja anna sähköpostiosoite"
 
-#: src/lib/Sympa/Config/Schema.pm:4844
+#: src/lib/Sympa/Config/Schema.pm:4864
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which mail "
 "interface of Sympa accepts mail commands.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4852
+#: src/lib/Sympa/Config/Schema.pm:4872
 #, fuzzy
 msgid "Local part of listmaster email address"
 msgstr "Ole hyvä ja anna sähköpostiosoite"
 
-#: src/lib/Sympa/Config/Schema.pm:4854
+#: src/lib/Sympa/Config/Schema.pm:4874
 msgid ""
 "Local part (the part preceding the \"@\" sign) of the address by which "
 "listmasters receive messages.\n"
 "If you change the default value, you must modify the mail aliases too."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4861
+#: src/lib/Sympa/Config/Schema.pm:4881
 #, fuzzy
 msgid "Custom robot parameter"
 msgstr "mukautetut arvot"
 
-#: src/lib/Sympa/Config/Schema.pm:4863
+#: src/lib/Sympa/Config/Schema.pm:4883
 msgid ""
 "Used to define a custom parameter for your server. Do not forget the "
 "semicolon between the parameter name and the parameter value.\n"
@@ -4106,35 +4118,35 @@ msgid ""
 "variable \"conf.custom_robot_parameter.<param_name>\""
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4874
+#: src/lib/Sympa/Config/Schema.pm:4894
 msgid "Prevent people to use some names for their lists names"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4876
+#: src/lib/Sympa/Config/Schema.pm:4896
 msgid ""
 "This parameter is a comma-separated list of names. You can use * as a "
 "wildcard character. To use a regex for this, please use "
 "prohibited_listnames_regex setting."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4886
+#: src/lib/Sympa/Config/Schema.pm:4906
 msgid ""
 "Prevent people to use some names for their lists names, based on a regex"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4888
+#: src/lib/Sympa/Config/Schema.pm:4908
 msgid ""
 "This parameter is a regex. Please note that prohibited_listnames and "
 "prohibited_listnames_regex will both be applied if set, they are not "
 "exclusive."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4898
+#: src/lib/Sympa/Config/Schema.pm:4918
 #, fuzzy
 msgid "Use of binary cache of list configuration"
 msgstr "kopioi listan asetukset"
 
-#: src/lib/Sympa/Config/Schema.pm:4900
+#: src/lib/Sympa/Config/Schema.pm:4920
 msgid ""
 "binary_file: Sympa processes will maintain a binary version of the list "
 "configuration, \"config.bin\" file on local disk. If you manage a big amount "
@@ -4142,144 +4154,144 @@ msgid ""
 "You can recreate cache by running \"sympa.pl --reload_list_config\"."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4908
+#: src/lib/Sympa/Config/Schema.pm:4928
 msgid "Use database cache to search lists"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4910
+#: src/lib/Sympa/Config/Schema.pm:4930
 msgid ""
 "Note that \"list_table\" database table should be filled at the first time "
 "by running:\n"
 "  # sympa.pl --sync_list_db"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4917
+#: src/lib/Sympa/Config/Schema.pm:4937
 msgid "Task for expiring inactive users"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4919
+#: src/lib/Sympa/Config/Schema.pm:4939
 msgid ""
 "This task removes rows in the \"user_table\" table which have not "
 "corresponding entries in the \"subscriber_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4929
+#: src/lib/Sympa/Config/Schema.pm:4949
 msgid "This task cleans old logs from \"logs_table\" table."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4937
+#: src/lib/Sympa/Config/Schema.pm:4957
 #, fuzzy
 msgid "Max age of logs in database"
 msgstr "Tietokantapäivitys epäonnistui."
 
-#: src/lib/Sympa/Config/Schema.pm:4939
+#: src/lib/Sympa/Config/Schema.pm:4959
 msgid "Number of months that elapse before a log is expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4948
+#: src/lib/Sympa/Config/Schema.pm:4968
 msgid "Max age of statistics information in database"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4950
+#: src/lib/Sympa/Config/Schema.pm:4970
 msgid "Number of months that elapse before statistics information are expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:4962
+#: src/lib/Sympa/Config/Schema.pm:4982
 #, fuzzy
 msgid "Umask"
 msgstr "viestiä"
 
-#: src/lib/Sympa/Config/Schema.pm:4964
+#: src/lib/Sympa/Config/Schema.pm:4984
 msgid ""
 "Default mask for file creation (see umask(2)). Note that it will be "
 "interpreted as an octal value."
 msgstr ""
 
 # nlsref 16,10
-#: src/lib/Sympa/Config/Schema.pm:4983
+#: src/lib/Sympa/Config/Schema.pm:5003
 msgid "Expiration of unmoderated messages"
 msgstr "Moderoitavien viestien poistamisaika"
 
 # nlsref 16,10
-#: src/lib/Sympa/Config/Schema.pm:4984
+#: src/lib/Sympa/Config/Schema.pm:5004
 #, fuzzy
 msgid "Max age of moderated messages"
 msgstr "Moderoitavien viestien poistamisaika"
 
-#: src/lib/Sympa/Config/Schema.pm:4986
+#: src/lib/Sympa/Config/Schema.pm:5006
 msgid ""
 "Number of days messages are kept in moderation spool (as specified by "
 "\"queuemod\" parameter). Beyond this deadline, messages that have not been "
 "processed are deleted."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5009
+#: src/lib/Sympa/Config/Schema.pm:5029
 msgid "Custom user attributes"
 msgstr "Mukautetut käyttäjäarvot"
 
-#: src/lib/Sympa/Config/Schema.pm:5014
+#: src/lib/Sympa/Config/Schema.pm:5034
 msgid "internal identifier"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5022
+#: src/lib/Sympa/Config/Schema.pm:5042
 msgid "label"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5030
+#: src/lib/Sympa/Config/Schema.pm:5050
 msgid "additional comment"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5037
+#: src/lib/Sympa/Config/Schema.pm:5057
 msgid "type"
 msgstr "tyyppi"
 
-#: src/lib/Sympa/Config/Schema.pm:5045
+#: src/lib/Sympa/Config/Schema.pm:5065
 msgid "possible attribute values (if enum is used)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5052
+#: src/lib/Sympa/Config/Schema.pm:5072
 msgid "is the attribute optional?"
 msgstr "onko tieto valinnainen?"
 
-#: src/lib/Sympa/Config/Schema.pm:5065
+#: src/lib/Sympa/Config/Schema.pm:5085
 msgid "custom parameters"
 msgstr "mukautetut arvot"
 
 # nlsref 16,29
-#: src/lib/Sympa/Config/Schema.pm:5070
+#: src/lib/Sympa/Config/Schema.pm:5090
 msgid "var name"
 msgstr "muuttujan nimi"
 
 # nlsref 16,91
-#: src/lib/Sympa/Config/Schema.pm:5077
+#: src/lib/Sympa/Config/Schema.pm:5097
 msgid "var value"
 msgstr "muuttujan arvo"
 
-#: src/lib/Sympa/Config/Schema.pm:5098
+#: src/lib/Sympa/Config/Schema.pm:5118
 msgid "Regular expression applied to prevent loops with robots"
 msgstr ""
 "Säännöllinen lauseke, jolla tarkistetaan viestit silmukoiden välttämiseksi "
 "robottien kanssa"
 
-#: src/lib/Sympa/Config/Schema.pm:5099
+#: src/lib/Sympa/Config/Schema.pm:5119
 #, fuzzy
 msgid "Regular expression to prevent loop"
 msgstr ""
 "Säännöllinen lauseke, jolla tarkistetaan viestit silmukoiden välttämiseksi "
 "robottien kanssa"
 
-#: src/lib/Sympa/Config/Schema.pm:5101
+#: src/lib/Sympa/Config/Schema.pm:5121
 msgid ""
 "If the sender address matches the regular expression, then the message is "
 "rejected."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5113
+#: src/lib/Sympa/Config/Schema.pm:5133
 #, fuzzy
 msgid "Pictures"
 msgstr "Kuva"
 
-#: src/lib/Sympa/Config/Schema.pm:5115
+#: src/lib/Sympa/Config/Schema.pm:5135
 msgid ""
 "Enables or disables the pictures feature by default.  If enabled, "
 "subscribers can upload their picture (from the \"Subscriber option\" page) "
@@ -4289,206 +4301,206 @@ msgid ""
 msgstr ""
 
 # nlsref 16,88
-#: src/lib/Sympa/Config/Schema.pm:5125
+#: src/lib/Sympa/Config/Schema.pm:5145
 msgid "Periodical subscription reminder task"
 msgstr "Säännölliset tilauksesta muistutukset"
 
-#: src/lib/Sympa/Config/Schema.pm:5127
+#: src/lib/Sympa/Config/Schema.pm:5147
 msgid ""
 "This parameter states which model is used to create a remind task. A remind "
 "task regularly sends  subscribers a message which reminds them of their list "
 "subscriptions."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5144
+#: src/lib/Sympa/Config/Schema.pm:5164
 msgid "Latest family instantiation"
 msgstr "Viimeisin ryhmän (family) käyttöönotto"
 
 # nlsref 16,53
-#: src/lib/Sympa/Config/Schema.pm:5149
+#: src/lib/Sympa/Config/Schema.pm:5169
 #, fuzzy
 msgid "who ran the instantiation"
 msgstr "Kuka voi katsoa listan tiedot"
 
-#: src/lib/Sympa/Config/Schema.pm:5162 src/lib/Sympa/Config/Schema.pm:5194
-#: src/lib/Sympa/Config/Schema.pm:5229
+#: src/lib/Sympa/Config/Schema.pm:5182 src/lib/Sympa/Config/Schema.pm:5214
+#: src/lib/Sympa/Config/Schema.pm:5249
 msgid "date"
 msgstr "päiväys"
 
 # nlsref 16,12
-#: src/lib/Sympa/Config/Schema.pm:5176
+#: src/lib/Sympa/Config/Schema.pm:5196
 msgid "Creation of the list"
 msgstr "Listan luominen"
 
 # nlsref 16,77
-#: src/lib/Sympa/Config/Schema.pm:5181
+#: src/lib/Sympa/Config/Schema.pm:5201
 msgid "who created the list"
 msgstr "kuka loi listan"
 
 # nlsref 16,77
-#: src/lib/Sympa/Config/Schema.pm:5209
+#: src/lib/Sympa/Config/Schema.pm:5229
 msgid "Last update of config"
 msgstr "Asetuksia muutettu"
 
 # nlsref 16,77
-#: src/lib/Sympa/Config/Schema.pm:5214
+#: src/lib/Sympa/Config/Schema.pm:5234
 msgid "who updated the config"
 msgstr "kuka viimeksi muutti asetuksia"
 
 # nlsref 16,71
-#: src/lib/Sympa/Config/Schema.pm:5243
+#: src/lib/Sympa/Config/Schema.pm:5263
 msgid "Status of the list"
 msgstr "Listan status"
 
 # nlsref 16,69
-#: src/lib/Sympa/Config/Schema.pm:5255
+#: src/lib/Sympa/Config/Schema.pm:5275
 msgid "Serial number of the config"
 msgstr "Asetusten sarjanumero"
 
-#: src/lib/Sympa/Config/Schema.pm:5270
+#: src/lib/Sympa/Config/Schema.pm:5290
 #, fuzzy
 msgid "URL prefix of web interface"
 msgstr "Verkkokäyttöliittymä"
 
-#: src/lib/Sympa/Config/Schema.pm:5272
+#: src/lib/Sympa/Config/Schema.pm:5292
 msgid ""
 "This is used to construct URLs of web interface. The protocol (either "
 "https:// or http://) is required."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5278
+#: src/lib/Sympa/Config/Schema.pm:5298
 msgid "URL prefix of WWSympa behind proxy"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5286
+#: src/lib/Sympa/Config/Schema.pm:5306
 msgid "URL for static contents"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5288
+#: src/lib/Sympa/Config/Schema.pm:5308
 msgid "HTTP server have to map it with \"static_content_path\" directory."
 msgstr ""
 
 # nlsref 15,10
-#: src/lib/Sympa/Config/Schema.pm:5295
+#: src/lib/Sympa/Config/Schema.pm:5315
 #, fuzzy
 msgid "Directory for static contents"
 msgstr "Listojen hakemisto"
 
 # nlsref 15,10
-#: src/lib/Sympa/Config/Schema.pm:5302
+#: src/lib/Sympa/Config/Schema.pm:5322
 #, fuzzy
 msgid "Directory for static style sheets (CSS)"
 msgstr "Listojen hakemisto"
 
-#: src/lib/Sympa/Config/Schema.pm:5304
+#: src/lib/Sympa/Config/Schema.pm:5324
 msgid ""
 "After an upgrade, static CSS files are upgraded with the newly installed "
 "\"css.tt2\" template. Therefore, this is not a good place to store "
 "customized CSS files."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5311
+#: src/lib/Sympa/Config/Schema.pm:5331
 msgid "URL for style sheets (CSS)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5313
+#: src/lib/Sympa/Config/Schema.pm:5333
 msgid ""
 "To use auto-generated static CSS, HTTP server have to map it with "
 "\"css_path\"."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5320
+#: src/lib/Sympa/Config/Schema.pm:5340
 msgid "Directory for subscribers pictures"
 msgstr "Hakemisto tilaajien kuville"
 
-#: src/lib/Sympa/Config/Schema.pm:5328
+#: src/lib/Sympa/Config/Schema.pm:5348
 #, fuzzy
 msgid "URL for subscribers pictures"
 msgstr "Olet ollut tilaajana"
 
-#: src/lib/Sympa/Config/Schema.pm:5330
+#: src/lib/Sympa/Config/Schema.pm:5350
 msgid "HTTP server have to map it with \"pictures_path\" directory."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5339
+#: src/lib/Sympa/Config/Schema.pm:5359
 msgid "Path to MHonArc mail-to-HTML converter"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5341
+#: src/lib/Sympa/Config/Schema.pm:5361
 msgid "This is required for HTML mail archiving."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5349
+#: src/lib/Sympa/Config/Schema.pm:5369
 msgid "System log facility for web interface"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5351
+#: src/lib/Sympa/Config/Schema.pm:5371
 msgid ""
 "System log facility for WWSympa, archived.pl and bounced.pl. Default is to "
 "use value of \"syslog\" parameter."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5367
+#: src/lib/Sympa/Config/Schema.pm:5387
 #, fuzzy
 msgid "Custom logo"
 msgstr "Mallit"
 
-#: src/lib/Sympa/Config/Schema.pm:5369
+#: src/lib/Sympa/Config/Schema.pm:5389
 msgid "HTML fragment to insert a logo in the page of web interface."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5377
+#: src/lib/Sympa/Config/Schema.pm:5397
 #, fuzzy
 msgid "Custom favicon"
 msgstr "Muokkaus"
 
-#: src/lib/Sympa/Config/Schema.pm:5378
+#: src/lib/Sympa/Config/Schema.pm:5398
 msgid "URL of favicon image"
 msgstr "URL favicon-kuvalle"
 
-#: src/lib/Sympa/Config/Schema.pm:5525
+#: src/lib/Sympa/Config/Schema.pm:5545
 msgid "Type of main web page"
 msgstr "Pääwebbisivun tyyppi"
 
-#: src/lib/Sympa/Config/Schema.pm:5527
+#: src/lib/Sympa/Config/Schema.pm:5547
 msgid "\"lists\" for the page of list of lists. \"home\" for home page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5535
+#: src/lib/Sympa/Config/Schema.pm:5555
 msgid "Default index organization of web archive"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5537
+#: src/lib/Sympa/Config/Schema.pm:5557
 msgid ""
 "thrd: Threaded index.\n"
 "mail: Chronological index."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5545
+#: src/lib/Sympa/Config/Schema.pm:5565
 msgid "Size of review page"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5547
+#: src/lib/Sympa/Config/Schema.pm:5567
 msgid ""
 "Default number of lines of the array displaying users in the review page"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5555
+#: src/lib/Sympa/Config/Schema.pm:5575
 msgid "Size of viewlogs page"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5557
+#: src/lib/Sympa/Config/Schema.pm:5577
 msgid ""
 "Default number of lines of the array displaying the log entries in the logs "
 "page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5565
+#: src/lib/Sympa/Config/Schema.pm:5585
 #, fuzzy
 msgid "Custom menus"
 msgstr "Muokkaa malleja"
 
-#: src/lib/Sympa/Config/Schema.pm:5567
+#: src/lib/Sympa/Config/Schema.pm:5587
 msgid ""
 "You may modify the main menu content by editing the menu.tt2 file, but you "
 "can also edit these parameters in order to add up to 3 buttons. Each button "
@@ -4496,11 +4508,11 @@ msgid ""
 "target."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5621
+#: src/lib/Sympa/Config/Schema.pm:5641
 msgid "HTTP cookies validity domain"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5623
+#: src/lib/Sympa/Config/Schema.pm:5643
 msgid ""
 "If beginning with a dot (\".\"), the cookie is available within the "
 "specified Internet domain. Otherwise, for the specified host. The only "
@@ -4508,35 +4520,35 @@ msgid ""
 "authentication process is shared with an application running on another host."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5631
+#: src/lib/Sympa/Config/Schema.pm:5651
 msgid "HTTP cookies lifetime"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5633
+#: src/lib/Sympa/Config/Schema.pm:5653
 msgid ""
 "This is the default value when not set explicitly by users. \"0\" means the "
 "cookie may be retained during browser sessions."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5641
+#: src/lib/Sympa/Config/Schema.pm:5661
 msgid "Average interval to refresh HTTP session ID."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5648
+#: src/lib/Sympa/Config/Schema.pm:5668
 msgid "Task for cleaning old sessions"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5650
+#: src/lib/Sympa/Config/Schema.pm:5670
 msgid "This task removes old entries in the \"session_table\" table."
 msgstr ""
 
 # nlsref 6,76
-#: src/lib/Sympa/Config/Schema.pm:5658
+#: src/lib/Sympa/Config/Schema.pm:5678
 #, fuzzy
 msgid "Max age of sessions"
 msgstr "Hallinnoi tilauksiasi"
 
-#: src/lib/Sympa/Config/Schema.pm:5660
+#: src/lib/Sympa/Config/Schema.pm:5680
 msgid ""
 "Session duration is controlled by \"sympa_session\" cookie validity "
 "attribute. However, by security reason, this delay also need to be "
@@ -4548,36 +4560,36 @@ msgid ""
 msgstr ""
 
 # nlsref 6,76
-#: src/lib/Sympa/Config/Schema.pm:5667
+#: src/lib/Sympa/Config/Schema.pm:5687
 #, fuzzy
 msgid "Max age of sessions for anonymous users"
 msgstr "Hallinnoi tilauksiasi"
 
 # nlsref 3,1
-#: src/lib/Sympa/Config/Schema.pm:5679
+#: src/lib/Sympa/Config/Schema.pm:5699
 #, fuzzy
 msgid "Enable shared repository"
 msgstr "Hakemiston vaihtaminen ei onnistu."
 
-#: src/lib/Sympa/Config/Schema.pm:5681
+#: src/lib/Sympa/Config/Schema.pm:5701
 msgid "If set to \"on\", list owners can open shared repository."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5699
+#: src/lib/Sympa/Config/Schema.pm:5719
 msgid "Use HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5701
+#: src/lib/Sympa/Config/Schema.pm:5721
 msgid ""
 "If set to \"on\", users will be able to post messages in HTML using a "
 "javascript WYSIWYG editor."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5713
+#: src/lib/Sympa/Config/Schema.pm:5733
 msgid "URL of HTML editor"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5715
+#: src/lib/Sympa/Config/Schema.pm:5735
 msgid ""
 "URL path to the javascript file making the WYSIWYG HTML editor available.  "
 "Relative path under <static_content_url> or absolute path.\n"
@@ -4585,20 +4597,20 @@ msgid ""
 msgstr ""
 
 # nlsref 16,33
-#: src/lib/Sympa/Config/Schema.pm:5723
+#: src/lib/Sympa/Config/Schema.pm:5743
 #, fuzzy
 msgid "HTML editor initialization"
 msgstr "Internet domain (verkkotunnus)"
 
-#: src/lib/Sympa/Config/Schema.pm:5725
+#: src/lib/Sympa/Config/Schema.pm:5745
 msgid "Javascript excerpt that enables and configures the WYSIWYG HTML editor."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5740
+#: src/lib/Sympa/Config/Schema.pm:5760
 msgid "Count limit of wrong password submission"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5742
+#: src/lib/Sympa/Config/Schema.pm:5762
 msgid ""
 "If this limit is reached, the account is locked until the user renews their "
 "password. The default value is chosen in order to block bots trying to log "
@@ -4607,12 +4619,12 @@ msgid ""
 "performs so many tries."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5750
+#: src/lib/Sympa/Config/Schema.pm:5770
 #, fuzzy
 msgid "Password case"
 msgstr "Salasana :"
 
-#: src/lib/Sympa/Config/Schema.pm:5753
+#: src/lib/Sympa/Config/Schema.pm:5773
 msgid ""
 "\"insensitive\" or \"sensitive\".\n"
 "If set to \"insensitive\", WWSympa's password check will be insensitive. "
@@ -4621,11 +4633,11 @@ msgid ""
 "Should not be changed! May invalid all user password."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5760
+#: src/lib/Sympa/Config/Schema.pm:5780
 msgid "Password hashing algorithm"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5763
+#: src/lib/Sympa/Config/Schema.pm:5783
 msgid ""
 "\"md5\" or \"bcrypt\".\n"
 "If set to \"md5\", Sympa will use MD5 password hashes. If set to \"bcrypt\", "
@@ -4633,11 +4645,11 @@ msgid ""
 "the Sympa database, not the ones in LDAP."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5771
+#: src/lib/Sympa/Config/Schema.pm:5791
 msgid "Update password hashing algorithm when users log in"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5774
+#: src/lib/Sympa/Config/Schema.pm:5794
 msgid ""
 "On successful login, update the encrypted user password to use the algorithm "
 "specified by \"password_hash\". This allows for a graceful transition to a "
@@ -4646,11 +4658,11 @@ msgid ""
 "setting in all cases."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5782
+#: src/lib/Sympa/Config/Schema.pm:5802
 msgid "Bcrypt hash cost"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5785
+#: src/lib/Sympa/Config/Schema.pm:5805
 msgid ""
 "When \"password_hash\" is set to \"bcrypt\", this sets the \"cost\" "
 "parameter of the bcrypt hash function. The default of 12 is expected to "
@@ -4660,46 +4672,46 @@ msgid ""
 "Can be changed but any new cost setting will only apply to new passwords."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5796
+#: src/lib/Sympa/Config/Schema.pm:5816
 msgid "Age of one time ticket"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5797
+#: src/lib/Sympa/Config/Schema.pm:5817
 msgid "Duration before the one time tickets are expired"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5804
+#: src/lib/Sympa/Config/Schema.pm:5824
 #, fuzzy
 msgid "Restrict access to one time ticket"
 msgstr "rajoita omistajalle tunnistautumisella"
 
-#: src/lib/Sympa/Config/Schema.pm:5806
+#: src/lib/Sympa/Config/Schema.pm:5826
 msgid ""
 "Is access to the one time ticket restricted, if any users previously "
 "accessed? (one_time | remote_addr | open)"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5812
+#: src/lib/Sympa/Config/Schema.pm:5832
 #, fuzzy
 msgid "Task for expiring old one time tickets"
 msgstr "varmenteesi vanhentuminen lähestyy"
 
 # nlsref 16,10
-#: src/lib/Sympa/Config/Schema.pm:5820
+#: src/lib/Sympa/Config/Schema.pm:5840
 #, fuzzy
 msgid "Expiration period of one time ticket"
 msgstr "Moderoitavien viestien poistamisaika"
 
-#: src/lib/Sympa/Config/Schema.pm:5832
+#: src/lib/Sympa/Config/Schema.pm:5852
 msgid "The maximum size of uploaded picture"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5844
+#: src/lib/Sympa/Config/Schema.pm:5864
 #, fuzzy
 msgid "Protect web interface against spam harvesters"
 msgstr "Verkkokäyttöliittymä"
 
-#: src/lib/Sympa/Config/Schema.pm:5846
+#: src/lib/Sympa/Config/Schema.pm:5866
 msgid ""
 "There is a need to protect Sympa web sites against spambots which collect "
 "email addresses from public web sites. Various methods are available in "
@@ -4714,57 +4726,57 @@ msgid ""
 "no protection against spammer."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5858
+#: src/lib/Sympa/Config/Schema.pm:5878
 msgid "Script to report spam"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5860
+#: src/lib/Sympa/Config/Schema.pm:5880
 msgid ""
 "If set, when a list moderator report undetected spams for list moderation, "
 "this external script is invoked and the message is injected into standard "
 "input of the script."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5871
+#: src/lib/Sympa/Config/Schema.pm:5891
 msgid ""
 "Prevent people to subscribe to a list with addresses using these domains"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5872
+#: src/lib/Sympa/Config/Schema.pm:5892
 #, fuzzy
 msgid "This parameter is a comma-separated list."
 msgstr "Css_path-parametri on määritelty, arvo on"
 
 # nlsref 6,76
-#: src/lib/Sympa/Config/Schema.pm:5888
+#: src/lib/Sympa/Config/Schema.pm:5908
 #, fuzzy
 msgid "Quiet subscriptions policy"
 msgstr "Jatka tilauksiani"
 
-#: src/lib/Sympa/Config/Schema.pm:5890
+#: src/lib/Sympa/Config/Schema.pm:5910
 msgid ""
 "Global policy for quiet subscriptions: \"on\" means that subscriptions will "
 "never send a notice to the subscriber, \"off\" will enforce a notice "
 "sending, and \"optional\" (default) allows the use of the list policy."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5901
+#: src/lib/Sympa/Config/Schema.pm:5921
 msgid "Add a \"Report abuse\" link in the side menu of the lists"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5903
+#: src/lib/Sympa/Config/Schema.pm:5923
 msgid ""
 "The link is a mailto link, you can change that by overriding web_tt2/"
 "report_abuse.tt2"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5914
+#: src/lib/Sympa/Config/Schema.pm:5934
 msgid ""
 "EXPERIMENTAL! Allow users to delete their account. If enabled, shows a "
 "\"delete my account\" form in user's preferences page."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5916
+#: src/lib/Sympa/Config/Schema.pm:5936
 msgid ""
 "Account deletion unsubscribes the users from his/her lists and removes him/"
 "her from lists ownership. It is only available to users using internal "
@@ -4772,19 +4784,19 @@ msgid ""
 "community/sympa/issues/300 for details"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5931
+#: src/lib/Sympa/Config/Schema.pm:5951
 msgid ""
 "The password validation techniques to be used against user passwords that "
 "are added to mailing lists. Options come from Data::Password https://"
 "metacpan.org/pod/Data::Password#VARIABLES"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5942
+#: src/lib/Sympa/Config/Schema.pm:5962
 #, fuzzy
 msgid "Use canonical email address for LDAP authentication"
 msgstr "Sähköpostiosoitteen hakeminen tunnistautumispalvelulta epäonnistui."
 
-#: src/lib/Sympa/Config/Schema.pm:5944
+#: src/lib/Sympa/Config/Schema.pm:5964
 msgid ""
 "When using LDAP authentication, if the identifier provided by the user was a "
 "valid email, if this parameter is set to false, then the provided email will "
@@ -4792,25 +4804,25 @@ msgid ""
 "by the LDAP server will be used."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5954
+#: src/lib/Sympa/Config/Schema.pm:5974
 msgid "URL of SympaSOAP"
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5956
+#: src/lib/Sympa/Config/Schema.pm:5976
 msgid "WSDL document of SympaSOAP refers to this URL in its service section."
 msgstr ""
 
-#: src/lib/Sympa/Config/Schema.pm:5962
+#: src/lib/Sympa/Config/Schema.pm:5982
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:369
+#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:371
 #: default/web_tt2/set_pending_list_request.tt2:62
-#: src/lib/Sympa/Config/Schema.pm:6153
+#: src/lib/Sympa/Config/Schema.pm:6173
 msgid "Owners"
 msgstr "Omistajat"
 
-#: src/lib/Sympa/Config/Schema.pm:6155
+#: src/lib/Sympa/Config/Schema.pm:6175
 msgid ""
 "Owners are managing subscribers of the list. They may review subscribers and "
 "add or delete email addresses from the mailing list. If you are a privileged "
@@ -4822,51 +4834,51 @@ msgstr ""
 "listaoptioita kuin tavallinen omistaja."
 
 # nlsref 16,29
-#: src/lib/Sympa/Config/Schema.pm:6177 src/lib/Sympa/Config/Schema.pm:6272
+#: src/lib/Sympa/Config/Schema.pm:6197 src/lib/Sympa/Config/Schema.pm:6292
 msgid "name"
 msgstr "nimi"
 
 # nlsref 16,30
-#: src/lib/Sympa/Config/Schema.pm:6197 src/lib/Sympa/Config/Schema.pm:6292
+#: src/lib/Sympa/Config/Schema.pm:6217 src/lib/Sympa/Config/Schema.pm:6312
 msgid "private information"
 msgstr "yksityiset tiedot"
 
-#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:6203
-#: src/lib/Sympa/Config/Schema.pm:6298
+#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:6223
+#: src/lib/Sympa/Config/Schema.pm:6318
 #, fuzzy
 msgid "subscribed"
 msgstr "Peru tilaus"
 
-#: src/lib/Sympa/Config/Schema.pm:6222 src/lib/Sympa/Config/Schema.pm:6317
+#: src/lib/Sympa/Config/Schema.pm:6242 src/lib/Sympa/Config/Schema.pm:6337
 #, fuzzy
 msgid "delegated since"
 msgstr "Tilaaja alkaen: "
 
-#: src/lib/Sympa/Config/Schema.pm:6229 src/lib/Sympa/Config/Schema.pm:6324
+#: src/lib/Sympa/Config/Schema.pm:6249 src/lib/Sympa/Config/Schema.pm:6344
 #, fuzzy
 msgid "last update time"
 msgstr "Viimeksi päivitetty:"
 
 # nlsref 16,44
-#: src/lib/Sympa/Config/Schema.pm:6236 src/lib/Sympa/Config/Schema.pm:6331
+#: src/lib/Sympa/Config/Schema.pm:6256 src/lib/Sympa/Config/Schema.pm:6351
 #, fuzzy
 msgid "last inclusion time"
 msgstr "Listan liittäminen"
 
 # nlsref 16,81
-#: src/lib/Sympa/Config/Schema.pm:6243 src/lib/Sympa/Config/Schema.pm:6338
+#: src/lib/Sympa/Config/Schema.pm:6263 src/lib/Sympa/Config/Schema.pm:6358
 #, fuzzy
 msgid "last inclusion time from external data source"
 msgstr "Käyttäjän tietolähde"
 
 # nlsref 16,26
-#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:374
+#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:376
 #: default/web_tt2/set_pending_list_request.tt2:67
-#: src/lib/Sympa/Config/Schema.pm:6255
+#: src/lib/Sympa/Config/Schema.pm:6275
 msgid "Moderators"
 msgstr "Moderaattorit"
 
-#: src/lib/Sympa/Config/Schema.pm:6257
+#: src/lib/Sympa/Config/Schema.pm:6277
 #, fuzzy
 msgid ""
 "Moderators are responsible for moderating messages. If the mailing list is "
@@ -4902,7 +4914,7 @@ msgstr "Sisällysluettelo:"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:7253 src/cgi/wwsympa.fcgi.in:7976
+#: src/cgi/wwsympa.fcgi.in:7264 src/cgi/wwsympa.fcgi.in:7998
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -4953,7 +4965,7 @@ msgstr ""
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:15597 src/lib/Sympa/WWW/SharedDocument.pm:346
+#: src/cgi/wwsympa.fcgi.in:15619 src/lib/Sympa/WWW/SharedDocument.pm:346
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d.%m.%Y %H.%M.%S"
 
@@ -5146,75 +5158,75 @@ msgstr "%s:n arkisto, viimeinen viesti"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:1213
+#: src/cgi/wwsympa.fcgi.in:1215
 msgid "%H:%M:%S"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:4141
+#: src/cgi/wwsympa.fcgi.in:4150
 #, fuzzy
 msgid "Your lists"
 msgstr "Omat listasi"
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12225 src/cgi/wwsympa.fcgi.in:12690
+#: src/cgi/wwsympa.fcgi.in:12247 src/cgi/wwsympa.fcgi.in:12712
 #, fuzzy
 msgid "New file"
 msgstr "apua-tiedosto"
 
-#: src/cgi/wwsympa.fcgi.in:12229
+#: src/cgi/wwsympa.fcgi.in:12251
 #, fuzzy
 msgid "New directory"
 msgstr "Hakemisto"
 
-#: src/cgi/wwsympa.fcgi.in:12696
+#: src/cgi/wwsympa.fcgi.in:12718
 #, fuzzy
 msgid "New bookmark"
 msgstr "Lisää kirjanmerkki"
 
-#: src/cgi/wwsympa.fcgi.in:15121
+#: src/cgi/wwsympa.fcgi.in:15143
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15123
+#: src/cgi/wwsympa.fcgi.in:15145
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Tilaukset"
 
-#: src/cgi/wwsympa.fcgi.in:15124
+#: src/cgi/wwsympa.fcgi.in:15146
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Tilauksen poisto:"
 
-#: src/cgi/wwsympa.fcgi.in:15125
+#: src/cgi/wwsympa.fcgi.in:15147
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15127
+#: src/cgi/wwsympa.fcgi.in:15149
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15128
+#: src/cgi/wwsympa.fcgi.in:15150
 msgid "File uploading"
 msgstr ""
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15129
+#: src/cgi/wwsympa.fcgi.in:15151
 #, fuzzy
 msgid "File creation"
 msgstr "Tiedoston sisällyttäminen"
 
-#: src/cgi/wwsympa.fcgi.in:15130
+#: src/cgi/wwsympa.fcgi.in:15152
 msgid "Directory creation"
 msgstr "Hakemiston luonti"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/cgi/wwsympa.fcgi.in:16344
+#: src/cgi/wwsympa.fcgi.in:16367
 #, c-format
 msgid "topic (%s)"
 msgstr "aihe (%s)"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16362
+#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16385
 #, fuzzy
 msgid "included"
 msgstr "Erikois haku"
@@ -5259,7 +5271,7 @@ msgstr "Keskiarvo per päivä"
 msgid "Creation date"
 msgstr "Luontipäivä"
 
-#: default/web_tt2/active_lists.tt2:25 default/web_tt2/arcsearch_form.tt2:68
+#: default/web_tt2/active_lists.tt2:25 default/web_tt2/arcsearch_form.tt2:69
 #: default/web_tt2/get_biggest_lists.tt2:8
 #: default/web_tt2/get_inactive_lists.tt2:10
 #: default/web_tt2/get_latest_lists.tt2:10 default/web_tt2/latest_arc.tt2:20
@@ -5429,7 +5441,7 @@ msgstr "Listan arkisto"
 #: default/web_tt2/edit_list_request.tt2:62
 #: default/web_tt2/edit_list_request.tt2:9 default/web_tt2/editfile.tt2:6
 #: default/web_tt2/modindex.tt2:148 default/web_tt2/modindex.tt2:4
-#: default/web_tt2/nav.tt2:441 default/web_tt2/nav.tt2:493
+#: default/web_tt2/nav.tt2:443 default/web_tt2/nav.tt2:495
 #: default/web_tt2/nav.tt2:7 default/web_tt2/pref.tt2:7
 #: default/web_tt2/rename_list_request.tt2:7 default/web_tt2/review.tt2:21
 #: default/web_tt2/reviewbouncing.tt2:5 default/web_tt2/skinsedit.tt2:18
@@ -5554,92 +5566,98 @@ msgstr "Palaa arkistoon %1"
 msgid "Advanced search"
 msgstr "Laajempi haku"
 
-#: default/mhonarc_rc.tt2:68 default/web_tt2/arcsearch_form.tt2:22
+#: default/web_tt2/arcsearch_form.tt2:20
+#: default/web_tt2/search_list_request.tt2:5
+#, fuzzy
+msgid "Search keywords:"
+msgstr "Hakujakso:"
+
+#: default/mhonarc_rc.tt2:68 default/web_tt2/arcsearch_form.tt2:23
 #: default/web_tt2/review.tt2:134 default/web_tt2/reviewbouncing.tt2:22
 msgid "Search"
 msgstr "Etsi"
 
-#: default/web_tt2/arcsearch_form.tt2:25
+#: default/web_tt2/arcsearch_form.tt2:26
 msgid "Search:"
 msgstr "Etsi:"
 
-#: default/web_tt2/arcsearch_form.tt2:27
+#: default/web_tt2/arcsearch_form.tt2:28
 msgid "this sentence"
 msgstr "tämä lause"
 
-#: default/web_tt2/arcsearch_form.tt2:29
+#: default/web_tt2/arcsearch_form.tt2:30
 msgid "all of these words"
 msgstr "kaikki nämä sanat"
 
-#: default/web_tt2/arcsearch_form.tt2:31
+#: default/web_tt2/arcsearch_form.tt2:32
 msgid "one of these words"
 msgstr "joku näistä sanoista"
 
-#: default/web_tt2/arcsearch_form.tt2:34
+#: default/web_tt2/arcsearch_form.tt2:35
 msgid "Prefer:"
 msgstr "Hakujärjestys:"
 
-#: default/web_tt2/arcsearch_form.tt2:36
+#: default/web_tt2/arcsearch_form.tt2:37
 msgid "newest messages"
 msgstr "uusimmat viestit"
 
-#: default/web_tt2/arcsearch_form.tt2:38
+#: default/web_tt2/arcsearch_form.tt2:39
 msgid "oldest messages"
 msgstr "vanhimmat viestit"
 
-#: default/web_tt2/arcsearch_form.tt2:41
+#: default/web_tt2/arcsearch_form.tt2:42
 msgid "Case:"
 msgstr "Kirjainkoko:"
 
-#: default/web_tt2/arcsearch_form.tt2:43
+#: default/web_tt2/arcsearch_form.tt2:44
 msgid "insensitive"
 msgstr "ei ota huomioon"
 
-#: default/web_tt2/arcsearch_form.tt2:45
+#: default/web_tt2/arcsearch_form.tt2:46
 msgid "sensitive"
 msgstr "OTTAA huomioon"
 
-#: default/web_tt2/arcsearch_form.tt2:48
+#: default/web_tt2/arcsearch_form.tt2:49
 msgid "Check:"
 msgstr "Tarkistus:"
 
-#: default/web_tt2/arcsearch_form.tt2:50
+#: default/web_tt2/arcsearch_form.tt2:51
 msgid "part of word"
 msgstr "osa sanasta"
 
-#: default/web_tt2/arcsearch_form.tt2:52
+#: default/web_tt2/arcsearch_form.tt2:53
 msgid "entire word"
 msgstr "koko sana"
 
-#: default/web_tt2/arcsearch_form.tt2:55
+#: default/web_tt2/arcsearch_form.tt2:56
 msgid "Layout:"
 msgstr "Ulkoasu:"
 
-#: default/web_tt2/arcsearch_form.tt2:57 default/web_tt2/arcsearch_form.tt2:59
-#: default/web_tt2/arcsearch_form.tt2:61
+#: default/web_tt2/arcsearch_form.tt2:58 default/web_tt2/arcsearch_form.tt2:60
+#: default/web_tt2/arcsearch_form.tt2:62
 msgid "results by page"
 msgstr "tulosta sivulla"
 
-#: default/web_tt2/arcsearch_form.tt2:64
+#: default/web_tt2/arcsearch_form.tt2:65
 msgid "Search area:"
 msgstr "Hakualue:"
 
-#: default/web_tt2/arcsearch_form.tt2:66
+#: default/web_tt2/arcsearch_form.tt2:67
 msgid "Sender"
 msgstr "Lähettäjä"
 
-#: default/web_tt2/arcsearch_form.tt2:70 default/web_tt2/docindex.tt2:23
+#: default/web_tt2/arcsearch_form.tt2:71 default/web_tt2/docindex.tt2:23
 #: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:28
 #: default/web_tt2/sigindex.tt2:20 default/web_tt2/subindex.tt2:23
 #: default/web_tt2/viewlogs.tt2:109 default/web_tt2/viewlogs.tt2:114
 msgid "Date"
 msgstr "Päiväys"
 
-#: default/web_tt2/arcsearch_form.tt2:72
+#: default/web_tt2/arcsearch_form.tt2:73
 msgid "Body"
 msgstr "Sisältö"
 
-#: default/web_tt2/arcsearch_form.tt2:76
+#: default/web_tt2/arcsearch_form.tt2:77
 msgid "Extend search field:"
 msgstr "Laajennettu haku:"
 
@@ -5742,7 +5760,7 @@ msgstr ""
 
 # Sovellettu lisää...
 #: default/web_tt2/change_email_request.tt2:3
-#: default/web_tt2/confirm_action.tt2:491
+#: default/web_tt2/confirm_action.tt2:496
 msgid ""
 "Changing your email address is an important operation. Therefore, we need to "
 "verify that it is really your email address."
@@ -5761,7 +5779,7 @@ msgstr ""
 "sähköpostiosoitteeseen %1. "
 
 #: default/web_tt2/change_email_request.tt2:5
-#: default/web_tt2/confirm_action.tt2:493
+#: default/web_tt2/confirm_action.tt2:498
 msgid "Please check your mailbox now."
 msgstr "Tarkista oletko saanut uutta sähköpostia."
 
@@ -5777,13 +5795,13 @@ msgstr ""
 msgid "New password:"
 msgstr "Uusi salasana:"
 
-#: default/web_tt2/choosepasswd.tt2:18
+#: default/web_tt2/choosepasswd.tt2:19
 msgid "New password again:"
 msgstr "Uusi salasana (uudelleen):"
 
-#: default/web_tt2/choosepasswd.tt2:23 default/web_tt2/picture_upload.tt2:15
-#: default/web_tt2/pref.tt2:39 default/web_tt2/pref.tt2:70
-#: default/web_tt2/pref.tt2:91
+#: default/web_tt2/choosepasswd.tt2:25 default/web_tt2/picture_upload.tt2:15
+#: default/web_tt2/pref.tt2:39 default/web_tt2/pref.tt2:72
+#: default/web_tt2/pref.tt2:96
 msgid "Submit"
 msgstr "Lähetä"
 
@@ -5808,48 +5826,48 @@ msgid "Subject:"
 msgstr "Otsikko:"
 
 # nlsref 16,72
-#: default/web_tt2/compose_mail.tt2:17
+#: default/web_tt2/compose_mail.tt2:18
 msgid "Send to list"
 msgstr "Lähetä"
 
 # nlsref 15,6
-#: default/web_tt2/compose_mail.tt2:18
+#: default/web_tt2/compose_mail.tt2:19
 msgid "Send to me"
 msgstr "Lähetä minulle"
 
-#: default/web_tt2/compose_mail.tt2:38 default/web_tt2/confirm_action.tt2:469
+#: default/web_tt2/compose_mail.tt2:39 default/web_tt2/confirm_action.tt2:474
 msgid "This list is configured to require topic(s)."
 msgstr "Lista vaatii aiheen määrittelyn."
 
-#: default/web_tt2/compose_mail.tt2:40
+#: default/web_tt2/compose_mail.tt2:41
 msgid "Please select one or more topic(s) that corresponds to your message:"
 msgstr "Valitse yksi tai useampi aihe kuvaamaan viestiäsi:"
 
-#: default/web_tt2/compose_mail.tt2:58
+#: default/web_tt2/compose_mail.tt2:59
 msgid "Messages customization: use the template syntax:"
 msgstr "Viestien räätälöinti, käytä sivupohjaa:"
 
-#: default/web_tt2/compose_mail.tt2:60
+#: default/web_tt2/compose_mail.tt2:61
 msgid "Below are some examples of TT2 parameters usable in messages."
 msgstr "Alla esimerkkejä TT2-asetuksista, joita voi käyttää viesteissä."
 
-#: default/web_tt2/compose_mail.tt2:63
+#: default/web_tt2/compose_mail.tt2:64
 msgid ": the list name; always available."
 msgstr ": listan nimi; aina näkyvissä."
 
-#: default/web_tt2/compose_mail.tt2:64
+#: default/web_tt2/compose_mail.tt2:65
 msgid ": the name of the host the list is installed on; always available."
 msgstr ": palvelimen nimi, jolle lista on asennettu;  aina näkyvissä."
 
-#: default/web_tt2/compose_mail.tt2:65
+#: default/web_tt2/compose_mail.tt2:66
 msgid ": the user email; always available."
 msgstr ": käyttäjän sähköpostiosoite; aina näkyvissä."
 
-#: default/web_tt2/compose_mail.tt2:66
+#: default/web_tt2/compose_mail.tt2:67
 msgid ": the user name associated to her email; always available."
 msgstr "; sähköpostiosoitteeseen liitetty nimi; aina näkyvissä."
 
-#: default/web_tt2/compose_mail.tt2:67
+#: default/web_tt2/compose_mail.tt2:68
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"title\" (see the list configuration, section \"Miscellaneous\")."
@@ -5857,13 +5875,13 @@ msgstr ""
 ": voi olla mitä vain; näkyvissä, jos valitsee kustomoidun \"otsikon\" (kts. "
 "listan konfiguraatio, kohta \"Sekalaista\")."
 
-#: default/web_tt2/compose_mail.tt2:68
+#: default/web_tt2/compose_mail.tt2:69
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"name\"."
 msgstr ": voi olla mitä vain; näkyvissä, jos valitsee kustomoidun \"nimen\" ."
 
-#: default/web_tt2/compose_mail.tt2:69
+#: default/web_tt2/compose_mail.tt2:70
 msgid ""
 ": can be anything you like; available if you defined a user custom attribute "
 "named \"organization\"."
@@ -5871,19 +5889,19 @@ msgstr ""
 ":  voi olla mitä vain; näkyvissä, jos valitsee kustomoidun "
 "\"organisaation\". "
 
-#: default/web_tt2/compose_mail.tt2:75
+#: default/web_tt2/compose_mail.tt2:76
 msgid "Select the source of your HTML newsletter"
 msgstr "Valitse HTML-uutiskirjeen lähde"
 
-#: default/web_tt2/compose_mail.tt2:77
+#: default/web_tt2/compose_mail.tt2:78
 msgid "Send the page from the following URL:"
 msgstr "Lähetä sivu seuraavasta URL-osoitteesta:"
 
-#: default/web_tt2/compose_mail.tt2:80
+#: default/web_tt2/compose_mail.tt2:81
 msgid "OR"
 msgstr "TAI"
 
-#: default/web_tt2/compose_mail.tt2:82
+#: default/web_tt2/compose_mail.tt2:83
 msgid "<strong>Send an HTML file from your computer:"
 msgstr "<strong>Lähetä HTML-tiedosto koneeltasi:"
 
@@ -5897,8 +5915,8 @@ msgid "scenario source"
 msgstr "scenario -lähdekoodi"
 
 #: default/web_tt2/config_common.tt2:96 default/web_tt2/confirm_action.tt2:215
-#: default/web_tt2/confirm_action.tt2:323
-#: default/web_tt2/confirm_action.tt2:347 default/web_tt2/d_upload.tt2:14
+#: default/web_tt2/confirm_action.tt2:328
+#: default/web_tt2/confirm_action.tt2:352 default/web_tt2/d_upload.tt2:14
 #: default/web_tt2/manage_template.tt2:47 default/web_tt2/picture_upload.tt2:16
 #: default/web_tt2/review.tt2:309
 msgid "Delete"
@@ -5937,28 +5955,28 @@ msgstr "Haluatko varmasti poistaa valitut arkistot?"
 #: default/web_tt2/confirm_action.tt2:117
 #: default/web_tt2/confirm_action.tt2:170 default/web_tt2/confirm_action.tt2:58
 #: default/web_tt2/review.tt2:173 default/web_tt2/reviewbouncing.tt2:165
-#: default/web_tt2/search_user.tt2:88
+#: default/web_tt2/search_user.tt2:90
 msgid "Delete selected email addresses"
 msgstr "Poista valitut sähköpostiosoitteet"
 
 #: default/web_tt2/confirm_action.tt2:253 default/web_tt2/confirm_action.tt2:62
-#: default/web_tt2/serveradmin.tt2:106
+#: default/web_tt2/serveradmin.tt2:108
 #, fuzzy
 msgid "Changing user's email"
 msgstr "Sähköpostiosoitteen muuttaminen"
 
-#: default/web_tt2/confirm_action.tt2:295 default/web_tt2/confirm_action.tt2:64
+#: default/web_tt2/confirm_action.tt2:300 default/web_tt2/confirm_action.tt2:64
 #: default/web_tt2/reviewbouncing.tt2:29
 msgid "Remind all subscribers"
 msgstr "Muistuta kaikkia tilaajia"
 
-#: default/web_tt2/confirm_action.tt2:357 default/web_tt2/confirm_action.tt2:66
+#: default/web_tt2/confirm_action.tt2:362 default/web_tt2/confirm_action.tt2:66
 #: default/web_tt2/confirm_action.tt2:93 default/web_tt2/list_menu.tt2:171
 #: default/web_tt2/list_menu.tt2:193 default/web_tt2/suspend_request.tt2:105
 msgid "Unsubscribe"
 msgstr "Peru tilaus"
 
-#: default/web_tt2/confirm_action.tt2:367 default/web_tt2/confirm_action.tt2:68
+#: default/web_tt2/confirm_action.tt2:372 default/web_tt2/confirm_action.tt2:68
 #: default/web_tt2/list_menu.tt2:182
 msgid "Subscribe"
 msgstr "Tilaa"
@@ -5975,7 +5993,7 @@ msgid "Do you really want this action to be taken?"
 msgstr "Haluatko varmasti tämän toimenpiteen tehtävän?"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:361 default/web_tt2/confirm_action.tt2:97
+#: default/web_tt2/confirm_action.tt2:366 default/web_tt2/confirm_action.tt2:97
 #, smalltalk-format
 msgid "Do you really want to unsubscribe from list %1?"
 msgstr "Haluatko varmasti poistua listalta %1?"
@@ -6018,7 +6036,7 @@ msgid ""
 "ownership of your lists and permanently delete your account?"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:154 default/web_tt2/pref.tt2:80
+#: default/web_tt2/confirm_action.tt2:154 default/web_tt2/pref.tt2:82
 msgid ""
 "Please, note that you will not be able to delete your account if you are the "
 "only owner of one or more lists."
@@ -6114,8 +6132,14 @@ msgstr "Poista valitut listat"
 msgid "Are you sure you wish to purge selected lists?"
 msgstr "Oletko varma, että haluat poistaa valitut listat?"
 
+#: default/web_tt2/confirm_action.tt2:295 default/web_tt2/docindex.tt2:67
+#: default/web_tt2/viewmod.tt2:17 default/web_tt2/viewmod.tt2:21
+#: default/web_tt2/viewmod.tt2:22
+msgid "Reject"
+msgstr "Hylkää"
+
 #. (total)
-#: default/web_tt2/confirm_action.tt2:299
+#: default/web_tt2/confirm_action.tt2:304
 #, smalltalk-format
 msgid ""
 "Do you really want to send a subscription reminder message to the %1 "
@@ -6124,68 +6148,68 @@ msgstr ""
 "Haluatko varmasti lähettää muistutusviestin kaikille listan %1 tilaajille ?"
 
 #: default/mhonarc_rc.tt2:268 default/mhonarc_rc.tt2:428
-#: default/web_tt2/confirm_action.tt2:306
+#: default/web_tt2/confirm_action.tt2:311
 msgid "Tag messages for deletion"
 msgstr "Merkitse viestejä poistettavaksi"
 
-#: default/mhonarc_rc.tt2:624 default/web_tt2/confirm_action.tt2:308
+#: default/mhonarc_rc.tt2:624 default/web_tt2/confirm_action.tt2:313
 msgid "tag this mail for deletion"
 msgstr "merkitse tämä viesti poistettavaksi"
 
-#: default/web_tt2/confirm_action.tt2:314
+#: default/web_tt2/confirm_action.tt2:319
 msgid "Do you really want to delete these messages?"
 msgstr "Haluatko varmasti poistaa nämä viestit?"
 
-#: default/web_tt2/confirm_action.tt2:316
+#: default/web_tt2/confirm_action.tt2:321
 msgid "Do you really want to delete this message ?"
 msgstr "Haluatko varmasti poistaa tämän viestin?"
 
 #. (template_name)
-#: default/web_tt2/confirm_action.tt2:327
+#: default/web_tt2/confirm_action.tt2:332
 #, smalltalk-format
 msgid "Do you really want to remove %1?"
 msgstr "Haluatko varmasti poistaa %1:n?"
 
-#: default/web_tt2/confirm_action.tt2:334 default/web_tt2/renewpasswd.tt2:62
+#: default/web_tt2/confirm_action.tt2:339 default/web_tt2/renewpasswd.tt2:62
 msgid "Request first password"
 msgstr "Pyydä ensimmäinen salasana"
 
-#: default/web_tt2/confirm_action.tt2:336 default/web_tt2/renewpasswd.tt2:64
+#: default/web_tt2/confirm_action.tt2:341 default/web_tt2/renewpasswd.tt2:64
 msgid "Request new password"
 msgstr "Pyydä uusi salasana"
 
-#: default/web_tt2/confirm_action.tt2:341
+#: default/web_tt2/confirm_action.tt2:346
 #, fuzzy
 msgid "Do you really want to request password?"
 msgstr "Haluatko varmasti poistaa %1:n?"
 
 #. (message_template)
-#: default/web_tt2/confirm_action.tt2:351
+#: default/web_tt2/confirm_action.tt2:356
 msgid "Do you really want to delete this message?"
 msgstr "Haluatko varmasti poistaa tämän viestin?"
 
 #. (list)
-#: default/web_tt2/confirm_action.tt2:371
+#: default/web_tt2/confirm_action.tt2:376
 #, smalltalk-format
 msgid "Do you really want to subscribe to list %1?"
 msgstr "Haluatko varmasti liittyä listalle %1?"
 
-#: default/web_tt2/confirm_action.tt2:390 default/web_tt2/review.tt2:97
+#: default/web_tt2/confirm_action.tt2:395 default/web_tt2/review.tt2:97
 msgid "Quiet (don't send welcome email)"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:409
+#: default/web_tt2/confirm_action.tt2:414
 #, fuzzy
 msgid "Download deleted archives"
 msgstr "Hallinnoi arkistoja:"
 
-#: default/web_tt2/confirm_action.tt2:447
-#: default/web_tt2/confirm_action.tt2:457 default/web_tt2/editsubscriber.tt2:95
-#: default/web_tt2/review.tt2:178 default/web_tt2/search_user.tt2:93
+#: default/web_tt2/confirm_action.tt2:452
+#: default/web_tt2/confirm_action.tt2:462 default/web_tt2/editsubscriber.tt2:95
+#: default/web_tt2/review.tt2:178 default/web_tt2/search_user.tt2:95
 msgid "Quiet (don't send deletion email)"
 msgstr ""
 
-#: default/web_tt2/confirm_action.tt2:471
+#: default/web_tt2/confirm_action.tt2:476
 msgid ""
 "Please select one or more topic(s) that corresponds to the messages you wish "
 "to distribute:"
@@ -6194,7 +6218,7 @@ msgstr ""
 
 # ”To this end”? Onko oikein?
 #. (email)
-#: default/web_tt2/confirm_action.tt2:492
+#: default/web_tt2/confirm_action.tt2:497
 #, fuzzy, smalltalk-format
 msgid ""
 "To this end we will send you an email to this address: %1 with a validation "
@@ -6203,46 +6227,46 @@ msgstr ""
 "Olemme lähettäneet sinulle www-linkin vahvistusta varten "
 "sähköpostiosoitteeseen %1. "
 
-#: default/mhonarc_rc.tt2:261 default/web_tt2/confirm_action.tt2:526
+#: default/mhonarc_rc.tt2:261 default/web_tt2/confirm_action.tt2:540
 #: default/web_tt2/modindex.tt2:124
 #, fuzzy
 msgid "Report messages as undetected spam"
 msgstr "Viestisi on hylätty"
 
-#: default/web_tt2/confirm_action.tt2:565
+#: default/web_tt2/confirm_action.tt2:579
 msgid "I am not a spammer"
 msgstr "En ole spammeri"
 
-#: default/web_tt2/confirm_action.tt2:567
+#: default/web_tt2/confirm_action.tt2:581
 msgid ""
 "This button tries to protect the mailing list archives against address "
 "harvesting by a spammer."
 msgstr ""
 "Tämän napin tarkoitus on suojella postituslista-arkistoja SPAMia vastaan."
 
-#: default/web_tt2/confirm_action.tt2:572
-#: default/web_tt2/confirm_action.tt2:594
+#: default/web_tt2/confirm_action.tt2:586
+#: default/web_tt2/confirm_action.tt2:608
 #: default/web_tt2/d_install_shared.tt2:11
 msgid "Confirm"
 msgstr "Vahvista"
 
-#: default/web_tt2/confirm_action.tt2:575
+#: default/web_tt2/confirm_action.tt2:589
 #: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:22
-#: default/web_tt2/manage_template.tt2:75
+#: default/web_tt2/manage_template.tt2:72
 msgid "Cancel"
 msgstr "Peru"
 
-#: default/web_tt2/confirm_action.tt2:581 default/web_tt2/info.tt2:69
+#: default/web_tt2/confirm_action.tt2:595 default/web_tt2/info.tt2:69
 #, fuzzy
 msgid "Review subscription requests"
 msgstr "Ei tilauspyyntöjä"
 
-#: default/web_tt2/confirm_action.tt2:585 default/web_tt2/info.tt2:75
+#: default/web_tt2/confirm_action.tt2:599 default/web_tt2/info.tt2:75
 #, fuzzy
 msgid "Review unsubscription requests"
 msgstr "Ei tilauspyyntöjä"
 
-#: default/web_tt2/confirm_action.tt2:597
+#: default/web_tt2/confirm_action.tt2:611
 #: default/web_tt2/head_javascript.tt2:13 default/web_tt2/signoff.tt2:10
 #: default/web_tt2/subscribe.tt2:10 default/web_tt2/viewbounce.tt2:25
 #: default/web_tt2/viewbounce.tt2:31 default/web_tt2/viewmod.tt2:78
@@ -6272,7 +6296,7 @@ msgstr "Laajuus: "
 #: default/web_tt2/copy_template.tt2:72 default/web_tt2/edit_config.tt2:27
 #: default/web_tt2/edit_list_request.tt2:246
 #: default/web_tt2/edit_template.tt2:42 default/web_tt2/ls_templates.tt2:51
-#: default/web_tt2/serveradmin.tt2:234 default/web_tt2/view_template.tt2:27
+#: default/web_tt2/serveradmin.tt2:237 default/web_tt2/view_template.tt2:27
 #: default/web_tt2/view_template.tt2:45
 msgid "default"
 msgstr "oletus"
@@ -6294,8 +6318,8 @@ msgstr "sivu"
 #: default/web_tt2/view_template.tt2:31
 #, fuzzy
 msgid ""
-"(this template is the default used by all robots unless redefined for a "
-"specific robot)"
+"(this template is the default used by all domains unless redefined for a "
+"specific domain)"
 msgstr ""
 "(tätä sivupohjaa käytetän kaikissa roboteissa, jos robotille ei ole "
 "määritelty omaa sivupohjaa)"
@@ -6305,7 +6329,7 @@ msgstr ""
 #: default/web_tt2/view_template.tt2:34
 #, fuzzy, smalltalk-format
 msgid ""
-"(this template is the default for all lists of robot %1 unless it is "
+"(this template is the default for all lists of domain %1 unless it is "
 "redefined for a specific list)"
 msgstr ""
 "(tämä on oletussivupohja kaikille listoille robotissa %1, jos listalle ei "
@@ -6410,7 +6434,7 @@ msgid "Go to list"
 msgstr "Mene listaan"
 
 #: default/web_tt2/create_list_request.tt2:7
-#: default/web_tt2/scenario_test.tt2:14
+#: default/web_tt2/scenario_test.tt2:14 default/web_tt2/serveradmin.tt2:149
 #: default/web_tt2/set_pending_list_request.tt2:4
 msgid "List name:"
 msgstr "Listan nimi:"
@@ -6513,7 +6537,7 @@ msgstr "Kirjainkoko:"
 #: default/web_tt2/d_editfile.tt2:57 default/web_tt2/d_properties.tt2:68
 #: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:279
 #: default/web_tt2/ls_templates.tt2:138 default/web_tt2/ls_templates.tt2:168
-#: default/web_tt2/ls_templates.tt2:190 default/web_tt2/search_user.tt2:72
+#: default/web_tt2/ls_templates.tt2:190 default/web_tt2/search_user.tt2:74
 msgid "edit"
 msgstr "muokkaa"
 
@@ -6819,11 +6843,6 @@ msgstr "Koko"
 msgid "Install"
 msgstr "Asenna"
 
-#: default/web_tt2/docindex.tt2:67 default/web_tt2/viewmod.tt2:17
-#: default/web_tt2/viewmod.tt2:21 default/web_tt2/viewmod.tt2:22
-msgid "Reject"
-msgstr "Hylkää"
-
 #: default/web_tt2/docindex.tt2:71
 msgid "Notified reject"
 msgstr "Hylkää tiedottaen lähettäjälle"
@@ -6913,12 +6932,12 @@ msgstr "*: pakollinen tieto"
 msgid "%1:"
 msgstr ""
 
-#: default/web_tt2/edit_config.tt2:4 default/web_tt2/nav.tt2:118
+#: default/web_tt2/edit_config.tt2:4 default/web_tt2/nav.tt2:119
 #, fuzzy
 msgid "View domain config"
 msgstr "Näytä pääasetukset"
 
-#: default/web_tt2/edit_config.tt2:24 default/web_tt2/serveradmin.tt2:232
+#: default/web_tt2/edit_config.tt2:24 default/web_tt2/serveradmin.tt2:235
 #, fuzzy
 msgid "parameter name"
 msgstr "parametrin arvo"
@@ -6989,8 +7008,7 @@ msgstr "HTML-sivut"
 #: default/web_tt2/editfile.tt2:62 default/web_tt2/editfile.tt2:67
 #: default/web_tt2/editfile.tt2:80 default/web_tt2/editfile.tt2:85
 #: default/web_tt2/editfile.tt2:99 default/web_tt2/manage_template.tt2:44
-#: default/web_tt2/manage_template.tt2:63 default/web_tt2/serveradmin.tt2:173
-#: default/web_tt2/serveradmin.tt2:185
+#: default/web_tt2/serveradmin.tt2:176 default/web_tt2/serveradmin.tt2:188
 msgid "Edit"
 msgstr "Muokkaa"
 
@@ -7159,7 +7177,7 @@ msgstr "Kuvan vaihtaminen tälle listalle"
 msgid ":"
 msgstr ":"
 
-#: default/web_tt2/editsubscriber.tt2:92 default/web_tt2/search_user.tt2:61
+#: default/web_tt2/editsubscriber.tt2:92 default/web_tt2/search_user.tt2:63
 msgid "Unsubscribe the User"
 msgstr "Peru käyttäjän tilaus"
 
@@ -7248,7 +7266,7 @@ msgstr "Alustana Sympa %1"
 msgid "Biggests Lists"
 msgstr "Uusimmat listat"
 
-#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:364
+#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:366
 msgid "Subscribers"
 msgstr "Tilaajat"
 
@@ -7277,7 +7295,7 @@ msgstr "Pyynnön lähettäjä"
 msgid " No closed lists"
 msgstr "Suljettu lista"
 
-#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:78
+#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:79
 #: default/web_tt2/serveradmin.tt2:11
 #, fuzzy
 msgid "View Lists sorted by Last Message Date"
@@ -7308,7 +7326,7 @@ msgstr "Luoja"
 msgid "none so far"
 msgstr "ei yhtään tähän mennessä"
 
-#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:75
+#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:76
 #: default/web_tt2/serveradmin.tt2:10
 #, fuzzy
 msgid "View Lists sorted by Creation Date"
@@ -7432,7 +7450,7 @@ msgstr ""
 "..."
 
 #: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:167
-#: default/web_tt2/search_user.tt2:62 default/web_tt2/show_exclude.tt2:48
+#: default/web_tt2/search_user.tt2:64 default/web_tt2/show_exclude.tt2:48
 msgid "quiet"
 msgstr "hiljainen"
 
@@ -7659,7 +7677,7 @@ msgid "New lists"
 msgstr "Uudet listat"
 
 #: default/web_tt2/latest_lists.tt2:18
-msgid " The latest lists of this robot"
+msgid " The latest lists of this domain"
 msgstr "Tämän robotin uusimmat listat"
 
 #: default/web_tt2/list_menu.tt2:12 default/web_tt2/picture_upload.tt2:24
@@ -7725,7 +7743,7 @@ msgstr "Tilaukset"
 msgid "Unsubscriptions"
 msgstr "Tilauksen poisto:"
 
-#: default/web_tt2/list_menu.tt2:149 default/web_tt2/nav.tt2:140
+#: default/web_tt2/list_menu.tt2:149 default/web_tt2/nav.tt2:141
 #, fuzzy
 msgid "Statistics"
 msgstr "Tila"
@@ -7814,7 +7832,7 @@ msgstr "Muut"
 msgid "No subscriptions with address <strong>%1</strong>!"
 msgstr "Osoitteella <strong>%1</strong> ei ole tilauksia!"
 
-#: default/web_tt2/lists.tt2:75 default/web_tt2/search_user.tt2:98
+#: default/web_tt2/lists.tt2:75 default/web_tt2/search_user.tt2:100
 msgid "No mailing list available."
 msgstr "Ei tarjollaolevia postilistoja"
 
@@ -7839,7 +7857,7 @@ msgstr "Olet kirjautuneena osoitteella %1"
 msgid "Login locally"
 msgstr ""
 
-#: default/web_tt2/login.tt2:12 default/web_tt2/login.tt2:92
+#: default/web_tt2/login.tt2:12 default/web_tt2/login.tt2:93
 #: default/web_tt2/login_menu.tt2:52 default/web_tt2/login_menu.tt2:57
 #: default/web_tt2/renewpasswd.tt2:10 default/web_tt2/renewpasswd.tt2:19
 msgid "Login"
@@ -7862,7 +7880,7 @@ msgstr "Kirjautuaksesi, valitse alta organisaatiosi tunnistautumispalvelin:"
 msgid "Click to select"
 msgstr "Klikkaa tästä"
 
-#: default/web_tt2/login.tt2:49 default/web_tt2/login.tt2:94
+#: default/web_tt2/login.tt2:49 default/web_tt2/login.tt2:95
 #: default/web_tt2/login_menu.tt2:31
 msgid "Go"
 msgstr "Mene"
@@ -7877,15 +7895,15 @@ msgid "password:"
 msgstr "salasana:"
 
 # nlsref 6,15
-#: default/web_tt2/login.tt2:110
+#: default/web_tt2/login.tt2:111
 msgid "Authentication help"
 msgstr "Tunnistautumisohje"
 
-#: default/web_tt2/login.tt2:120 default/web_tt2/login.tt2:133
+#: default/web_tt2/login.tt2:121 default/web_tt2/login.tt2:134
 msgid "First login?"
 msgstr "Ensimmäinen kirjautuminen?"
 
-#: default/web_tt2/login.tt2:125 default/web_tt2/login.tt2:138
+#: default/web_tt2/login.tt2:126 default/web_tt2/login.tt2:139
 msgid "Lost password?"
 msgstr "Salasana hukassa?"
 
@@ -7919,7 +7937,7 @@ msgid ""
 "First, you may list a category of templates. The list should include a "
 "default template and may include any templates designated for a particular "
 "list. You will then have an opportunity to copy and edit templates for the "
-"current robot or the named list."
+"current domain or the named list."
 msgstr ""
 "Voit ensin listata sivumallit. Jokainen postituslista käyttää yleistä "
 "sivumallia, jos vastaavaa omaa ei ole. Valmiiista malleista voit kopioida ja "
@@ -8023,27 +8041,26 @@ msgstr "Toiminta"
 msgid "There are currently no Rejection Messages available"
 msgstr "Hylkäysviestejä ei ole tällä hetkellä saatavilla."
 
-#: default/web_tt2/manage_template.tt2:66
-msgid "Message Name:"
-msgstr "Viestin nimi:"
+# nlsref 15,7
+#. (message_template)
+#: default/web_tt2/manage_template.tt2:63
+#, fuzzy, smalltalk-format
+msgid "Edit rejection message %1"
+msgstr "ylläpitäjän hylkäys viesti"
 
-#: default/web_tt2/manage_template.tt2:67
-msgid "Default Message"
-msgstr "Oletusviesti"
-
-#: default/web_tt2/manage_template.tt2:74
+#: default/web_tt2/manage_template.tt2:71
 msgid "Save Message"
 msgstr "Tallenna viesti"
 
-#: default/web_tt2/manage_template.tt2:82
+#: default/web_tt2/manage_template.tt2:79
 msgid "Create new rejection messages"
 msgstr "Luo uusia hylkäysviestejä"
 
-#: default/web_tt2/manage_template.tt2:88
+#: default/web_tt2/manage_template.tt2:85
 msgid "New message name:"
 msgstr "Uuden viestin nimi:"
 
-#: default/web_tt2/manage_template.tt2:90
+#: default/web_tt2/manage_template.tt2:87
 msgid "create"
 msgstr "luo"
 
@@ -8154,123 +8171,123 @@ msgstr "Kopioi olemassaoleva lista."
 msgid "Listmaster Admin"
 msgstr "Ylläpitäjä"
 
-#: default/web_tt2/nav.tt2:66 default/web_tt2/serveradmin.tt2:4
+#: default/web_tt2/nav.tt2:67 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
 msgstr "Listat"
 
-#: default/web_tt2/nav.tt2:69 default/web_tt2/serveradmin.tt2:8
+#: default/web_tt2/nav.tt2:70 default/web_tt2/serveradmin.tt2:8
 #, fuzzy
 msgid "View Pending (Requested) lists"
 msgstr "Odottavat listat"
 
-#: default/web_tt2/nav.tt2:72 default/web_tt2/serveradmin.tt2:9
+#: default/web_tt2/nav.tt2:73 default/web_tt2/serveradmin.tt2:9
 #, fuzzy
 msgid "View Closed Lists"
 msgstr "Suljetut listat"
 
-#: default/web_tt2/nav.tt2:359 default/web_tt2/nav.tt2:84
+#: default/web_tt2/nav.tt2:361 default/web_tt2/nav.tt2:85
 #: default/web_tt2/serveradmin.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:58
 msgid "Users"
 msgstr "Käyttäjät"
 
-#: default/web_tt2/nav.tt2:92 default/web_tt2/serveradmin.tt2:164
+#: default/web_tt2/nav.tt2:93 default/web_tt2/serveradmin.tt2:167
 msgid "Templates"
 msgstr "Mallit"
 
-#: default/web_tt2/nav.tt2:96 default/web_tt2/serveradmin.tt2:214
+#: default/web_tt2/nav.tt2:97 default/web_tt2/serveradmin.tt2:217
 msgid "Skins, CSS and colors"
 msgstr "Teemat, CSS ja värit"
 
-#: default/web_tt2/nav.tt2:106 default/web_tt2/serveradmin.tt2:17
+#: default/web_tt2/nav.tt2:107 default/web_tt2/serveradmin.tt2:17
 #, fuzzy
 msgid "Domains"
 msgstr "Domain (verkkotunnus)"
 
 # nlsref 8,7
-#: default/web_tt2/nav.tt2:129 default/web_tt2/serveradmin.tt2:66
+#: default/web_tt2/nav.tt2:130 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Perheet"
 
-#: default/web_tt2/nav.tt2:150 default/web_tt2/serveradmin.tt2:268
+#: default/web_tt2/nav.tt2:151 default/web_tt2/serveradmin.tt2:271
 msgid "Translating Sympa"
 msgstr "Sympan kääntäminen"
 
-#: default/web_tt2/nav.tt2:158 default/web_tt2/serveradmin.tt2:274
+#: default/web_tt2/nav.tt2:159 default/web_tt2/serveradmin.tt2:277
 msgid "Submitting a bug, a feature request"
 msgstr "Virheilmoituksen tai ominaisuuspyynnön lähettäminen"
 
 # nlsref 8,1
-#: default/web_tt2/nav.tt2:167 default/web_tt2/nav.tt2:178
+#: default/web_tt2/nav.tt2:168 default/web_tt2/nav.tt2:179
 msgid "Index of lists"
 msgstr "Listahakemisto"
 
-#: default/web_tt2/nav.tt2:192 default/web_tt2/nav.tt2:201
+#: default/web_tt2/nav.tt2:193 default/web_tt2/nav.tt2:202
 #, fuzzy
 msgid "others"
 msgstr "Muut"
 
-#: default/web_tt2/nav.tt2:218 default/web_tt2/viewlogs.tt2:43
+#: default/web_tt2/nav.tt2:219 default/web_tt2/viewlogs.tt2:43
 msgid "All"
 msgstr "Kaikki"
 
 # nlsref 16,61
-#: default/web_tt2/nav.tt2:227 default/web_tt2/nav.tt2:232
+#: default/web_tt2/nav.tt2:228 default/web_tt2/nav.tt2:233
 #, fuzzy
 msgid "Basic Operations"
 msgstr "Äärimmäiset toiminnot"
 
-#: default/web_tt2/nav.tt2:247
+#: default/web_tt2/nav.tt2:249
 msgid "Edit List Config"
 msgstr "Muokkaa listan asetuksia"
 
 # nlsref 15,13
-#: default/web_tt2/nav.tt2:326
+#: default/web_tt2/nav.tt2:328
 #, fuzzy
 msgid "List description/homepage"
 msgstr "listan kuvaus"
 
-#: default/web_tt2/nav.tt2:336
+#: default/web_tt2/nav.tt2:338
 #, fuzzy
 msgid "Message templates"
 msgstr "Viestin nimi"
 
-#: default/web_tt2/nav.tt2:388 default/web_tt2/review.tt2:35
+#: default/web_tt2/nav.tt2:390 default/web_tt2/review.tt2:35
 msgid "Blocklist"
 msgstr "Sulkulista"
 
-#: default/web_tt2/nav.tt2:400
+#: default/web_tt2/nav.tt2:402
 msgid "Manage Archives"
 msgstr "Hallinnoi arkistoja"
 
-#: default/web_tt2/nav.tt2:424
+#: default/web_tt2/nav.tt2:426
 msgid "Logs"
 msgstr "Lokit"
 
-#: default/web_tt2/nav.tt2:436 default/web_tt2/nav.tt2:450
+#: default/web_tt2/nav.tt2:438 default/web_tt2/nav.tt2:452
 msgid "Sending an HTML page to the list"
 msgstr "HTML-viestin lähettäminen listalle"
 
-#: default/web_tt2/nav.tt2:438 default/web_tt2/nav.tt2:452
+#: default/web_tt2/nav.tt2:440 default/web_tt2/nav.tt2:454
 msgid "Sending a message to the list"
 msgstr "Viestin lähettäminen listalle"
 
 # nlsref 15,6
-#: default/web_tt2/nav.tt2:471
+#: default/web_tt2/nav.tt2:473
 msgid "Send a message"
 msgstr "Lähetä viesti"
 
-#: default/web_tt2/nav.tt2:481
+#: default/web_tt2/nav.tt2:483
 msgid "Send an html page"
 msgstr "Lähetä HTML-sivu"
 
 # nlsref 6,81
 # ... vai käyttäjätila?
-#: default/web_tt2/nav.tt2:511
+#: default/web_tt2/nav.tt2:513
 msgid "User mode"
 msgstr "Käyttäjätila"
 
-#: default/web_tt2/nav.tt2:517
+#: default/web_tt2/nav.tt2:519
 msgid "Expert mode"
 msgstr "Asiantuntijatila"
 
@@ -8416,7 +8433,7 @@ msgstr ""
 "kertaa. Jos olet myös listan omistaja tai moderaattori, myös osoitteesi "
 "näihin rooleihin päivitetään."
 
-#: default/web_tt2/pref.tt2:52 default/web_tt2/serveradmin.tt2:115
+#: default/web_tt2/pref.tt2:52 default/web_tt2/serveradmin.tt2:117
 msgid "New email address:"
 msgstr "Uusi sähköpostiosoite:"
 
@@ -8428,26 +8445,26 @@ msgstr "Vaihda sähköpostiosoitetta"
 msgid "Changing your password"
 msgstr "Salasanan vaihtaminen"
 
-#: default/web_tt2/pref.tt2:68
+#: default/web_tt2/pref.tt2:69
 msgid "Re-enter your new password:"
 msgstr "Syötä uusi salasanasi uudestaan:"
 
-#: default/web_tt2/pref.tt2:76
+#: default/web_tt2/pref.tt2:78
 msgid "Deleting your account"
 msgstr ""
 
-#: default/web_tt2/pref.tt2:78
+#: default/web_tt2/pref.tt2:80
 msgid ""
 "Deleting your account will unsubscribe you from all your lists, remove your "
 "ownership of your lists and permanently delete your account."
 msgstr ""
 
-#: default/web_tt2/pref.tt2:84
+#: default/web_tt2/pref.tt2:86
 #, fuzzy
 msgid "Enter your password:"
 msgstr "Syötä uusi salasanasi uudestaan:"
 
-#: default/web_tt2/pref.tt2:88
+#: default/web_tt2/pref.tt2:93
 msgid ""
 "I understand that I will be unsubscribed from all my lists and that my "
 "account will be permanently deleted."
@@ -8646,7 +8663,8 @@ msgid "To add an individual user:"
 msgstr ""
 
 # nlsref 16,27
-#: default/web_tt2/review.tt2:90
+#: default/web_tt2/review.tt2:90 default/web_tt2/serveradmin.tt2:131
+#: default/web_tt2/serveradmin.tt2:86
 #, fuzzy
 msgid "Email address:"
 msgstr "Sähköpostiosoite:"
@@ -8958,15 +8976,15 @@ msgid "latest arc:"
 msgstr "uusin arkisto:"
 
 # nlsref 16,70
-#: default/web_tt2/rss_request.tt2:61
+#: default/web_tt2/rss_request.tt2:64
 msgid "latest document:"
 msgstr "uusin tiedosto:"
 
-#: default/web_tt2/rss_request.tt2:70
+#: default/web_tt2/rss_request.tt2:76
 msgid "active lists:"
 msgstr "aktiiviset listat:"
 
-#: default/web_tt2/rss_request.tt2:79
+#: default/web_tt2/rss_request.tt2:88
 msgid "latest lists:"
 msgstr "uusimmat listat:"
 
@@ -9007,11 +9025,12 @@ msgstr "hae toteutettu sääntö"
 msgid "Search for list(s)"
 msgstr "Hae listoja"
 
-#: default/web_tt2/search_list_request.tt2:5
+#: default/web_tt2/search_list_request.tt2:8
+#: default/web_tt2/search_list_request.tt2:9
 msgid "Enter a list name"
 msgstr "Anna listan nimi"
 
-#: default/web_tt2/search_list_request.tt2:7
+#: default/web_tt2/search_list_request.tt2:11
 msgid "Search lists"
 msgstr "Hae listoja"
 
@@ -9092,36 +9111,36 @@ msgid ""
 "Enter an email address of a user to view lists that they are subscribed to:"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:89
+#: default/web_tt2/serveradmin.tt2:91
 msgid "Search User"
 msgstr "Etsi käyttäjä"
 
 # nlsref 17,1
-#: default/web_tt2/serveradmin.tt2:94
+#: default/web_tt2/serveradmin.tt2:96
 #, fuzzy
 msgid "Sessions"
 msgstr "istunto"
 
-#: default/web_tt2/serveradmin.tt2:95
+#: default/web_tt2/serveradmin.tt2:97
 msgid "View session information for users connected to this web interface:"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:98
+#: default/web_tt2/serveradmin.tt2:100
 msgid "Delay for active sessions (minutes)"
 msgstr "Aktiivisten istuntojen viive (minuuttia)"
 
-#: default/web_tt2/serveradmin.tt2:100
+#: default/web_tt2/serveradmin.tt2:102
 #, fuzzy
 msgid "Show only currently connected users"
 msgstr "Näytä vain yhteydessä olevat käyttäjät"
 
 # nlsref 17,1
-#: default/web_tt2/serveradmin.tt2:101
+#: default/web_tt2/serveradmin.tt2:103
 #, fuzzy
 msgid "Show Sessions"
 msgstr "Näytä istunnot"
 
-#: default/web_tt2/serveradmin.tt2:107
+#: default/web_tt2/serveradmin.tt2:109
 #, fuzzy
 msgid ""
 "You can update a user's email address for all their list memberships at "
@@ -9132,20 +9151,20 @@ msgstr ""
 "kertaa. Jos olet myös listan omistaja tai moderaattori, myös osoitteesi "
 "näihin rooleihin päivitetään."
 
-#: default/web_tt2/serveradmin.tt2:111
+#: default/web_tt2/serveradmin.tt2:113
 msgid "Current email address:"
 msgstr "Nykyinen sähköpostiosoite:"
 
-#: default/web_tt2/serveradmin.tt2:120
+#: default/web_tt2/serveradmin.tt2:122
 #, fuzzy
 msgid "Update user's email"
 msgstr "Päivitä käyttäjien jäsenyyksiä"
 
-#: default/web_tt2/serveradmin.tt2:125
+#: default/web_tt2/serveradmin.tt2:127
 msgid "Impersonate another User"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:126
+#: default/web_tt2/serveradmin.tt2:128
 #, fuzzy
 msgid ""
 "Listmasters can switch context (impersonate) other users; this may be useful "
@@ -9156,72 +9175,72 @@ msgstr ""
 "saattaa olla hyödyllistä tarjotessasi apua tai kokeillaksesi käyttäjän "
 "oikeuksia. Uusi identiteetti liitetään nykyiseen istuntoon"
 
-#: default/web_tt2/serveradmin.tt2:131
+#: default/web_tt2/serveradmin.tt2:134
 msgid "Switch User Context"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:139
+#: default/web_tt2/serveradmin.tt2:142
 msgid ""
 "It is possible to rebuild HTML archives for an individual list or for all "
 "lists (in batch)."
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:141
+#: default/web_tt2/serveradmin.tt2:144
 msgid "Rebuild archives for an individual list"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:142
+#: default/web_tt2/serveradmin.tt2:145
 msgid ""
 "Enter the name of the list that you'd like to rebuild HTML archives for:"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:149
+#: default/web_tt2/serveradmin.tt2:152
 msgid "Rebuild archive"
 msgstr "Luo arkisto uudelleen"
 
-#: default/web_tt2/serveradmin.tt2:152
+#: default/web_tt2/serveradmin.tt2:155
 #, fuzzy
 msgid "Rebuild archives for all lists"
 msgstr "Luo arkisto uudelleen"
 
-#: default/web_tt2/serveradmin.tt2:154
+#: default/web_tt2/serveradmin.tt2:157
 #, fuzzy
 msgid "Note:"
 msgstr "Nimi:"
 
-#: default/web_tt2/serveradmin.tt2:154
+#: default/web_tt2/serveradmin.tt2:157
 msgid ""
 "As this option may take a long time to complete, it is recommended (if "
 "possible) to use it during non-busy times."
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:157
+#: default/web_tt2/serveradmin.tt2:160
 msgid "Rebuild all"
 msgstr "Luo kaikki uudelleen"
 
-#: default/web_tt2/serveradmin.tt2:167
+#: default/web_tt2/serveradmin.tt2:170
 #, fuzzy
 msgid "Edit default list template"
 msgstr "Asetetaan lista oletusmallit"
 
-#: default/web_tt2/serveradmin.tt2:179
+#: default/web_tt2/serveradmin.tt2:182
 #, fuzzy
 msgid "Edit site-wide templates"
 msgstr "Muokkaa listamallia"
 
-#: default/web_tt2/serveradmin.tt2:191
+#: default/web_tt2/serveradmin.tt2:194
 msgid "view translations"
 msgstr "näytä käännökset"
 
-#: default/web_tt2/serveradmin.tt2:194
+#: default/web_tt2/serveradmin.tt2:197
 msgid "Customize templates"
 msgstr "Muokkaa malleja"
 
-#: default/web_tt2/serveradmin.tt2:199
+#: default/web_tt2/serveradmin.tt2:202
 msgid "Dump TT2 Variables"
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:200
+#: default/web_tt2/serveradmin.tt2:203
 msgid ""
 "Toggle the dumping of available TT2 variables when rendering web interface "
 "pages. This may be useful when developing or debugging custom TT2 templates. "
@@ -9229,42 +9248,42 @@ msgid ""
 "interface fastcgi process."
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:204
+#: default/web_tt2/serveradmin.tt2:207
 #, fuzzy
 msgid "Disable template variables dump"
 msgstr "Poista mallinemuuttujaviennin asetus"
 
-#: default/web_tt2/serveradmin.tt2:206
+#: default/web_tt2/serveradmin.tt2:209
 #, fuzzy
 msgid "Enable template variables dump"
 msgstr "Poista mallinemuuttujaviennin asetus"
 
-#: default/web_tt2/serveradmin.tt2:217
+#: default/web_tt2/serveradmin.tt2:220
 msgid "Skins administration page"
 msgstr "Teemojen hallintasivu"
 
-#: default/web_tt2/serveradmin.tt2:223
+#: default/web_tt2/serveradmin.tt2:226
 msgid "View main config"
 msgstr "Näytä pääasetukset"
 
-#: default/web_tt2/serveradmin.tt2:235
+#: default/web_tt2/serveradmin.tt2:238
 #, fuzzy
 msgid "semantic"
 msgstr "lause"
 
 #. (domain)
-#: default/web_tt2/serveradmin.tt2:260
+#: default/web_tt2/serveradmin.tt2:263
 #, fuzzy, smalltalk-format
 msgid "Virtual domain %1 statistics"
 msgstr "Lista %1 on poistettu"
 
-#: default/web_tt2/serveradmin.tt2:261
+#: default/web_tt2/serveradmin.tt2:264
 msgid ""
 "This page displays overall information regarding the activity on this "
 "virtual domain."
 msgstr ""
 
-#: default/web_tt2/serveradmin.tt2:269
+#: default/web_tt2/serveradmin.tt2:272
 msgid ""
 "Sympa is designed to allow easy internationalization of its user interface "
 "(service email messages and web interface). All translations for a language "
@@ -9277,7 +9296,7 @@ msgstr ""
 "normaaleilla GNU gettext -työkaluilla."
 
 # ”tai parantaa nykyistä käännöstä” is not in the original version, but the Finnish translation is so bad... Means "or enhance the current translation".
-#: default/web_tt2/serveradmin.tt2:270
+#: default/web_tt2/serveradmin.tt2:273
 msgid ""
 "Check our translation FAQ if you wish to translate the Sympa GUI into your "
 "native language: "
@@ -9285,7 +9304,7 @@ msgstr ""
 "Katson Sympan Translation FAQ, jos haluat kääntää käyttöliittymän omalle "
 "äidinkielellesi tai parantaa nykyistä käännöstä: "
 
-#: default/web_tt2/serveradmin.tt2:275
+#: default/web_tt2/serveradmin.tt2:278
 msgid "You can submit a problem or request a new feature: "
 msgstr "Voit lähettää ongelman tai pyytää uutta ominaisuutta:"
 
@@ -9718,12 +9737,12 @@ msgstr ""
 "seuraavalle sivulle. Syttämällä sivulle juuri saamasi salasanan vahvistat "
 "että osoitteesi toimii."
 
-#: default/web_tt2/sso_login.tt2:33
+#: default/web_tt2/sso_login.tt2:36
 msgid "Send me a confirmation password"
 msgstr "Lähetä minulle tarkistussalasana"
 
 #. (init_email)
-#: default/web_tt2/sso_login.tt2:38
+#: default/web_tt2/sso_login.tt2:41
 #, fuzzy, smalltalk-format
 msgid ""
 "A confirmation password has been sent to your email address %1. Please check "
@@ -15475,9 +15494,37 @@ msgstr "Web-keskustelupostilista"
 msgid "Mailing list for intranets"
 msgstr "Intranet-postituslista"
 
-# nlsref 15,4
-#~ msgid "Inclusions timeout for message distribution"
-#~ msgstr "sisällyttämisen aikaraja viestiä jaettaessa"
+#~ msgid " The latest lists of this robot"
+#~ msgstr "Tämän robotin uusimmat listat"
+
+#~ msgid ""
+#~ "IF list context defined, apply list template if exist\n"
+#~ "ELSE apply domain defined template if exist\n"
+#~ "ELSE apply locally defined template if exist\n"
+#~ "ELSE apply template included in the distribution (these must not be "
+#~ "edited because Sympa's update will over write these files)"
+#~ msgstr ""
+#~ "JOS lista-konteksti on määritetty, käytä listamallia (mikäli olemassa)\n"
+#~ "MUUTEN käytä robotin mallia (mikäli olemassa)\n"
+#~ "MUUTEN käytä paikallisesti määritettyä mallia (mikäli olemassa)\n"
+#~ "MUUTEN käytä jakelupaketissa olevaa mallia (Sympan päivitys ylikirjoittaa "
+#~ "nämä tiedostot)"
+
+#~ msgid ""
+#~ "First, you may list a category of templates. The list should include a "
+#~ "default template and may include any templates designated for a "
+#~ "particular list. You will then have an opportunity to copy and edit "
+#~ "templates for the current robot or the named list."
+#~ msgstr ""
+#~ "Voit ensin listata sivumallit. Jokainen postituslista käyttää yleistä "
+#~ "sivumallia, jos vastaavaa omaa ei ole. Valmiiista malleista voit kopioida "
+#~ "ja muokata haluamasi jokaiselle listarobotille ja listalle."
+
+#~ msgid "Message Name:"
+#~ msgstr "Viestin nimi:"
+
+#~ msgid "Default Message"
+#~ msgstr "Oletusviesti"
 
 #, fuzzy
 #~ msgid "authenticated by DKIM signature"
@@ -16241,10 +16288,6 @@ msgstr "Intranet-postituslista"
 #, fuzzy
 #~ msgid "Moderated, need authentication from editor"
 #~ msgstr "Kun tunnistaudut("
-
-# nlsref 15,7
-#~ msgid "editor rejection message"
-#~ msgstr "ylläpitäjän hylkäys viesti"
 
 #~ msgid ""
 #~ "Rejection message: when a message is rejected by list editor, a "
@@ -21235,3 +21278,11 @@ msgstr "Intranet-postituslista"
 
 #~ msgid "No Virtual Robot defined on this server"
 #~ msgstr "Tällä palvelimella ei ole virtuaali-robotteja"
+
+# nlsref 15,4
+#~ msgid "Inclusions timeout for message distribution"
+#~ msgstr "sisällyttämisen aikaraja viestiä jaettaessa"
+
+# nlsref 15,7
+#~ msgid "editor rejection message"
+#~ msgstr "ylläpitäjän hylkäys viesti"
