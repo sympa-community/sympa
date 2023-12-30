@@ -6776,6 +6776,11 @@ msgstr ""
 "(ce modèle est utilisé par défaut sauf s'il est redéfini au niveau d'un "
 "robot)"
 
+#: default/web_tt2/copy_template.tt2:21 default/web_tt2/edit_template.tt2:28
+#: default/web_tt2/view_template.tt2:31
+msgid "(this template is the default used by all domains unless redefined for a specific domain)"
+msgstr "(ce modèle est utilisé par défaut sauf s'il est redéfini au niveau d'un robot)"
+
 #. (robot)
 #: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
 #: default/web_tt2/view_template.tt2:34
@@ -6786,6 +6791,13 @@ msgid ""
 msgstr ""
 "(ce modèle est utilisé par défaut pour toutes les listes du robot %1 sauf "
 "s'il est redéfini au niveau d'une liste)"
+
+#. (robot)
+#: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
+#: default/web_tt2/view_template.tt2:34
+#, smalltalk-format
+msgid "(this template is the default for all lists of domain %1 unless it is redefined for a specific list)"
+msgstr "(ce modèle est utilisé par défaut pour toutes les listes du robot %1 sauf s'il est redéfini au niveau d'une liste)"
 
 #. (list,robot)
 #: default/web_tt2/copy_template.tt2:27 default/web_tt2/edit_template.tt2:34
@@ -8114,6 +8126,10 @@ msgstr "Les nouvelles listes"
 msgid " The latest lists of this robot"
 msgstr "Les nouvelles listes créées"
 
+#: default/web_tt2/latest_lists.tt2:18
+msgid " The latest lists of this domain"
+msgstr "Les nouvelles listes créées"
+
 #: default/web_tt2/list_menu.tt2:12 default/web_tt2/picture_upload.tt2:24
 #: default/web_tt2/picture_upload.tt2:27
 msgid "Your picture"
@@ -8356,6 +8372,10 @@ msgstr ""
 "SINON utilisation du modèle par défaut, distribué avec Sympa (ceux-ci ne "
 "doivent pas être modifiés car Sympa les écrase à chaque mise à jour)"
 
+#: default/web_tt2/ls_templates.tt2:14
+msgid "IF list context defined, apply list template if exist\nELSE apply domain defined template if exist\nELSE apply locally defined template if exist\nELSE apply template included in the distribution (these must not be edited because Sympa's update will over write these files)"
+msgstr "SI une liste est spécifiée, utilisation du modèle de la liste\nSINON utilisation du modèle du robot s'il existe\nSINON utilisation du modèle du site s'il existe\nSINON utilisation du modèle par défaut, distribué avec Sympa (ceux-ci ne doivent pas être modifiés car Sympa les écrase à chaque mise à jour)"
+
 #: default/web_tt2/ls_templates.tt2:18
 msgid ""
 "First, you may list a category of templates. The list should include a "
@@ -8367,6 +8387,10 @@ msgstr ""
 "inclure un modèle par défaut et peut inclure tous les modèles désignés pour "
 "une liste particulière. Vous aurez alors l'occasion de copier et d'éditer "
 "des modèles pour le robot actuel ou la liste nommée."
+
+#: default/web_tt2/ls_templates.tt2:18
+msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current domain or the named list."
+msgstr "Tout d'abord, vous pouvez lister une catégorie de modèles. La liste doit inclure un modèle par défaut et peut inclure tous les modèles désignés pour une liste particulière. Vous aurez alors l'occasion de copier et d'éditer des modèles pour le robot actuel ou la liste nommée."
 
 # nlsref 15,18
 #: default/web_tt2/ls_templates.tt2:25

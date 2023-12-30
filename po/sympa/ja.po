@@ -6390,6 +6390,11 @@ msgstr ""
 "(このテンプレートは、テンプレートを再定義しているようなロボットを除き、すべて"
 "のロボットで使います)"
 
+#: default/web_tt2/copy_template.tt2:21 default/web_tt2/edit_template.tt2:28
+#: default/web_tt2/view_template.tt2:31
+msgid "(this template is the default used by all domains unless redefined for a specific domain)"
+msgstr "(このテンプレートは、テンプレートを再定義しているようなロボットを除き、すべてのロボットで使います)"
+
 #. (robot)
 #: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
 #: default/web_tt2/view_template.tt2:34
@@ -6400,6 +6405,13 @@ msgid ""
 msgstr ""
 "(このテンプレートは、テンプレートを再定義しているようなリストを除き、%1 のロ"
 "ボットのすべてのリストで使います)"
+
+#. (robot)
+#: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
+#: default/web_tt2/view_template.tt2:34
+#, smalltalk-format
+msgid "(this template is the default for all lists of domain %1 unless it is redefined for a specific list)"
+msgstr "(このテンプレートは、テンプレートを再定義しているようなリストを除き、%1 のロボットのすべてのリストで使います)"
 
 #. (list,robot)
 #: default/web_tt2/copy_template.tt2:27 default/web_tt2/edit_template.tt2:34
@@ -7699,6 +7711,10 @@ msgstr "新しいリスト"
 msgid " The latest lists of this robot"
 msgstr " このロボットの最新のリスト "
 
+#: default/web_tt2/latest_lists.tt2:18
+msgid " The latest lists of this domain"
+msgstr " このロボットの最新のリスト "
+
 #: default/web_tt2/list_menu.tt2:12 default/web_tt2/picture_upload.tt2:24
 #: default/web_tt2/picture_upload.tt2:27
 msgid "Your picture"
@@ -7934,6 +7950,10 @@ msgstr ""
 "は変更できません。たとえ変更しても、Sympa がアップデートされると上書きされて"
 "しまうからです)"
 
+#: default/web_tt2/ls_templates.tt2:14
+msgid "IF list context defined, apply list template if exist\nELSE apply domain defined template if exist\nELSE apply locally defined template if exist\nELSE apply template included in the distribution (these must not be edited because Sympa's update will over write these files)"
+msgstr "リストを特定でき、リスト専用のテンプレートがあればそれを適用する\nそうではなく、ロボット全体用のテンプレートがあればそれを適用する\nそうではなく、独自に決めたテンプレートがあればそれを適用する\nさもなければ、インストール時からあるテンプレートを適用する (このテンプレートは変更できません。たとえ変更しても、Sympa がアップデートされると上書きされてしまうからです)"
+
 #: default/web_tt2/ls_templates.tt2:18
 msgid ""
 "First, you may list a category of templates. The list should include a "
@@ -7945,6 +7965,10 @@ msgstr ""
 "アップしましょう。次に、いまあるテンプレートを複写して、ロボット全体用のテン"
 "プレートにするものと、特定のリスト専用のテンプレートにするものを用意してお"
 "き、それからテンプレートをひとつひとつ変更していくとよいでしょう。"
+
+#: default/web_tt2/ls_templates.tt2:18
+msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current domain or the named list."
+msgstr "まず、特定のリスト専用のテンプレートにするものと、そうしないものとをリストアップしましょう。次に、いまあるテンプレートを複写して、ロボット全体用のテンプレートにするものと、特定のリスト専用のテンプレートにするものを用意しておき、それからテンプレートをひとつひとつ変更していくとよいでしょう。"
 
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"

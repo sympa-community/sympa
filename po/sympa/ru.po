@@ -6506,6 +6506,11 @@ msgstr ""
 "(этот шаблон используется по умолчанию всеми роботами, за исключением тех, "
 "для которых он переопределён)"
 
+#: default/web_tt2/copy_template.tt2:21 default/web_tt2/edit_template.tt2:28
+#: default/web_tt2/view_template.tt2:31
+msgid "(this template is the default used by all domains unless redefined for a specific domain)"
+msgstr "(этот шаблон используется по умолчанию всеми роботами, за исключением тех, для которых он переопределён)"
+
 #. (robot)
 #: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
 #: default/web_tt2/view_template.tt2:34
@@ -6516,6 +6521,13 @@ msgid ""
 msgstr ""
 "(этот шаблон задан по умолчанию для всех рассылок робота %1, за исключением "
 "тех рассылок, для которых шаблон задан отдельно)"
+
+#. (robot)
+#: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
+#: default/web_tt2/view_template.tt2:34
+#, smalltalk-format
+msgid "(this template is the default for all lists of domain %1 unless it is redefined for a specific list)"
+msgstr "(этот шаблон задан по умолчанию для всех рассылок робота %1, за исключением тех рассылок, для которых шаблон задан отдельно)"
 
 #. (list,robot)
 #: default/web_tt2/copy_template.tt2:27 default/web_tt2/edit_template.tt2:34
@@ -7817,6 +7829,10 @@ msgstr "Новые рассылки"
 msgid " The latest lists of this robot"
 msgstr " Последние рассылки этого робота"
 
+#: default/web_tt2/latest_lists.tt2:18
+msgid " The latest lists of this domain"
+msgstr " Последние рассылки этого робота"
+
 #: default/web_tt2/list_menu.tt2:12 default/web_tt2/picture_upload.tt2:24
 #: default/web_tt2/picture_upload.tt2:27
 msgid "Your picture"
@@ -8049,6 +8065,10 @@ msgstr ""
 "ИНАЧЕ применить шаблон, включённый в состав пакета (они не должны "
 "редактироваться, поскольку при обновлении Симпы эти файлы будут перезаписаны)"
 
+#: default/web_tt2/ls_templates.tt2:14
+msgid "IF list context defined, apply list template if exist\nELSE apply domain defined template if exist\nELSE apply locally defined template if exist\nELSE apply template included in the distribution (these must not be edited because Sympa's update will over write these files)"
+msgstr "ЕСЛИ контекст рассылки указан, применить шаблон рассылки, если он есть\nИНАЧЕ применить шаблон, заданный в роботе, если он есть\nИНАЧЕ применить локально заданный шаблон, если он есть\nИНАЧЕ применить шаблон, включённый в состав пакета (они не должны редактироваться, поскольку при обновлении Симпы эти файлы будут перезаписаны)"
+
 #: default/web_tt2/ls_templates.tt2:18
 msgid ""
 "First, you may list a category of templates. The list should include a "
@@ -8060,6 +8080,10 @@ msgstr ""
 "по умолчанию, и может иметь шаблоны, заданные для конкретной рассылки. Затем "
 "будет возможность копировать и редактировать шаблоны для текущего робота или "
 "указанной рассылки."
+
+#: default/web_tt2/ls_templates.tt2:18
+msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current domain or the named list."
+msgstr "Сначала можно просмотреть категорию шаблонов. Рассылка должна иметь шаблон по умолчанию, и может иметь шаблоны, заданные для конкретной рассылки. Затем будет возможность копировать и редактировать шаблоны для текущего робота или указанной рассылки."
 
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"

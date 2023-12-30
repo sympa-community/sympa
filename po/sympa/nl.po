@@ -6108,6 +6108,11 @@ msgstr ""
 "(dit sjabloon wordt gebruikt voor alle robots, tenzij het wordt veranderd "
 "voor een bepaalde robot)"
 
+#: default/web_tt2/copy_template.tt2:21 default/web_tt2/edit_template.tt2:28
+#: default/web_tt2/view_template.tt2:31
+msgid "(this template is the default used by all domains unless redefined for a specific domain)"
+msgstr "(dit sjabloon wordt gebruikt voor alle robots, tenzij het wordt veranderd voor een bepaalde robot)"
+
 #. (robot)
 #: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
 #: default/web_tt2/view_template.tt2:34
@@ -6118,6 +6123,13 @@ msgid ""
 msgstr ""
 "(dit template wordt standaard gebruikt voor alle lijsten van robot %1, "
 "tenzij het wordt veranderd voor een bepaalde lijst)"
+
+#. (robot)
+#: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
+#: default/web_tt2/view_template.tt2:34
+#, smalltalk-format
+msgid "(this template is the default for all lists of domain %1 unless it is redefined for a specific list)"
+msgstr "(dit template wordt standaard gebruikt voor alle lijsten van robot %1, tenzij het wordt veranderd voor een bepaalde lijst)"
 
 #. (list,robot)
 #: default/web_tt2/copy_template.tt2:27 default/web_tt2/edit_template.tt2:34
@@ -7397,6 +7409,10 @@ msgstr "Nieuwe lijsten"
 
 #: default/web_tt2/latest_lists.tt2:18
 msgid " The latest lists of this robot"
+msgstr " De nieuwste lijsten van deze robot "
+
+#: default/web_tt2/latest_lists.tt2:18
+msgid " The latest lists of this domain"
 msgstr " De nieuwste lijsten van deze robot "
 
 #: default/web_tt2/list_menu.tt2:12 default/web_tt2/picture_upload.tt2:24

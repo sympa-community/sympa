@@ -6297,6 +6297,11 @@ msgstr ""
 "(aquesta és la plantilla per defecte per a tots els robots si no és que hi "
 "ha un robot específic)"
 
+#: default/web_tt2/copy_template.tt2:21 default/web_tt2/edit_template.tt2:28
+#: default/web_tt2/view_template.tt2:31
+msgid "(this template is the default used by all domains unless redefined for a specific domain)"
+msgstr "(aquesta és la plantilla per defecte per a tots els robots si no és que hi ha un robot específic)"
+
 #. (robot)
 #: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
 #: default/web_tt2/view_template.tt2:34
@@ -6307,6 +6312,13 @@ msgid ""
 msgstr ""
 "(aquesta és la plantilla per defecte per a tots les llistes del robot %1 si "
 "no és  que està redefinida per a una llista específica)"
+
+#. (robot)
+#: default/web_tt2/copy_template.tt2:24 default/web_tt2/edit_template.tt2:31
+#: default/web_tt2/view_template.tt2:34
+#, smalltalk-format
+msgid "(this template is the default for all lists of domain %1 unless it is redefined for a specific list)"
+msgstr "(aquesta és la plantilla per defecte per a tots les llistes del robot %1 si no és  que està redefinida per a una llista específica)"
 
 #. (list,robot)
 #: default/web_tt2/copy_template.tt2:27 default/web_tt2/edit_template.tt2:34
@@ -7614,6 +7626,10 @@ msgstr "Llistes noves"
 msgid " The latest lists of this robot"
 msgstr " Últimes llistes d'aquest robot"
 
+#: default/web_tt2/latest_lists.tt2:18
+msgid " The latest lists of this domain"
+msgstr " Últimes llistes d'aquest robot"
+
 #: default/web_tt2/list_menu.tt2:12 default/web_tt2/picture_upload.tt2:24
 #: default/web_tt2/picture_upload.tt2:27
 msgid "Your picture"
@@ -7848,6 +7864,10 @@ msgstr ""
 "SINO  (ELSE) aplica la plantilla inclosa en la distribució (no s'ha "
 "d'editar, perquè una futura actualització de Sympa la pot sobrescriure)"
 
+#: default/web_tt2/ls_templates.tt2:14
+msgid "IF list context defined, apply list template if exist\nELSE apply domain defined template if exist\nELSE apply locally defined template if exist\nELSE apply template included in the distribution (these must not be edited because Sympa's update will over write these files)"
+msgstr "SI (IF) el context està definit, aplica la plantilla. (si existeix)\nSINO (ELSE) aplica la plantilla definida pel robot (si existeix)\nSINO  (ELSE)  aplica la plantilla definida localment (si existeix)\nSINO  (ELSE) aplica la plantilla inclosa en la distribució (no s'ha d'editar, perquè una futura actualització de Sympa la pot sobrescriure)"
+
 #: default/web_tt2/ls_templates.tt2:18
 msgid ""
 "First, you may list a category of templates. The list should include a "
@@ -7859,6 +7879,10 @@ msgstr ""
 "plantilla predeterminada i pot incloure plantilles assignades a una llista "
 "en particular. Aleshores podreu copiar i editar les plantilles del robot o "
 "llista actual."
+
+#: default/web_tt2/ls_templates.tt2:18
+msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current domain or the named list."
+msgstr "Primer heu de llistar una categoria de plantilles; la llista ha de tenir una plantilla predeterminada i pot incloure plantilles assignades a una llista en particular. Aleshores podreu copiar i editar les plantilles del robot o llista actual."
 
 #: default/web_tt2/ls_templates.tt2:25
 msgid "Select templates type:"
