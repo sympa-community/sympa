@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2023-12-30 00:48:30+0000\n"
-"PO-Revision-Date: 2023-12-13 09:42+0000\n"
-"Last-Translator: Inledning <hans.ericson@bredband.net>\n"
+"POT-Creation-Date: 2023-12-30 09:47:29+0000\n"
+"PO-Revision-Date: 2023-12-30 07:30+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Svenska\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
 "X-Rosetta-Version: 0.1\n"
-"X-POOTLE-MTIME: 1702460576.000000\n"
+"X-POOTLE-MTIME: 1703921446.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -3664,11 +3664,13 @@ msgid ""
 "supports paging. If not set or set to zero, do not use paging. Typically "
 "1000 for an Active Directory server, to avoid \"SizeLimit\" errors"
 msgstr ""
+"Antal enheter att hämta per batch (paging), för en LDAP-server som stöder "
+"paging. Om inte är satt till noll, använd inte paging. Typiskt 100 för en "
+"Active Directory-server, för att undvika \"Storleksbegränsnings\"-fel"
 
 #: src/lib/Sympa/Config/Schema.pm:3475 src/lib/Sympa/Config/Schema.pm:3710
-#, fuzzy
 msgid "LDAP page size"
-msgstr "Sidstorlek"
+msgstr "LDAP-sidstorlek"
 
 #: src/lib/Sympa/Config/Schema.pm:3488
 msgid "LDAP 2-level query inclusion"
@@ -3779,9 +3781,8 @@ msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "Katalog där databasen lagras (används enbart för DBD::CSV)"
 
 #: src/lib/Sympa/Config/Schema.pm:3844
-#, fuzzy
 msgid "TTL of user data"
-msgstr "Typ av databas"
+msgstr "TTL för användardata"
 
 #: src/lib/Sympa/Config/Schema.pm:3846
 msgid ""
@@ -3793,9 +3794,8 @@ msgstr ""
 "liv) inom Sympa kan kontrolleras med denna parameter. Standardvärdet är 3600"
 
 #: src/lib/Sympa/Config/Schema.pm:3863
-#, fuzzy
 msgid "TTL of user data for message distribution"
-msgstr "Inkluderings-tidsgräns uppnådd för meddelandedistribution"
+msgstr "TTL för användardata för meddelandedistribution"
 
 #: src/lib/Sympa/Config/Schema.pm:3865
 msgid ""
@@ -4752,11 +4752,15 @@ msgid ""
 "users that will probably uses the renew password service before they "
 "performs so many tries."
 msgstr ""
+"Om denna begränsning nås, kommer kontot att vara låst tills användaren "
+"förnyar sitt lösenord. Standardvärdet är valt för att blockera botar som "
+"försöker att logga in med brute force. Detta värde ska aldrig nås av riktiga "
+"användare som troligtvis använder förnya lösenordsservicen innan de gör så "
+"många försök."
 
 #: src/lib/Sympa/Config/Schema.pm:5770
-#, fuzzy
 msgid "Password case"
-msgstr "Lösenord :"
+msgstr "Lösenordsstorlek"
 
 #: src/lib/Sympa/Config/Schema.pm:5773
 msgid ""
@@ -4766,10 +4770,14 @@ msgid ""
 "LDAP.\n"
 "Should not be changed! May invalid all user password."
 msgstr ""
+"\"okänslig\" eller \"känslig\"\n"
+"Om satt till \"okänslig\", kommer WWSympas lösenordskontroll att vara "
+"okänslig. Detta berör bara lösenord sparade i Sympas databas inte de i LDAP\n"
+"Bör inte ändras! Kan göra alla användarlösenord ogiltiga."
 
 #: src/lib/Sympa/Config/Schema.pm:5780
 msgid "Password hashing algorithm"
-msgstr ""
+msgstr "Lösenordets hashalgoritm"
 
 #: src/lib/Sympa/Config/Schema.pm:5783
 msgid ""
@@ -7975,7 +7983,7 @@ msgstr "Prioriteringsregler för mallval:"
 #: default/web_tt2/ls_templates.tt2:14
 msgid ""
 "IF list context defined, apply list template if exist\n"
-"ELSE apply robot defined template if exist\n"
+"ELSE apply domain defined template if exist\n"
 "ELSE apply locally defined template if exist\n"
 "ELSE apply template included in the distribution (these must not be edited "
 "because Sympa's update will over write these files)"
@@ -15334,12 +15342,9 @@ msgstr "Web-forum ML"
 msgid "Mailing list for intranets"
 msgstr "E-postlista för intranät"
 
-#~ msgid " The latest lists of this robot"
-#~ msgstr " De senaste listorna för denna robot"
-
 #~ msgid ""
 #~ "IF list context defined, apply list template if exist\n"
-#~ "ELSE apply domain defined template if exist\n"
+#~ "ELSE apply robot defined template if exist\n"
 #~ "ELSE apply locally defined template if exist\n"
 #~ "ELSE apply template included in the distribution (these must not be "
 #~ "edited because Sympa's update will over write these files)"
@@ -15349,6 +15354,25 @@ msgstr "E-postlista för intranät"
 #~ "ANNARS använd lokal definerat mall om det finns\n"
 #~ "ANNARS använd mall från distributionen (dessa får inte redigeras då det "
 #~ "skrivs över av Sympauppdateringar)"
+
+#, fuzzy
+#~ msgid ""
+#~ "(this template is the default used by all robots unless redefined for a "
+#~ "specific robot)"
+#~ msgstr ""
+#~ "( denna mall används som standard av alla robotar om den inte defineras "
+#~ "om för en särskild robot )"
+
+#, fuzzy, smalltalk-format
+#~ msgid ""
+#~ "(this template is the default for all lists of robot %1 unless it is "
+#~ "redefined for a specific list)"
+#~ msgstr ""
+#~ "( denna mall används som standard för alla listor hos roboten %1 om inte "
+#~ "annat anges för en särskild lista )"
+
+#~ msgid " The latest lists of this robot"
+#~ msgstr " De senaste listorna för denna robot"
 
 #~ msgid ""
 #~ "First, you may list a category of templates. The list should include a "
