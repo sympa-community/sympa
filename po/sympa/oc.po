@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: oc\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2023-12-13 00:48:16+0000\n"
+"POT-Creation-Date: 2023-12-30 00:48:30+0000\n"
 "PO-Revision-Date: 2022-10-10 13:48+0000\n"
 "Last-Translator: vincent <vincent.laporte@inria.fr>\n"
 "Language-Team: Occitan <asso.oc@abuledu.org>\n"
@@ -744,12 +744,12 @@ msgstr "Lista tampada"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/lib/Sympa/Message.pm:1689 src/lib/Sympa/Process.pm:415
+#: src/lib/Sympa/Message.pm:1698 src/lib/Sympa/Process.pm:415
 msgid "%d %b %Y  %H:%M"
 msgstr "%d %b %Y  %H:%M"
 
 # nlsref 5,4
-#: src/lib/Sympa/Message.pm:3094
+#: src/lib/Sympa/Message.pm:3103
 msgid ""
 "----- Malformed message ignored -----\n"
 "\n"
@@ -757,11 +757,11 @@ msgstr ""
 "------Messatge mal format ignorat ------\n"
 "\n"
 
-#: src/lib/Sympa/Message.pm:3104
+#: src/lib/Sympa/Message.pm:3113
 msgid "[Unknown]"
 msgstr "[Desconegut]"
 
-#: src/lib/Sympa/Message.pm:3135
+#: src/lib/Sympa/Message.pm:3144
 msgid ""
 "\n"
 "[Attached message follows]\n"
@@ -773,35 +773,35 @@ msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3137
+#: src/lib/Sympa/Message.pm:3146
 #, c-format
 msgid "Date: %s\n"
 msgstr "Data : %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3138
+#: src/lib/Sympa/Message.pm:3147
 #, c-format
 msgid "From: %s\n"
 msgstr "De : %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3139
+#: src/lib/Sympa/Message.pm:3148
 #, c-format
 msgid "To: %s\n"
 msgstr "A : %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3140
+#: src/lib/Sympa/Message.pm:3149
 #, c-format
 msgid "Cc: %s\n"
 msgstr "Cc : %s\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3141
+#: src/lib/Sympa/Message.pm:3150
 #, c-format
 msgid "Subject: %s\n"
 msgstr "Objècte : %s\n"
@@ -809,7 +809,7 @@ msgstr "Objècte : %s\n"
 # nlsref 5,4
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3149
+#: src/lib/Sympa/Message.pm:3158
 #, c-format
 msgid ""
 "-----End of original message from %s-----\n"
@@ -820,7 +820,7 @@ msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3178 src/lib/Sympa/Message.pm:3243
+#: src/lib/Sympa/Message.pm:3187 src/lib/Sympa/Message.pm:3252
 #, fuzzy, c-format
 msgid ""
 "** Warning: A message part is using unrecognised character set %s\n"
@@ -833,7 +833,7 @@ msgstr ""
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3199
+#: src/lib/Sympa/Message.pm:3208
 #, c-format
 msgid ""
 "\n"
@@ -842,7 +842,7 @@ msgstr ""
 "\n"
 "[Un estacament de format %s èra inserit aicí]\n"
 
-#: src/lib/Sympa/Message.pm:3208
+#: src/lib/Sympa/Message.pm:3217
 msgid ""
 "\n"
 "-----Delivery Status Report-----\n"
@@ -850,7 +850,7 @@ msgstr ""
 "\n"
 "-----Rapòrt de distribucion-----\n"
 
-#: src/lib/Sympa/Message.pm:3211
+#: src/lib/Sympa/Message.pm:3220
 msgid ""
 "\n"
 "-----End of Delivery Status Report-----\n"
@@ -858,7 +858,7 @@ msgstr ""
 "\n"
 "-----Fin del rapòrt de non-remesa-----\n"
 
-#: src/lib/Sympa/Message.pm:3225 src/lib/Sympa/Message.pm:3258
+#: src/lib/Sympa/Message.pm:3234 src/lib/Sympa/Message.pm:3267
 #, fuzzy
 msgid ""
 "\n"
@@ -867,82 +867,82 @@ msgstr ""
 "\n"
 "[ **  La part HTML del messatge se poguèt pas tractar **]\n"
 
-#: src/lib/Sympa/Message.pm:3262
+#: src/lib/Sympa/Message.pm:3271
 msgid "[ Text converted from HTML ]\n"
 msgstr "[ Tèxt convertit a partir del format HTML ]\n"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3402
+#: src/lib/Sympa/Message.pm:3411
 #, c-format
 msgid "%s via Owner Address of %s Mailing List"
 msgstr "%s via l’adreça del proprietari de la lista %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3406
+#: src/lib/Sympa/Message.pm:3415
 #, c-format
 msgid "%s via Moderator Address of %s Mailing List"
 msgstr "%s via l’adreça del moderator de la lista %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3410
+#: src/lib/Sympa/Message.pm:3419
 #, c-format
 msgid "%s via %s Mailing List"
 msgstr "%s via %s Mailing List"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3418
+#: src/lib/Sympa/Message.pm:3427
 #, c-format
 msgid "via Owner Address of %s Mailing List"
 msgstr "via l’adreça del proprietari de la lista %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3422
+#: src/lib/Sympa/Message.pm:3431
 #, c-format
 msgid "via Moderator Address of %s Mailing List"
 msgstr "via l’adreça del moderator de la lista %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3426
+#: src/lib/Sympa/Message.pm:3435
 #, c-format
 msgid "via %s Mailing List"
 msgstr "via la lista de difusion %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3432 src/lib/Sympa/Message.pm:3448
+#: src/lib/Sympa/Message.pm:3441 src/lib/Sympa/Message.pm:3457
 #, c-format
 msgid "Owner Address of %s Mailing List"
 msgstr "Adreça del proprietari de la lista %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3436 src/lib/Sympa/Message.pm:3452
+#: src/lib/Sympa/Message.pm:3445 src/lib/Sympa/Message.pm:3461
 #, c-format
 msgid "Moderator Address of %s Mailing List"
 msgstr "Adreça del moderator de la lista %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3439 src/lib/Sympa/Message.pm:3455
+#: src/lib/Sympa/Message.pm:3448 src/lib/Sympa/Message.pm:3464
 #, c-format
 msgid "%s Mailing List"
 msgstr "Lista de difusion %s"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/lib/Sympa/Message.pm:3444 src/lib/Sympa/Message.pm:3460
+#: src/lib/Sympa/Message.pm:3453 src/lib/Sympa/Message.pm:3469
 #, c-format
 msgid "on behalf of %s"
 msgstr "per delegacion de %s"
 
 # nlsref 16,3
-#: src/lib/Sympa/Message.pm:3477
+#: src/lib/Sympa/Message.pm:3486
 msgid "Anonymous"
 msgstr "Anonim"
 
@@ -6365,8 +6365,8 @@ msgstr "site"
 #: default/web_tt2/view_template.tt2:31
 #, fuzzy
 msgid ""
-"(this template is the default used by all robots unless redefined for a "
-"specific robot)"
+"(this template is the default used by all domains unless redefined for a "
+"specific domain)"
 msgstr ""
 "(Aqueste modèl es definit per totes los robòts levat s'es redefinit al nivèl "
 "d'un robòt especific)"
@@ -6376,7 +6376,7 @@ msgstr ""
 #: default/web_tt2/view_template.tt2:34
 #, fuzzy, smalltalk-format
 msgid ""
-"(this template is the default for all lists of robot %1 unless it is "
+"(this template is the default for all lists of domain %1 unless it is "
 "redefined for a specific list)"
 msgstr ""
 "(Aqueste modèl es definit per totas las listas del robòt %1 levat s'es "
@@ -7705,10 +7705,6 @@ msgid "New lists"
 msgstr "Las novèlas listas"
 
 #: default/web_tt2/latest_lists.tt2:18
-msgid " The latest lists of this robot"
-msgstr "Las darrièras listas creadas"
-
-#: default/web_tt2/latest_lists.tt2:18
 msgid " The latest lists of this domain"
 msgstr "Las darrièras listas creadas"
 
@@ -7958,24 +7954,16 @@ msgstr ""
 "SIQUENON utilizacion del modèl per defaut, distribuit amb Sympa (aqueles "
 "devon pas èsser modificats perque Sympa los espotís a cada mesa a jorn)"
 
-#: default/web_tt2/ls_templates.tt2:14
-msgid "IF list context defined, apply list template if exist\nELSE apply domain defined template if exist\nELSE apply locally defined template if exist\nELSE apply template included in the distribution (these must not be edited because Sympa's update will over write these files)"
-msgstr "S'una lista es especificada, utilizacion del modèl de la lista\nSIQUENON utilizacion del modèl del robòt s'existís\nSIQUENON utilizacion del modèl del site s'existís\nSIQUENON utilizacion del modèl per defaut, distribuit amb Sympa (aqueles devon pas èsser modificats perque Sympa los espotís a cada mesa a jorn)"
-
 #: default/web_tt2/ls_templates.tt2:18
 msgid ""
 "First, you may list a category of templates. The list should include a "
 "default template and may include any templates designated for a particular "
 "list. You will then have an opportunity to copy and edit templates for the "
-"current robot or the named list."
+"current domain or the named list."
 msgstr ""
 "Podètz far la lista d'una categoria de modèls, eventualament los d'una lista "
 "especifica. Poiretz puèi copiar e editar los modèls del site o de la lista "
 "correnta."
-
-#: default/web_tt2/ls_templates.tt2:18
-msgid "First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current domain or the named list."
-msgstr "Podètz far la lista d'una categoria de modèls, eventualament los d'una lista especifica. Poiretz puèi copiar e editar los modèls del site o de la lista correnta."
 
 # nlsref 15,18
 #: default/web_tt2/ls_templates.tt2:25
@@ -15399,6 +15387,32 @@ msgstr "Lista de tipe forum ML"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista per l'Intranet"
+
+#~ msgid " The latest lists of this robot"
+#~ msgstr "Las darrièras listas creadas"
+
+#~ msgid ""
+#~ "IF list context defined, apply list template if exist\n"
+#~ "ELSE apply domain defined template if exist\n"
+#~ "ELSE apply locally defined template if exist\n"
+#~ "ELSE apply template included in the distribution (these must not be "
+#~ "edited because Sympa's update will over write these files)"
+#~ msgstr ""
+#~ "S'una lista es especificada, utilizacion del modèl de la lista\n"
+#~ "SIQUENON utilizacion del modèl del robòt s'existís\n"
+#~ "SIQUENON utilizacion del modèl del site s'existís\n"
+#~ "SIQUENON utilizacion del modèl per defaut, distribuit amb Sympa (aqueles "
+#~ "devon pas èsser modificats perque Sympa los espotís a cada mesa a jorn)"
+
+#~ msgid ""
+#~ "First, you may list a category of templates. The list should include a "
+#~ "default template and may include any templates designated for a "
+#~ "particular list. You will then have an opportunity to copy and edit "
+#~ "templates for the current robot or the named list."
+#~ msgstr ""
+#~ "Podètz far la lista d'una categoria de modèls, eventualament los d'una "
+#~ "lista especifica. Poiretz puèi copiar e editar los modèls del site o de "
+#~ "la lista correnta."
 
 #~ msgid "Message Name:"
 #~ msgstr "Nom del messatge :"
