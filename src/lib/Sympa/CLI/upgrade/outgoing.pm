@@ -275,7 +275,7 @@ robot configuration parameters in C<robot.conf> are referred.
 
 =head1 SEE ALSO
 
-L<sympa.conf(5)>,
+L<sympa_config(5)>,
 L<Sympa::Message>,
 L<Sympa::Spool::Outgoing>.
 

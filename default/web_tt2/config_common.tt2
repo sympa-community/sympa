@@ -244,6 +244,7 @@
                        id="param.[% ppaths.join('.') %]"
                        value="[% val %]" size="[% pitem.length %]"
                        [%~ IF pitem.field_type == 'password' %] type="password"
+                       autocomplete="new-password"
                        [%~ ELSE %] type="text"
                        [%~ END %]
                        [%~ IF pitem.field_type == 'lang' %] class="neutral"[% END %] />

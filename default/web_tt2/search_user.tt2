@@ -43,7 +43,9 @@
                             [% IF l.value.is_editor %][%|loc%]moderator[%END%] [% END %]
                         </td>
                         <td headers="h_reception">
-                            [%|optdesc('reception')%][% l.value.reception %][% END %]
+                            [% IF l.value.reception ~%]
+                                [% l.value.reception | optdesc('reception') %]
+                            [%~ END %]
                         </td>
                         <td headers="h_topics">
                             [% l.value.topic %]

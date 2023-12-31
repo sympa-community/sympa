@@ -26,6 +26,7 @@ package Sympa::Spindle::DoMessage;
 
 use strict;
 use warnings;
+use Encode qw();
 
 use Sympa;
 use Conf;
@@ -149,8 +150,13 @@ sub _check_command {
     my $subject_field = $message->{'decoded_subject'};
     $subject_field = '' unless defined $subject_field;
     $subject_field =~ s/\n//mg;    # multiline subjects
+    # Remove leading "Re:" and equivalents.
+    # Note that Unicode case-ignore match is performed.
     my $re_regexp = Sympa::Regexps::re();
-    $subject_field =~ s/^\s*(?:$re_regexp)?\s*(.*)\s*$/$1/i;
+    $subject_field = Encode::decode_utf8($subject_field);
+    $subject_field =~ s/\A\s*$re_regexp\s*//i;
+    $subject_field =~ s/\s+\z//;
+    $subject_field = Encode::encode_utf8($subject_field);
 
     if ($subject_field =~ /^($commands_re)$/im) {
         return $1;

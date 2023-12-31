@@ -56,13 +56,10 @@
     [%IF content %]
         <form action="[% path_cgi %]" method="post" name="edit_templates">
             <fieldset>
+                <h2>
+                    [%|loc(message_template)%]Edit rejection message %1[%END%]
+                </h2>
                 <p>
-                    <h2>[%|loc%]Edit[%END%] [% message_template %]</h2>
-                </p>
-                <p>
-                    <!-- [%|loc()%]Message Name:[%END%]<input type="text" name="message_template" value="[% message_template %]"> -->
-                    <!-- <input class="MainMenuLinks" type="submit" name="subaction_default" value="[%|loc%]Default Message[%END%]" /> -->
-
                     <textarea name="content" cols="50" rows="10" wrap="soft">
                         [%~ content ~%]
                     </textarea>

@@ -58,9 +58,8 @@ test -w "$TRANS_DIRECTORY"
 # Confirm that remote repository has been cloned using the Deploy Key.
 # Confirm that any branches in remote origin may be fetched.
 
-git config --get remote.origin.url
 git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-git fetch --quiet --depth 50
+git fetch --depth 50 |& cat
 
 # Export recent translations under TRANS_DIRECTORY.
 # "pootle sync_stores" is the command to export them.
@@ -210,7 +209,7 @@ else
     do_push="yes"
 fi
 if [ "$do_push" = "yes" ]; then
-    git push -f origin "$SYMPA_PUSH_BRANCH"
+    git push -f origin "$SYMPA_PUSH_BRANCH" |& cat
 else
     echo 'Nothing to push.'
 fi
