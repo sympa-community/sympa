@@ -13,7 +13,7 @@ jobs:
     if: github.repository_owner == 'sympa-community'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Submit PR
         run: >
           gh pr create -H $GITHUB_REPOSITORY_OWNER:$GITHUB_REF_NAME

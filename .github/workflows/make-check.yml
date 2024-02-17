@@ -32,7 +32,7 @@ jobs:
           - '5.16'
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies for Linux
         if: runner.os == 'Linux'
         run: |
