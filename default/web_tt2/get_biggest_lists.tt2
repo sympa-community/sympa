@@ -3,10 +3,10 @@
 <table  class="responsive table_style">
     <caption>[%|loc%]Biggests Lists[%END%]</caption>
     <tr class="color_light">
-        <th>[%|loc%]Creation date[%END%]</th>
-        <th>[%|loc%]List name[%END%]</th>
-        <th>[%|loc%]Subject[%END%]</th>
-        <th>[%|loc%]Subscribers[%END%]</th>
+        <th id="h_date">[%|loc%]Creation date[%END%]</th>
+        <th id="h_name">[%|loc%]List name[%END%]</th>
+        <th id="h_subject">[%|loc%]Subject[%END%]</th>
+        <th id="h_value">[%|loc%]Subscribers[%END%]</th>
     </tr>
 
     [% FOREACH list = biggest_lists %]
@@ -15,10 +15,12 @@
         [% ELSE %]
             <tr class="color0">[% SET dark = 1 %]
         [% END %]
-                <td>[% list.creation_date_epoch | optdesc('unixtime') %]</td>
-                <td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
-                <td>[% list.subject %]</td>
-                <td>[% list.subscribers %]</td>
+                <td headers="h_date">[% list.creation_date_epoch | optdesc('unixtime') %]</td>
+                <td headers="h_name">
+                    <a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a>
+                </td>
+                <td headers="h_subject">[% list.subject %]</td>
+                <td headers="h_value">[% list.subscribers %]</td>
             </tr>
     [% END %]
 </table>

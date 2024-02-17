@@ -14,18 +14,27 @@
         </ul>
         <p>
             [% SET close_table = '' %]
+            [% SET groupid = '' %]
             [% FOREACH confparam IN editable_params %]
                 [% IF confparam.title %]
                     [% close_table %]
-                    <a name="[%confparam.group%]"></a>
+                    [% SET groupid = confparam.group %]
+                    <a name="[%groupid%]"></a>
                     <h4>[% confparam.title %]</h4>
                     <table class="responsive listOfItems">
                         <tr>
-                            <th>[%|loc%]parameter name[%END%]</th>
-                            <th>[%|loc%]value[%END%]</th>
-                            <th>[%|loc%]apply to[%END%]</th>
-                            <th>[%|loc%]default[%END%]</th>
-                            [%# <th>semantic</th> %]
+                            <th id="h_name_[%groupid%]">
+                                [%|loc%]parameter name[%END%]
+                            </th>
+                            <th id="h_value_[%groupid%]">
+                                [%|loc%]value[%END%]
+                            </th>
+                            <th id="h_context_[%groupid%]">
+                                [%|loc%]apply to[%END%]
+                            </th>
+                            <th id="h_default_[%groupid%]">
+                                [%|loc%]default[%END%]
+                            </th>
                         </tr>
                 [% ELSE %]
                     [% IF dark == '1' %]
@@ -35,27 +44,30 @@
                         [% SET dark='1'%]
                         <tr class="color0">
                     [% END %]
-                        <td [% IF confparam.query %]
+                        <td headers="h_name_[%groupid%]"
+                         [% IF confparam.query ~%]
                          data-tooltip aria-haspopup="true"
                          title="[% confparam.query %]"
                          [%~ END %]>
                             <strong>[% confparam.name  %]</strong>
                         </td>
-                        <td>
+                        <td headers="h_value_[%groupid%]">
                             [% UNLESS confparam.obfuscated == '1' %]
                                 [% confparam.current_value %]
                             [% ELSE %]
                                 [% confparam.current_value.replace('.','*') %]
                             [% END %]
                         </td>
-                        <td>
+                        <td headers="h_context_[%groupid%]">
                             [% IF confparam.vhost == '1' ~%]
                                 [% robot %]
                             [%~ ELSE ~%]
                                 [%|loc%]main conf[%END%]
                             [%~ END %]
                         </td>
-                        <td>[% confparam.default %]</td>
+                        <td headers="h_default_[%groupid%]">
+                            [% confparam.default %]
+                        </td>
                         </tr>
                     [% SET close_table = '</table>' %]
                 [% END %]

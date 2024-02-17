@@ -4,15 +4,12 @@
 <p>
     [% IF available_files %]
         <table border="1">
-            <table  class="responsive listOfItems">
+            <table class="responsive listOfItems">
                 <caption>[%|loc%]Listing rejection messages[%END%]</caption>
                 <tr>
-                    <th colspan="4">[%|loc%]Listing rejection messages[%END%]</th>
-                </tr>
-                <tr>
-                    <th>[%|loc%]Use as default[%END%]</th>
-                    <th>[%|loc%]Message name[%END%]</th>
-                    <th colspan="2">[%|loc%]Operation[%END%]</th>
+                    <th id="h_selection">[%|loc%]Use as default[%END%]</th>
+                    <th id="h_name">[%|loc%]Message name[%END%]</th>
+                    <th id="h_actions" colspan="2">[%|loc%]Operation[%END%]</th>
                 </tr>
 
                 <form action="[% path_cgi %]" method="post" name="manage_templates">
@@ -29,7 +26,7 @@
                                 [% dark = '1' %]
                                 <tr class="color0">
                             [% END %]
-                                    <td align="center">
+                                    <td headers="h_selection" align="center">
                                         <input type="radio" name="new_default" value="[% file %]"
                                                [% IF file == default_reject_template ~%]
                                                    checked="checked"
@@ -37,13 +34,13 @@
                                                    class="submitOnChange"
                                                [%~ END %]>
                                     </td>
-                                    <td>
+                                    <td headers="h_name">
                                         [% file %]
                                     </td>
-                                    <td align="center">
+                                    <td headers="h_actions" align="center">
                                         <a href="[% 'rt_edit' | url_rel([list,file]) %]" class="MainMenuLinks">[%|loc%]Edit[%END%]</a>
                                     </td>
-                                    <td align="center">
+                                    <td headers="h_actions" align="center">
                                         <a href="[% 'rt_delete' | url_rel([list,file]) %]" class="MainMenuLinks" >[%|loc%]Delete[%END%]</a>
                                     </td>
                                 </tr>
