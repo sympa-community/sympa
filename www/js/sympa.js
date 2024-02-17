@@ -156,26 +156,6 @@ $(function() {
     }
 });
 
-/* Loading jQuery-UI Datepicker Widget. */
-$(function() {
-    var options = {
-        buttonText:      sympa.calendarButtonText,
-        changeMonth:     true,
-        changeYear:      true,
-        dateFormat:      'dd-mm-yy',
-        dayNames:        sympa.dayNames,
-        dayNamesMin:     sympa.dayNamesMin,
-        firstDay:        sympa.calendarFirstDay,
-        monthNamesShort: sympa.monthNamesShort,
-        shortYearCutoff: 50,
-        showOn:          "button"
-    };
-    $('#date_deb').datepicker(options);
-    $('#date_from').datepicker(options);
-    $('#date_fin').datepicker(options);
-    $('#date_to').datepicker(options);
-});
-
 /* Emulates AJAX reveal modal button of Foundation 5. */
 /* The element specified by data-reveal-id is the container of content
  * specified by href attribute of the item which have data-reveal-ajax="true".
