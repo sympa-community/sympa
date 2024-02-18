@@ -192,7 +192,7 @@ recommends 'Net::SMTP';
 # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
 recommends 'Unicode::Normalize', '>= 1.03';
 
-recommends 'Unicode::UTF8', '>= 0.58';
+recommends 'Unicode::UTF8', '>= 0.60';
 
 ### Features
 ##
@@ -319,7 +319,7 @@ feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
     # Note: Perl 5.8.1 bundles version 0.23.
     # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
     requires 'Unicode::Normalize', '>= 1.03';
-    requires 'Unicode::UTF8', '>= 0.58';
+    requires 'Unicode::UTF8', '>= 0.60';
 };
 
 on 'test' => sub {
