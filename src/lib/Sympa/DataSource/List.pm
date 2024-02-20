@@ -45,7 +45,8 @@ sub _new {
 
     my $list = $self->{context};
     if (ref $list eq 'Sympa::List') {
-        my $inlist = Sympa::List->new($self->{listname}, $list->{'domain'},
+        my $inlist = Sympa::List->new($self->{listname},
+            ($self->{listname} =~ /\@/ ? undef : $list->{'domain'}),
             {just_try => 1});
         $self->{listname} = $inlist->get_id if $inlist;
     }
