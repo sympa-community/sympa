@@ -1,13 +1,35 @@
 <!-- lists.tt2 -->
 
+[% BLOCK ListsList # (listname, listinfo) ~%]
+    <a href="[% 'info' | url_rel([listname]) %]">
+        [% "${listname}@${domain}" | obfuscate(conf.spam_protection) %]
+        [% IF listinfo.is_owner || listinfo.is_editor || listinfo.is_subscriber ~%]
+            <span class="highlighted">(
+                [%~ IF listinfo.is_owner ~%]
+                    [%|loc%]Owner[%END ~%]
+                    [% IF listinfo.is_subscriber %]
+                        [%|loc%], [%END%]
+                    [%END ~%]
+                [% ELSIF listinfo.is_editor ~%]
+                    [%|loc%]Moderator[%END ~%]
+                    [% IF listinfo.is_subscriber %]
+                        [%|loc%], [%END%]
+                    [%END ~%]
+                [% END ~%]
+                [% IF listinfo.is_subscriber %]
+                    [%|loc%]Subscriber[%END%]
+                [%END ~%]
+            )</span>
+        [% END %]
+    </a>
+    <p class="listenum" >[% listinfo.subject %]</p>
+[%~ END ~%]
+
 [% IF topic ~%]
     <h3>[% topic | optdesc('listtopic') %]</h3>
 [%~ ELSIF subtitle ~%]
     <h3>[% subtitle %]</h3>
 [%~ END %]
-
-[% letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','others' ] %]
-[% all_letters = [] %]
 
 [% IF action == 'search_list' %]
     [%~ PROCESS search_list_request.tt2 %]
@@ -18,77 +40,78 @@
     <p>[%|loc(email)%]<strong>%1</strong> is subscribed to the following mailing lists[%END%]</p>
 [%~ END %]
 
-[% IF which && which.size %]
-    [% FOREACH letter IN letters %]
-        [% IF orderedlist.$letter.0 %]
-            <article id="[% letter %]" >
-                <h4 class="letter">
-                    [% IF letter == "others" %]
-                        [%|loc%]Others[%END%]
-                    [% ELSE %]
-                        [% letter %]
-                    [% END %]
-                </h4>
-                <ul class="listenum">
-                    [% FOREACH listname IN  orderedlist.$letter %]
-                        <li class="listenum">
-                            <a href="[% 'info' | url_rel([listname]) %]">
-                                [%|obfuscate(conf.spam_protection) %][% listname %]@[% domain %][% END %]
-                                [% IF which.$listname.is_owner || which.$listname.is_editor || which.$listname.is_subscriber ~%]
-                                    <span class="highlighted">(
-                                        [%~ IF which.$listname.is_owner ~%]
-                                            [%|loc%]Owner[%END ~%]
-                                            [% IF which.$listname.is_subscriber %]
-                                                [%|loc%], [%END%]
-                                            [%END ~%]
-                                        [% ELSIF which.$listname.is_editor ~%]
-                                            [%|loc%]Moderator[%END ~%]
-                                            [% IF which.$listname.is_subscriber %]
-                                                [%|loc%], [%END%]
-                                            [%END ~%]
-                                        [% END ~%]
-                                        [% IF which.$listname.is_subscriber %]
-                                            [%|loc%]Subscriber[%END%]
-                                        [%END ~%]
-                                    )</span>
-                                [% END %]
-                            </a>
-                            <p class="listenum" >[% which.$listname.subject %]</p>
-                        </li>
-                    [% END %]
+[% SET letters_which = {} ~%]
+[% SET others_which = {} ~%]
+[% IF which && which.size ~%]
+    [% FOREACH l IN which ~%]
+        [% IF l.key.match('^[a-z]') ~%]
+            [% letters_which.${l.key} = l.value %]
+        [%~ ELSE ~%]
+            [% others_which.${l.key} = l.value %]
+        [%~ END %]
+    [%~ END %]
+[%~ END ~%]
+
+[% UNLESS letters_which.size || others_which.size ~%]
+    <p>
+        [%|loc%]No mailing list available.[%END%]
+    </p>
+[%~ END ~%]
+
+[% IF letters_which.size ~%]
+    [% SET prev_letter = '' ~%]
+    [% FOREACH l IN letters_which ~%]
+        [% letter = l.key.substr(0, 1) ~%]
+
+        [% IF prev_letter != letter ~%]
+            [% IF prev_letter != '' ~%]
                 </ul>
                 <span class="divider"></span>
-            </article>
-            [% all_letters.push(letter) %]
-        [% END %]
-    [% END %]
+                </article>
+            [%~ END %]
 
-    <br />
+            <article id="[% letter %]" class="letter" >
+            <h4 class="letter">
+                [% letter %]
+            </h4>
+            <ul class="listenum">
 
-    [% IF action == 'which' %]
-        [% IF ! which %]
-            &nbsp;&nbsp;<span class="color_dark">[%|loc(user.email)%]No subscriptions with address <strong>%1</strong>![%END%]</span>
-            <br />
-        [% END %]
-    [% END %]
-[% ELSE %]
-    <p>[%|loc%]No mailing list available.[%END%]</p>
-[% END %]
+            [% prev_letter = letter %]
+        [%~ END %]
 
-[% IF all_letters.size %]
-    <script>
-    <!--
-    $(
-        '[% 'a[href="#' _ all_letters.join( '"], a[href="#' ) _ '"]' %]'
-    ).on('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        id = $(this).attr('href').substr(1);
-        $( '[% '#' _ all_letters.join(', #') %]' ).hide();
-        $('#' + id).show();
-        return false;
-    });
-    //-->
-    </script>
-[% END %]
+        <li class="listenum">
+        [% PROCESS ListsList
+            listname = l.key
+            listinfo = l.value
+        %]
+        </li>
+    [%~ END %]
+
+    </ul>
+    <span class="divider"></span>
+    </article>
+[%~ END %]
+
+[% IF others_which.size ~%]
+    [% letter = 'others' ~%]
+    <article id="[% letter %]" class="letter" >
+    <h4 class="letter">
+        [%|loc%]Others[%END%]
+    </h4>
+    <ul class="listenum">
+
+    [% FOREACH l IN others_which ~%]
+        <li class="listenum">
+        [% PROCESS ListsList
+            listname = l.key
+            listinfo = l.value
+        %]
+        </li>
+    [%~ END %]
+
+    </ul>
+    <span class="divider"></span>
+    </article>
+[%~ END %]
+
 <!-- end lists.tt2 -->

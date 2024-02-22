@@ -4177,19 +4177,17 @@ sub do_lists {
                 'remote_addr' => $param->{'remote_addr'},
             }
             );
+        my $r_action = $result->{action} if ref $result eq 'HASH';
+        next
+            unless ($r_action // '') =~ /\Ado_it\b/i
+            or $param->{'is_listmaster'};
 
-        my $r_action;
-        $r_action = $result->{'action'} if (ref($result) eq 'HASH');
-
-        next unless ($r_action eq 'do_it');
-
-        my $list_info = {};
-        $list_info->{'subject'} = $list->{'admin'}{'subject'};
-        $list_info->{'date_epoch'} =
-            $list->{'admin'}{'creation'}{'date_epoch'};
-        $list_info->{'topics'} = $list->{'admin'}{'topics'};
-        #Compat.<6.2.32
-        $list_info->{'host'} = $list->{'domain'};
+        my $list_info = {
+            subject    => $list->{'admin'}{'subject'},
+            date_epoch => $list->{'admin'}{'creation'}{'date_epoch'},
+            topics     => $list->{'admin'}{'topics'},
+            host => $list->{'domain'},    #Compat.<6.2.32
+        };
 
         if ($param->{'user'}{'email'}) {
             if ($which->{owner}->{$listname}) {
@@ -4222,6 +4220,8 @@ sub do_lists {
 
         $param->{'which'} ||= {};
         $param->{'which'}{$listname} = $list_info;
+
+        #Compat.<=6.2.72
         if ($listname =~ /^([a-z])/) {
             push @{$param->{'orderedlist'}{$1}}, $listname;
         } else {
@@ -4389,9 +4389,13 @@ sub do_active_lists {
 sub do_including_lists {
     my %which;
 
+    my %visible;
+    my %invisible;
     foreach my $role (qw(member owner editor)) {
         foreach my $l (@{$list->get_including_lists($role) || []}) {
-            unless (exists $which{$l->get_id}) {
+            my $id = $l->get_id;
+
+            unless (exists $visible{$id}) {
                 # Check visibility.
                 my $result =
                     Sympa::Scenario->new($l, 'visibility',
@@ -4402,10 +4406,12 @@ sub do_including_lists {
                         'remote_addr' => $param->{'remote_addr'},
                     }
                     );
-                my $action = $result->{'action'} if ref $result eq 'HASH';
-                next unless $action;
+                my $r_action = $result->{action} if ref $result eq 'HASH';
+                $visible{$id} = ($r_action // '') =~ /\Ado_it\b/i;
+            }
 
-                $which{$l->get_id} = {
+            if ($visible{$id} or $param->{'is_listmaster'}) {
+                $which{$id} ||= {
                     name   => $l->{'name'},
                     domain => $l->{'domain'},
                     host   => $l->{'domain'},    # Compat.<6.2.32
@@ -4414,10 +4420,19 @@ sub do_including_lists {
                     url_abs => Sympa::get_url($l, 'info'),
                     url_rel =>
                         Sympa::get_url($l, 'info', authority => 'omit'),
-                    visible => ($action =~ /\Ado_it\b/i),
+                    visible => $visible{$id},    #Compat.<=6.2.72
                 };
+
+                $which{$id}->{"${$role}_include"} = 1;
+            } else {
+                unless (exists $invisible{$id}) {
+                    $invisible{$id} = sprintf 'list#%d',
+                        scalar keys %invisible;
+                }
+                $which{$invisible{$id}} ||= {};
+
+                $which{$invisible{$id}}->{"${$role}_include"} = 1;
             }
-            $which{$l->get_id}->{$role . '_include'} = 1;
         }
     }
 
@@ -10184,9 +10199,10 @@ sub do_search_list {
                 'remote_addr' => $param->{'remote_addr'}
             }
         );
-        my $r_action;
-        $r_action = $result->{'action'} if (ref($result) eq 'HASH');
-        next unless ($r_action eq 'do_it');
+        my $r_action = $result->{action} if ref $result eq 'HASH';
+        next
+            unless ($r_action // '') =~ /\Ado_it\b/i
+            or $param->{'is_listmaster'};
 
         if ($param->{'user'}{'email'}
             and (  $list->is_admin('owner', $param->{'user'}{'email'})
@@ -10197,14 +10213,15 @@ sub do_search_list {
 
         $record++;
         $param->{'which'}{$list->{'name'}} = {
-            'subject' => $list->{'admin'}{'subject'},
-            'admin'   => $is_admin,
-            'export'  => 'no',
-            # Compat. < 6.2.32
-            'host' => $list->{'domain'},
+            subject => $list->{'admin'}{'subject'},
+            admin   => $is_admin,
+            export  => 'no',
+            host    => $list->{'domain'},             # Compat. < 6.2.32
         };
     }
     $param->{'occurrence'} = $record;
+
+    # Compat.<=6.2.72
     foreach my $listname (sort keys %{$param->{'which'}}) {
         if ($listname =~ /^([a-z])/) {
             push @{$param->{'orderedlist'}{$1}}, $listname;
@@ -13780,9 +13797,10 @@ sub _set_my_lists_info {
                     'remote_addr' => $param->{'remote_addr'}
                 }
             );
+            my $r_action = $result->{action} if ref $result eq 'HASH';
             next
-                unless ref $result eq 'HASH'
-                and $result->{'action'} eq 'do_it';
+                unless ($r_action // '') =~ /\Ado_it\b/i
+                or $param->{'is_listmaster'};
 
             $all_lists{$list->{'name'}} = $list;
 

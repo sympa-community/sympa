@@ -8,7 +8,7 @@
         <span class="divider"></span>
         [% SET invisible_count = 0; visible_count = 0 ~%]
         [% FOREACH l = which ~%]
-            [% IF l.value.visible ~%]
+            [% IF l.value.visible || is_listmaster ~%]
                 <div class="item_content">
                     <a class="item_title" href="[% l.value.robot == robot ? l.value.url_rel : l.value.url_abs %]">
                         [%|obfuscate(conf.spam_protection) ~%]

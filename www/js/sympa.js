@@ -342,6 +342,16 @@ $(function(){
     });
 });
 
+/* Filter list of lists. */
+$(function() {
+    $('li.letter a').on('click', function(e) {
+        id = $(this).attr('href').substr(1);
+        $('article.letter').hide();
+        $('#' + id).show();
+        return false;
+    });
+});
+
 /* Align the scrollable calendar. */
 $(function() {
     $('.calendarLinksCurrentPage').each(function(){
@@ -353,4 +363,3 @@ $(function() {
             (container.height() - curmonth.height()) / 2);
     });
 });
-
