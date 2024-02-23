@@ -767,16 +767,38 @@ sub is_listmaster {
 }
 
 # Old name: tools::get_message_id().
+#
+# Note:
+# The boundary of multipart message is generated based on this function
+# and its length, 2 octets longer, should be limited up to 70 octets
+# (See RFC 2046, 5.1.1). So as of 6.2.74, the length of the domain part will
+# be limited.  See also GH #1795.
 sub unique_message_id {
     my $that = shift;
 
-    my ($time, $usec) = Sympa::Tools::Time::gettimeofday();
     my $domain =
           (ref $that eq 'Sympa::List') ? $that->{'domain'}
         : ($that and $that ne '*') ? $that
         :                            $Conf::Conf{'domain'};
-    return sprintf '<sympa.%d.%d.%d.%d@%s>', $time, $usec, $PID,
-        (int rand 999), $domain;
+
+    my ($time, $usec) = Sympa::Tools::Time::gettimeofday();
+    my $base32 = sprintf '%s%s%s%s',
+        _base32($time, 35), _base32($usec, 20), _base32($PID, 35),
+        _base32(int(rand 1023), 10);
+
+    return sprintf '<sympa.%s@%s>', $base32, substr $domain, -39;
+}
+
+my @base32_alphabets = split '', '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+
+sub _base32 {
+    my $dec = shift;
+    my $prc = shift;
+
+    # Convert a (possiblly signed) decimal $dec to binary in $prc bits
+    # then encode it in base32.
+    my $vec = substr sprintf("%0${prc}b", $dec), -$prc;
+    return $vec =~ s/([01]{5})/$base32_alphabets[oct "0b$1"]/egr;
 }
 
 1;
