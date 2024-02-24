@@ -9,11 +9,47 @@
 
 **Implemented enhancements:**
 
+- WWSympa: Save default sort key in review [\#1577](https://github.com/sympa-community/sympa/issues/1577)
+- Add `.eml` extension to archives files [\#1581](https://github.com/sympa-community/sympa/issues/1581)
+- Additional localised "Re:" prefixes in subject [\#1668](https://github.com/sympa-community/sympa/pull/1668)
 - Support for LDAP paged queries [\#57](https://github.com/sympa-community/sympa/issues/57)
 - Overall statistics panel [\#1661](https://github.com/sympa-community/sympa/issues/1661)
 
 **Fixed bugs:**
 
+
+- Display name in `From:` header field should be quoted / unquoted appropriately [\#1572](https://github.com/sympa-community/sympa/pull/1572)
+- sympa instantiate: Progress bar could not be inactivated [\#1567](https://github.com/sympa-community/sympa/issues/1567)
+- WWSympa: Noise in Apache error_log [\#1325](https://github.com/sympa-community/sympa/issues/1325)
+- WWSympa: Enable autofilling of password only if necessary [\#1033](https://github.com/sympa-community/sympa/issues/1033)
+- WWSympa: Direct link to reject action crashes [\#1703](https://github.com/sympa-community/sympa/issues/1703)
+- SOAP: Broken output with SOAP API due to mixture of byte- and utf8-strings [\#1541](https://github.com/sympa-community/sympa/issues/1541)
+- MacPorts: Fixes for `service/sympa.in` [\#1642](https://github.com/sympa-community/sympa/pull/1642)
+- "warning: ignoring prerequisites on suffix rule definition" with GNU make 4.3 [\#1651](https://github.com/sympa-community/sympa/pull/1651)
+- Manually deleted list blocks closure of the list which has been included by the former [\#1660](https://github.com/sympa-community/sympa/issues/1660)
+- WWSympa: A workaround for the browser back to let the "Please Wait..." spinner remain [\#1666](https://github.com/sympa-community/sympa/pull/1666)
+- WWSympa: Lower the list of months in the calendar and allow it scrolling [\#1672](https://github.com/sympa-community/sympa/pull/1672)
+- RSS: lastBuildDate element in RSS feed was inproperly formatted [\#1680](https://github.com/sympa-community/sympa/pull/1680)
+- WWSympa: Fixes for Sympa Accessibility Issues - Review by UIUC
+  [\#1744](https://github.com/sympa-community/sympa/issues/1744)
+  [\#1747](https://github.com/sympa-community/sympa/issues/1747)
+  [\#1748](https://github.com/sympa-community/sympa/issues/1748)
+  [\#1751](https://github.com/sympa-community/sympa/issues/1751)
+  [\#1752](https://github.com/sympa-community/sympa/issues/1752)
+  [\#1753](https://github.com/sympa-community/sympa/issues/1753)
+  [\#1761](https://github.com/sympa-community/sympa/issues/1761)
+  [\#1763](https://github.com/sympa-community/sympa/issues/1763)
+  [\#1767](https://github.com/sympa-community/sympa/issues/1767)
+  [\#1776](https://github.com/sympa-community/sympa/issues/1776)
+- [CVE-2021-41183] [CVE-2021-41182] [CVE-2021-41184] [CVE-2022-31160] WWSympa: Update jquery-ui from 1.12.1 to 1.13.2 [\#1719](https://github.com/sympa-community/sympa/issues/1719)
+- DSN with status `4.3.0` may mess the parent(s) of nested list [\#1699](https://github.com/sympa-community/sympa/issues/1699)
+- `INFO` mail command pulls different owners and/or moderators than those with web UI [\#1732](https://github.com/sympa-community/sympa/issues/1732)
+- DKIM: Default value of `dkim_signature_apply_on` in domain context was ignored [\#1739](https://github.com/sympa-community/sympa/issues/1739)
+- Upgrade command should fail if no previuos version number can be found [\#1741](https://github.com/sympa-community/sympa/pull/1741)
+- WWSympa: Missing validation on Digest frequency in Edit Config [\#1742](https://github.com/sympa-community/sympa/issues/1742)
+- WWSympa: 🐛 — Fix error when rejecting message from direct URL [\#1687](https://github.com/sympa-community/sympa/pull/1687)
+- SOAP: Fix typos in `sympa.wsdl` [\#1676](https://github.com/sympa-community/sympa/issues/1676) [\#1696](https://github.com/sympa-community/sympa/issues/1696)
+- Crashes by "Can't locate object method "new" via package "Sympa::Aliases"" [\#1710](https://github.com/sympa-community/sympa/issues/1710)
 - WWSympa: Invalid input on sso\_login form floods listmaster notification [\#1654](https://github.com/sympa-community/sympa/issues/1654)
 - Deprecate "System log" setting in Listmaster Admin menu [\#1649](https://github.com/sympa-community/sympa/issues/1649)
 - Confusing labels for ttl and distribution\_ttl [\#896](https://github.com/sympa-community/sympa/issues/896)
@@ -21,6 +57,10 @@
 - Some typos in docs and comments [\#1653](https://github.com/sympa-community/sympa/pull/1653)
 - Correct texts about obsoleted `dkim` authentication method for scenarios [\#1599](https://github.com/sympa-community/sympa/pull/1599)
 - When owners/moderators are added, "N subscribers added" is shown [\#1584](https://github.com/sympa-community/sympa/pull/1584)
+
+**Merged pull requests:**
+
+- Tracking: Remove outdated heuristics for bounce processing [\#1701](https://github.com/sympa-community/sympa/pull/1701)
 
 ## [6.2.72](https://github.com/sympa-community/sympa/tree/6.2.72) (2023-06-01)
 
