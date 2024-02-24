@@ -187,14 +187,6 @@ sub new {
         }
     }
 
-    my $unique_id = Sympa::unique_message_id($robot_id);
-    $data->{'boundary'} = sprintf '=_%s', $unique_id
-        unless $data->{'boundary'};
-    $data->{'boundary1'} = sprintf '=1%s', $unique_id
-        unless $data->{'boundary1'};
-    $data->{'boundary2'} = sprintf '=2%s', $unique_id
-        unless $data->{'boundary2'};
-
     my $self = $class->_new_from_template($that, $tpl . '.tt2',
         $who, $data, %options);
     return undef unless $self;
@@ -272,6 +264,15 @@ sub _new_from_template {
     die sprintf 'Wrong type of reference for $rcpt: %s', ref $rcpt
         if ref $rcpt and ref $rcpt ne 'ARRAY';
 
+    # Boundaries for multipart message.
+    my $unique_id = Sympa::unique_message_id($robot_id);
+    $data->{'boundary'} = sprintf '=_%s', $unique_id
+        unless $data->{'boundary'};
+    $data->{'boundary1'} = sprintf '=1%s', $unique_id
+        unless $data->{'boundary1'};
+    $data->{'boundary2'} = sprintf '=2%s', $unique_id
+        unless $data->{'boundary2'};
+
     ## Charset for encoding
     $data->{'charset'} ||= Conf::lang2charset($data->{'lang'});
 
@@ -328,8 +329,7 @@ sub _new_from_template {
     my $headers = "";
 
     unless ($header_ok{'message-id'}) {
-        $headers .=
-            sprintf("Message-Id: %s\n", Sympa::unique_message_id($robot_id));
+        $headers .= sprintf("Message-Id: %s\n", $unique_id);
     }
 
     unless ($header_ok{'date'}) {
