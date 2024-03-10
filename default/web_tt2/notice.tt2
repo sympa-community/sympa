@@ -2,7 +2,7 @@
 <div id="ephemeralMsg">
     [% IF last_login_epoch ~%]
         <div  data-alert class="alert-box info radius">
-            <i class="fi-eye"></i>
+            <i class="far fa-eye" aria-hidden="true"></i>
             [% last_login_date = BLOCK ~%]
                 [% last_login_epoch | optdesc('unixtime') %]
             [%~ END ~%]
@@ -15,7 +15,7 @@
     [% FOREACH notice = notices ~%]
         [%~ IF notice.msg == 'time_limit_for_include' ~%]
             <div  data-alert class="alert-box warning radius">
-                <i class="fi-alert"></i>
+                <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
         [% ELSIF notice.msg == 'add_performed' ||
                  notice.msg == 'del_performed' ||
                  notice.msg == 'performed' ||
@@ -25,10 +25,10 @@
                  notice.msg == 'list_restored' ||
                  notice.msg == 'upload_success' ~%]
             <div  data-alert class="alert-box success radius">
-                <i class="fi-check"></i>
+                <i class="fa fa-check" aria-hidden="true"></i>
         [%~ ELSE ~%]
             <div  data-alert class="alert-box info radius">
-                <i class="fi-eye"></i>
+                <i class="far fa-eye" aria-hidden="true"></i>
         [%~ END %]
 
         [% notice_msg = BLOCK ~%]

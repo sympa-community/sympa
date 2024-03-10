@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -53,6 +52,7 @@ my %types = (
         'isOwner'      => 'boolean',
         'isEditor'     => 'boolean',
         'subject'      => 'string',
+        'info'         => 'string',
         'email'        => 'string',
         'gecos'        => 'string'
     }
@@ -229,13 +229,9 @@ sub casLogin {
 
     ## Validate the CAS ST against all known CAS servers defined in auth.conf
     ## CAS server response will include the user's NetID
-    my ($user, @proxies, $email, $cas_id);
-    foreach my $service_id (0 .. $#{$Conf::Conf{'auth_services'}{$robot}}) {
-        my $auth_service = $Conf::Conf{'auth_services'}{$robot}[$service_id];
-        ## skip non CAS entries
-        next
-            unless ($auth_service->{'auth_type'} eq 'cas');
-
+    my ($user, @proxies, $email, $auth);
+    foreach my $auth_service (grep { $_->{auth_type} eq 'cas' }
+        @{$Conf::Conf{'auth_services'}{$robot}}) {
         my $cas = AuthCAS->new(
             casUrl => $auth_service->{'base_url'},
             #CAFile => '/usr/local/apache/conf/ssl.crt/ca-bundle.crt',
@@ -257,7 +253,7 @@ sub casLogin {
             $user, $auth_service->{'base_url'});
 
         ## User was authenticated
-        $cas_id = $service_id;
+        $auth = $auth_service;
         last;
     }
 
@@ -269,11 +265,9 @@ sub casLogin {
     }
 
     ## Now fetch email attribute from LDAP
-    unless (
-        $email = Sympa::WWW::Auth::get_email_by_net_id(
-            $robot, $cas_id, {'uid' => $user}
-        )
-    ) {
+    unless ($email =
+        Sympa::WWW::Auth::get_email_by_net_id($robot, $auth, {uid => $user}))
+    {
         $log->syslog('err',
             'Could not get email address from LDAP for user %s', $user);
         die SOAP::Fault->faultcode('Server')
@@ -527,6 +521,8 @@ sub info {
         $result_item->{'subject'} =
             SOAP::Data->name('subject')->type('string')
             ->value($list->{'admin'}{'subject'});
+        $result_item->{'info'} =
+            SOAP::Data->name('info')->type('string')->value($list->get_info);
         $result_item->{'homepage'} =
             SOAP::Data->name('homepage')->type('string')
             ->value(Sympa::get_url($list, 'info'));
@@ -1364,12 +1360,12 @@ sub getDetails {
         $result{'subscribeDate'} = $subscriber->{'date'};
         $result{'updateDate'}    = $subscriber->{'update_date'};
         $result{'custom'}        = [];
-        if ($subscriber->{'custom_attribute'}) {
-            foreach my $k (keys %{$subscriber->{'custom_attribute'}}) {
+        if ($subscriber->{attrib}) {
+            foreach my $k (keys %{$subscriber->{attrib}}) {
                 push @{$result{'custom'}},
                     {
                     key   => $k,
-                    value => $subscriber->{'custom_attribute'}{$k}{value}
+                    value => $subscriber->{attrib}{$k}
                     }
                     if $k;
             }
@@ -1435,21 +1431,19 @@ sub setDetails {
         if $reception
         and $reception =~
         /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)$/;
-    if (@_) {    # do we have any custom attributes passed?
-        %newcustom = %{$subscriber->{'custom_attribute'}};
-        while (@_) {
-            my $key = shift;
+    my %attrs = @_;
+    if (%attrs) {
+        # We have any custom attributes passed.
+        %newcustom = %{$subscriber->{attrib} // {}};
+        while (my ($key, $value) = each %attrs) {
             next unless $key;
-            my $value = shift;
-            if (!defined $value or $value eq '') {
-                undef $newcustom{$key};
+            unless (length($value // '')) {
+                delete $newcustom{$key};
             } else {
-                # $newcustom{$key} = $list->{'admin'}{'custom_attribute'}{$key}
-                #     if !defined $newcustom{$key};
-                $newcustom{$key}{value} = $value;
+                $newcustom{$key} = $value;
             }
         }
-        $user{'custom_attribute'} = \%newcustom;
+        $user{attrib} = \%newcustom;
     }
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user details')
@@ -1496,23 +1490,21 @@ sub setCustom {
             ->faultstring('Not a subscriber to this list')
             ->faultdetail('Use : <list> <key> <value> ');
     }
-    %newcustom = %{$subscriber->{'custom_attribute'}};
-    #if(! defined $list->{'admin'}{'custom_attribute'}{$key} ) {
-    #	return SOAP::Data->name('result')->type('boolean')->value(0);
-    #}
-    if ($value eq '') {
-        undef $newcustom{$key};
+    %newcustom = %{$subscriber->{attrib} // {}};
+
+    # Workaround for possible bug in SOAP::Lite.
+    Encode::_utf8_off($key);
+    Encode::_utf8_off($value);
+
+    unless (length($value // '')) {
+        delete $newcustom{$key};
     } else {
-        # $newcustom{$key} = $list->{'admin'}{'custom_attribute'}{$key}
-        #     if !defined $newcustom{$key}
-        #         and defined $list->{'admin'}{'custom_attribute'};
-        $newcustom{$key}{value} = $value;
+        $newcustom{$key} = $value;
     }
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user attributes')
         ->faultdetail("SOAP setCustom : update user failed")
-        unless $list->update_list_member($sender,
-        custom_attribute => \%newcustom);
+        unless $list->update_list_member($sender, attrib => \%newcustom);
 
     return SOAP::Data->name('result')->type('boolean')->value(1);
 }

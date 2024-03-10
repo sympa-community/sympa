@@ -5,8 +5,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2023 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -201,7 +201,7 @@ $(function() {
 // Show "Please wait..." spinner icon.
 $(function() {
 	var loadingText =
-	$('<h1 id="loadingText"><i class="fa fa-spinner fa-pulse"></i> ' +
+	$('<h1 id="loadingText"><i class="fa fa-spinner fa-spin-pulse"></i> ' +
 		sympa.loadingText + '</h1>');
 	$('#loading').append(loadingText);
 
@@ -268,6 +268,20 @@ $(function() {
     });
 });
 
+/* If set to "on" / "off", enable / disable item specified by data-selector. */
+$(function() {
+    $('.disableIfOff').each(function(){
+        var selector = $(this).data('selector');
+        $(this).on('change', function(){
+            if ($(this).val() == 'off')
+                $(selector).fadeOut('slow');
+            else
+                $(selector).slideDown('normal');
+        });
+        $(selector).trigger('change');
+    });
+});
+
 /* Help button to hide/show online help.
    It may be closed only when javascript is enabled. */
 $(function() {
@@ -312,6 +326,36 @@ $(function() {
         var tooltip = $(this);
         tooltip.html(tooltip.html().replace(/\r\n|\r|\n/g, '<br />'));
         return true;
+    });
+});
+
+/* Copy permalink on click. */
+$(function(){
+    $('.copyPermalinkContainer').each(function(){
+        var container = this;
+
+        var permalink = $(
+            '<span tabindex="0" style="cursor:pointer;"' +
+            ' title="' + sympa.copyPermalinkText + '">' +
+            '<i class="fa fa-link"></i>' +
+            '</span>'
+        );
+        $(container).append(permalink);
+
+        permalink.on('click', function(){
+            navigator.clipboard.writeText($(container).data('pl'));
+
+            $('#ephemeralMsg').remove();
+            var em = $('<div id="ephemeralMsg">' +
+                '<div data-alert class="alert-box success radius">' +
+                '<i class="fa fa-check" aria-hidden="true"></i><p>' +
+                sympa.copiedText + '</p>' +
+                '</div></div>');
+            $('body').append(em);
+            em.delay(500).fadeOut(4000);
+
+            return false;
+        });
     });
 });
 

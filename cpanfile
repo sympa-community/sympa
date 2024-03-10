@@ -5,8 +5,12 @@
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
 requires 'perl', '5.16.0';
 
-# This module provides zip/unzip for archive and shared document download/upload
-requires 'Archive::Zip', '>= 1.05';
+# Used to zip/unzip for archive and shared document download/upload.
+# Note: Some environments not providing 'Archive::Zip::Simple*' modules may
+#   use a memory-consuming module 'Archive::Zip' for the alternative.
+requires 'Archive::Zip::SimpleUnzip', '>= 0.024';
+requires 'Archive::Zip::SimpleZip', '>= 0.021';
+#requires 'Archive::Zip', '>= 1.05';
 
 # Required to run Sympa web interface
 requires 'CGI', '>= 3.51';
@@ -57,6 +61,9 @@ requires 'File::NFSLock';
 # Used to create or remove paths
 requires 'File::Path', '>= 2.08';
 
+# Used to parse arguments of command line tools
+requires 'Getopt::Long', '>= 2.24';
+
 # Note: 'HTML::Entities' >=3.59 is included in HTML-Parser which
 #   'HTML::StripScripts::Parser' depends on.
 
@@ -99,7 +106,7 @@ requires 'Locale::Messages', '>= 1.20';
 requires 'MHonArc::UTF8', '>= 2.6.24';
 
 # Required to compute digest for password and emails
-requires 'MIME::Base64', '>= 3.03';
+requires 'MIME::Base64', '>= 3.11';
 
 # Used to encode mail body using a different charset
 requires 'MIME::Charset', '>= 1.011.3';
@@ -118,6 +125,9 @@ requires 'Mail::Address', '>= 1.70';
 
 # Used to check netmask within Sympa authorization scenario rules
 requires 'Net::CIDR', '>= 0.16';
+
+# Used to show POD documentation for command line utilities
+requires 'Pod::Usage', '>= 1.63';
 
 # Note: 'Scalar::Util' is included in Scalar-List-Utils which includes
 #   'List::Util'.
@@ -204,15 +214,16 @@ feature 'Crypt::Eksblowfish', 'Used to encrypt passwords with the Bcrypt hash al
 };
 
 feature 'x509-auth', 'Required to extract user certificates for SSL clients and S/MIME messages.' => sub {
-    requires 'Crypt::OpenSSL::X509', '>= 1.800.1';
+    # Note: email() for certificate on versions < 1.909 was broken.
+    requires 'Crypt::OpenSSL::X509', '>= 1.909';
 };
 
 feature 'smime', 'Required to sign, verify, encrypt and decrypt S/MIME messages.' => sub {
-    requires 'Convert::ASN1';
     requires 'Crypt::SMIME', '>= 0.15';
     # Required to extract user certificates for SSL clients and S/MIME messages.
-    # Note: On versions < 1.808, the value() method for extension was broken.
-    requires 'Crypt::OpenSSL::X509', '>= 1.808';
+    # Note: value() for extension on versions < 1.808 was broken.
+    # Note: email() for certificate on versions < 1.909 was broken.
+    requires 'Crypt::OpenSSL::X509', '>= 1.909';
 };
 
 feature 'csv', 'CSV database driver, required if you include list members, owners or moderators from CSV file.' => sub {
@@ -263,7 +274,9 @@ feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both fo
 };
 
 feature 'Mail::DKIM::ARC::Signer', 'Required in order to use ARC features to add ARC seals.' => sub {
-    requires 'Mail::DKIM::ARC::Signer', '>= 0.55';
+    requires 'Mail::DKIM::ARC::Signer', '>= 0.57';
+    # Note: Mail::DKIM::ARC::Verifier is also included in Mail-DKIM.
+    # Note: Mail::AuthenticationResults::Parser is depended on Mail-DKIM.
 };
 
 feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_mode" which requires DNS verification.' => sub {
@@ -271,9 +284,11 @@ feature 'Net::DNS', 'This is required if you set a value for "dmarc_protection_m
 };
 
 feature 'ipv6', 'Required to support IPv6 with client features.' => sub {
-    requires 'Socket6', '>= 0.23';
+    # Note: Perl 5.14 bundles Socket 0.95 which exports AF_INET6.  Earlier
+    #   version also requires Socket6 >= 0.23.
     # Note: Some distributions e.g. RHEL/CentOS 6 do not provide package for
-    # IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    #   IO::Socket::IP.  If that is the case, use IO::Socket::INET6 instead.
+    # Note: Perl 5.20.0 bundles IO::Socket::IP 0.29.
     requires 'IO::Socket::IP', '>= 0.21';
 };
 
@@ -300,7 +315,7 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
     requires 'SOAP::Lite', '>= 0.712';
 };
 
-feature 'safe-unicode', 'Sanitises inputs with Unicode text.' => sub {
+feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
     # Note: Perl 5.8.1 bundles version 0.23.
     # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
     requires 'Unicode::Normalize', '>= 1.03';

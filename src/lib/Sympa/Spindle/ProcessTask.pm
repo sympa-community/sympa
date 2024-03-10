@@ -353,11 +353,8 @@ sub do_delete_subs {
                 "error in delete_subs command : deletion of $email not allowed"
             );
         } else {
-            my $u = $list->delete_list_member(
-                users     => [$email],
-                operation => 'auto_del'
-            );
             $log->syslog('notice', '--> %s deleted', $email);
+            $list->delete_list_member([$email], operation => 'auto_del');
             $selection{$email} = {};
         }
     }
@@ -1087,18 +1084,19 @@ sub do_eval_bouncers {
         $log->syslog('info', '(%s)', $listname);
 
         ## Analizing file Msg-count and fill %$list_traffic
-        unless (open(COUNT, $list->{'dir'} . '/msg_count')) {
+        my $ifh;
+        unless (open $ifh, '<', $list->{'dir'} . '/msg_count') {
             $log->syslog('debug',
                 '** Could not open msg_count FILE for list %s', $listname);
             next;
         }
-        while (<COUNT>) {
+        while (<$ifh>) {
             if (/^(\w+)\s+(\d+)/) {
                 my ($a, $b) = ($1, $2);
                 $list_traffic->{$a} = $b;
             }
         }
-        close(COUNT);
+        close $ifh;
 
         #for each bouncing user
         for (
@@ -1311,11 +1309,7 @@ sub _remove_bouncers {
         $log->syslog('notice', 'Removing bouncing subsrciber of list %s: %s',
             $list, $u);
     }
-    $list->delete_list_member(
-        users     => $users,
-        exclude   => '1',
-        operation => 'auto_del'
-    );
+    $list->delete_list_member($users, exclude => 1, operation => 'auto_del');
     return 1;
 }
 

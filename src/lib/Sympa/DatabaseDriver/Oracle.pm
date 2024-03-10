@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2022, 2023 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -315,30 +314,23 @@ sub add_field {
     return $report;
 }
 
-sub delete_field {
+sub drop_field {
+    $log->syslog('debug', '(%s, %s, %s)', @_);
     my $self  = shift;
-    my $param = shift;
-    $log->syslog('debug', 'Deleting field %s from table %s',
-        $param->{'field'}, $param->{'table'});
+    my $table = shift;
+    my $field = shift;
 
     unless (
-        $self->do_query(
-            q{ALTER TABLE %s
-              DROP (%s)},
-            $param->{'table'},
-            $param->{'field'}
-        )
+        $self->do_query(q{ALTER TABLE %s DROP (%s)}, $table, $field)
     ) {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
-            $param->{'field'}, $param->{'table'}, $self->{'db_name'});
+            $field, $table, $self->{'db_name'});
         return undef;
     }
 
-    my $report = sprintf('Field %s removed from table %s',
-        $param->{'field'}, $param->{'table'});
-    $log->syslog('info', 'Field %s removed from table %s',
-        $param->{'field'}, $param->{'table'});
+    my $report = sprintf 'Field %s removed from table %s', $field, $table;
+    $log->syslog('info', '%s', $report);
 
     return $report;
 }
@@ -570,6 +562,13 @@ sub AS_BLOB {
     return ({'ora_type' => DBD::Oracle::ORA_BLOB()} => $_[1])
         if scalar @_ > 1;
     return ();
+}
+
+sub md5_func {
+    shift;
+
+    return sprintf q{LOWER(RAWTOHEX(STANDARD_HASH(%s, 'MD5')))},
+        join ' || ', map { sprintf 'TO_CHAR(%s)', $_ } @_;
 }
 
 1;

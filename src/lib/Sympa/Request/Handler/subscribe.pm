@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2019, 2021 The Sympa Community. See the
+# Copyright 2018, 2019, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -35,8 +34,6 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Tools::Domains;
-use Sympa::Tools::Password;
 use Sympa::User;
 
 use base qw(Sympa::Request::Handler);
@@ -60,6 +57,7 @@ sub _twist {
     my $sender  = $request->{sender};
     my $email   = $request->{email};
     my $comment = $request->{gecos};
+    my $ca      = $request->{custom_attribute};
 
     $language->set_lang($list->{'admin'}{'lang'});
 
@@ -73,72 +71,34 @@ sub _twist {
         undef $comment;
     }
 
-    if (Sympa::Tools::Domains::is_blocklisted($email)) {
-        $self->add_stash($request, 'user', 'blocklisted_domain',
-            {'email' => $email});
-        $log->syslog('err',
-            'SUBSCRIBE to %s command rejected; blocklisted domain for "%s"',
-            $list, $email);
-        return undef;
-    }
-
-    # Unless rejected by scenario, don't go further if the user is subscribed
-    # already.
-    my $user_entry = $list->get_list_member($email);
-    if (defined $user_entry) {
-        $self->add_stash($request, 'user', 'already_subscriber',
-            {'email' => $email, 'listname' => $list->{'name'}});
-        $log->syslog(
-            'err',
-            'User %s is subscribed to %s already. Ignoring subscription request',
-            $email,
-            $list
-        );
-        return undef;
-    }
-
     # If a list is not 'open' and allow_subscribe_if_pending has been set to
     # 'off' returns undef.
-    unless ($list->{'admin'}{'status'} eq 'open'
-        or
-        Conf::get_robot_conf($list->{'domain'}, 'allow_subscribe_if_pending')
-        eq 'on') {
-        $self->add_stash($request, 'user', 'list_not_open',
-            {'status' => $list->{'admin'}{'status'}});
+    unless ($list->is_subscription_allowed) {
         $log->syslog('info', 'List %s not open', $list);
+        $self->add_stash($request, 'user', 'list_not_open',
+            {status => $list->{'admin'}{'status'}});
+        $self->{finish} = 1;
         return undef;
     }
 
-    my $u;
-    my $defaults = $list->get_default_user_options();
-    %{$u} = %{$defaults};
-    $u->{'email'} = $email;
-    $u->{'gecos'} = $comment;
-    $u->{'date'}  = $u->{'update_date'} = time;
-
-    $list->add_list_member($u);
-    if (defined $list->{'add_outcome'}{'errors'}) {
-        if (defined $list->{'add_outcome'}{'errors'}
-            {'max_list_members_exceeded'}) {
-            $self->add_stash($request, 'user', 'max_list_members_exceeded',
-                {max_list_members => $list->{'admin'}{'max_list_members'}});
-        } else {
-            my $error =
-                sprintf 'Unable to add user %s in list %s : %s',
-                $u, $list->get_id,
-                $list->{'add_outcome'}{'errors'}{'error_message'};
+    my @stash;
+    $list->add_list_member(
+        {email => $email, gecos => $comment, ($ca ? (attrib => $ca) : ())},
+        stash => \@stash);
+    foreach my $report (@stash) {
+        $self->add_stash($request, @$report);
+        if ($report->[0] eq 'intern') {
             Sympa::send_notify_to_listmaster(
                 $list,
                 'mail_intern_error',
-                {   error  => $error,
+                {   error  => $report->[1],      #FIXME: Update listmaster tt2
                     who    => $sender,
                     action => 'Command process',
                 }
             );
-            $self->add_stash($request, 'intern');
         }
-        return undef;
     }
+    return undef if grep { $_->[0] eq 'user' or $_->[0] eq 'intern' } @stash;
 
     my $user = Sympa::User->new($email);
     $user->lang($list->{'admin'}{'lang'}) unless $user->lang;

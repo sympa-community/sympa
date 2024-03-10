@@ -6,15 +6,16 @@ use strict;
 use warnings;
 use Cwd qw();
 use English;    # FIXME: Avoid $MATCH usage
-use Getopt::Long;
+use Getopt::Long qw(:config no_ignore_case);
 use Pod::Usage;
+use POSIX qw();
 
 use constant NUL   => 0;
 use constant BEG   => 1;
 use constant PAR   => 2;
 use constant QUO1  => 3;
 use constant QUO2  => 4;
-use constant QUO3  => 5;
+use constant QUO3  => 5;    # No longer used
 use constant BEGM  => 6;
 use constant PARM  => 7;
 use constant QUOM1 => 8;
@@ -22,11 +23,11 @@ use constant QUOM2 => 9;
 use constant COMM  => 10;
 
 ## A hash that will contain the strings to translate and their meta
-## informations.
+## information.
 my %file;
-## conatins informations if a string is a date string.
+## contains information if a string is a date string.
 my %type_of_entries;
-## Contains unique occurences of each string
+## Contains unique occurrences of each string
 my %Lexicon;
 ## All the strings, in the order they were found while parsing the files
 my @ordered_strings = ();
@@ -40,7 +41,8 @@ GetOptions(
     'help|h',               'keyword|k:s@',
     'msgid-bugs-address=s', "output|o=s",
     'package-name=s',       'package-version=s',
-    'version|v',            't=s@',
+    'version|V',            'verbose|v',
+    't=s@',
 ) or pod2usage(-verbose => 1, -exitval => 1);
 
 $opts{help} and pod2usage(-verbose => 2, -exitval => 0);
@@ -78,7 +80,7 @@ if ($opts{directory}) {
 foreach my $file (@ARGV) {
     next if $file =~ m{ [.] po.? \z }ix;    # Don't parse po files
 
-    printf STDOUT "Processing %s...\n", $file;
+    printf STDOUT "Processing %s...\n", $file if $opts{verbose};
     unless (-f $file) {
         printf STDERR "Cannot open %s\n", $file;
         next;
@@ -86,7 +88,7 @@ foreach my $file (@ARGV) {
 
     # cpanfile
     if ($file eq 'cpanfile') {
-        CPANFile::load();
+        printf STDERR "%s is no longer supported\n", $file;
         next;
     }
 
@@ -156,7 +158,8 @@ if (-r $output_file) {
         last;
     }
 
-    1 while chomp $out;
+    $out =~ s/[\r\n]+\z//;
+    $out .= "\n" if length $out;
 
     seek $pot, 0, 0;
     truncate $pot, 0;
@@ -166,7 +169,7 @@ if (-r $output_file) {
 }
 select $pot;
 
-print $out ? "$out\n" : (<< '.');
+$out ||= (<< '.');
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
@@ -187,6 +190,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 .
 
+$out =~ s{"(Project-Id-Version): .*\\n"}
+    {"$1: $opts{'package-name'}-$opts{'package-version'}\\n"}
+    if $opts{'package-name'} and $opts{'package-version'};
+$out =~ s{"(Report-Msgid-Bugs-To): .*\\n"}
+    {"$1: $opts{'msgid-bugs-address'}\\n"}
+    if $opts{'msgid-bugs-address'};
+my $cdate = POSIX::strftime('%Y-%m-%d %H:%M:%S+0000', gmtime time);
+$out =~ s{"(POT-Creation-Date): .*\\n"}
+    {"$1: $cdate\\n"};
+
+print $out;
+
 foreach my $entry (@ordered_bis) {
     my %f = (map { ("$_->[0]:$_->[1]" => 1) } @{$file{$entry}});
     my $f = join(' ', sort keys %f);
@@ -202,28 +217,32 @@ foreach my $entry (@ordered_bis) {
 
     my %seen;
 
-    ## Print code/templates references
-    print "\n#:$f\n";
+    print "\n";
 
-    ## Print variables if any
-    foreach my $entry (grep { $_->[2] } @{$file{$entry}}) {
-        my ($file, $line, $var) = @{$entry};
+    # Print variables if any.
+    foreach my $ent (grep { $_->[2] } @{$file{$entry}}) {
+        my ($file, $line, $var) = @{$ent};
         $var =~ s/^\s*,\s*//;
         $var =~ s/\s*$//;
         print "#. ($var)\n" unless !length($var) or $seen{$var}++;
     }
 
-    ## If the entry is a date format, add a developper comment to help
-    ## translators
-    if ($type_of_entries{$entry} and $type_of_entries{$entry} eq 'date') {
-        print "#. This entry is a date/time format\n";
-        print
-            "#. Check the strftime manpage for format details : http://docs.freebsd.org/info/gawk/gawk.info.Time_Functions.html\n";
-    } elsif ($type_of_entries{$entry}
-        and $type_of_entries{$entry} eq 'printf') {
-        print "#. This entry is a sprintf format\n";
-        print
-            "#. Check the sprintf manpage for format details : http://perldoc.perl.org/functions/sprintf.html\n";
+    # If the entry is a date format, add a developper comment to help
+    # translators.
+    if ('date' eq ($type_of_entries{$entry} || '')) {
+        print "#. This entry contains date/time conversions.  See\n";
+        print "#. https://perldoc.perl.org/POSIX#strftime for details.\n";
+    } elsif ('printf' eq ($type_of_entries{$entry} || '')) {
+        print "#. This entry contains sprintf conversions.  See\n";
+        print "#. https://perldoc.perl.org/functions/sprintf for details.\n";
+    }
+
+    # Print code/templates references.
+    print "#:$f\n";
+    if ('printf' eq ($type_of_entries{$entry} || '')) {
+        print "#, c-format\n";
+    } elsif ('maketext' eq ($type_of_entries{$entry} || '')) {
+        print "#, smalltalk-format\n";
     }
 
     print "msgid ";
@@ -332,7 +351,11 @@ sub load_tt2 {
                 filename   => $filename,
                 line       => $line,
                 vars       => $vars,
-                (($this_tag eq 'locdt') ? (type => 'date') : ())
+                (     ($this_tag eq 'locdt') ? (type => 'date')
+                    : ($this_tag eq 'loc' and 0 <= index $str, '%')
+                    ? (type => 'maketext')
+                    : ()
+                )
             }
         );
     }
@@ -402,6 +425,9 @@ PARSER: {
             } elsif ($1 eq 'gettext_sprintf') {
                 $state = BEGM;
                 $type  = 'printf';
+            } elsif ($1 eq 'maketext') {
+                $state = BEG;
+                $type  = 'maketext';
             } else {
                 $state = BEG;
                 undef $type;
@@ -422,75 +448,83 @@ PARSER: {
         }
 
         # begin or end of string
-        if ($state == PAR and $t =~ m/^\s*(\')/cg) {
+        if ($state == PAR and $t =~ m/^\s*'/cg) {
             $state = QUO1;
             redo;
         }
-        if ($state == QUO1 and $t =~ m/^([^\']+)/cg) {
-            $str .= $1;
+        if ($state == QUO1 and $t =~ m/^((?:\\\\|\\'|[^'])+)/cg) {
+            my $m = $1;
+            $m =~
+                s{(\\.)}{($1 eq "\\\\") ? "\\" : ($1 eq "\\'") ? "'" : $1}eg;
+            $m =~ s{\\}{\\\\}g;
+            $str .= $m;
             redo;
         }
-        if ($state == QUO1 and $t =~ m/^\'/cg) {
+        if ($state == QUO1 and $t =~ m/^'/cg) {
             $state = PAR;
             redo;
         }
 
-        if ($state == PAR and $t =~ m/^\s*\"/cg) {
+        if ($state == PAR and $t =~ m/^\s*"/cg) {
             $state = QUO2;
             redo;
         }
-        if ($state == QUO2 and $t =~ m/^([^\"]+)/cg) {
+        if ($state == QUO2 and $t =~ m/^((?:\\.|[^\\"])+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUO2 and $t =~ m/^\"/cg) {
+        if ($state == QUO2 and $t =~ m/^"/cg) {
             $state = PAR;
             redo;
         }
 
-        if ($state == PAR and $t =~ m/^\s*\`/cg) {
-            $state = QUO3;
-            redo;
-        }
-        if ($state == QUO3 and $t =~ m/^([^\`]*)/cg) {
-            $str .= $1;
-            redo;
-        }
-        if ($state == QUO3 and $t =~ m/^\`/cg) {
-            $state = PAR;
-            redo;
-        }
+        #if ($state == PAR and $t =~ m/^\s*\`/cg) {
+        #    $state = QUO3;
+        #    redo;
+        #}
+        #if ($state == QUO3 and $t =~ m/^([^\`]*)/cg) {
+        #    $str .= $1;
+        #    redo;
+        #}
+        #if ($state == QUO3 and $t =~ m/^\`/cg) {
+        #    $state = PAR;
+        #    redo;
+        #}
 
-        if ($state == BEGM and $t =~ m/^(\')/cg) {
+        if ($state == BEGM and $t =~ m/^'/cg) {
             $state = QUOM1;
             redo;
         }
-        if ($state == PARM and $t =~ m/^\s*(\')/cg) {
+        if ($state == PARM and $t =~ m/^\s*'/cg) {
             $state = QUOM1;
             redo;
         }
-        if ($state == QUOM1 and $t =~ m/^([^\']+)/cg) {
-            $str .= $1;
+        if ($state == QUOM1 and $t =~ m/^((?:\\\\|\\'|[^'])+)/cg) {
+            my $m = $1;
+            $m =~
+                s{(\\.)}{($1 eq "\\\\") ? "\\" : ($1 eq "\\'") ? "'" : $1}eg;
+            $m =~ s{\\}{\\\\}g;
+            $str .= $m;
             redo;
         }
-        if ($state == QUOM1 and $t =~ m/^\'/cg) {
+        if ($state == QUOM1 and $t =~ m/^'/cg) {
             $state = COMM;
             redo;
         }
 
-        if ($state == BEGM and $t =~ m/^(\")/cg) {
+        if ($state == BEGM and $t =~ m/^"/cg) {
             $state = QUOM2;
             redo;
         }
-        if ($state == PARM and $t =~ m/^\s*(\")/cg) {
+        if ($state == PARM and $t =~ m/^\s*"/cg) {
             $state = QUOM2;
             redo;
         }
-        if ($state == QUOM2 and $t =~ m/^([^\"]+)/cg) {
+        if ($state == QUOM2 and $t =~ m/^((?:\\.|[^\\"])+)/cg) {
             $str .= $1;
             redo;
         }
-        if ($state == QUOM2 and $t =~ m/^\"/cg) {
+        if ($state == QUOM2 and $t =~ m/^"/cg) {
             $state = COMM;
             redo;
         }
@@ -604,34 +638,6 @@ sub output {
     }
 }
 
-package CPANFile;
-
-use strict;
-use warnings;
-use lib qw(.);
-
-my @entries;
-
-sub feature {
-    push @entries,
-        {
-        expression => $_[1],
-        filename   => 'cpanfile',
-        line       => [caller]->[2],
-        };
-}
-sub on         { $_[1]->() }
-sub recommends { }
-sub requires   { }
-
-sub load {
-    do 'cpanfile';
-    die unless @entries;
-    foreach my $entry (@entries) {
-        main::add_expression($entry);
-    }
-}
-
 1;
 __END__
 
@@ -669,9 +675,16 @@ B<Deprecated>.
 Enables GNU gettext interoperability by printing C<#, maketext-format>
 before each entry that has C<%> variables.
 
+Instead, currently C<#, smalltalk-format>, the argument supported by
+GNU gettext, is printed.
+
 =item C<--help>, C<-h>
 
 Shows this documentation and exits.
+
+=item C<--msgid-bugs-address> I<address>
+
+Includes email address or URL where bugs are reported in output.
 
 =item C<--output> I<outputfile>, C<-o>I<outputfile>
 
@@ -680,11 +693,19 @@ updated C<-> means writing to F<STDOUT>.  If neither this option nor
 C<--default-domain> option specified,
 F<messages.po> is used.
 
+=item C<--package-name> I<name>
+
+=item C<--package-version> I<version>
+
+Includes name and version of package in output.
+
 =item C<-t>I<tag1> ...
 
 Specifies which tag(s) must be used to extract Template Toolkit strings.
 Default is C<loc> and C<locdt>.
 Can be specified multiple times.
+
+This option is the extension by Sympa package.
 
 =item C<-u>
 
@@ -693,7 +714,11 @@ Disables conversion from Maketext format to Gettext
 format -- i.e. it leaves all brackets alone.  This is useful if you are
 also using the Gettext syntax in your program.
 
-=item C<--version>, C<-v>
+=item C<--verbose>, C<-v>
+
+Prints the names of processed files.
+
+=item C<--version>, C<-V>
 
 Prints "C<sympa-6>" and newline, and then exits.
 
@@ -702,12 +727,6 @@ Prints "C<sympa-6>" and newline, and then exits.
 =item C<--copyright-holder> I<string>
 
 =item C<--keyword> [ I<word> ], C<-k>[ I<word> ], ...
-
-=item C<--msgid-bugs-address> I<address>
-
-=item C<--package-name> I<name>
-
-=item C<--package-version> I<version>
 
 These options will do nothing.
 They are prepared for compatibility to xgettext of GNU gettext.
@@ -758,25 +777,5 @@ by Autrijus Tang E<lt>autrijus@autrijus.orgE<gt>
 which was bundled in L<Locale-Maketext-Lexicon>.
 Afterward, it has been drastically rewritten to be adopted to Sympa
 and original code hardly remains.
-
-Part of changes are as following:
-
-=over
-
-=item [O. Salaun] 12/08/02 :
-
-Also look for gettext() in perl code.
-No more escape '\' chars.
-Extract gettext_comment, gettext_id and gettext_unit entries from List.pm.
-Extract title.gettext entries from scenarios.
-
-=item [D. Verdin] 05/11/2007 :
-
-Strings ordered following the order in which files are read and
-the order in which they appear in the files.
-Switch to Getopt::Long to allow multiple value parameter.
-Added 't' parameter the specifies which tags to explore in TT2.
-
-=back
 
 =cut

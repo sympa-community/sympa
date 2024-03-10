@@ -9,7 +9,7 @@
                     [% SET colspan = colspan + 1 %]
                     <th>
                         <a href="#" data-tooltip aria-haspopup="true" title="[%|loc%]Toggle Selection[%END%]" class="toggleButton">
-                            <i class="fa fa-check-square-o"></i>
+                            <i class="far fa-check-square"></i>
                         </a>
                     </th>
                 [% END %]
@@ -179,7 +179,7 @@
                     [% FOREACH ca_k IN listconf.custom_attribute %]
                         <td>
                             [% SET id = ca_k.id %]
-                            [% u.custom_attribute.$id.value %]
+                            [% u.attrib.$id %]
                         </td>
                     [% END %]
                 [% END %]

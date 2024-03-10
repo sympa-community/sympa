@@ -60,13 +60,6 @@ Subject: [%"Subscription request to list %1"|loc(list.name)|qencode%]
   AUTH [%keyauth%] ADD [%list.name%] [%who%] [%gecos%]
 [%- END %]
 
-[% IF custom_attribute %]
-[%|loc%]The user has provided the following information:[%END%]
-[% FOREACH attribute = custom_attribute %]
-[% attribute.key %][%|loc%]:[%END%] [% attribute.value.value -%]
-[%END-%]
-[% END %]
-
 [% ELSIF type == 'sigrequest' -%]
 Subject: [%"UNsubscription request from list %1"|loc(list.name)|qencode%]
 

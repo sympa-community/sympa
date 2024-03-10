@@ -508,7 +508,13 @@ MSGPGEND
 
 <TOPLINKS>
     <div id="ActionHeader">
-        <div class="text_center"><h2><% subtitle %></h2></div><br />
+        <div class="text_center">
+            <% plid = BLOCK %><% | permalink_id %>$MSGID$<% END %><% END ~%>
+            <h2 class="copyPermalinkContainer"
+             data-pl="<% 'msg' | url_abs([list,archive_name,plid]) %>">
+                <% subtitle %>
+            </h2>
+        </div>
             <span class="search_form">
                 <a class="ArcMenuLinksSortInactive" href="$IDXFNAME$#$MSGNUM$">
                     <%|loc%>Chronological<% END %>
@@ -622,7 +628,7 @@ $POWERED_BY$
                     <input class="MainMenuLinks" type="submit" name="action_view_source" value="<%|loc%>View source<%END%>" />
                 <% END %>
 
-                <% IF listconf.tracking.delivery_status_notification == 'on' || listconf.tracking.message_delivery_notification == 'on_demand' || listconf.tracking.message_delivery_notification == 'on' %>
+                <% IF listconf.tracking.delivery_status_notification == 'on' || listconf.tracking.message_disposition_notification == 'on_demand' || listconf.tracking.message_disposition_notification == 'on' %>
                     <% IF may_tracking %>
                         <input class="MainMenuLinks" type="submit" name="action_tracking" value="<%|loc%>mail tracking<%END%>" />
                     <% END %>
@@ -639,38 +645,7 @@ $POWERED_BY$
 <!-- Message itself -->
 <!-- Do not display the following header -->
 <EXCS Override>
-content-
-errors-to
-forward
-lines
-mime-
-message-id
-nntp-
-originator
-path
-precedence
-received
-replied
-return-path
-status
-via
-x-
-sender
-list-help
-list-owner
-list-post
-list-subscribe
-list-unsubscribe
-in-reply-to
-delivered-to
-references
-reply-to
-thread-
-User-agent
-Mail-followup-to
-Dkim-signature
-autocrypt
-openpgp
+(?!(Subject|(Resent-)?(From|To|Cc|Date))\z)
 </EXCS>
 
 <!-- Field order in message header -->

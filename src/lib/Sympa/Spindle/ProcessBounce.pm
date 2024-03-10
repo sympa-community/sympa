@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -118,7 +118,7 @@ sub _twist {
         # Pick address only.
         my @to = Mail::Address->parse($to);
         if (@to and $to[0] and $to[0]->address) {
-            $to = lc($to[0]->address);
+            $to = Sympa::Tools::Text::canonic_email($to[0]->address);
         } else {
             undef $to;
         }
@@ -340,7 +340,6 @@ sub _twist {
         # Overwrite context.
         $message->{context} = $list;
 
-        my $email_regexp = Sympa::Regexps::email();
         my @reports =
             _parse_multipart_report($message, 'message/feedback-report');
         foreach my $report (@reports) {
@@ -352,8 +351,9 @@ sub _twist {
 
             my $feedback_type = lc($report->{feedback_type}->[0] || '');
             my @original_rcpts =
-                grep {m/$email_regexp/}
-                map { lc($_ || '') } @{$report->{original_rcpt_to} || []};
+                grep { Sympa::Tools::Text::valid_email($_) }
+                map { Sympa::Tools::Text::canonic_email($_ || '') }
+                @{$report->{original_rcpt_to} || []};
 
             # Malformed reports are forwarded to listmaster.
             unless (@original_rcpts) {
@@ -417,9 +417,9 @@ sub _twist {
                     if ($action and $action =~ /do_it/i) {
                         if ($list->is_list_member($original_rcpt)) {
                             $list->delete_list_member(
-                                'users'     => [$original_rcpt],
-                                'exclude'   => ' 1',
-                                'operation' => 'auto_del',
+                                [$original_rcpt],
+                                exclude   => 1,
+                                operation => 'auto_del'
                             );
 
                             $log->syslog(
@@ -502,9 +502,9 @@ sub _twist {
         if ($action and $action =~ /do_it/i) {
             if ($list->is_list_member($who)) {
                 $list->delete_list_member(
-                    'users'     => [$who],
-                    'exclude'   => '1',
-                    'operation' => 'auto_del',
+                    [$who],
+                    exclude   => 1,
+                    operation => 'auto_del'
                 );
                 $log->syslog(
                     'notice',

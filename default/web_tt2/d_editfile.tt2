@@ -35,7 +35,7 @@
 </menu>
 
 <h3>
-    <i class="fa fa-pencil fa-lg"></i>
+    <i class="fas fa-pencil-alt fa-lg"></i>
     [% IF shared_doc.type == 'url' ~%]
         [%|loc(shared_doc.name)%]Edition of the bookmark %1[%END%]
     [%~ ELSE ~%]
@@ -53,14 +53,14 @@
     <menu class="shared">
         <span class="search_form">
             <span class="actionMenuLinksInactive">
-                <i class="fa fa-pencil"></i>
+                <i class="fas fa-pencil-alt"></i>
                 [%|loc%]edit[%END%]
             </span>
 
             [% IF shared_doc.may_edit %]
                 <a class="actionMenuLinks"
                    href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
-                    <i class="fa fa-trash"></i>
+                    <i class="fas fa-trash-alt"></i>
                     [%|loc%]delete[%END%]
                 </a>
             [% END %]

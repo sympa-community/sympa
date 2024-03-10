@@ -6,8 +6,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2018, 2023 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -24,14 +24,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 nobase_static_DATA = \
-	fonts/font-awesome/css/font-awesome.css \
-	fonts/font-awesome/css/font-awesome.min.css \
-	fonts/font-awesome/fonts/FontAwesome.otf \
-	fonts/font-awesome/fonts/fontawesome-webfont.woff \
-	fonts/font-awesome/fonts/fontawesome-webfont.woff2 \
-	fonts/foundation-icons/foundation-icons.css \
-	fonts/foundation-icons/foundation-icons.ttf \
-	fonts/foundation-icons/foundation-icons.woff \
+	fonts/font-awesome/LICENSE.txt \
+	fonts/font-awesome/css/brands.css \
+	fonts/font-awesome/css/brands.min.css \
+	fonts/font-awesome/css/fontawesome.css \
+	fonts/font-awesome/css/fontawesome.min.css \
+	fonts/font-awesome/css/regular.css \
+	fonts/font-awesome/css/regular.min.css \
+	fonts/font-awesome/css/solid.css \
+	fonts/font-awesome/css/solid.min.css \
+	fonts/font-awesome/webfonts/fa-brands-400.ttf \
+	fonts/font-awesome/webfonts/fa-brands-400.woff2 \
+	fonts/font-awesome/webfonts/fa-regular-400.ttf \
+	fonts/font-awesome/webfonts/fa-regular-400.woff2 \
+	fonts/font-awesome/webfonts/fa-solid-900.ttf \
+	fonts/font-awesome/webfonts/fa-solid-900.woff2 \
 	fonts/Raleway/OFL.txt \
 	fonts/Raleway/Raleway-Regular.otf \
 	icons/favicon_sympa.png \

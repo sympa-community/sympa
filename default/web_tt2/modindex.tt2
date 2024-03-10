@@ -15,7 +15,7 @@
                     <a href="#" data-tooltip aria-haspopup="true"
                        title="[%|loc%]Toggle Selection[%END%]"
                        class="toggleButton">
-                        <i class="fa fa-check-square-o"></i>
+                        <i class="far fa-check-square"></i>
                     </a>&nbsp;&nbsp;
                 </div>
                 <div class="small-4 medium-4 columns" role="columnheader">
@@ -44,17 +44,15 @@
                            data-reveal-id="mainviewmod" data-reveal-ajax="true"
                            data-tooltip aria-haspopup="true"
                            title="[%|loc%]view[%END%]">
-                            <i class="fa fa-eye"></i>
+                            <i class="far fa-eye"></i>
                         </a>
 
-                        [%~ IF conf.antispam_feature == 'on' ~%]
-                            [% IF msg.value.spam_status == 'spam' ~%]
-                                <span data-tooltip title="[%|loc%]Spam[%END%]">
-                                    <i class="fa fa-ban text-error"></i>
-                                </span>
-                            [%~ ELSE ~%]
-                                &nbsp;
-                            [%~ END %]
+                        [% IF msg.value.spam_status == 'spam' ~%]
+                            <span data-tooltip title="[%|loc%]Spam[%END%]">
+                                <i class="fa fa-ban text-error"></i>
+                            </span>
+                        [%~ ELSE ~%]
+                            &nbsp;
                         [%~ END %]
                     </div>
                     <div class="small-4 medium-4 columns" role="cell">

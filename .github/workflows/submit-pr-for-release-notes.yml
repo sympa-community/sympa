@@ -1,0 +1,21 @@
+on:
+  push:
+    branches:
+      - pr/release-*
+
+env:
+  GH_PR_BODY: 'This pull request is a workplace for editing release notes `NEWS.md`.'
+  GH_PR_LABEL: on going,ignore-for-release
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  submit-pr-for-release-notes:
+    if: github.repository_owner == 'sympa-community'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Submit PR
+        run: >
+          gh pr create -H $GITHUB_REPOSITORY_OWNER:$GITHUB_REF_NAME
+          -t "Release ${GITHUB_REF_NAME#pr/release-}" -b "$GH_PR_BODY" -l "$GH_PR_LABEL"
+          || true

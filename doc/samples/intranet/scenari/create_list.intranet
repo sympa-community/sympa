@@ -2,7 +2,6 @@ title.gettext anyone from local domain
 
 is_listmaster([sender])     md5,smime -> do_it
 # this is example of a rule to check local adresses
-# verify_netmask('1.12.123.0/24') smtp,dkim,md5,smime -> do_it
+# verify_netmask('1.12.123.0/24') smtp,md5,smime -> do_it
 match([sender],/[domain]$/)    md5,smime -> listmaster,notify
-true()                         smtp,dkim,md5,smime -> reject(reason='create_list_local_user')	
-
+true()                         smtp,md5,smime -> reject(reason='create_list_local_user')	

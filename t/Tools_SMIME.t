@@ -95,13 +95,14 @@ is_deeply(
     'directory with dedicated key/certificates, decryption operation'
 );
 
-ok(!Sympa::Tools::SMIME::parse_cert(), 'neither text nor file given',);
+ok(!eval { Sympa::Tools::SMIME::parse_cert() },
+    'neither text nor file given');
 
 ok( !Sympa::Tools::SMIME::parse_cert(file => '/no/where'),
     'non-existing file',
 );
 
-ok(!Sympa::Tools::SMIME::parse_cert(text => ''), 'empty string',);
+ok(!eval { Sympa::Tools::SMIME::parse_cert(text => '') }, 'empty string',);
 
 my $cert_file = 't/pki/crt/rousse.pem';
 #my $cert_string = Sympa::Tools::File::slurp_file($cert_file);
@@ -112,8 +113,12 @@ my $cert_data = {
         enc  => 1
     },
     subject =>
-        '/O=sympa developpers/OU=unit testing/CN=Guillaume Rousse/emailAddress=Guillaume.Rousse@sympa.org',
-    email => {'guillaume.rousse@sympa.org' => 1}
+        'O=sympa developpers, OU=unit testing, CN=Guillaume Rousse, emailAddress=Guillaume.Rousse@sympa.org',
+    email    => {'guillaume.rousse@sympa.org' => 1},
+    emails   => ['guillaume.rousse@sympa.org'],
+    notAfter => 'Feb 23 17:11:04 2023 GMT',
+    issuer =>
+        'O=sympa developpers, OU=unit testing, CN=Test CA, emailAddress=test@sympa.org',
 };
 
 SKIP: {
@@ -130,12 +135,16 @@ SKIP: {
 my $ca_cert_file = 't/pki/crt/ca.pem';
 my $ca_cert_data = {
     subject =>
-        '/O=sympa developpers/OU=unit testing/CN=Test CA/emailAddress=test@sympa.org',
+        'O=sympa developpers, OU=unit testing, CN=Test CA, emailAddress=test@sympa.org',
     email   => {'test@sympa.org' => 1},
+    emails  => ['test@sympa.org'],
     purpose => {
         sign => '',
         enc  => ''
     },
+    notAfter => 'Feb 24 17:05:48 2018 GMT',
+    issuer =>
+        'O=sympa developpers, OU=unit testing, CN=Test CA, emailAddress=test@sympa.org',
 };
 
 SKIP: {
