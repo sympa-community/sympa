@@ -118,6 +118,33 @@ $spindle->spin;
 is $message->as_string, "Subject: SV: [list] Fwd: Re: Something\n\n",
     'Multilingual "Re:"';
 
+# Empty tmplate
+
+$list->{admin}{custom_subject} = ' ';
+
+$message = Sympa::Message->new("Subject: Re: Re: Test\n\n", context => $list);
+$spindle->{distaff} = Sympa::Spool::Mock->new(message => $message);
+$spindle->spin;
+is $message->as_string, "Subject: Re: Re: Test\n\n", 'empty template';
+
+# Error in tmplate
+
+$list->{admin}{custom_subject} = '[%list.name%%]';
+
+$message = Sympa::Message->new("Subject: Re: Re: Test\n\n", context => $list);
+$spindle->{distaff} = Sympa::Spool::Mock->new(message => $message);
+$spindle->spin;
+is $message->as_string, "Subject: Re: Re: Test\n\n", 'error in template';
+
+# Empty tag
+
+$list->{admin}{custom_subject} = ' [%# Nothing %] ';
+
+$message = Sympa::Message->new("Subject: Re: Re: Test\n\n", context => $list);
+$spindle->{distaff} = Sympa::Spool::Mock->new(message => $message);
+$spindle->spin;
+is $message->as_string, "Subject: Re: Re: Test\n\n", 'tag parsed to be empty';
+
 done_testing;
 
 package Sympa::Spool::Mock;

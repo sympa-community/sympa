@@ -97,7 +97,7 @@ sub _twist {
     # Add Custom Subject
 
     my $parsed_tag;
-    if ($list->{'admin'}{'custom_subject'}) {
+    if (($list->{'admin'}{'custom_subject'} // '') =~ /\S/) {
         my $custom_subject = $list->{'admin'}{'custom_subject'};
 
         # Check if custom_subject parameter is parsable.
@@ -115,7 +115,8 @@ sub _twist {
             undef $parsed_tag;
         }
     }
-    if ($list->{'admin'}{'custom_subject'} and defined $parsed_tag) {
+    if (    ($list->{'admin'}{'custom_subject'} // '') =~ /\S/
+        and ($parsed_tag // '') =~ /\S/) {
         my $subject_field = $message->{'decoded_subject'};
         $subject_field = '' unless defined $subject_field;
 
@@ -153,27 +154,24 @@ sub _twist {
         ## The custom subject is not kept.
         my $before_tag;
         my $after_tag;
-        if ($custom_subject =~ /\S/) {
-            $subject_field =~ s/\s*\[$tag_regexp\]\s*/ /;
-        }
+
+        $subject_field =~ s/\s*\[$tag_regexp\]\s*/ /;
+
         # Remove leading and trailing blanks.
-        $subject_field =~ s/\A\s*(.*)\s*\z/$1/;
+        $subject_field =~ s/\A\s+//;
+        $subject_field =~ s/\s+\z//;
 
         # Truncate multiple "Re:" and equivalents.
-        # Note that Unicode case-ignore match is performed.
         my $re_regexp = Sympa::Regexps::re();
-        $subject_field = Encode::decode_utf8($subject_field);
-        if ($subject_field =~ s/\A\s*($re_regexp\s*)($re_regexp\s*)*//i) {
-            $before_tag = Encode::encode_utf8($1);
-        } else {
-            $before_tag = '';
-        }
-        $after_tag = Encode::encode_utf8($subject_field);
 
-        ## Encode subject using initial charset
-
-        ## Don't try to encode the subject if it was not originally encoded.
         if ($message->{'subject_charset'}) {
+            # Encode subject using initial charset.
+            # Note that Unicode case-ignore match is performed.
+            $after_tag =
+                Encode::encode_utf8(Encode::decode_utf8($subject_field) =~
+                    s/\A\s*($re_regexp\s*)($re_regexp\s*)*//ir);
+            $before_tag = Encode::encode_utf8($1 // '');
+
             my $etag = sprintf '[%s]', $parsed_tag;
             $subject_field = MIME::EncWords::encode_mimewords(
                 Encode::decode_utf8(
@@ -187,7 +185,12 @@ sub _twist {
                 Replacement => 'FALLBACK'
             );
         } else {
+            # Don't try to encode the subject if it was not originally encoded.
+            $after_tag =
+                $subject_field =~ s/\A\s*($re_regexp\s*)($re_regexp\s*)*//ir;
+            $before_tag = $1 // '';
             $before_tag =~ s/\s+\z//;
+
             my $etag = MIME::EncWords::encode_mimewords(
                 Encode::decode_utf8('[' . $parsed_tag . ']'),
                 Charset  => Conf::lang2charset($language->get_lang),
