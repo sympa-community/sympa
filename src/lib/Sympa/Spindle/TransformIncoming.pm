@@ -118,8 +118,6 @@ sub _twist {
     if ($list->{'admin'}{'custom_subject'} and defined $parsed_tag) {
         my $subject_field = $message->{'decoded_subject'};
         $subject_field = '' unless defined $subject_field;
-        ## Remove leading and trailing blanks
-        $subject_field =~ s/^\s*(.*)\s*$/$1/;
 
         ## Search previous subject tagging in Subject
         my $custom_subject = $list->{'admin'}{'custom_subject'};
@@ -135,7 +133,9 @@ sub _twist {
         ## cleanup, just in case dangerous chars were left
         $tag_regexp =~ s/([^\w\s\x80-\xFF])/\\$1/g;
         ## Replaces "[%list.sequence%]" by "\d+"
-        $tag_regexp =~ s/\\\[\\\%\s*list\\\.sequence\s*\\\%\\\]/\\d+/g;
+        my $has_seq;
+        $tag_regexp =~ s/\\\[\\\%\s*list\\\.sequence\s*\\\%\\\]/\\d+/g
+            and $has_seq = 1;
         ## Replace "[%list.name%]" by escaped list name
         $tag_regexp =~
             s/\\\[\\\%\s*list\\\.name\s*\\\%\\\]/$list_name_escaped/g;
@@ -156,7 +156,8 @@ sub _twist {
         if ($custom_subject =~ /\S/) {
             $subject_field =~ s/\s*\[$tag_regexp\]\s*/ /;
         }
-        $subject_field =~ s/\s+$//;
+        # Remove leading and trailing blanks.
+        $subject_field =~ s/\A\s*(.*)\s*\z/$1/;
 
         # Truncate multiple "Re:" and equivalents.
         # Note that Unicode case-ignore match is performed.
@@ -173,9 +174,12 @@ sub _twist {
 
         ## Don't try to encode the subject if it was not originally encoded.
         if ($message->{'subject_charset'}) {
+            my $etag = sprintf '[%s]', $parsed_tag;
             $subject_field = MIME::EncWords::encode_mimewords(
                 Encode::decode_utf8(
-                    $before_tag . '[' . $parsed_tag . '] ' . $after_tag
+                    $has_seq
+                    ? join(' ', $etag,               $before_tag . $after_tag)
+                    : join(' ', $before_tag . $etag, $after_tag)
                 ),
                 Charset     => $message->{'subject_charset'},
                 Encoding    => 'A',
@@ -183,16 +187,17 @@ sub _twist {
                 Replacement => 'FALLBACK'
             );
         } else {
-            $subject_field =
-                $before_tag . ' '
-                . MIME::EncWords::encode_mimewords(
+            $before_tag =~ s/\s+\z//;
+            my $etag = MIME::EncWords::encode_mimewords(
                 Encode::decode_utf8('[' . $parsed_tag . ']'),
                 Charset  => Conf::lang2charset($language->get_lang),
                 Encoding => 'A',
                 Field    => 'Subject'
-                )
-                . ' '
-                . $after_tag;
+            );
+            $subject_field =
+                $has_seq
+                ? join(' ', grep {length} $etag, $before_tag, $after_tag)
+                : join(' ', grep {length} $before_tag, $etag, $after_tag);
         }
 
         $message->delete_header('Subject');
