@@ -5,8 +5,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2024 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -101,7 +101,8 @@ sub add {
     # Create a lock
     my $lock_fh;
     unless ($lock_fh = Sympa::LockedFile->new($alias_file, 20, '+>>')) {
-        $log->syslog('err', 'Can\'t lock %s', $alias_file);
+        $log->syslog('err', 'Can\'t lock %s: %s',
+            $alias_file, Sympa::LockedFile->last_error);
         return undef;
     }
 
@@ -168,7 +169,8 @@ sub del {
     # Create a lock
     my $lock_fh;
     unless ($lock_fh = Sympa::LockedFile->new($alias_file, 20, '+<')) {
-        $log->syslog('err', 'Can\'t lock %s', $alias_file);
+        $log->syslog('err', 'Can\'t lock %s: %s',
+            $alias_file, Sympa::LockedFile->last_error);
         return undef;
     }
 
