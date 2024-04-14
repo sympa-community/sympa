@@ -2185,6 +2185,7 @@ sub check_action_parameters {
                         }
                     );
 
+                    delete $param->{'list'};
                     # User is redirected to the login request form.
                     # Once logged in, they will be redirected to the URL in
                     # $session->{'redirect_url'}.
@@ -6012,6 +6013,7 @@ sub do_edit_config {
             'Access denied in edit_config for %s because not super listmaster',
             $param->{'user'}{'email'}
         );
+        return undef;
     }
 
     for my $p (@$editable_params) {
