@@ -289,6 +289,11 @@
             [%|loc%]Are you sure you wish to purge selected lists?[%END%]
         </strong>
     </p>
+[%~ ELSIF confirm_action == 'reject' ~%]
+    <h2>
+        <i class="fa fa-check-circle"></i>
+        [%|loc%]Reject[%END%]
+    </h2>
 [%~ ELSIF confirm_action == 'remind' ~%]
     <h2>
         <i class="fa fa-check-circle"></i>
@@ -508,6 +513,15 @@
                 <li>[% l %]</li>
             [%~ END %]
         </ul>
+    [%~ ELSIF confirm_action == 'reject' ~%]
+        [% FOREACH i = id ~%]
+            <input type="hidden" name="id" value="[% i %]" />
+        [%~ END %]
+        <input type="hidden" name="message_template"
+         value="[% message_template %]" />
+        <input type="hidden" name="signal_spam" value="[% signal_spam %]" />
+        <input type="hidden" name="blocklist" value="[% blocklist %]" />
+        <input type="hidden" name="quiet" value="[% quiet %]" />
     [%~ ELSIF confirm_action == 'remove_arc' ~%]
         <input type="hidden" name="yyyy" value="[% yyyy %]" />
         <input type="hidden" name="month" value="[% month %]" />

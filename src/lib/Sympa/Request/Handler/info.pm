@@ -88,6 +88,10 @@ sub _twist {
 
     $data->{'url'} = Sympa::get_url($list, 'info');
 
+    # Owners and moderators no longer are saved in the config file.
+    $data->{owner} = [$list->get_admins('owner')];
+    $data->{editor} = [$list->get_admins('editor')];
+
     unless (Sympa::send_file($list, 'info_report', $sender, $data)) {
         $log->syslog('notice', 'Unable to send template "info_report" to %s',
             $sender);

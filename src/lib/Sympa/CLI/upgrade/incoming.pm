@@ -178,7 +178,8 @@ Following site configuration parameters in F<--CONFIG--> are referred.
 
 =head1 SEE ALSO
 
-L<sympa.conf(5)>, L<Sympa::Message>.
+L<sympa_config(5)>,
+L<Sympa::Message>.
 
 =head1 HISTORY
 

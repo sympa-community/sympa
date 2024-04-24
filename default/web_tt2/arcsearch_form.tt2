@@ -17,6 +17,7 @@
                 <strong>[% archive_name %]</strong>
             </a>
 
+            <label for="key_word">[%|loc%]Search keywords:[%END%]</label>
             <input id="key_word" name="key_word" type="text" size="30" value="[% key_word %]" />
             <input name="action" type="hidden" value="arcsearch" />
             <input class="MainMenuLinks disableIfEmpty" data-selector="#key_word" name="action_arcsearch" type="submit" value="[%|loc%]Search[%END%]" />

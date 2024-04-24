@@ -15,11 +15,11 @@
 <br />
 
 <table class="responsive table_style" >
-    <caption>[%|loc%] The latest lists of this robot[%END%] </caption>
+    <caption>[%|loc%] The latest lists of this domain[%END%] </caption>
     <tr class="color_light">
-        <th>[%|loc%]List name[%END%]</th>
-        <th>[%|loc%]Creation date[%END%]</th>
-        <th>[%|loc%]Subject[%END%]</th>
+        <th id="h_name">[%|loc%]List name[%END%]</th>
+        <th id="h_date">[%|loc%]Creation date[%END%]</th>
+        <th id="h_subject">[%|loc%]Subject[%END%]</th>
     </tr>
 
     [% FOREACH l = latest_lists %]
@@ -29,15 +29,15 @@
         [% ELSE %]
             <tr class="color0">[% SET dark = 1 %]
         [% END %]
-                <td>
+                <td headers="h_name">
                     <a href="[% 'info' | url_rel([l.name]) %]" >
                         <strong>
                             [%|obfuscate(conf.spam_protection) %][% l.name %]@[% domain %][% END %]
                         </strong>
                     </a>
                 </td>
-                <td> [% l.date %] </td>
-                <td> [% l.subject %] </td>
+                <td headers="h_date"> [% l.date %] </td>
+                <td headers="h_subject"> [% l.subject %] </td>
             </tr>
     [% END %]
 </table>

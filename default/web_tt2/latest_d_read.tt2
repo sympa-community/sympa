@@ -16,16 +16,16 @@
 <table class="responsive table_style" >
     <caption>[%|loc%]Most recent documents for this list [%END%] </caption>
     <tr class="color_light">
-        <th>[%|loc%]Last update[%END%]</th>
-        <th>[%|loc%]Name[%END%]</th>
-        <th>[%|loc%]Author[%END%]</th>
-        <th>[%|loc%]Directory[%END%]</th>
+        <th id="h_date">[%|loc%]Last update[%END%]</th>
+        <th id="h_name">[%|loc%]Name[%END%]</th>
+        <th id="h_author">[%|loc%]Author[%END%]</th>
+        <th id="h_parent">[%|loc%]Directory[%END%]</th>
     </tr>
 
     [% FOREACH d = shared_doc.children %]
         <tr>
-            <td> [% d.date %] </td>
-            <td>
+            <td headers="h_date"> [% d.date %] </td>
+            <td headers="h_name">
                 [% IF d.html ~%]
                     <a href="[% 'd_read' | url_rel([list,d.paths_d]) %]"
                        title="[%|loc%]Open in a new window[%END%]" target="html_window">
@@ -45,14 +45,14 @@
                     </a>
                 [%~ END %]
             </td>
-            <td>
+            <td headers="h_author">
                 [%~ IF d.owner ~%]
                     [% d.owner %]
                 [%~ ELSE ~%]
                     [%|loc%]Unknown[%END%]
                 [%~ END ~%]
             </td>
-            <td>
+            <td headers="h_parent">
                 <a href="[% 'd_read' | url_rel([list,d.parent.paths_d]) %]">
                     [% d.parent.name %]
                 </a>

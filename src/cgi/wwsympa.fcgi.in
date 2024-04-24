@@ -9,9 +9,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,7 +39,6 @@ use IO::File qw();
 use MIME::EncWords;
 use MIME::Lite::HTML;
 use POSIX qw();
-use Time::Local qw();
 use URI;
 use Data::Dumper;    # tentative
 
@@ -285,7 +284,6 @@ our %comm = (
     'set'                      => 'do_set',
     'set_dumpvars'             => 'do_set_dumpvars',
     'set_lang'                 => 'do_set_lang',
-    'set_loglevel'             => 'do_set_loglevel',
     'set_pending_list_request' => 'do_set_pending_list_request',
     'set_session_email'        => 'do_set_session_email',
     'setpasswd'                => 'do_setpasswd',
@@ -657,7 +655,6 @@ our %required_privileges = (
     'serveradmin'                   => ['listmaster'],
     'set'                           => ['*'],
     'set_dumpvars'                  => ['listmaster'],
-    'set_loglevel'                  => ['listmaster'],
     'set_pending_list_request'      => ['listmaster'],
     'set_session_email'             => ['listmaster'],
     'setpasswd'                     => ['*'],
@@ -756,7 +753,6 @@ my %action_type = (
     'show_exclude'        => 'admin',
     'rebuildarc'          => 'serveradmin',
     'set_session_email'   => 'serveradmin',
-    'set_loglevel'        => 'serveradmin',
     'editfile'            => 'serveradmin',    #FIXME: admin?
     'unset_dumpvars'      => 'serveradmin',
     'set_dumpvars'        => 'serveradmin',
@@ -1001,11 +997,7 @@ $log->syslog('info', 'WWSympa started, process %d', $PID);
 #XXXbinmode STDIN, ":utf8";
 
 # Main loop.
-my $loop_count = 0;
-my $start_time = time;
 while ($query = Sympa::WWW::FastCGI->new) {
-    $loop_count++;
-
     undef $param;
     undef $list;
     undef $robot;
@@ -1166,8 +1158,10 @@ while ($query = Sympa::WWW::FastCGI->new) {
     $param->{'wwsconf'} = Conf::_load_wwsconf;    #FXIME: no longer used?
 
     $param->{'version'} = Sympa::Constants::VERSION;
+    # No longer used.
     $param->{'date'} =
         $language->gettext_strftime("%d %b %Y at %H:%M:%S", localtime time);
+    # No longer used.
     $param->{'time'} =
         $language->gettext_strftime("%H:%M:%S", localtime time);
 
@@ -1630,6 +1624,12 @@ while ($query = Sympa::WWW::FastCGI->new) {
         ## Send RSS
         print "Cache-control: no-cache\n";
         print "Content-Type: application/rss+xml; charset=utf-8\n\n";
+
+        # Current time in RFC 5322 form.
+        # If setting local timezone fails, fallback to UTC.
+        $param->{'date'} =
+            (eval { DateTime->now(time_zone => 'local') } || DateTime->now)
+            ->strftime('%a, %{day} %b %Y %H:%M:%S %z');
 
         ## Icons
         $param->{'icons_url'} =
@@ -2159,22 +2159,23 @@ sub check_action_parameters {
 sub send_html {
     my $tt2_file = shift;
 
-    ## Send HTML headers
-    if ($param->{'date'}) {
-        printf "Date: %s\n",
-            DateTime->now->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
-    }
-    ## If we set the header indicating the last time the file to send was
-    ## modified, add an HTTP header (limitate web harvesting).
+    # Send HTTP header
+
+    printf "Date: %s\n", DateTime->now->strftime("%a, %d %b %Y %H:%M:%S GMT");
+    # If we indicate the last time the file to send was modified, add it
+    # as an HTTP header field to limitate web harvesting.
     if ($param->{'header_date'}) {
         printf "Last-Modified: %s\n",
             DateTime->from_epoch(epoch => $param->{'header_date'})
-            ->strftime("%a, %{day} %b %Y %H:%M:%S GMT");
+            ->strftime("%a, %d %b %Y %H:%M:%S GMT");
     }
-    print "Cache-control: max-age=0\n" unless $param->{'action'} eq 'arc';
+    # Prevent caching responses except archives.
+    # "max-age=0" is a workaround for very old HTTP/1.0 proxies.
+    print "Cache-Control: no-store, max-age=0\n"
+        unless $param->{'action'} eq 'arc';
     print "Content-Type: text/html; charset=utf-8\n";
-    ## Workaround for Internet Explorer 8 or later.
-    print "X-UA-Compatible: IE=100\n";
+    # No longer needed: Workaround for Internet Explorer 8 or later.
+    #print "X-UA-Compatible: IE=100\n";
 
     ## Notify crash to client.
     if ($param->{'action'} eq 'crash') {
@@ -2629,12 +2630,6 @@ sub check_param_in {
 ## Prepare outgoing params
 sub check_param_out {
     wwslog('debug2', '');
-
-    $param->{'loop_count'} = $loop_count;
-    $param->{'start_time'} =
-        $language->gettext_strftime("%d %b %Y at %H:%M:%S",
-        localtime $start_time);
-    $param->{'process_id'} = $PID;
 
     # listmaster has owner and editor privileges for the list.
     $param->{'is_listmaster'} =
@@ -3466,7 +3461,7 @@ sub do_sso_login {
         }
 
         unless ($email) {
-            add_stash('intern', 'no_identified_user');
+            add_stash('user', 'no_identified_user');
             wwslog(
                 'err',
                 'User could not be identified, no %s HTTP header set',
@@ -3955,7 +3950,7 @@ sub do_my {
     wwslog('info', '');
 
     # Sets the date of the field "start date" to "today"
-    $param->{'d_day'} = POSIX::strftime('%d-%m-%Y', localtime time);
+    $param->{'d_day'} = POSIX::strftime('%Y-%m-%d', localtime time);
     _set_my_lists_info();
     return 1;
 }
@@ -4550,10 +4545,7 @@ sub _review_user {
 }
 
 sub _review_member {
-    my $record;
-    my @users;
     my $size;
-    my $sortby = lc($in{'sortby'} || 'email');
 
     ## Access control
     return undef unless defined check_authz('do_review', 'review');
@@ -4606,6 +4598,10 @@ sub _review_member {
     my @additional_fields = split ',',
         $Conf::Conf{'db_additional_subscriber_fields'};
 
+    # Sort key.
+    # GH #1577: Default subscribers sorts preferences.
+    my $sortby = lc($in{'sortby'} || $session->{'review_sortby'} || 'email');
+
     # Members list
     # Some review pages may be empty while viewed by subscribers.
     my @members = $list->get_members(
@@ -4643,8 +4639,9 @@ sub _review_member {
         $param->{'next_page'} = $param->{'page'} + 1;
     }
 
-    $param->{'size'}   = $size;
-    $param->{'sortby'} = $sortby;
+    $param->{'size'}            = $size;
+    $param->{'sortby'}          = $sortby;
+    $session->{'review_sortby'} = $sortby;
 
     ######################
     if ($in{'exclude'} eq '1') {
@@ -5815,6 +5812,9 @@ sub do_serveradmin {
 
     ## Checking families and other virtual hosts.
     get_server_details();
+    if ($in{'subaction'} eq 'stats') {
+        _get_stats();
+    }
 
     ## Server files
     foreach my $f (
@@ -5882,12 +5882,8 @@ sub do_edit_config {
 }
 
 ## Change log_level for the current session
-sub do_set_loglevel {
-    wwslog('info', '');
-
-    $session->{'log_level'} = $in{'log_level'};
-    return 'serveradmin';
-}
+# Deprecated.
+#sub do_set_loglevel;
 
 ## activate dump var feature
 sub do_set_dumpvars {
@@ -7379,29 +7375,38 @@ sub do_d_reject_shared {
 #
 ####################################################
 sub do_reject {
+    wwslog('info', '(%s)', $in{'id'});
 
-    # toggle selection javascript have a distinction of spam and ham base on
-    # the checkbox name . It is not useful here so join id list and idspam
-    # list.
-    $in{'id'} .= ',' . $in{'idspam'} if ($in{'idspam'});
-    $in{'id'} =~ s/^,//;
-    $in{'id'} =~ s/\0/,/g;
+    my @ids = split /\0/, $in{'id'};
+    push @ids, $in{'idspam'} if length($in{'idspam'} // '');    # compat.
+    $param->{'id'} = [@ids];
 
     ## The quiet information might either be provided by the 'quiet' variable
     ## or by the 'quiet' value of the 'message_template' variable
-    if ($in{'message_template'} eq 'quiet') {
-        $in{'quiet'} = 1;
-        delete $in{'message_template'};
-    }
-    if ($in{'blocklist'}) {
-        $in{'quiet'} = 1;
-    }
+    my $message_template = $in{'message_template'} || 'reject';
+    my $signal_spam      = $in{'signal_spam'};
+    my $blocklist        = $in{'blocklist'};
+    my $quiet =
+          ($message_template eq 'quiet' or $blocklist) ? 'quiet'
+        : $in{'quiet'} ? 'quiet'
+        :                undef;
+    $param->{'message_template'} = $message_template;
+    $param->{'signal_spam'}      = $signal_spam;
+    $param->{'blocklist'}        = $blocklist;
+    $param->{'quiet'}            = $quiet;
 
-    wwslog('info', '(%s)', $in{'id'});
+    # Action confirmed?
+    my $next_action = $session->confirm_action(
+        $in{'action'},
+        $in{'response_action'},
+        arg             => join(',', @ids),
+        previous_action => ($in{'previous_action'} || 'modindex')
+    );
+    return $next_action unless $next_action eq '1';
 
     $param->{'blocklist_added'}   = 0;
     $param->{'blocklist_ignored'} = 0;
-    foreach my $id (split(/,/, $in{'id'})) {
+    foreach my $id (@ids) {
         next unless $id and $id =~ /\A\w+\z/;
 
         my $spool_mod =
@@ -7428,26 +7433,28 @@ sub do_reject {
 
         #  extract sender address is needed to report reject to sender and in
         #  case the sender is to be added to the blocklist
-        if (($in{'quiet'} ne '1') || ($in{'blocklist'})) {
+        if (not $quiet or $blocklist) {
             my $rejected_sender = $message->{'sender'};
             if ($rejected_sender) {
-                unless ($in{'message_template'} eq 'reject_quiet') {
+                unless ($message_template) {
+                    $message_template = 'reject';
+                }
+                unless ($message_template eq 'reject_quiet') {
                     my %context;
                     $context{'subject'}       = $message->{'decoded_subject'};
                     $context{'rejected_by'}   = $param->{'user'}{'email'};
-                    $context{'template_used'} = $in{'message_template'};
+                    $context{'template_used'} = $message_template;
                     unless (
                         Sympa::send_file(
-                            $list,            $in{'message_template'},  #FIXME
+                            $list,            $message_template,    #FIXME
                             $rejected_sender, \%context
                         )
                     ) {
-                        wwslog('notice',
-                            "Unable to send template $in{'message_template'} to $rejected_sender"
-                        );
+                        wwslog('notice', 'Unable to send template %s to %s',
+                            $message_template, $rejected_sender);
                     }
                 }
-                if ($in{'blocklist'}) {
+                if ($blocklist) {
                     if (_add_in_blocklist($rejected_sender, $robot, $list)) {
                         $param->{'blocklist_added'} += 1;
                         wwslog('info',
@@ -7470,7 +7477,7 @@ sub do_reject {
         }
 
         my $script = $Conf::Conf{'reporting_spam_script_path'};
-        if ($in{'signal_spam'} and length($script // '')) {
+        if ($signal_spam and length($script // '')) {
             my $pipeout;
             unless (open $pipeout, '|-', $script) {
                 $log->syslog('err', 'Could not execute %s: %m', $script);
@@ -7506,7 +7513,7 @@ sub do_reject {
 
     }
     web_db_log(
-        {   'parameters' => $in{'id'},
+        {   'parameters' => join(',', @ids),
             'status'     => 'success'
         }
     );
@@ -8503,21 +8510,8 @@ sub do_latest_arc {
     return 1;
 }
 
-sub get_timelocal_from_date {
-    my ($mday, $mon, $yr, $hr, $min, $sec, $zone) = @_;
-    my ($time) = 0;
-
-    $yr -= 1900 if $yr >= 1900;    # if given full 4 digit year
-    $yr += 100 if $yr <= 37;       # in case of 2 digit years
-    if (($yr < 70) || ($yr > 137)) {
-        warn "Warning: Bad year (", $yr + 1900, ") using current\n";
-        $yr = (localtime(time))[5];
-    }
-
-    $time = Time::Local::timelocal($sec, $min, $hr, $mday, $mon, $yr);
-    return $time;
-
-}
+# No longer used.
+#sub get_timelocal_from_date;
 
 ####################################################
 #  do_remove_arc
@@ -13535,7 +13529,7 @@ sub do_suspend_request {
     wwslog('info', '');
 
     ## Sets the date of the field "start date" to "today"
-    $param->{'d_day'} = POSIX::strftime('%d-%m-%Y', localtime time);
+    $param->{'d_day'} = POSIX::strftime('%Y-%m-%d', localtime time);
     _set_my_lists_info();
 
     # Compatibility with Sympa <= 6.1b.1.
@@ -13714,6 +13708,12 @@ sub do_suspend_request_action {
 
     my $previous_action = $in{'previous_action'} || 'suspend_request';
 
+    # Compat. <= 6.2.72
+    $in{'date_deb'} =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$2-$1/
+        if $in{'date_deb'};
+    $in{'date_fin'} =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$2-$1/
+        if $in{'date_fin'};
+
     if ($in{'sub_action'} eq 'suspendsave') {
 
         # to retrieve the selected list
@@ -13738,59 +13738,23 @@ sub do_suspend_request_action {
             return $previous_action;
         }
 
-        if ($in{'date_deb'}) {
-            ($day1, $month1, $year1) = split(/\-/, $in{'date_deb'});
-            $month1 = $month1 - 1;
+        my $html_date_re = Sympa::Regexps::html_date();
+        if (($in{'date_deb'} // '') =~ /\A$html_date_re\z/) {
+            ($year1, $month1, $day1) = split /-/, $in{'date_deb'};
+            # Return an epoch date
+            $data->{'startdate'} =
+                POSIX::mktime(0, 0, 0, $day1 + 0, $month1 - 1, $year1 - 1900);
 
-            if (   ($day1 =~ /([0-9]*)/)
-                && ($month1 =~ /([0-9]*)/)
-                && ($year1 =~ /([0-9]*)/)) {
-                if (   ((1 <= $day1) && ($day1 <= 31))
-                    && ((0 <= $month1) && ($month1 <= 11))
-                    && (1900 <= $year1)) {
-                    ## Return an epoch date
-                    $data->{'startdate'} =
-                        Time::Local::timelocal(0, 0, 0, $day1, $month1,
-                        $year1);
-                } else {
-                    add_stash('user', 'missing_arg',
-                        {argument => 'Start Date doesn\'t exist.'});
-                    wwslog('info', 'Date doesn\'t exist');
-                    return $previous_action;
-                }
-            } else {
-                add_stash('user', 'missing_arg',
-                    {argument => 'Start Date doesn\'t exist.'});
-                wwslog('info', 'Date doesn\'t exist');
-                return $previous_action;
-            }
-            ## Case 1 : Start date & End date (without indefinite)
-            if (($in{'date_fin'}) && (!$in{'indefinite'})) {
-                ($day2, $month2, $year2) = split(/\-/, $in{'date_fin'});
-                $month2 = $month2 - 1;
-
-                if (   ($day2 =~ /([0-9]*)/)
-                    && ($month2 =~ /([0-9]*)/)
-                    && ($year2 =~ /([0-9]*)/)) {
-                    if (   ((1 <= $day2) && ($day2 <= 31))
-                        && ((0 <= $month2) && ($month2 <= 11))
-                        && (1900 <= $year2)) {
-                        ## Return an epoch date
-                        $data->{'enddate'} =
-                            Time::Local::timelocal(0, 0, 0, $day2, $month2,
-                            $year2);
-                    } else {
-                        add_stash('user', 'missing_arg',
-                            {argument => 'End Date doesn\'t exist.'});
-                        wwslog('info', 'Date doesn\'t exist');
-                        return $previous_action;
-                    }
-                } else {
-                    add_stash('user', 'missing_arg',
-                        {argument => 'End Date doesn\'t exist.'});
-                    wwslog('info', 'Date doesn\'t exist');
-                    return $previous_action;
-                }
+            if (($in{'date_fin'} // '') =~ /\A$html_date_re\z/
+                and not $in{'indefinite'}) {
+                # Case 1 : Start date & End date (without indefinite)
+                ($year2, $month2, $day2) = split /-/, $in{'date_fin'};
+                # Return an epoch date
+                $data->{'enddate'} = POSIX::mktime(
+                    0, 0, 0, $day2 + 0,
+                    $month2 - 1,
+                    $year2 - 1900
+                );
 
                 unless ($data->{'startdate'} <= $data->{'enddate'}) {
                     add_stash(
@@ -13804,27 +13768,27 @@ sub do_suspend_request_action {
                         'The start date must be less than the end date.');
                     return $previous_action;
                 }
-                ## Case 2 : Start date & without indefinite (without end date)
-            } elsif ((!$in{'date_fin'}) && ($in{'indefinite'})) {
+            } elsif ($in{'indefinite'}) {
+                # Case 2 : Start date & without indefinite (without end date)
                 $data->{'enddate'} = undef;
             } else {
                 add_stash(
                     'user',
                     'missing_arg',
                     {   argument =>
-                            'Choose end date (dd/mm/yyyy) or indefinite end date'
+                            'Choose end date (yyyy-mm-dd) or indefinite end date'
                     }
                 );
                 wwslog('info',
-                    'Missing argument for the end date or syntax error : dd/mm/yyyy or must choose a end date or indefinite end date'
+                    'Missing argument for the end date or syntax error : yyyy-mm-dd or must choose a end date or indefinite end date'
                 );
                 return $previous_action;
             }
         } else {
             add_stash('user', 'missing_arg',
-                {argument => 'Miss start date (dd/mm/yyyy)'});
+                {argument => 'Miss start date (yyyy-mm-dd)'});
             wwslog('info',
-                'Missing argument for the start date or syntax error : dd/mm/yyyy'
+                'Missing argument for the start date or syntax error : yyyy-mm-dd'
             );
             return $previous_action;
         }
@@ -14910,6 +14874,12 @@ sub do_stats {
     $param->{'arc_size'} =
         int((Sympa::Archive->new(context => $list)->get_size + 512) / 1024);
 
+    return _get_stats();
+}
+
+sub _get_stats {
+    my $that = (ref $list eq 'Sympa::List') ? $list : $robot;
+
     my $stats = {
         send_mail => {title => $language->gettext("Mail sending")},
         add_or_subscribe =>
@@ -14924,7 +14894,7 @@ sub do_stats {
     };
 
     foreach my $operation (keys %$stats) {
-        my $data = $log->aggregate_daily_data($list, $operation);
+        my $data = $log->aggregate_daily_data($that, $operation);
         if (%{$data || {}}) {
             $stats->{$operation}{'stats_values'} = '[' . join(
                 ',',
@@ -14935,6 +14905,8 @@ sub do_stats {
                     sprintf "['%s',%d]", $formatted_date, $data->{$_}
                 } sort keys %$data
             ) . ']';
+            $stats->{$operation}{'max_value'} =
+                [sort { $b <=> $a } values %$data]->[0];
         }
     }
     $param->{'stats'} = $stats;
@@ -15361,6 +15333,12 @@ sub do_viewlogs {
 
     $param->{'total_results'} = 0;
 
+    # Compat. <= 6.2.72
+    $in{'date_from'} =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$2-$1/
+        if $in{'date_from'};
+    $in{'date_to'} =~ s/(\d\d)-(\d\d)-(\d\d\d\d)/$3-$2-$1/
+        if $in{'date_to'};
+
     my @dates = $log->get_log_date;
     ($param->{'date_from_formated'}, $param->{'date_to_formated'}) = @dates
         if @dates;
@@ -15518,14 +15496,15 @@ sub do_arc_download {
             next unless $message;
 
             my ($rv, $az);
+            my $string = $message->as_string =~ s/\r?\n/\r\n/gr;
             if ($Archive::Zip::SimpleZip::VERSION) {
-                $rv = $zip->addString($message->as_string,
-                    Name => sprintf('%s/%s', $arc_dirname, $handle->basename)
+                $rv = $zip->addString($string,
+                    Name => sprintf('%s/%s.eml', $arc_dirname, $handle->basename)
                 );
                 $az = $Archive::Zip::SimpleZip::SimpleZipError;
             } else {
-                $rv = $zip->addString($message->as_string,
-                    sprintf('%s/%s', $arc_dirname, $handle->basename));
+                $rv = $zip->addString($string,
+                    sprintf('%s/%s.eml', $arc_dirname, $handle->basename));
                 $az = 'unknown error';
             }
             unless ($rv) {

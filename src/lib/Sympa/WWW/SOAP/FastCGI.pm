@@ -4,12 +4,8 @@
 #
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
-# Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
-# 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
-# Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2023 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Sympa::WWW::SOAP::Transport;
+package Sympa::WWW::SOAP::FastCGI;
 
 use strict;
 use warnings;
@@ -58,21 +54,21 @@ sub request {
 
     if (my $request = $_[0]) {
         # Select appropriate robot.
-        $ENV{'SYMPA_ROBOT'} =
+        $ENV{SYMPA_DOMAIN} =
             Sympa::WWW::Tools::get_robot('soap_url_local', 'soap_url');
 
         my $session;
         ## Existing session or new one
         if (Sympa::WWW::Session::get_session_cookie($ENV{'HTTP_COOKIE'})) {
             $session = Sympa::WWW::Session->new(
-                $ENV{'SYMPA_ROBOT'},
+                $ENV{SYMPA_DOMAIN},
                 {   'cookie' => Sympa::WWW::Session::get_session_cookie(
                         $ENV{'HTTP_COOKIE'}
                     )
                 }
             );
         } else {
-            $session = Sympa::WWW::Session->new($ENV{'SYMPA_ROBOT'}, {});
+            $session = Sympa::WWW::Session->new($ENV{SYMPA_DOMAIN}, {});
             $session->store() if (defined $session);
             ## Note that id_session changes each time it is saved in the DB
             $session->renew()
@@ -135,3 +131,41 @@ sub handle {
 }
 
 1;
+
+package Sympa::WWW::SOAP::Data;
+
+use Encode qw();
+use SOAP::Lite;
+
+# 'base' pragma doesn't work here
+our @ISA = qw(SOAP::Data);
+
+sub type {
+    my $self = shift;
+    if (@_) {
+        my ($type, @value) = @_;
+
+        if ($type eq 'string') {
+            return $self->SUPER::type($type,
+                map { Encode::is_utf8($_) ? $_ : Encode::decode_utf8($_) }
+                    @value);
+        }
+    }
+
+    return $self->SUPER::type(@_);
+}
+
+sub value {
+    my $self = shift;
+
+    if (($self->type // '') eq 'string') {
+        return $self->SUPER::value(
+            map { Encode::is_utf8($_) ? $_ : Encode::decode_utf8($_) } @_);
+    }
+
+    return $self->SUPER::value(@_);
+}
+
+1;
+__END__
+
