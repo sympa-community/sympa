@@ -8,9 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2024 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1543,49 +1543,43 @@ sub _infer_server_specific_parameter_values {
 
     $param->{'config_hash'}{'robot_name'} = '';
 
-    unless ($param->{'config_hash'}{'dkim_signer_domain'}) {
-        $param->{'config_hash'}{'dkim_signer_domain'} =
-            $param->{'config_hash'}{'domain'};
-    }
+    $param->{'config_hash'}{'dkim_signer_domain'} ||=
+        $param->{'config_hash'}{'domain'};
 
-    my @dmarc = split /[,\s]+/,
+    my @dmarc = grep {length} split /[,\s]+/,
         ($param->{'config_hash'}{'dmarc_protection.mode'} || '');
     if (@dmarc) {
-        $param->{'config_hash'}{'dmarc_protection.mode'} = \@dmarc;
+        $param->{'config_hash'}{'dmarc_protection.mode'} = [@dmarc];
     } else {
         delete $param->{'config_hash'}{'dmarc_protection.mode'};
     }
 
-    ## Set Regexp for accepted list suffixes
-    if (defined($param->{'config_hash'}{'list_check_suffixes'})) {
-        $param->{'config_hash'}{'list_check_regexp'} =
-            $param->{'config_hash'}{'list_check_suffixes'};
-        $param->{'config_hash'}{'list_check_regexp'} =~ s/[,\s]+/\|/g;
-    }
+    # Accepted list suffixes.
+    $param->{'config_hash'}{'list_check_suffixes'} = [
+        grep {length} split /[,\s]+/,
+        ($param->{'config_hash'}{'list_check_suffixes'} // '')
+    ];
 
-#    my $p = 1;
-#    foreach (split(/,/, $param->{'config_hash'}{'sort'})) {
-#        $param->{'config_hash'}{'poids'}{$_} = $p++;
-#    }
-#    $param->{'config_hash'}{'poids'}{'*'} = $p
-#        if !$param->{'config_hash'}{'poids'}{'*'};
-
-    ## Parameters made of comma-separated list
+    # Parameters made of comma-separated list.
+    # Note that whitespace character(s) cannot be a separator, because the
+    # value of remove_outgoing_headers can contain them.
     foreach my $parameter (
         'rfc2369_header_fields', 'anonymous_header_fields',
         'remove_headers',        'remove_outgoing_headers'
     ) {
-        if ($param->{'config_hash'}{$parameter} eq 'none') {
+        if ('none' eq ($param->{'config_hash'}{$parameter} // '')
+            or not length($param->{'config_hash'}{$parameter} // '')) {
             delete $param->{'config_hash'}{$parameter};
         } else {
-            $param->{'config_hash'}{$parameter} =
-                [split(/,/, $param->{'config_hash'}{$parameter})];
+            $param->{'config_hash'}{$parameter} = [
+                grep {length} split /\s*,\s*/,
+                $param->{'config_hash'}{$parameter}
+            ];
         }
     }
 
-    foreach
-        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blocklist'})
-    {
+    foreach my $action (split /\s*,\s*/,
+        ($param->{'config_hash'}{'use_blocklist'} // '')) {
         next unless $action =~ /\A[.\w]+\z/;
         # Compat. <= 6.2.38
         $action = {
@@ -1600,20 +1594,6 @@ sub _infer_server_specific_parameter_values {
             || $action;
 
         $param->{'config_hash'}{'blocklist'}{$action} = 1;
-    }
-
-    if ($param->{'config_hash'}{'ldap_export_name'}) {
-        $param->{'config_hash'}{'ldap_export'} = {
-            $param->{'config_hash'}{'ldap_export_name'} => {
-                'host'     => $param->{'config_hash'}{'ldap_export_host'},
-                'suffix'   => $param->{'config_hash'}{'ldap_export_suffix'},
-                'password' => $param->{'config_hash'}{'ldap_export_password'},
-                'DnManager' =>
-                    $param->{'config_hash'}{'ldap_export_dnmanager'},
-                'connection_timeout' =>
-                    $param->{'config_hash'}{'ldap_export_connection_timeout'}
-            }
-        };
     }
 
     return 1;
@@ -1637,7 +1617,8 @@ sub _load_server_specific_secondary_config_files {
         || 'en-US';
 
     ## Load charset.conf file if necessary.
-    if ($param->{'config_hash'}{'legacy_character_support_feature'} eq 'on') {
+    if ('on' eq
+        ($param->{'config_hash'}{'legacy_character_support_feature'} // '')) {
         $param->{'config_hash'}{'locale2charset'} = load_charset();
     } else {
         $param->{'config_hash'}{'locale2charset'} = {};
@@ -1722,8 +1703,10 @@ sub _infer_robot_parameter_values {
         Sympa::Language::canonic_lang($param->{'config_hash'}{'lang'})
         or delete $param->{'config_hash'}{'lang'};
 
-    $param->{'config_hash'}{'dkim_signature_apply_on'} =
-        [split /\s*,\s*/, $param->{'config_hash'}{'dkim_signature_apply_on'}];
+    $param->{'config_hash'}{'dkim_signature_apply_on'} = [
+        grep {length} split /[,\s]+/,
+        ($param->{'config_hash'}{'dkim_signature_apply_on'} // '')
+    ];
 
     _parse_custom_robot_parameters(
         {'config_hash' => $param->{'config_hash'}});
@@ -1792,7 +1775,7 @@ sub _check_cpan_modules_required_by_config {
     my $number_of_missing_modules = 0;
 
     ## Some parameters require CPAN modules
-    if ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
+    if ('on' eq ($param->{'config_hash'}{'dkim_feature'} // '')) {
         eval "require Mail::DKIM";
         if ($EVAL_ERROR) {
             $log->syslog('notice',
