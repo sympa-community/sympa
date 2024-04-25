@@ -42,6 +42,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           brew install automake
+          brew install openssl
           brew install pkg-config
       - name: Workaround for macOS
         if: runner.os == 'macOS'
