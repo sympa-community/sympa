@@ -268,6 +268,11 @@ feature 'Encode::Locale', 'Useful when running command line utilities in the con
     requires 'Encode::Locale', '>= 1.02';
 };
 
+feature 'macos', 'Requirements specific to macOS.' => sub {
+    # Use dlopen() for macOS Big Sur or later.
+    requires 'ExtUtils::MakeMaker', '>= 7.58';
+};
+
 feature 'remote-list-including', 'Required when including members of a remote list.' => sub {
     requires 'LWP::Protocol::https';
 };

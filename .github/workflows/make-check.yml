@@ -60,6 +60,7 @@ jobs:
             --with-feature=Data::Password --with-feature=ldap
             --with-feature=safe-unicode --with-feature=smime
             --with-feature=soap --with-feature=sqlite
+            ${{ startsWith(matrix.os, 'macos') && '--with-feature=macos' || '' }}
       - name: Run tests
         run: |
           if [ "$(uname -s)" = "Linux" ]; then
