@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,6 +7,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2024 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -237,8 +239,8 @@ sub remove_pid {
     # Lock pid file
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+<');
     unless ($lock_fh) {
-        $log->syslog('err', 'Could not open %s to remove PID %s',
-            $pidfile, $pid);
+        $log->syslog('err', 'Could not open %s to remove PID %s: %s',
+            $pidfile, $pid, Sympa::LockedFile->last_error);
         return undef;
     }
 
@@ -306,7 +308,7 @@ sub write_pid {
             group => Sympa::Constants::GROUP,
         )
     ) {
-        die sprintf 'Unable to set rights on %s. Exiting.', $piddir;
+        die sprintf 'Unable to set rights on %s: %s', $piddir, $ERRNO;
         ## No return
     }
 
@@ -315,8 +317,8 @@ sub write_pid {
     # Lock pid file
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '+>>');
     unless ($lock_fh) {
-        die sprintf 'Unable to lock %s file in write mode. Exiting.',
-            $pidfile;
+        die sprintf 'Unable to lock %s file in write mode: %s',
+            $pidfile, Sympa::LockedFile->last_error;
     }
     ## If pidfile exists, read the PIDs
     if (-s $pidfile) {
@@ -348,9 +350,10 @@ sub write_pid {
 
         seek $lock_fh, 0, 0;
         unless (truncate $lock_fh, 0) {
-            ## Unlock pid file
+            my $errno = $ERRNO;
+            # Unlock pid file
             $lock_fh->close();
-            die sprintf 'Could not truncate %s, exiting.', $pidfile;
+            die sprintf 'Could not truncate %s: %s', $pidfile, $errno;
         }
 
         print $lock_fh $pid . "\n";
@@ -363,9 +366,10 @@ sub write_pid {
             group => Sympa::Constants::GROUP,
         )
     ) {
-        ## Unlock pid file
+        my $errno = $ERRNO;
+        # Unlock pid file
         $lock_fh->close();
-        die sprintf 'Unable to set rights on %s', $pidfile;
+        die sprintf 'Unable to set rights on %s: %s', $pidfile, $errno;
     }
     ## Unlock pid file
     $lock_fh->close();
@@ -445,7 +449,10 @@ sub _get_pids_in_pid_file {
 
     my $lock_fh = Sympa::LockedFile->new($pidfile, 5, '<');
     unless ($lock_fh) {
-        $log->syslog('err', 'Unable to open PID file %s: %m', $pidfile);
+        $log->syslog(
+            'err',    'Unable to open PID file %s: %s',
+            $pidfile, Sympa::LockedFile->last_error
+        );
         return;
     }
     my $l = <$lock_fh>;
