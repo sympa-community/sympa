@@ -195,7 +195,7 @@ sub run {
                         $val = $arg;
                     }
                 } elsif ($def eq 'keyvalue') {
-                    if ($arg =~ /\A(\w+)=(.*)\z/) {
+                    if ($arg =~ /\A(\w+(?:[.]\w+)*)=(.*)\z/) {
                         $val = [$1 => $2];
                     }
                 } else {
