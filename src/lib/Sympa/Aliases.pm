@@ -4,7 +4,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2021, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -108,15 +108,13 @@ sub check_new_listname {
         return ('user', 'incorrect_listname', {bad_listname => $listname});
     }
 
-    my $regx = Conf::get_robot_conf($robot_id, 'list_check_regexp');
-    if ($regx) {
-        if ($listname =~ /^(\S+)-($regx)$/) {
-            $log->syslog('err',
-                'Incorrect listname %s matches one of service aliases',
-                $listname);
-            return ('user', 'listname_matches_aliases',
-                {new_listname => $listname});
-        }
+    my $sfxs = Conf::get_robot_conf($robot_id, 'list_check_suffixes') // [];
+    if (grep { lc("-$_") eq substr $listname, -length("-$_") } @$sfxs) {
+        $log->syslog('err',
+            'Incorrect listname %s matches one of service aliases',
+            $listname);
+        return ('user', 'listname_matches_aliases',
+            {new_listname => $listname});
     }
 
     # Avoid "sympa", "listmaster", "bounce" and "bounce+XXX".

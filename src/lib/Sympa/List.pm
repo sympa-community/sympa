@@ -7,9 +7,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2024 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -153,16 +153,12 @@ sub new {
     $name =~ tr/A-Z/a-z/;
 
     ## Reject listnames with reserved list suffixes
-    my $regx = Conf::get_robot_conf($robot, 'list_check_regexp');
-    if ($regx) {
-        if ($name =~ /^(\S+)-($regx)$/) {
-            $log->syslog(
-                'err',
-                'Incorrect name: listname "%s" matches one of service aliases',
-                $name
-            ) unless ($options->{'just_try'});
-            return undef;
-        }
+    my $sfxs = Conf::get_robot_conf($robot, 'list_check_suffixes') // [];
+    if (grep { lc("-$_") eq substr $name, -length("-$_") } @$sfxs) {
+        $log->syslog('err',
+            'Incorrect listname %s matches one of service aliases', $name)
+            unless $options->{'just_try'};
+        return undef;
     }
 
     my $status;
