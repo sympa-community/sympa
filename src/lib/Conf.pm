@@ -1541,6 +1541,11 @@ sub _infer_server_specific_parameter_values {
 
     $param->{'config_hash'}{'robot_name'} = '';
 
+    $param->{'config_hash'}{'syslog_socket.type'} = [
+        grep {length} split /\*,\*/,
+        ($param->{'config_hash'}{'syslog_socket.type'} // '')
+    ];
+
     unless (
         Sympa::Tools::Data::smart_eq(
             $param->{'config_hash'}{'dkim_feature'}, 'on'
@@ -2054,9 +2059,6 @@ sub _load_wwsconf {
             'MHonArc is not installed or %s is not executable',
             $conf->{'mhonarc'});
     }
-
-    ## set default
-    $conf->{'log_facility'} ||= $config_hash->{'syslog'};
 
     foreach my $k (keys %$conf) {
         $config_hash->{$k} = $conf->{$k};

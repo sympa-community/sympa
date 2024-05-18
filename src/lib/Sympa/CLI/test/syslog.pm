@@ -41,11 +41,7 @@ sub _run {
     my $log = Sympa::Log->instance;
 
     # Open the syslog and say we're read out stuff.
-    $log->openlog(
-        $Conf::Conf{'syslog'},
-        $Conf::Conf{'log_socket_type'},
-        service => 'sympa/testlogs'
-    );
+    $log->openlog(service => 'sympa/testlogs');
 
     # setting log_level using conf unless it is set by calling option
     if ($options->{log_level}) {

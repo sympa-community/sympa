@@ -48,14 +48,11 @@ sub _new_instance {
 
 # Old name: Log::do_openlog().
 sub openlog {
-    my $self        = shift;
-    my $facility    = shift;
-    my $socket_type = shift;
-    my %options     = @_;
+    my $self    = shift;
+    my %options = @_;
 
-    $self->{_facility}    = $facility;
-    $self->{_socket_type} = $socket_type;
-    $self->{_service}     = $options{service} || _daemon_name() || 'sympa';
+    $self->{_facility} = $options{facility};
+    $self->{_service} = $options{service} || _daemon_name() || 'sympa';
     $self->{_database_backend} =
         (exists $options{database_backend})
         ? $options{database_backend}
@@ -222,15 +219,24 @@ sub _daemon_name {
 sub _connect {
     my $self = shift;
 
-    if ($self->{_socket_type} =~ /^(unix|inet)$/i) {
-        Sys::Syslog::setlogsock(lc($self->{_socket_type}));
+    if (@{$Conf::Conf{'syslog_socket.type'} || []}) {
+        Sys::Syslog::setlogsock(
+            {   (type => $Conf::Conf{'syslog_socket.type'}),
+                map {
+                    length($Conf::Conf{"syslog_socket.$_"} // '')
+                        ? ($_ => $Conf::Conf{"syslog_socket.$_"})
+                        : ()
+                } qw(path timeout host port)
+            }
+        );
     }
+
     # Close log may be useful: If parent processus did open log child
     # process inherit the openlog with parameters from parent process.
     Sys::Syslog::closelog;
     eval {
         Sys::Syslog::openlog(sprintf('%s[%s]', $self->{_service}, $PID),
-            'ndelay,nofatal', $self->{_facility});
+            'ndelay,nofatal', $self->{_facility} || $Conf::Conf{'syslog'});
     };
     if ($EVAL_ERROR && ($warning_date < time - $warning_timeout)) {
         warn sprintf 'No logs available: %s', $EVAL_ERROR;
@@ -819,7 +825,7 @@ Sympa::Log - Logging facility of Sympa
   use Sympa::Log;
 
   my $log = Sympa::Log->instance;
-  $log->openlog($facility, 'inet');
+  $log->openlog(facility => $facility);
   $log->{level} = 0;
   $log->syslog('info', '%s: Stat logging', $$);
 
@@ -836,7 +842,7 @@ TBD.
 I<Constructor>.
 Creates new singleton instance of L<Sympa::Log>.
 
-=item openlog ( $facility, $socket_type, [ options ... ] )
+=item openlog ( [ options ... ] )
 
 TBD.
 

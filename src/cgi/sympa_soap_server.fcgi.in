@@ -53,9 +53,8 @@ unless (Conf::load()) {
 my $log = Sympa::Log->instance;
 $log->{level} = $Conf::Conf{'log_level'};
 $log->openlog(
-    $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'},
-    $Conf::Conf{'log_socket_type'},
-    service => 'sympasoap'
+    facility => $Conf::Conf{'log_facility'},
+    service  => 'sympasoap'
 );
 $log->syslog('info', 'SympaSOAP started');
 

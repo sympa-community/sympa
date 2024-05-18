@@ -119,8 +119,7 @@ if ($main::options{'log_level'}) {
     );
 }
 
-my $log_facility = $Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'};
-$log->openlog($log_facility, $Conf::Conf{'log_socket_type'});
+$log->openlog(facility => $Conf::Conf{'log_facility'});
 
 ## Set the User ID & Group ID for the process
 $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
