@@ -51,7 +51,6 @@ sub openlog {
     my $self    = shift;
     my %options = @_;
 
-    $self->{_facility} = $options{facility};
     $self->{_service} = $options{service} || _daemon_name() || 'sympa';
     $self->{_database_backend} =
         (exists $options{database_backend})
@@ -231,12 +230,18 @@ sub _connect {
         );
     }
 
+    my $facility =
+        (grep { $self->{_service} eq $_ }
+            qw(wwsympa sympasoap archived bounced task_manager)
+            and $Conf::Conf{'log_facility'})
+        || $Conf::Conf{'syslog'};
+
     # Close log may be useful: If parent processus did open log child
     # process inherit the openlog with parameters from parent process.
     Sys::Syslog::closelog;
     eval {
         Sys::Syslog::openlog(sprintf('%s[%s]', $self->{_service}, $PID),
-            'ndelay,nofatal', $self->{_facility} || $Conf::Conf{'syslog'});
+            'ndelay,nofatal', $facility);
     };
     if ($EVAL_ERROR && ($warning_date < time - $warning_timeout)) {
         warn sprintf 'No logs available: %s', $EVAL_ERROR;

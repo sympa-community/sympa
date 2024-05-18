@@ -132,7 +132,7 @@ unless (Conf::load()) {
 # Open log
 my $log = Sympa::Log->instance;
 $log->{level} = $Conf::Conf{'log_level'};
-$log->openlog(facility => $Conf::Conf{'log_facility'});
+$log->openlog;
 
 Sympa::Spool::Listmaster->instance->{use_bulk} = 1;
 

@@ -52,10 +52,7 @@ unless (Conf::load()) {
 # Open log
 my $log = Sympa::Log->instance;
 $log->{level} = $Conf::Conf{'log_level'};
-$log->openlog(
-    facility => $Conf::Conf{'log_facility'},
-    service  => 'sympasoap'
-);
+$log->openlog(service => 'sympasoap');
 $log->syslog('info', 'SympaSOAP started');
 
 ## We set the real UID with the effective UID value

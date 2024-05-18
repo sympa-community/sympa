@@ -119,7 +119,7 @@ if ($main::options{'log_level'}) {
     );
 }
 
-$log->openlog(facility => $Conf::Conf{'log_facility'});
+$log->openlog;
 
 ## Set the User ID & Group ID for the process
 $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];
