@@ -24,6 +24,7 @@ package Sympa::CLI::help;
 
 use strict;
 use warnings;
+use Config;
 use English qw(-no_match_vars);
 use Pod::Usage qw();
 
@@ -36,6 +37,21 @@ use constant _options   => qw(format|o=s);
 use constant _args      => qw(command*);
 use constant _need_priv => 0;
 
+my $has_perldoc;
+
+BEGIN {
+    # Some distributions (Debian and its descendants) separate perldoc from
+    # the package for Perl and replace it with a stub.  Use perldoc only if
+    # such stub wouldn't be used.
+    my $path = join '/', ($Config{scriptdirexp} || $Config{scriptdir}),
+        'perldoc';
+    if (-e $path and open my $pipein, '-|', $path, '-V') {
+        1 while <$pipein>;
+        close $pipein;
+        $has_perldoc = not $CHILD_ERROR;
+    }
+}
+
 my $language = Sympa::Language->instance;
 
 sub _run {
@@ -43,7 +59,9 @@ sub _run {
     my $options = shift;
     my @command = @_;
 
-    my $noperldoc = 1 unless Sympa::CLI->istty(1) or $options->{format};
+    my $noperldoc = 1
+        unless $has_perldoc and (Sympa::CLI->istty(1) or $options->{format});
+
     my $message;
 
     local $ENV{PERLDOC} = sprintf '-o%s', $options->{format}
