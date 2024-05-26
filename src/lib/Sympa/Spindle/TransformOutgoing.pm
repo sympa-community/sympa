@@ -102,7 +102,7 @@ sub _twist {
 
     # Add custom header fields
     foreach my $i (@{$list->{'admin'}{'custom_header'}}) {
-        $message->add_header($1, $2) if $i =~ /^([\S\-\:]*)\s(.*)$/;
+        $message->add_header(split /\s*:\s*/, $i, 2) if 0 < index $i, ':';
     }
 
     ## Add RFC 2919 header field
@@ -143,7 +143,7 @@ sub _twist {
     ## Useful to remove some header fields that Sympa has set
     if ($list->{'admin'}{'remove_outgoing_headers'}) {
         foreach my $field (@{$list->{'admin'}{'remove_outgoing_headers'}}) {
-            my ($f, $v) = split /\s*:\s*/, $field;
+            my ($f, $v) = split /\s*:\s*/, $field, 2;
             if (defined $v) {
                 my @values = $message->get_header($f);
                 my $i;

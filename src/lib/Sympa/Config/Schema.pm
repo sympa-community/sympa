@@ -1201,7 +1201,7 @@ our %pinfo = (
         gettext_id => "Custom header field",
         gettext_comment =>
             'This parameter is optional. The headers specified will be added to the headers of messages distributed via the list. As of release 1.2.2 of Sympa, it is possible to put several custom header lines in the configuration file at the same time.',
-        format     => '\S+:\s+.*',
+        format_s   => '$header_field_name:.+',
         occurrence => '0-n',
         length     => 30
     },
@@ -1353,7 +1353,7 @@ our %pinfo = (
             'Header fields to be removed before message distribution',
         gettext_comment =>
             "The removal happens after Sympa's own header fields are added; therefore, it is a convenient way to remove Sympa's own header fields (like \"X-Loop:\" or \"X-no-archive:\") if you wish.",
-        format     => '\S+',
+        format_s   => '$header_field_name(:.+)?',
         default    => 'none',
         sample     => 'X-no-archive',
         occurrence => '0-n',

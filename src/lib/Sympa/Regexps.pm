@@ -47,6 +47,8 @@ use constant email =>
 use constant family_name => qr'[a-z0-9][a-z0-9\-\.\+_]*';
 ## Allow \s for template names
 use constant template_name => qr'[a-zA-Z0-9][a-zA-Z0-9\-\.\+_\s]*';
+# cf. RFC5322, 2.2.
+use constant header_field_name => qr'[!-9;-~]+';
 #FIXME: Not matching with IPv6 address.
 use constant host     => qr'[\w\.\-]+';
 use constant hostport => qr{(?:
