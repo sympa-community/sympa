@@ -297,6 +297,7 @@ our %comm = (
     'sso_login'                => 'do_sso_login',
     'sso_login_succeeded'      => 'do_sso_login_succeeded',
     'stats'                    => 'do_stats',
+    'invite'                   => 'do_invite',
     'subindex'                 => 'do_subindex',
     'suboptions'               => 'do_suboptions',
     'subscribe'                => 'do_subscribe',
@@ -16639,6 +16640,82 @@ sub _add_in_blocklist {
     print $fh "$entry\n";
     close $fh;
 
+}
+
+# web invite function (code adapted from do_add() and do_import()):
+sub do_invite {
+
+    # Access control.
+    unless (defined check_authz('do_invite', 'invite')) {
+        add_stash('user', 'Invite not allowed');
+        return 'review';
+    }
+
+    my @emails;
+
+    # address for single user (from review.tt2) is in $in{email}:
+    if ($in{'email'}) {
+        @emails =
+            grep {$_} map { Sympa::Tools::Text::canonic_email($_) }
+        split /\0/, $in{'email'};
+        $log->syslog('info', 'single invite "%s"', join(' ',@emails));
+        unless (@emails) {
+            add_stash('user', 'no_email');
+            return 'review';
+        }
+    } else { # addresses for multiple users (from import.tt2) are $in{dump}
+        foreach (split /\r\n|\r|\n/, $in{'dump'}) {
+            next unless /\S/;
+            next if /\A\s*#/;    #FIXME: email address can contain '#'
+
+            my ($email) = m{\A\s*(\S+)(?:\s+(.*))?\s*\z};
+            push @emails, $email;
+        }
+        $log->syslog('info', 'multiple invite "%s"', join(' ',@emails));
+        unless (@emails) {
+            add_stash('user', 'no_email');
+            return 'import';
+        }
+    }
+
+    $param->{'email'} = [@emails];
+
+    my $stash     = [];
+    my $processed = 0;
+    foreach my $email (@emails) {
+        $log->syslog('info', 'do_invite working on %s', $emails[0]);
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'invite',
+            email            => $email,
+            sender           => $param->{'user'}{'email'},
+            md5_check        => 1,
+            scenario_context => {
+                email       => $email,
+                sender      => $param->{'user'}{'email'},
+                remote_host => $param->{'remote_host'},
+                remote_addr => $param->{'remote_addr'}
+            },
+            stash => $stash,
+        );
+        $spindle and $processed += $spindle->spin;
+    }
+    unless ($processed) {
+        return $in{'previous_action'} || 'review';
+    }
+
+    foreach my $report (@$stash) {
+        if ($report->[1] eq 'notice') {
+            add_stash('notice', @{$report}[2, 3]);
+        } else {
+            add_stash(@{$report}[1 .. 3]);
+        }
+    }
+    unless (@$stash) {
+        add_stash('notice', 'performed');
+    }
+
+    return $in{'previous_action'} || 'review';
 }
 
 __END__
