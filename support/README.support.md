@@ -15,6 +15,13 @@ Initially taken from repository of rsync
 https://git.samba.org/?p=rsync.git;a=history;f=support/git-set-file-times
 at 2009-01-13, and made modifications.
 
+### make_crawlers.pl
+
+Generates `Sympa/WWW/Crawlers.pm` file, by running as:
+```
+make_crawlers.pl -o $MODULEDIR/Sympa/WWW/Crawlers.pm
+```
+
 ### pod2md
 
 Converts POD data to Markdown format.  This may be used as a replacement of
