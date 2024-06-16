@@ -351,16 +351,15 @@ sub _twist {
             $new_message->remove_invalid_dkim_signature
                 if $arc_enabled or $dkim_enabled;
 
-            my $arc_sealed = $new_message->arc_seal(%arc) if %arc;
-
-            if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
+            if ($new_message->{shelved}{dkim_sign} or %arc) {
                 # apply DKIM signature AFTER any other message
                 # transformation.
                 # Note that when ARC seal was added, DKIM signature is forced.
                 $new_message->dkim_sign(%dkim) if %dkim;
-
                 delete $new_message->{shelved}{dkim_sign};
             }
+            # DKIM signing must be done before ARC sealing. See RFC 8617, 5.1.
+            $new_message->arc_seal(%arc) if %arc;
 
             # trace_smime($new_message, 'dkim');
 
@@ -405,14 +404,12 @@ sub _twist {
         $new_message->remove_invalid_dkim_signature
             if $arc_enabled or $dkim_enabled;
 
-        my $arc_sealed = $new_message->arc_seal(%arc) if %arc;
-
         # Initial message
-        if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
+        if ($new_message->{shelved}{dkim_sign} or %arc) {
             $new_message->dkim_sign(%dkim) if %dkim;
-
             delete $new_message->{shelved}{dkim_sign};
         }
+        $new_message->arc_seal(%arc) if %arc;
 
         # trace_smime($new_message,'dkim 2');
 
