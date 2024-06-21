@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa 6.2\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2023-12-30 09:47:29+0000\n"
+"POT-Creation-Date: 2024-04-26 10:39:23+0000\n"
 "PO-Revision-Date: 2022-06-17 06:02+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Suomi\n"
@@ -90,6 +90,7 @@ msgstr "lista"
 msgid "family"
 msgstr ""
 
+#: default/web_tt2/ls_templates.tt2:59 default/web_tt2/show_sessions.tt2:9
 #: src/lib/Sympa/CLI.pm:419
 #, fuzzy
 msgid "domain"
@@ -187,13 +188,12 @@ msgstr "peitetty"
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "su:ma:ti:ke:to:pe:la"
 
-#: default/mhonarc_rc.tt2:751 default/web_tt2/head_javascript.tt2:19
-#: src/lib/Sympa/Language.pm:633 src/lib/Sympa/Template.pm:296
+#: default/mhonarc_rc.tt2:751 src/lib/Sympa/Language.pm:633
+#: src/lib/Sympa/Template.pm:296
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Sunnuntai:Maanantai:Tiistai:Keskiviikko:Torstai:Perjantai:Lauantai"
 
-#: default/mhonarc_rc.tt2:763 default/web_tt2/head_javascript.tt2:25
-#: src/lib/Sympa/Language.pm:637
+#: default/mhonarc_rc.tt2:763 src/lib/Sympa/Language.pm:637
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "tammi:helmi:maalis:huhti:touko:kesä:heinä:elo:syys:loka:marras:joulu"
 
@@ -299,7 +299,6 @@ msgstr "Automaattisten listojen tulokset"
 
 #: default/web_tt2/copy_template.tt2:23 default/web_tt2/copy_template.tt2:59
 #: default/web_tt2/copy_template.tt2:64 default/web_tt2/edit_template.tt2:30
-#: default/web_tt2/ls_templates.tt2:53 default/web_tt2/show_sessions.tt2:9
 #: default/web_tt2/view_template.tt2:33 src/lib/Sympa/ListOpt.pm:94
 msgid "robot"
 msgstr "robotti"
@@ -991,9 +990,9 @@ msgstr "(ei päiväystä)"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:1212 src/cgi/wwsympa.fcgi.in:3031
-#: src/cgi/wwsympa.fcgi.in:6087 src/cgi/wwsympa.fcgi.in:6090
-#: src/cgi/wwsympa.fcgi.in:9003 src/cgi/wwsympa.fcgi.in:9880
+#: src/cgi/wwsympa.fcgi.in:1163 src/cgi/wwsympa.fcgi.in:2873
+#: src/cgi/wwsympa.fcgi.in:5925 src/cgi/wwsympa.fcgi.in:5928
+#: src/cgi/wwsympa.fcgi.in:8815 src/cgi/wwsympa.fcgi.in:9687
 #: src/lib/Sympa/Template.pm:326 src/lib/Sympa/Upgrade.pm:1004
 #: src/lib/Sympa/Upgrade.pm:2050
 msgid "%d %b %Y at %H:%M:%S"
@@ -1051,15 +1050,15 @@ msgstr ""
 #. https://perldoc.perl.org/POSIX#strftime for details.
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10013 src/cgi/wwsympa.fcgi.in:10016
-#: src/cgi/wwsympa.fcgi.in:13825 src/cgi/wwsympa.fcgi.in:13829
-#: src/cgi/wwsympa.fcgi.in:14967 src/cgi/wwsympa.fcgi.in:15056
-#: src/cgi/wwsympa.fcgi.in:15162 src/cgi/wwsympa.fcgi.in:16358
-#: src/cgi/wwsympa.fcgi.in:16360 src/cgi/wwsympa.fcgi.in:4958
-#: src/cgi/wwsympa.fcgi.in:5029 src/cgi/wwsympa.fcgi.in:8657
-#: src/cgi/wwsympa.fcgi.in:9378 src/cgi/wwsympa.fcgi.in:9426
-#: src/cgi/wwsympa.fcgi.in:9693 src/cgi/wwsympa.fcgi.in:9696
-#: src/cgi/wwsympa.fcgi.in:9732 src/cgi/wwsympa.fcgi.in:9734
+#: src/cgi/wwsympa.fcgi.in:13599 src/cgi/wwsympa.fcgi.in:13603
+#: src/cgi/wwsympa.fcgi.in:14708 src/cgi/wwsympa.fcgi.in:14797
+#: src/cgi/wwsympa.fcgi.in:14903 src/cgi/wwsympa.fcgi.in:16095
+#: src/cgi/wwsympa.fcgi.in:16097 src/cgi/wwsympa.fcgi.in:4795
+#: src/cgi/wwsympa.fcgi.in:4866 src/cgi/wwsympa.fcgi.in:8486
+#: src/cgi/wwsympa.fcgi.in:9190 src/cgi/wwsympa.fcgi.in:9238
+#: src/cgi/wwsympa.fcgi.in:9500 src/cgi/wwsympa.fcgi.in:9503
+#: src/cgi/wwsympa.fcgi.in:9539 src/cgi/wwsympa.fcgi.in:9541
+#: src/cgi/wwsympa.fcgi.in:9820 src/cgi/wwsympa.fcgi.in:9823
 #: src/lib/Sympa/Aliases/Template.pm:51 src/lib/Sympa/Message/Template.pm:105
 #: src/lib/Sympa/Message/Template.pm:108 src/lib/Sympa/Message/Template.pm:115
 msgid "%d %b %Y"
@@ -1131,7 +1130,7 @@ msgstr "Sulkulistan hallinnointi"
 msgid "Mail server"
 msgstr "Postilistapalvelin"
 
-#: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:258
+#: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:262
 #: src/lib/Sympa/Config/Schema.pm:68
 msgid "List definition"
 msgstr "Listan määritys"
@@ -1146,7 +1145,7 @@ msgstr "Vastaanotto:"
 msgid "Sending related"
 msgstr "Odottavat listat"
 
-#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/nav.tt2:268
+#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/nav.tt2:272
 #: src/lib/Sympa/Config/Schema.pm:79
 msgid "Sending/receiving setup"
 msgstr "Lähetys- ja vastaanottoasetukset"
@@ -1156,13 +1155,13 @@ msgstr "Lähetys- ja vastaanottoasetukset"
 msgid "Distribution"
 msgstr "Lähetä jaeltavaksi"
 
-#: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:278
+#: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:282
 #: src/lib/Sympa/Config/Schema.pm:89
 msgid "Privileges"
 msgstr "Oikeudet"
 
 #: default/web_tt2/edit_list_request.tt2:41 default/web_tt2/my.tt2:65
-#: default/web_tt2/nav.tt2:288 default/web_tt2/nav.tt2:89
+#: default/web_tt2/nav.tt2:292 default/web_tt2/nav.tt2:91
 #: default/web_tt2/serveradmin.tt2:141 default/web_tt2/suspend_request.tt2:69
 #: src/lib/Sympa/Config/Schema.pm:1817 src/lib/Sympa/Config/Schema.pm:94
 msgid "Archives"
@@ -1174,8 +1173,8 @@ msgstr "Arkistot"
 msgid "Bounce management and tracking"
 msgstr "Pomppuviestien käsittely"
 
-#: default/web_tt2/edit_list_request.tt2:48 default/web_tt2/nav.tt2:298
-#: default/web_tt2/nav.tt2:414 default/web_tt2/review.tt2:39
+#: default/web_tt2/edit_list_request.tt2:48 default/web_tt2/nav.tt2:302
+#: default/web_tt2/nav.tt2:418 default/web_tt2/review.tt2:39
 #: src/lib/Sympa/Config/Schema.pm:100
 msgid "Bounces"
 msgstr "Pomput"
@@ -1198,7 +1197,7 @@ msgstr ""
 msgid "Directories"
 msgstr "Hakemisto"
 
-#: default/web_tt2/edit_list_request.tt2:59 default/web_tt2/nav.tt2:348
+#: default/web_tt2/edit_list_request.tt2:59 default/web_tt2/nav.tt2:352
 #: src/lib/Sympa/Config/Schema.pm:126
 msgid "Miscellaneous"
 msgstr "Sekalaiset"
@@ -1229,7 +1228,7 @@ msgid ""
 "TLS client authentication. It requires an external module: IO-Socket-SSL."
 msgstr ""
 
-#: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:308
+#: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:312
 #: src/lib/Sympa/Config/Schema.pm:154
 msgid "Data sources setup"
 msgstr "Data-lähteiden asetukset"
@@ -1246,7 +1245,7 @@ msgstr ""
 msgid "DKIM and ARC"
 msgstr ""
 
-#: default/web_tt2/edit_list_request.tt2:57 default/web_tt2/nav.tt2:318
+#: default/web_tt2/edit_list_request.tt2:57 default/web_tt2/nav.tt2:322
 #: src/lib/Sympa/Config/Schema.pm:161
 msgid "DKIM/DMARC/ARC"
 msgstr ""
@@ -2014,7 +2013,7 @@ msgid ""
 msgstr ""
 
 # nlsref 16,91
-#: default/web_tt2/edit_config.tt2:25 default/web_tt2/skinsedit.tt2:65
+#: default/web_tt2/edit_config.tt2:30 default/web_tt2/skinsedit.tt2:65
 #: src/lib/Sympa/Config/Schema.pm:1134
 msgid "value"
 msgstr "arvo"
@@ -2504,7 +2503,7 @@ msgstr ""
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/list_menu.tt2:250 default/web_tt2/list_menu.tt2:253
-#: default/web_tt2/nav.tt2:493 default/web_tt2/nav.tt2:502
+#: default/web_tt2/nav.tt2:498 default/web_tt2/nav.tt2:507
 #: src/lib/Sympa/Config/Schema.pm:1701
 msgid "Shared documents"
 msgstr "Jaetut dokumentit"
@@ -4816,7 +4815,7 @@ msgstr ""
 msgid "URL of SympaSOAP behind proxy"
 msgstr ""
 
-#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:371
+#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:375
 #: default/web_tt2/set_pending_list_request.tt2:62
 #: src/lib/Sympa/Config/Schema.pm:6173
 msgid "Owners"
@@ -4843,7 +4842,7 @@ msgstr "nimi"
 msgid "private information"
 msgstr "yksityiset tiedot"
 
-#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:6223
+#: default/web_tt2/subscriber_table.tt2:160 src/lib/Sympa/Config/Schema.pm:6223
 #: src/lib/Sympa/Config/Schema.pm:6318
 #, fuzzy
 msgid "subscribed"
@@ -4872,7 +4871,7 @@ msgid "last inclusion time from external data source"
 msgstr "Käyttäjän tietolähde"
 
 # nlsref 16,26
-#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:376
+#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:380
 #: default/web_tt2/set_pending_list_request.tt2:67
 #: src/lib/Sympa/Config/Schema.pm:6275
 msgid "Moderators"
@@ -4914,7 +4913,7 @@ msgstr "Sisällysluettelo:"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:7264 src/cgi/wwsympa.fcgi.in:7998
+#: src/cgi/wwsympa.fcgi.in:7102 src/cgi/wwsympa.fcgi.in:7836
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -4965,7 +4964,7 @@ msgstr ""
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:15619 src/lib/Sympa/WWW/SharedDocument.pm:346
+#: src/cgi/wwsympa.fcgi.in:15360 src/lib/Sympa/WWW/SharedDocument.pm:346
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d.%m.%Y %H.%M.%S"
 
@@ -5158,75 +5157,75 @@ msgstr "%s:n arkisto, viimeinen viesti"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:1215
+#: src/cgi/wwsympa.fcgi.in:1166
 msgid "%H:%M:%S"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:4150
+#: src/cgi/wwsympa.fcgi.in:3992
 #, fuzzy
 msgid "Your lists"
 msgstr "Omat listasi"
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12247 src/cgi/wwsympa.fcgi.in:12712
+#: src/cgi/wwsympa.fcgi.in:12025 src/cgi/wwsympa.fcgi.in:12490
 #, fuzzy
 msgid "New file"
 msgstr "apua-tiedosto"
 
-#: src/cgi/wwsympa.fcgi.in:12251
+#: src/cgi/wwsympa.fcgi.in:12029
 #, fuzzy
 msgid "New directory"
 msgstr "Hakemisto"
 
-#: src/cgi/wwsympa.fcgi.in:12718
+#: src/cgi/wwsympa.fcgi.in:12496
 #, fuzzy
 msgid "New bookmark"
 msgstr "Lisää kirjanmerkki"
 
-#: src/cgi/wwsympa.fcgi.in:15143
+#: src/cgi/wwsympa.fcgi.in:14884
 msgid "Mail sending"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15145
+#: src/cgi/wwsympa.fcgi.in:14886
 #, fuzzy
 msgid "Subscription additions"
 msgstr "Tilaukset"
 
-#: src/cgi/wwsympa.fcgi.in:15146
+#: src/cgi/wwsympa.fcgi.in:14887
 #, fuzzy
 msgid "Unsubscription"
 msgstr "Tilauksen poisto:"
 
-#: src/cgi/wwsympa.fcgi.in:15147
+#: src/cgi/wwsympa.fcgi.in:14888
 msgid "Users deleted by admin"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15149
+#: src/cgi/wwsympa.fcgi.in:14890
 msgid "Users deleted automatically"
 msgstr ""
 
-#: src/cgi/wwsympa.fcgi.in:15150
+#: src/cgi/wwsympa.fcgi.in:14891
 msgid "File uploading"
 msgstr ""
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15151
+#: src/cgi/wwsympa.fcgi.in:14892
 #, fuzzy
 msgid "File creation"
 msgstr "Tiedoston sisällyttäminen"
 
-#: src/cgi/wwsympa.fcgi.in:15152
+#: src/cgi/wwsympa.fcgi.in:14893
 msgid "Directory creation"
 msgstr "Hakemiston luonti"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/cgi/wwsympa.fcgi.in:16367
+#: src/cgi/wwsympa.fcgi.in:16104
 #, c-format
 msgid "topic (%s)"
 msgstr "aihe (%s)"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16385
+#: default/web_tt2/subscriber_table.tt2:166 src/cgi/wwsympa.fcgi.in:16122
 #, fuzzy
 msgid "included"
 msgstr "Erikois haku"
@@ -5441,7 +5440,7 @@ msgstr "Listan arkisto"
 #: default/web_tt2/edit_list_request.tt2:62
 #: default/web_tt2/edit_list_request.tt2:9 default/web_tt2/editfile.tt2:6
 #: default/web_tt2/modindex.tt2:148 default/web_tt2/modindex.tt2:4
-#: default/web_tt2/nav.tt2:443 default/web_tt2/nav.tt2:495
+#: default/web_tt2/nav.tt2:447 default/web_tt2/nav.tt2:500
 #: default/web_tt2/nav.tt2:7 default/web_tt2/pref.tt2:7
 #: default/web_tt2/rename_list_request.tt2:7 default/web_tt2/review.tt2:21
 #: default/web_tt2/reviewbouncing.tt2:5 default/web_tt2/skinsedit.tt2:18
@@ -5649,7 +5648,7 @@ msgstr "Lähettäjä"
 #: default/web_tt2/arcsearch_form.tt2:71 default/web_tt2/docindex.tt2:23
 #: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:28
 #: default/web_tt2/sigindex.tt2:20 default/web_tt2/subindex.tt2:23
-#: default/web_tt2/viewlogs.tt2:109 default/web_tt2/viewlogs.tt2:114
+#: default/web_tt2/viewlogs.tt2:111 default/web_tt2/viewlogs.tt2:116
 msgid "Date"
 msgstr "Päiväys"
 
@@ -5667,18 +5666,18 @@ msgid "List Options Menu"
 msgstr "Listavalintasi"
 
 # nlsref 12,4
-#: default/web_tt2/aside_menu.tt2:32 default/web_tt2/aside_menu.tt2:42
+#: default/web_tt2/aside_menu.tt2:33 default/web_tt2/aside_menu.tt2:43
 #: default/web_tt2/footer.tt2:3 default/web_tt2/header.tt2:10
-#: default/web_tt2/header.tt2:30
+#: default/web_tt2/header.tt2:31
 msgid "SYMPA logo"
 msgstr "SYMPA logo"
 
-#: default/web_tt2/aside_menu.tt2:48
+#: default/web_tt2/aside_menu.tt2:49
 #, fuzzy
 msgid "General Menu"
 msgstr "Listan määritys"
 
-#: default/web_tt2/aside_menu.tt2:64
+#: default/web_tt2/aside_menu.tt2:66
 #, fuzzy
 msgid "User Information"
 msgstr "Tilaajan tiedot"
@@ -5917,7 +5916,7 @@ msgstr "scenario -lähdekoodi"
 #: default/web_tt2/config_common.tt2:96 default/web_tt2/confirm_action.tt2:215
 #: default/web_tt2/confirm_action.tt2:328
 #: default/web_tt2/confirm_action.tt2:352 default/web_tt2/d_upload.tt2:14
-#: default/web_tt2/manage_template.tt2:47 default/web_tt2/picture_upload.tt2:16
+#: default/web_tt2/manage_template.tt2:44 default/web_tt2/picture_upload.tt2:16
 #: default/web_tt2/review.tt2:309
 msgid "Delete"
 msgstr "Poista"
@@ -5954,7 +5953,7 @@ msgstr "Haluatko varmasti poistaa valitut arkistot?"
 
 #: default/web_tt2/confirm_action.tt2:117
 #: default/web_tt2/confirm_action.tt2:170 default/web_tt2/confirm_action.tt2:58
-#: default/web_tt2/review.tt2:173 default/web_tt2/reviewbouncing.tt2:165
+#: default/web_tt2/review.tt2:173 default/web_tt2/reviewbouncing.tt2:167
 #: default/web_tt2/search_user.tt2:90
 msgid "Delete selected email addresses"
 msgstr "Poista valitut sähköpostiosoitteet"
@@ -6124,7 +6123,7 @@ msgid "Are you sure you wish to restore list %1?"
 msgstr "Oletko varma, että haluat palauttaa listan %1?"
 
 #: default/web_tt2/confirm_action.tt2:285
-#: default/web_tt2/get_closed_lists.tt2:43
+#: default/web_tt2/get_closed_lists.tt2:47
 msgid "Purge selected lists"
 msgstr "Poista valitut listat"
 
@@ -6252,7 +6251,7 @@ msgstr "Vahvista"
 
 #: default/web_tt2/confirm_action.tt2:589
 #: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:22
-#: default/web_tt2/manage_template.tt2:72
+#: default/web_tt2/manage_template.tt2:69
 msgid "Cancel"
 msgstr "Peru"
 
@@ -6293,9 +6292,9 @@ msgid "Scope: "
 msgstr "Laajuus: "
 
 #: default/web_tt2/copy_template.tt2:17 default/web_tt2/copy_template.tt2:34
-#: default/web_tt2/copy_template.tt2:72 default/web_tt2/edit_config.tt2:27
+#: default/web_tt2/copy_template.tt2:72 default/web_tt2/edit_config.tt2:36
 #: default/web_tt2/edit_list_request.tt2:246
-#: default/web_tt2/edit_template.tt2:42 default/web_tt2/ls_templates.tt2:51
+#: default/web_tt2/edit_template.tt2:42 default/web_tt2/ls_templates.tt2:53
 #: default/web_tt2/serveradmin.tt2:237 default/web_tt2/view_template.tt2:27
 #: default/web_tt2/view_template.tt2:45
 msgid "default"
@@ -6309,7 +6308,7 @@ msgstr ""
 "määritelty omaa sivupohjaa)"
 
 #: default/web_tt2/copy_template.tt2:20 default/web_tt2/copy_template.tt2:55
-#: default/web_tt2/edit_template.tt2:27 default/web_tt2/ls_templates.tt2:52
+#: default/web_tt2/edit_template.tt2:27 default/web_tt2/ls_templates.tt2:56
 #: default/web_tt2/view_template.tt2:30
 msgid "site"
 msgstr "sivu"
@@ -6535,27 +6534,27 @@ msgstr "Kirjainkoko:"
 
 #: default/web_tt2/d_control.tt2:63 default/web_tt2/d_control.tt2:67
 #: default/web_tt2/d_editfile.tt2:57 default/web_tt2/d_properties.tt2:68
-#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:279
-#: default/web_tt2/ls_templates.tt2:138 default/web_tt2/ls_templates.tt2:168
-#: default/web_tt2/ls_templates.tt2:190 default/web_tt2/search_user.tt2:74
+#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:295
+#: default/web_tt2/ls_templates.tt2:159 default/web_tt2/ls_templates.tt2:191
+#: default/web_tt2/ls_templates.tt2:215 default/web_tt2/search_user.tt2:74
 msgid "edit"
 msgstr "muokkaa"
 
 #: default/web_tt2/d_control.tt2:74 default/web_tt2/d_editfile.tt2:64
-#: default/web_tt2/d_properties.tt2:77 default/web_tt2/d_read.tt2:145
-#: default/web_tt2/d_read.tt2:284 default/web_tt2/d_read.tt2:52
+#: default/web_tt2/d_properties.tt2:77 default/web_tt2/d_read.tt2:161
+#: default/web_tt2/d_read.tt2:300 default/web_tt2/d_read.tt2:52
 msgid "delete"
 msgstr "poista"
 
 #: default/web_tt2/d_control.tt2:79 default/web_tt2/d_editfile.tt2:71
-#: default/web_tt2/d_properties.tt2:83 default/web_tt2/d_read.tt2:155
-#: default/web_tt2/d_read.tt2:294 default/web_tt2/d_read.tt2:58
+#: default/web_tt2/d_properties.tt2:83 default/web_tt2/d_read.tt2:171
+#: default/web_tt2/d_read.tt2:310 default/web_tt2/d_read.tt2:58
 msgid "access"
 msgstr "oikeudet"
 
 #: default/web_tt2/d_control.tt2:85 default/web_tt2/d_editfile.tt2:78
-#: default/web_tt2/d_properties.tt2:88 default/web_tt2/d_read.tt2:165
-#: default/web_tt2/d_read.tt2:304 default/web_tt2/d_read.tt2:64
+#: default/web_tt2/d_properties.tt2:88 default/web_tt2/d_read.tt2:181
+#: default/web_tt2/d_read.tt2:320 default/web_tt2/d_read.tt2:64
 msgid "properties"
 msgstr "ominaisuudet"
 
@@ -6608,7 +6607,7 @@ msgid "Replace the file %1 with your file"
 msgstr "Korvaa tiedosto %1 toisella tiedostolla"
 
 #: default/web_tt2/d_editfile.tt2:121 default/web_tt2/d_editfile.tt2:98
-#: default/web_tt2/d_read.tt2:387 default/web_tt2/d_read.tt2:405
+#: default/web_tt2/d_read.tt2:403 default/web_tt2/d_read.tt2:421
 msgid "Publish"
 msgstr "Julkaise"
 
@@ -6687,112 +6686,112 @@ msgstr "Lista juurihakemistosta"
 msgid "Empty folder"
 msgstr "Tyhjä kansio"
 
-#: default/web_tt2/d_read.tt2:92 default/web_tt2/d_read.tt2:94
+#: default/web_tt2/d_read.tt2:94 default/web_tt2/d_read.tt2:98
 #: default/web_tt2/list_menu.tt2:116
 msgid "Document"
 msgstr "Dokumentti"
 
-#: default/web_tt2/d_read.tt2:100 default/web_tt2/d_read.tt2:98
+#: default/web_tt2/d_read.tt2:104 default/web_tt2/d_read.tt2:108
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/latest_d_read.tt2:21
 #: default/web_tt2/modindex.tt2:22
 msgid "Author"
 msgstr "Kirjoittaja"
 
-#: default/web_tt2/d_read.tt2:104 default/web_tt2/d_read.tt2:106
+#: default/web_tt2/d_read.tt2:114 default/web_tt2/d_read.tt2:118
 msgid "Size (Kb)"
 msgstr "Koko (Kb)"
 
-#: default/web_tt2/d_read.tt2:110 default/web_tt2/d_read.tt2:112
+#: default/web_tt2/d_read.tt2:124 default/web_tt2/d_read.tt2:128
 #: default/web_tt2/latest_d_read.tt2:19 default/web_tt2/subscriber_table.tt2:87
 msgid "Last update"
 msgstr "Päivitetty"
 
-#: default/web_tt2/d_read.tt2:116
+#: default/web_tt2/d_read.tt2:132
 #, fuzzy
 msgid "Actions"
 msgstr "Toiminto"
 
-#: default/web_tt2/d_read.tt2:134 default/web_tt2/d_read.tt2:237
+#: default/web_tt2/d_read.tt2:150 default/web_tt2/d_read.tt2:253
 #: default/web_tt2/editsubscriber.tt2:110 default/web_tt2/latest_d_read.tt2:52
 msgid "Unknown"
 msgstr "Tuntematon"
 
-#: default/web_tt2/d_read.tt2:195 default/web_tt2/d_read.tt2:202
-#: default/web_tt2/editsubscriber.tt2:57 default/web_tt2/head_javascript.tt2:26
+#: default/web_tt2/d_read.tt2:211 default/web_tt2/d_read.tt2:218
+#: default/web_tt2/editsubscriber.tt2:57 default/web_tt2/head_javascript.tt2:21
 #: default/web_tt2/latest_d_read.tt2:31 default/web_tt2/latest_d_read.tt2:37
 #: default/web_tt2/picture_upload.tt2:23
-#: default/web_tt2/subscriber_table.tt2:139
+#: default/web_tt2/subscriber_table.tt2:141
 msgid "Open in a new window"
 msgstr "Avaa uuteen ikkunaan"
 
 # Konteksti: myös moderoidakseen tms.
-#: default/web_tt2/d_read.tt2:230
+#: default/web_tt2/d_read.tt2:246
 msgid "to moderate"
 msgstr "moderointiin"
 
-#: default/web_tt2/d_read.tt2:267
+#: default/web_tt2/d_read.tt2:283
 msgid "moderate"
 msgstr "moderoi"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:326
+#: default/web_tt2/d_read.tt2:342
 #, smalltalk-format
 msgid "Create a new folder inside folder %1"
 msgstr "Luo uusi kansio hakemistoon %1"
 
-#: default/web_tt2/d_read.tt2:328
+#: default/web_tt2/d_read.tt2:344
 msgid "Create a new folder inside root folder"
 msgstr "Luo uusi kansio juurihakemistoon"
 
-#: default/web_tt2/d_read.tt2:331
+#: default/web_tt2/d_read.tt2:347
 msgid "Folder name"
 msgstr "Kansion nimi"
 
-#: default/web_tt2/d_read.tt2:334 default/web_tt2/d_read.tt2:350
+#: default/web_tt2/d_read.tt2:350 default/web_tt2/d_read.tt2:366
 msgid "Create"
 msgstr "Luo"
 
-#: default/web_tt2/d_read.tt2:346
+#: default/web_tt2/d_read.tt2:362
 msgid "Create a new file"
 msgstr "Luo uusi tiedosto"
 
-#: default/web_tt2/d_read.tt2:347
+#: default/web_tt2/d_read.tt2:363
 msgid "File name"
 msgstr "Tiedoston nimi"
 
-#: default/web_tt2/d_read.tt2:361
+#: default/web_tt2/d_read.tt2:377
 msgid "Add a bookmark"
 msgstr "Lisää kirjanmerkki"
 
-#: default/web_tt2/d_read.tt2:362
+#: default/web_tt2/d_read.tt2:378
 msgid "title"
 msgstr "otsikko"
 
-#: default/web_tt2/d_read.tt2:365
+#: default/web_tt2/d_read.tt2:381
 msgid "URL"
 msgstr "URL"
 
-#: default/web_tt2/d_read.tt2:368 default/web_tt2/review.tt2:103
+#: default/web_tt2/d_read.tt2:384 default/web_tt2/review.tt2:103
 msgid "Add"
 msgstr "Lisää"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:381
+#: default/web_tt2/d_read.tt2:397
 #, smalltalk-format
 msgid "Upload a file inside folder %1"
 msgstr "Lähetä tiedosto kansioon %1"
 
-#: default/web_tt2/d_read.tt2:383
+#: default/web_tt2/d_read.tt2:399
 msgid "Upload a file inside folder SHARED"
 msgstr "Lähetä tiedosto kansioon JAETTU"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:399
+#: default/web_tt2/d_read.tt2:415
 #, smalltalk-format
 msgid "Unzip a file inside the folder %1"
 msgstr "Unzip tiedosto kansioon %1"
 
-#: default/web_tt2/d_read.tt2:401
+#: default/web_tt2/d_read.tt2:417
 msgid "Unzip a file inside the folder SHARED"
 msgstr "Unzip tiedoston kansioon JAETTU"
 
@@ -6824,7 +6823,7 @@ msgstr "Lista hallinnoitavista dokumenteista"
 
 #: default/mhonarc_rc.tt2:266 default/mhonarc_rc.tt2:426
 #: default/web_tt2/docindex.tt2:11 default/web_tt2/get_closed_lists.tt2:16
-#: default/web_tt2/modindex.tt2:16 default/web_tt2/reviewbouncing.tt2:95
+#: default/web_tt2/modindex.tt2:16 default/web_tt2/reviewbouncing.tt2:96
 #: default/web_tt2/search_user.tt2:11 default/web_tt2/show_exclude.tt2:19
 #: default/web_tt2/sigindex.tt2:11 default/web_tt2/subindex.tt2:11
 #: default/web_tt2/subscriber_table.tt2:11
@@ -6883,7 +6882,7 @@ msgid "robot %1"
 msgstr "robotti %1"
 
 #. (list)
-#: default/web_tt2/dump_scenario.tt2:31 default/web_tt2/ls_templates.tt2:54
+#: default/web_tt2/dump_scenario.tt2:31 default/web_tt2/ls_templates.tt2:62
 #, smalltalk-format
 msgid "list %1"
 msgstr "lista %1"
@@ -6932,22 +6931,22 @@ msgstr "*: pakollinen tieto"
 msgid "%1:"
 msgstr ""
 
-#: default/web_tt2/edit_config.tt2:4 default/web_tt2/nav.tt2:119
+#: default/web_tt2/edit_config.tt2:4 default/web_tt2/nav.tt2:121
 #, fuzzy
 msgid "View domain config"
 msgstr "Näytä pääasetukset"
 
-#: default/web_tt2/edit_config.tt2:24 default/web_tt2/serveradmin.tt2:235
+#: default/web_tt2/edit_config.tt2:27 default/web_tt2/serveradmin.tt2:235
 #, fuzzy
 msgid "parameter name"
 msgstr "parametrin arvo"
 
-#: default/web_tt2/edit_config.tt2:26
+#: default/web_tt2/edit_config.tt2:33
 #, fuzzy
 msgid "apply to"
 msgstr "Käytä"
 
-#: default/web_tt2/edit_config.tt2:55
+#: default/web_tt2/edit_config.tt2:65
 #, fuzzy
 msgid "main conf"
 msgstr "Muuta listan asetuksia"
@@ -7007,7 +7006,7 @@ msgstr "HTML-sivut"
 #: default/web_tt2/editfile.tt2:52 default/web_tt2/editfile.tt2:57
 #: default/web_tt2/editfile.tt2:62 default/web_tt2/editfile.tt2:67
 #: default/web_tt2/editfile.tt2:80 default/web_tt2/editfile.tt2:85
-#: default/web_tt2/editfile.tt2:99 default/web_tt2/manage_template.tt2:44
+#: default/web_tt2/editfile.tt2:99 default/web_tt2/manage_template.tt2:41
 #: default/web_tt2/serveradmin.tt2:176 default/web_tt2/serveradmin.tt2:188
 msgid "Edit"
 msgstr "Muokkaa"
@@ -7157,7 +7156,7 @@ msgstr "Kuva:"
 #. (current_subscriber.email)
 #. (u.email)
 #: default/web_tt2/editsubscriber.tt2:59
-#: default/web_tt2/subscriber_table.tt2:140
+#: default/web_tt2/subscriber_table.tt2:142
 #, smalltalk-format
 msgid "%1's picture"
 msgstr "%1:n kuva"
@@ -7171,7 +7170,7 @@ msgstr "Kuvan vaihtaminen tälle listalle"
 #: default/mail_tt2/listmaster_notification.tt2:330
 #: default/mail_tt2/listmaster_notification.tt2:369
 #: default/mail_tt2/listmaster_notification.tt2:435
-#: default/mail_tt2/lists.tt2:6 default/mail_tt2/report.tt2:824
+#: default/mail_tt2/lists.tt2:6 default/mail_tt2/report.tt2:827
 #: default/web_tt2/editsubscriber.tt2:74 default/web_tt2/editsubscriber.tt2:82
 #: default/web_tt2/rss.tt2:4 default/web_tt2/subindex.tt2:54
 msgid ":"
@@ -7250,7 +7249,7 @@ msgstr ""
 "Tilausosoitettasi listalle '%1' ei voitu muuttaa, koska uusi osoitteesi ei "
 "kelpaa listan tilaamiseen tai tilauksen peruuttamiseen:"
 
-#: default/mail_tt2/report.tt2:684 default/web_tt2/error.tt2:64
+#: default/mail_tt2/report.tt2:687 default/web_tt2/error.tt2:64
 msgid "You need to login"
 msgstr "Sinun täytyy sisäänkirjautua"
 
@@ -7266,7 +7265,7 @@ msgstr "Alustana Sympa %1"
 msgid "Biggests Lists"
 msgstr "Uusimmat listat"
 
-#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:366
+#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:370
 msgid "Subscribers"
 msgstr "Tilaajat"
 
@@ -7290,12 +7289,12 @@ msgstr "listan otsikko"
 msgid "Requested by"
 msgstr "Pyynnön lähettäjä"
 
-#: default/web_tt2/get_closed_lists.tt2:46
+#: default/web_tt2/get_closed_lists.tt2:50
 #, fuzzy
 msgid " No closed lists"
 msgstr "Suljettu lista"
 
-#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:79
+#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:81
 #: default/web_tt2/serveradmin.tt2:11
 #, fuzzy
 msgid "View Lists sorted by Last Message Date"
@@ -7326,7 +7325,7 @@ msgstr "Luoja"
 msgid "none so far"
 msgstr "ei yhtään tähän mennessä"
 
-#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:76
+#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:78
 #: default/web_tt2/serveradmin.tt2:10
 #, fuzzy
 msgid "View Lists sorted by Creation Date"
@@ -7345,37 +7344,29 @@ msgstr "Odottavat listat"
 msgid "Requested date"
 msgstr "Pyyntöpäivä"
 
-#: default/web_tt2/get_pending_lists.tt2:32
+#: default/web_tt2/get_pending_lists.tt2:36
 #, fuzzy
 msgid " No pending lists"
 msgstr "Odottavat listat"
 
 #: default/web_tt2/head_javascript.tt2:14
-msgid "Calendar"
-msgstr "Kalenteri"
-
-#: default/web_tt2/head_javascript.tt2:16
 #, fuzzy
 msgid "Close"
 msgstr "Poista"
 
-#: default/web_tt2/head_javascript.tt2:17
+#: default/web_tt2/head_javascript.tt2:15
 msgid "Copied!"
 msgstr ""
 
-#: default/web_tt2/head_javascript.tt2:18
+#: default/web_tt2/head_javascript.tt2:16
 msgid "Copy permalink"
 msgstr ""
 
 #: default/web_tt2/head_javascript.tt2:20
-msgid "Su:Mo:Tu:We:Th:Fr:Sa"
-msgstr "S:M:T:K:T:P:L"
-
-#: default/web_tt2/head_javascript.tt2:24
 msgid "Please Wait..."
 msgstr ""
 
-#: default/web_tt2/head_javascript.tt2:27
+#: default/web_tt2/head_javascript.tt2:22
 msgid "Reset"
 msgstr "Hylkää"
 
@@ -7419,21 +7410,26 @@ msgstr ""
 msgid "What would you like to do ?"
 msgstr ""
 
-#: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
-#: default/web_tt2/home.tt2:71 default/web_tt2/home.tt2:76
+#: default/web_tt2/home.tt2:31 default/web_tt2/home.tt2:34
+#: default/web_tt2/home.tt2:36
+msgid "Home Submenu"
+msgstr ""
+
+#: default/web_tt2/home.tt2:45 default/web_tt2/home.tt2:50
+#: default/web_tt2/home.tt2:73 default/web_tt2/home.tt2:78
 #: default/web_tt2/my.tt2:2 default/web_tt2/user_menu.tt2:23
 #, fuzzy
 msgid "My lists"
 msgstr "Uudet listat"
 
-#: default/web_tt2/home.tt2:52 default/web_tt2/home.tt2:57
+#: default/web_tt2/home.tt2:54 default/web_tt2/home.tt2:59
 #: default/web_tt2/nav.tt2:17 default/web_tt2/nav.tt2:5
 msgid "Create list"
 msgstr "Luo lista"
 
-#: default/web_tt2/home.tt2:102 default/web_tt2/home.tt2:61
-#: default/web_tt2/home.tt2:66 default/web_tt2/home.tt2:80
-#: default/web_tt2/home.tt2:85 default/web_tt2/home.tt2:97
+#: default/web_tt2/home.tt2:104 default/web_tt2/home.tt2:63
+#: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:82
+#: default/web_tt2/home.tt2:87 default/web_tt2/home.tt2:99
 #: default/web_tt2/sympa_menu.tt2:53
 #, fuzzy
 msgid "Search for List(s)"
@@ -7449,7 +7445,7 @@ msgstr ""
 "sposti@osoite2 Nimi2\n"
 "..."
 
-#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:167
+#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:169
 #: default/web_tt2/search_user.tt2:64 default/web_tt2/show_exclude.tt2:48
 msgid "quiet"
 msgstr "hiljainen"
@@ -7468,7 +7464,7 @@ msgstr "Listat sisältäen %1"
 msgid "Following lists are including list %1."
 msgstr "Seuraavat listat sisältävät listan %1."
 
-#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:571
+#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:574
 #: default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/including_lists.tt2:26 default/web_tt2/list_menu.tt2:40
 #: default/web_tt2/list_menu.tt2:47 default/web_tt2/list_menu.tt2:52
@@ -7730,7 +7726,7 @@ msgstr "Ylläpito"
 msgid "Moderate"
 msgstr "Moderoi"
 
-#: default/web_tt2/list_menu.tt2:107 default/web_tt2/viewlogs.tt2:59
+#: default/web_tt2/list_menu.tt2:107 default/web_tt2/viewlogs.tt2:61
 msgid "Message"
 msgstr "Viesti"
 
@@ -7743,7 +7739,7 @@ msgstr "Tilaukset"
 msgid "Unsubscriptions"
 msgstr "Tilauksen poisto:"
 
-#: default/web_tt2/list_menu.tt2:149 default/web_tt2/nav.tt2:141
+#: default/web_tt2/list_menu.tt2:149 default/web_tt2/nav.tt2:143
 #, fuzzy
 msgid "Statistics"
 msgstr "Tila"
@@ -7959,23 +7955,23 @@ msgstr "Lataa uudelleen"
 msgid "This table contain all templates you can copy or see"
 msgstr "Taulukko sisältää kaikki mallit jotka voit kopioida tai nähdä"
 
-#: default/web_tt2/ls_templates.tt2:50
+#: default/web_tt2/ls_templates.tt2:51
 msgid "template name"
 msgstr "mallin nimi"
 
-#: default/web_tt2/ls_templates.tt2:118 default/web_tt2/ls_templates.tt2:145
-#: default/web_tt2/modindex.tt2:46 default/web_tt2/tracking.tt2:41
+#: default/web_tt2/ls_templates.tt2:137 default/web_tt2/ls_templates.tt2:166
+#: default/web_tt2/modindex.tt2:46 default/web_tt2/tracking.tt2:43
 msgid "view"
 msgstr "näytä"
 
-#: default/web_tt2/ls_templates.tt2:119 default/web_tt2/ls_templates.tt2:140
-#: default/web_tt2/ls_templates.tt2:147 default/web_tt2/ls_templates.tt2:169
-#: default/web_tt2/ls_templates.tt2:191
+#: default/web_tt2/ls_templates.tt2:138 default/web_tt2/ls_templates.tt2:161
+#: default/web_tt2/ls_templates.tt2:168 default/web_tt2/ls_templates.tt2:192
+#: default/web_tt2/ls_templates.tt2:216
 msgid "cp"
 msgstr "kopioi"
 
-#: default/web_tt2/ls_templates.tt2:142 default/web_tt2/ls_templates.tt2:170
-#: default/web_tt2/ls_templates.tt2:192
+#: default/web_tt2/ls_templates.tt2:163 default/web_tt2/ls_templates.tt2:193
+#: default/web_tt2/ls_templates.tt2:217
 msgid "rm"
 msgstr "poista"
 
@@ -8020,47 +8016,47 @@ msgid "Modify or delete existing rejection messages"
 msgstr "Muokkaa tai poista olemassaolevia hylkäysviestejä"
 
 # nlsref 15,7
-#: default/web_tt2/manage_template.tt2:10 default/web_tt2/manage_template.tt2:8
+#: default/web_tt2/manage_template.tt2:8
 msgid "Listing rejection messages"
 msgstr "Listataan hylkäysviestejä"
 
-#: default/web_tt2/manage_template.tt2:13
+#: default/web_tt2/manage_template.tt2:10
 msgid "Use as default"
 msgstr "Käytä oletuksena"
 
-#: default/web_tt2/manage_template.tt2:14
+#: default/web_tt2/manage_template.tt2:11
 msgid "Message name"
 msgstr "Viestin nimi"
 
 # nlsref 16,26
-#: default/web_tt2/manage_template.tt2:15
+#: default/web_tt2/manage_template.tt2:12
 msgid "Operation"
 msgstr "Toiminta"
 
-#: default/web_tt2/manage_template.tt2:54
+#: default/web_tt2/manage_template.tt2:51
 msgid "There are currently no Rejection Messages available"
 msgstr "Hylkäysviestejä ei ole tällä hetkellä saatavilla."
 
 # nlsref 15,7
 #. (message_template)
-#: default/web_tt2/manage_template.tt2:63
+#: default/web_tt2/manage_template.tt2:60
 #, fuzzy, smalltalk-format
 msgid "Edit rejection message %1"
 msgstr "ylläpitäjän hylkäys viesti"
 
-#: default/web_tt2/manage_template.tt2:71
+#: default/web_tt2/manage_template.tt2:68
 msgid "Save Message"
 msgstr "Tallenna viesti"
 
-#: default/web_tt2/manage_template.tt2:79
+#: default/web_tt2/manage_template.tt2:76
 msgid "Create new rejection messages"
 msgstr "Luo uusia hylkäysviestejä"
 
-#: default/web_tt2/manage_template.tt2:85
+#: default/web_tt2/manage_template.tt2:82
 msgid "New message name:"
 msgstr "Uuden viestin nimi:"
 
-#: default/web_tt2/manage_template.tt2:87
+#: default/web_tt2/manage_template.tt2:84
 msgid "create"
 msgstr "luo"
 
@@ -8157,137 +8153,137 @@ msgstr "Tarkista tilaajat"
 msgid "No subscription."
 msgstr "Ei tilausta."
 
-#: default/web_tt2/nav.tt2:27
+#: default/web_tt2/nav.tt2:28
 msgid "Create a list using a template"
 msgstr "Luo lista mallia käyttäen"
 
-#: default/web_tt2/nav.tt2:33
+#: default/web_tt2/nav.tt2:34
 msgid "Copy an existing list"
 msgstr "Kopioi olemassaoleva lista."
 
-#: default/web_tt2/nav.tt2:43 default/web_tt2/nav.tt2:52
+#: default/web_tt2/nav.tt2:44 default/web_tt2/nav.tt2:53
 #: default/web_tt2/sympa_menu.tt2:41
 #, fuzzy
 msgid "Listmaster Admin"
 msgstr "Ylläpitäjä"
 
-#: default/web_tt2/nav.tt2:67 default/web_tt2/serveradmin.tt2:4
+#: default/web_tt2/nav.tt2:69 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
 msgstr "Listat"
 
-#: default/web_tt2/nav.tt2:70 default/web_tt2/serveradmin.tt2:8
+#: default/web_tt2/nav.tt2:72 default/web_tt2/serveradmin.tt2:8
 #, fuzzy
 msgid "View Pending (Requested) lists"
 msgstr "Odottavat listat"
 
-#: default/web_tt2/nav.tt2:73 default/web_tt2/serveradmin.tt2:9
+#: default/web_tt2/nav.tt2:75 default/web_tt2/serveradmin.tt2:9
 #, fuzzy
 msgid "View Closed Lists"
 msgstr "Suljetut listat"
 
-#: default/web_tt2/nav.tt2:361 default/web_tt2/nav.tt2:85
+#: default/web_tt2/nav.tt2:365 default/web_tt2/nav.tt2:87
 #: default/web_tt2/serveradmin.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:58
 msgid "Users"
 msgstr "Käyttäjät"
 
-#: default/web_tt2/nav.tt2:93 default/web_tt2/serveradmin.tt2:167
+#: default/web_tt2/nav.tt2:95 default/web_tt2/serveradmin.tt2:167
 msgid "Templates"
 msgstr "Mallit"
 
-#: default/web_tt2/nav.tt2:97 default/web_tt2/serveradmin.tt2:217
+#: default/web_tt2/nav.tt2:99 default/web_tt2/serveradmin.tt2:217
 msgid "Skins, CSS and colors"
 msgstr "Teemat, CSS ja värit"
 
-#: default/web_tt2/nav.tt2:107 default/web_tt2/serveradmin.tt2:17
+#: default/web_tt2/nav.tt2:109 default/web_tt2/serveradmin.tt2:17
 #, fuzzy
 msgid "Domains"
 msgstr "Domain (verkkotunnus)"
 
 # nlsref 8,7
-#: default/web_tt2/nav.tt2:130 default/web_tt2/serveradmin.tt2:66
+#: default/web_tt2/nav.tt2:132 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Perheet"
 
-#: default/web_tt2/nav.tt2:151 default/web_tt2/serveradmin.tt2:271
+#: default/web_tt2/nav.tt2:153 default/web_tt2/serveradmin.tt2:271
 msgid "Translating Sympa"
 msgstr "Sympan kääntäminen"
 
-#: default/web_tt2/nav.tt2:159 default/web_tt2/serveradmin.tt2:277
+#: default/web_tt2/nav.tt2:161 default/web_tt2/serveradmin.tt2:277
 msgid "Submitting a bug, a feature request"
 msgstr "Virheilmoituksen tai ominaisuuspyynnön lähettäminen"
 
 # nlsref 8,1
-#: default/web_tt2/nav.tt2:168 default/web_tt2/nav.tt2:179
+#: default/web_tt2/nav.tt2:170 default/web_tt2/nav.tt2:181
 msgid "Index of lists"
 msgstr "Listahakemisto"
 
-#: default/web_tt2/nav.tt2:193 default/web_tt2/nav.tt2:202
+#: default/web_tt2/nav.tt2:196 default/web_tt2/nav.tt2:205
 #, fuzzy
 msgid "others"
 msgstr "Muut"
 
-#: default/web_tt2/nav.tt2:219 default/web_tt2/viewlogs.tt2:43
+#: default/web_tt2/nav.tt2:222 default/web_tt2/viewlogs.tt2:45
 msgid "All"
 msgstr "Kaikki"
 
 # nlsref 16,61
-#: default/web_tt2/nav.tt2:228 default/web_tt2/nav.tt2:233
+#: default/web_tt2/nav.tt2:231 default/web_tt2/nav.tt2:236
 #, fuzzy
 msgid "Basic Operations"
 msgstr "Äärimmäiset toiminnot"
 
-#: default/web_tt2/nav.tt2:249
+#: default/web_tt2/nav.tt2:253
 msgid "Edit List Config"
 msgstr "Muokkaa listan asetuksia"
 
 # nlsref 15,13
-#: default/web_tt2/nav.tt2:328
+#: default/web_tt2/nav.tt2:332
 #, fuzzy
 msgid "List description/homepage"
 msgstr "listan kuvaus"
 
-#: default/web_tt2/nav.tt2:338
+#: default/web_tt2/nav.tt2:342
 #, fuzzy
 msgid "Message templates"
 msgstr "Viestin nimi"
 
-#: default/web_tt2/nav.tt2:390 default/web_tt2/review.tt2:35
+#: default/web_tt2/nav.tt2:394 default/web_tt2/review.tt2:35
 msgid "Blocklist"
 msgstr "Sulkulista"
 
-#: default/web_tt2/nav.tt2:402
+#: default/web_tt2/nav.tt2:406
 msgid "Manage Archives"
 msgstr "Hallinnoi arkistoja"
 
-#: default/web_tt2/nav.tt2:426
+#: default/web_tt2/nav.tt2:430
 msgid "Logs"
 msgstr "Lokit"
 
-#: default/web_tt2/nav.tt2:438 default/web_tt2/nav.tt2:452
+#: default/web_tt2/nav.tt2:442 default/web_tt2/nav.tt2:456
 msgid "Sending an HTML page to the list"
 msgstr "HTML-viestin lähettäminen listalle"
 
-#: default/web_tt2/nav.tt2:440 default/web_tt2/nav.tt2:454
+#: default/web_tt2/nav.tt2:444 default/web_tt2/nav.tt2:458
 msgid "Sending a message to the list"
 msgstr "Viestin lähettäminen listalle"
 
 # nlsref 15,6
-#: default/web_tt2/nav.tt2:473
+#: default/web_tt2/nav.tt2:478
 msgid "Send a message"
 msgstr "Lähetä viesti"
 
-#: default/web_tt2/nav.tt2:483
+#: default/web_tt2/nav.tt2:488
 msgid "Send an html page"
 msgstr "Lähetä HTML-sivu"
 
 # nlsref 6,81
 # ... vai käyttäjätila?
-#: default/web_tt2/nav.tt2:513
+#: default/web_tt2/nav.tt2:519
 msgid "User mode"
 msgstr "Käyttäjätila"
 
-#: default/web_tt2/nav.tt2:519
+#: default/web_tt2/nav.tt2:525
 msgid "Expert mode"
 msgstr "Asiantuntijatila"
 
@@ -8412,7 +8408,7 @@ msgstr "Kuvasi tilaajalistassa"
 msgid "In the members page"
 msgstr "Jäsenten sivulla"
 
-#: default/web_tt2/pref.tt2:5 default/web_tt2/viewlogs.tt2:63
+#: default/web_tt2/pref.tt2:5 default/web_tt2/viewlogs.tt2:65
 msgid "User preferences"
 msgstr "Käyttäjän asetukset"
 
@@ -8722,7 +8718,7 @@ msgstr "Erikois haku"
 msgid "List of exclude"
 msgstr "Lista kansiosta"
 
-#: default/web_tt2/review.tt2:189 default/web_tt2/reviewbouncing.tt2:99
+#: default/web_tt2/review.tt2:189 default/web_tt2/reviewbouncing.tt2:100
 #: default/web_tt2/show_exclude.tt2:24 default/web_tt2/sigindex.tt2:17
 #: default/web_tt2/subindex.tt2:17 default/web_tt2/subscriber_table.tt2:20
 #: default/web_tt2/subscriber_table.tt2:25 default/web_tt2/viewlogs.tt2:13
@@ -8734,32 +8730,32 @@ msgid "Since"
 msgstr "Lähtien"
 
 #: default/web_tt2/review.tt2:213 default/web_tt2/reviewbouncing.tt2:42
-#: default/web_tt2/viewlogs.tt2:247
+#: default/web_tt2/viewlogs.tt2:249
 msgid "Page size"
 msgstr "Sivun koko"
 
 #: default/web_tt2/review.tt2:237 default/web_tt2/reviewbouncing.tt2:64
-#: default/web_tt2/viewlogs.tt2:267
+#: default/web_tt2/viewlogs.tt2:269
 #, fuzzy
 msgid "Change"
 msgstr "Peru"
 
-#: default/web_tt2/review.tt2:243 default/web_tt2/reviewbouncing.tt2:148
-#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:274
+#: default/web_tt2/review.tt2:243 default/web_tt2/reviewbouncing.tt2:150
+#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:276
 msgid "Previous page"
 msgstr "Edell sivu"
 
 #. (page,total_page)
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc_rc.tt2:220 default/mhonarc_rc.tt2:362
-#: default/web_tt2/review.tt2:247 default/web_tt2/reviewbouncing.tt2:152
-#: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:278
+#: default/web_tt2/review.tt2:247 default/web_tt2/reviewbouncing.tt2:154
+#: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:280
 #, smalltalk-format
 msgid "page %1 / %2"
 msgstr "page %1 / %2"
 
-#: default/web_tt2/review.tt2:251 default/web_tt2/reviewbouncing.tt2:156
-#: default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:282
+#: default/web_tt2/review.tt2:251 default/web_tt2/reviewbouncing.tt2:158
+#: default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:284
 msgid "Next page"
 msgstr "Seuraava sivu"
 
@@ -8804,7 +8800,7 @@ msgstr "näytä lähdekoodi"
 msgid "Table which display family lists"
 msgstr "Taulukko perhelistauksista"
 
-#: default/web_tt2/review_family.tt2:6 default/web_tt2/viewlogs.tt2:146
+#: default/web_tt2/review_family.tt2:6 default/web_tt2/viewlogs.tt2:148
 msgid "Status"
 msgstr "Tila"
 
@@ -8820,36 +8816,36 @@ msgstr "Hallinnoi tavoittamattomia tilaajia"
 msgid "Table to display list bounces"
 msgstr "Taulukko, jossa näkyvät listan tavoittamattomat jäsenet"
 
-#: default/web_tt2/reviewbouncing.tt2:100
+#: default/web_tt2/reviewbouncing.tt2:101
 msgid "Bounce score"
 msgstr "Tavoittamattomuuspisteet"
 
-#: default/web_tt2/reviewbouncing.tt2:101
+#: default/web_tt2/reviewbouncing.tt2:102
 msgid "Details"
 msgstr "Lisätietoja"
 
-#: default/web_tt2/reviewbouncing.tt2:104
+#: default/web_tt2/reviewbouncing.tt2:105
 #, fuzzy
 msgid "Number of bounces"
 msgstr "Palautuneiden viestien määrä"
 
-#: default/web_tt2/reviewbouncing.tt2:105
+#: default/web_tt2/reviewbouncing.tt2:106
 msgid "First bounce"
 msgstr "Ensimmäinen palautunut viesti"
 
-#: default/web_tt2/reviewbouncing.tt2:106
+#: default/web_tt2/reviewbouncing.tt2:107
 msgid "Last bounce"
 msgstr "Viimeisin palautunut viesti"
 
-#: default/web_tt2/reviewbouncing.tt2:134
+#: default/web_tt2/reviewbouncing.tt2:135
 msgid "no score"
 msgstr "ei pistemäärää"
 
-#: default/web_tt2/reviewbouncing.tt2:173
+#: default/web_tt2/reviewbouncing.tt2:175
 msgid "Reset errors for selected users"
 msgstr "Nollaa virheet valituilta käyttäjiltä"
 
-#: default/web_tt2/reviewbouncing.tt2:180
+#: default/web_tt2/reviewbouncing.tt2:182
 #, fuzzy
 msgid "No bouncing members"
 msgstr "Hallinnoi tavoittamattomia tilaajia"
@@ -9061,6 +9057,12 @@ msgstr "aiheet"
 msgid "bounce"
 msgstr "tavoittamattomuusviesti"
 
+# nlsref 16,26
+#: default/web_tt2/search_user.tt2:20
+#, fuzzy
+msgid "operations"
+msgstr "Toiminta"
+
 #: default/web_tt2/search_user.tt2:41
 msgid "member"
 msgstr "jäsen"
@@ -9092,7 +9094,7 @@ msgstr "Sympan URL:"
 msgid "Listmaster(s):"
 msgstr "Ylläpitäjä(t):"
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:569
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:572
 #: default/web_tt2/serveradmin.tt2:50
 msgid ", and "
 msgstr ""
@@ -9836,8 +9838,8 @@ msgstr "Tilaussähköpostiosoitteesi on %1"
 msgid "From:"
 msgstr "Lähettäjä:"
 
-#: default/web_tt2/suboptions.tt2:123 default/web_tt2/suboptions.tt2:96
-#: default/web_tt2/suspend_request.tt2:94
+#: default/web_tt2/suboptions.tt2:125 default/web_tt2/suboptions.tt2:96
+#: default/web_tt2/suspend_request.tt2:95
 msgid "To:"
 msgstr "Vastaanottaja: "
 
@@ -9864,12 +9866,11 @@ msgid ""
 "office for some time."
 msgstr ""
 
-#: default/web_tt2/suboptions.tt2:122 default/web_tt2/suboptions.tt2:125
-#: default/web_tt2/suboptions.tt2:127 default/web_tt2/suspend_request.tt2:93
-#: default/web_tt2/suspend_request.tt2:97
-#: default/web_tt2/suspend_request.tt2:98 default/web_tt2/viewlogs.tt2:30
-#: default/web_tt2/viewlogs.tt2:34
-msgid "dd-mm-yyyy"
+#: default/web_tt2/suboptions.tt2:124 default/web_tt2/suboptions.tt2:128
+#: default/web_tt2/suspend_request.tt2:94
+#: default/web_tt2/suspend_request.tt2:98 default/web_tt2/viewlogs.tt2:31
+#: default/web_tt2/viewlogs.tt2:36
+msgid "yyyy-mm-dd"
 msgstr ""
 
 #: default/web_tt2/suboptions.tt2:130 default/web_tt2/suspend_request.tt2:99
@@ -9899,7 +9900,7 @@ msgstr "Täytä allaoleva lomake ja klikkaa tarkistuspainiketta"
 
 #. (list)
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:325 default/web_tt2/subscribe.tt2:21
+#: default/mail_tt2/report.tt2:328 default/web_tt2/subscribe.tt2:21
 #, smalltalk-format
 msgid "You've made a subscription request to %1."
 msgstr "Pyysit tilausta listalle %1"
@@ -9937,11 +9938,11 @@ msgstr "Lähteet"
 msgid "Sub date"
 msgstr "Tilasi"
 
-#: default/web_tt2/subscriber_table.tt2:121
+#: default/web_tt2/subscriber_table.tt2:123
 msgid "bouncing"
 msgstr "tavoittamaton"
 
-#: default/mail_tt2/report.tt2:594 default/web_tt2/subscriber_table.tt2:197
+#: default/mail_tt2/report.tt2:597 default/web_tt2/subscriber_table.tt2:199
 msgid "List has no subscribers"
 msgstr "Listalla ei ole tilaajia"
 
@@ -10161,7 +10162,7 @@ msgstr "Ilmoituspäivä"
 msgid "Notification"
 msgstr "Ilmoitus"
 
-#: default/web_tt2/tracking.tt2:52 default/web_tt2/viewbounce.tt2:3
+#: default/web_tt2/tracking.tt2:54 default/web_tt2/viewbounce.tt2:3
 #, fuzzy
 msgid "View notification"
 msgstr "ilmoitus"
@@ -10222,117 +10223,117 @@ msgstr ""
 msgid "Search by date from:"
 msgstr "Hae päivämäärän perusteella:"
 
-#: default/web_tt2/viewlogs.tt2:31
+#: default/web_tt2/viewlogs.tt2:32
 msgid "to:"
 msgstr "vastaanottaja:"
 
-#: default/web_tt2/viewlogs.tt2:35
+#: default/web_tt2/viewlogs.tt2:37
 msgid "ex: 24-05-2006"
 msgstr "esim.: 24-05-2006"
 
-#: default/web_tt2/viewlogs.tt2:38
+#: default/web_tt2/viewlogs.tt2:40
 msgid "Search by type:"
 msgstr "Hae tyypin perusteella:"
 
 # nlsref 6,15
-#: default/web_tt2/viewlogs.tt2:47
+#: default/web_tt2/viewlogs.tt2:49
 msgid "Authentication"
 msgstr "Tunnistus"
 
 # nlsref 16,7
-#: default/web_tt2/viewlogs.tt2:51
+#: default/web_tt2/viewlogs.tt2:53
 msgid "Bounce management"
 msgstr "Pomppuviestien käsittely"
 
-#: default/web_tt2/viewlogs.tt2:55
+#: default/web_tt2/viewlogs.tt2:57
 msgid "List Management"
 msgstr "Listan hallinta"
 
 # nlsref 16,7
-#: default/web_tt2/viewlogs.tt2:67
+#: default/web_tt2/viewlogs.tt2:69
 msgid "User management"
 msgstr "Käyttäjähallinta"
 
 # nlsref 16,7
-#: default/web_tt2/viewlogs.tt2:71
+#: default/web_tt2/viewlogs.tt2:73
 msgid "Web documents management"
 msgstr "Verkkotiedostojen hallinta"
 
-#: default/web_tt2/viewlogs.tt2:78
+#: default/web_tt2/viewlogs.tt2:80
 msgid "Search by IP:"
 msgstr "Hae IP-osoitteen perusteella:"
 
-#: default/web_tt2/viewlogs.tt2:83
+#: default/web_tt2/viewlogs.tt2:85
 msgid "View"
 msgstr "Näytä"
 
-#: default/web_tt2/viewlogs.tt2:88
+#: default/web_tt2/viewlogs.tt2:90
 msgid "Search period: "
 msgstr "Hakujakso:"
 
-#: default/web_tt2/viewlogs.tt2:90
+#: default/web_tt2/viewlogs.tt2:92
 msgid "to"
 msgstr "vastaanottaja"
 
 #. (list)
-#: default/web_tt2/viewlogs.tt2:96
+#: default/web_tt2/viewlogs.tt2:98
 #, smalltalk-format
 msgid "Research was carried out in list <strong>%1</strong>."
 msgstr "Tutkimus tehtiin listalle <strong>%1</strong>."
 
 #. (total_results)
-#: default/web_tt2/viewlogs.tt2:101
+#: default/web_tt2/viewlogs.tt2:103
 #, smalltalk-format
 msgid "%1 results"
 msgstr "%1 tulokset"
 
-#: default/web_tt2/viewlogs.tt2:105
+#: default/web_tt2/viewlogs.tt2:107
 #, fuzzy
 msgid "Logs table"
 msgstr "Lokinäkymä"
 
-#: default/web_tt2/viewlogs.tt2:120
+#: default/web_tt2/viewlogs.tt2:122
 msgid "List"
 msgstr "Lista"
 
-#: default/web_tt2/viewlogs.tt2:126 default/web_tt2/viewlogs.tt2:131
+#: default/web_tt2/viewlogs.tt2:128 default/web_tt2/viewlogs.tt2:133
 msgid "Action"
 msgstr "Toiminto"
 
-#: default/web_tt2/viewlogs.tt2:137
+#: default/web_tt2/viewlogs.tt2:139
 msgid "Parameters"
 msgstr "Parametrit"
 
-#: default/web_tt2/viewlogs.tt2:140
+#: default/web_tt2/viewlogs.tt2:142
 msgid "Target Email"
 msgstr "Kohdesähköpostiosoite"
 
-#: default/web_tt2/viewlogs.tt2:143
+#: default/web_tt2/viewlogs.tt2:145
 msgid "Message ID"
 msgstr "Viestin ID"
 
 # nlsref 1,3
-#: default/web_tt2/viewlogs.tt2:149
+#: default/web_tt2/viewlogs.tt2:151
 msgid "Error type"
 msgstr "Virhetyyppi"
 
-#: default/web_tt2/viewlogs.tt2:154 default/web_tt2/viewlogs.tt2:159
+#: default/web_tt2/viewlogs.tt2:156 default/web_tt2/viewlogs.tt2:161
 msgid "User Email"
 msgstr "Käyttäjän sähköpostiosoite"
 
-#: default/web_tt2/viewlogs.tt2:166
+#: default/web_tt2/viewlogs.tt2:168
 msgid "User IP"
 msgstr "Käyttäjän IP-osoite"
 
-#: default/web_tt2/viewlogs.tt2:170
+#: default/web_tt2/viewlogs.tt2:172
 msgid "Service"
 msgstr "Palvelu"
 
-#: default/web_tt2/viewlogs.tt2:205
+#: default/web_tt2/viewlogs.tt2:207
 msgid "view other events related to this message id."
 msgstr "näytä muita tähän Message-ID:hen liittyviä tapahtumia"
 
-#: default/web_tt2/viewlogs.tt2:206
+#: default/web_tt2/viewlogs.tt2:208
 msgid "Other events"
 msgstr "Muut tapahtumat"
 
@@ -10644,7 +10645,7 @@ msgstr "%1-listan luominen epäonnistui."
 #. (report_param.listname)
 #: default/mail_tt2/delivery_status_notification.tt2:57
 #: default/mail_tt2/delivery_status_notification.tt2:60
-#: default/mail_tt2/report.tt2:537
+#: default/mail_tt2/report.tt2:540
 #, smalltalk-format
 msgid "List '%1' does not exist."
 msgstr "Lista '%1' ei ole."
@@ -11920,7 +11921,7 @@ msgstr "Tilaajaa '%1' ei löytynyt listalta %2."
 #. (filepath)
 #. (report_param.filename)
 #: default/mail_tt2/listmaster_notification.tt2:380
-#: default/mail_tt2/report.tt2:887
+#: default/mail_tt2/report.tt2:890
 #, smalltalk-format
 msgid "Unable to read file: '%1'."
 msgstr "Tiedoston lukeminen epäonnistui: '%1'."
@@ -12060,13 +12061,13 @@ msgstr "Listan luominen epäonnistui."
 
 # nlsref 6,2
 #: default/mail_tt2/listmaster_notification.tt2:401
-#: default/mail_tt2/report.tt2:243
+#: default/mail_tt2/report.tt2:246
 msgid "Unable to load list topics."
 msgstr "Lista-aiheiden lukeminen epäonnistui."
 
 # nlsref 6,2
 #: default/mail_tt2/listmaster_notification.tt2:402
-#: default/mail_tt2/report.tt2:246
+#: default/mail_tt2/report.tt2:249
 msgid "Unable to load create_list templates."
 msgstr "create_list -mallien lataaminen epäonnistui."
 
@@ -12208,7 +12209,7 @@ msgstr "Evästevirhe: '%1' määrittelemätön, tunnistautumisvirhe."
 #. (list.name,new_listname)
 #. (report_param.listname,report_param.new_listname)
 #: default/mail_tt2/listmaster_notification.tt2:425
-#: default/mail_tt2/report.tt2:282
+#: default/mail_tt2/report.tt2:285
 #, fuzzy, smalltalk-format
 msgid "Unable to rename list '%1' to '%2'."
 msgstr "Tiedoston '%1' uudelleennimeäminen nimelle '%2' epäonnistui."
@@ -12942,7 +12943,13 @@ msgstr ""
 "Tämä toiminto on rajoitettu ylläpitäjille tai etuoikeutetuille listan "
 "omistajille."
 
+# nlsref 6,46
 #: default/mail_tt2/report.tt2:204
+#, fuzzy
+msgid "This action is restricted to listmasters, list owners or moderators."
+msgstr "Tämä toiminto on rajoitettu listan omistajille tai moderaattoreille."
+
+#: default/mail_tt2/report.tt2:207
 msgid ""
 "This action is restricted to the document author, listmasters, or privileged "
 "list owners."
@@ -12950,34 +12957,34 @@ msgstr ""
 "Tämä toiminto on rajoitettu tiedostotoimittajalle, ylläpitäjille tai "
 "etuoikeutetuille listan omistajille."
 
-#: default/mail_tt2/report.tt2:207
+#: default/mail_tt2/report.tt2:210
 msgid "This action is restricted to privileged list owners."
 msgstr "Tämä toiminto on rajoitettu etuoikeutetuille listan omistajille."
 
 # nlsref 6,46
-#: default/mail_tt2/report.tt2:210
+#: default/mail_tt2/report.tt2:213
 #, fuzzy
 msgid "This action is restricted to super-listmasters."
 msgstr "Tämä toiminto on rajoitettu ylläpitäjille."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:213
+#: default/mail_tt2/report.tt2:216
 #, smalltalk-format
 msgid "Rights to this action are '%2' for a '%1'."
 msgstr "Tämän toiminnon oikeudet ovat %2 %1:lle."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:216
+#: default/mail_tt2/report.tt2:219
 msgid "You need to login."
 msgstr "Sinun täytyy kirjautua sisään."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:219
+#: default/mail_tt2/report.tt2:222
 msgid "This action is impossible because editing is a moderated function."
 msgstr "Tämä toiminto on mahdoton koska muokkaaminen on moderoitu toiminto."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:222
+#: default/mail_tt2/report.tt2:225
 msgid ""
 "This action is impossible for directories because editing is a moderated "
 "function."
@@ -12985,75 +12992,75 @@ msgstr ""
 "Tämä toiminto on mahdoton hakemistoille koska muokkaaminen on moderoitu "
 "toiminto."
 
-#: default/mail_tt2/report.tt2:225
+#: default/mail_tt2/report.tt2:228
 msgid "The list is closed."
 msgstr "Lista on suljettu."
 
-#: default/mail_tt2/report.tt2:228
+#: default/mail_tt2/report.tt2:231
 msgid "you are not allowed to perform this action."
 msgstr "sinulla ei ole oikeuksia toteuttaa tätä toimintoa."
 
 #. (report_param.year_month)
-#: default/mail_tt2/report.tt2:240
+#: default/mail_tt2/report.tt2:243
 #, smalltalk-format
 msgid "Archives from %1 are not accessible"
 msgstr "Arkistot %1 eivät ole saatavilla"
 
-#: default/mail_tt2/report.tt2:249
+#: default/mail_tt2/report.tt2:252
 #, fuzzy
 msgid "Failed to include members"
 msgstr "Käyttäjien lisääminen epäonnistui"
 
-#: default/mail_tt2/report.tt2:252
+#: default/mail_tt2/report.tt2:255
 msgid "Failed to include list admins"
 msgstr "Admin-käyttäjien lisääminen epäonnistui"
 
-#: default/mail_tt2/report.tt2:255
+#: default/mail_tt2/report.tt2:258
 msgid "No owner is defined for the list"
 msgstr "Listalle ei ole määritelty omistajaa"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:258
+#: default/mail_tt2/report.tt2:261
 #, smalltalk-format
 msgid "The exportation failed for list '%1'"
 msgstr "Listan '%1 vieminen epäonnistui'"
 
 #. (name)
-#: default/mail_tt2/report.tt2:261
+#: default/mail_tt2/report.tt2:264
 #, fuzzy, smalltalk-format
 msgid "Cannot create '%1'."
 msgstr "Hakemistoa ei voida luoda %1"
 
 #. (name)
-#: default/mail_tt2/report.tt2:264
+#: default/mail_tt2/report.tt2:267
 #, smalltalk-format
 msgid "Cannot unzip file '%1'."
 msgstr "Tiedostoa %1 ei voi unzipata'."
 
 # nlsref 6,68
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:267
+#: default/mail_tt2/report.tt2:270
 #, smalltalk-format
 msgid "Unable to access the message authenticated with key %1"
 msgstr "Viestin avaaminen epäonnistui tunnistauduttaessa avaimella %1"
 
 # nlsref 16,46
-#: default/mail_tt2/report.tt2:270
+#: default/mail_tt2/report.tt2:273
 msgid "Database error."
 msgstr "Tietokantavirhe."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:273
+#: default/mail_tt2/report.tt2:276
 msgid "Failed to update database."
 msgstr "Tietokantapäivitys epäonnistui."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:276
+#: default/mail_tt2/report.tt2:279
 msgid "Failed to update a file."
 msgstr "Tiedoston päivitys epäonnistui."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:279
+#: default/mail_tt2/report.tt2:282
 #, smalltalk-format
 msgid ""
 "Failed creating list '%1'. The list might already exist or list name might "
@@ -13063,28 +13070,28 @@ msgstr ""
 "nimessä saattaa olla \"kiellettyjä\" merkkejä."
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:285
+#: default/mail_tt2/report.tt2:288
 msgid "Attempts to add some users in database failed."
 msgstr ""
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:288
+#: default/mail_tt2/report.tt2:291
 msgid "Attempts to delete some users in database failed."
 msgstr ""
 
 # nlsref 6,262
-#: default/mail_tt2/report.tt2:300
+#: default/mail_tt2/report.tt2:303
 msgid "Your message signature was successfully verified using S/MIME."
 msgstr "Viestisi allekirjoitus tarkistettiin onnistuneesti S/MIME:n avulla"
 
 # nlsref 6,262
-#: default/mail_tt2/report.tt2:303
+#: default/mail_tt2/report.tt2:306
 #, fuzzy
 msgid "Your message contains a DKIM signature. It was successfully verified"
 msgstr "Viestisi allekirjoitus tarkistettiin onnistuneesti S/MIME:n avulla"
 
 # nlsref 6,25
-#: default/mail_tt2/report.tt2:306
+#: default/mail_tt2/report.tt2:309
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
 "owners for approval. You will receive a notification when you have been "
@@ -13095,17 +13102,17 @@ msgstr ""
 "listan omistajien hyväksyttäväksi. Saat vahvistuksen kun listan tilaus\n"
 "(tai listalta poistuminen) on hyväksytty."
 
-#: default/mail_tt2/report.tt2:310
+#: default/mail_tt2/report.tt2:313
 msgid "Your request has been forwarded to the list owner"
 msgstr "Pyyntösi on lähetetty listan omistajalle"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:314
+#: default/mail_tt2/report.tt2:317
 #, fuzzy, smalltalk-format
 msgid "Your request has been forwarded to the user %1"
 msgstr "Pyyntösi on lähetetty listan omistajalle"
 
-#: default/mail_tt2/report.tt2:316 default/mail_tt2/report.tt2:326
+#: default/mail_tt2/report.tt2:319 default/mail_tt2/report.tt2:329
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to this "
 "list against your will, a message containing an validation link was sent to "
@@ -13117,13 +13124,13 @@ msgstr ""
 "sähköpostiosoitteeseen varmistuslinkki. "
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:322
+#: default/mail_tt2/report.tt2:325
 #, smalltalk-format
 msgid "You clicked a link to unsubscribe the address %1 from list %2."
 msgstr "Pyysit osoitteen %1 poistamista listalta %2."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:323
+#: default/mail_tt2/report.tt2:326
 #, smalltalk-format
 msgid ""
 "A confirmation was just sent to this address. By clicking the link it "
@@ -13133,7 +13140,7 @@ msgstr ""
 "tilauksen perumisen listalta %1."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:327
+#: default/mail_tt2/report.tt2:330
 #, smalltalk-format
 msgid ""
 "Check your mailbox for new messages and click this link. This will confirm "
@@ -13143,7 +13150,7 @@ msgstr ""
 "varmistaa listan %1 tilauksesi."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:329
+#: default/mail_tt2/report.tt2:332
 #, fuzzy, smalltalk-format
 msgid ""
 "We need to check your identity before validating your unsubscription request "
@@ -13157,7 +13164,7 @@ msgstr ""
 "sisältää tarkistuslinkin; syötä alapuolelle sähköpostiosoitteesi saadaksesi "
 "tämän tarkistuslinkin."
 
-#: default/mail_tt2/report.tt2:330
+#: default/mail_tt2/report.tt2:333
 #, fuzzy
 msgid ""
 "We've sent you an email including a validation link. Please check your "
@@ -13169,345 +13176,345 @@ msgstr ""
 
 # nlsref 16,57
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:335
+#: default/mail_tt2/report.tt2:338
 #, fuzzy, smalltalk-format
 msgid "%1 owners added"
 msgstr "(%1 omistajat)"
 
 # nlsref 16,26
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:337
+#: default/mail_tt2/report.tt2:340
 #, fuzzy, smalltalk-format
 msgid "%1 moderators added"
 msgstr "(%1 moderaattorit)"
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:339
+#: default/mail_tt2/report.tt2:342
 #, smalltalk-format
 msgid "%1 subscribers added"
 msgstr "%1 tilaajaa lisätty"
 
 # nlsref 6,36
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:343
+#: default/mail_tt2/report.tt2:346
 #, smalltalk-format
 msgid "Information regarding user %1 has been updated for list %2."
 msgstr "Käyttäjän %1 tiedot on päivitetty listalle %2."
 
 # nlsref 6,37
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:346
+#: default/mail_tt2/report.tt2:349
 #, smalltalk-format
 msgid "User %1 is now subscriber of list %2."
 msgstr "Käyttäjä %1 on nyt listan %2 tilaaja."
 
 # nlsref 6,37
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:350
+#: default/mail_tt2/report.tt2:353
 #, fuzzy, smalltalk-format
 msgid "User %1 is now unsubscribed from list %2."
 msgstr "Käyttäjä %1 on nyt listan %2 tilaaja."
 
 # nlsref 6,85
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:353
+#: default/mail_tt2/report.tt2:356
 #, smalltalk-format
 msgid "User %1 has been invited to subscribe in list %2."
 msgstr "Käyttäjä %1 on kutsuttu listan %2 tilaajaksi."
 
 # nlsref 6,78
 #. (report_param.total,report_param.listname)
-#: default/mail_tt2/report.tt2:356
+#: default/mail_tt2/report.tt2:359
 #, smalltalk-format
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr "Tilausmuistutus on lähetetty jokaiselle %1:lle listan %2 tilaajalle."
 
 #. (report_param.count)
-#: default/mail_tt2/report.tt2:359
+#: default/mail_tt2/report.tt2:362
 #, smalltalk-format
 msgid "The Reminder has been sent to %1 users."
 msgstr "Muistutus on lähetetty %1 käyttäjälle."
 
 # nlsref 6,38
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:362
+#: default/mail_tt2/report.tt2:365
 #, smalltalk-format
 msgid "The user %1 has been removed from the list %2."
 msgstr "Käyttäjä %1 on poistettu listalta %2."
 
 # nlsref 6,38
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:365
+#: default/mail_tt2/report.tt2:368
 #, fuzzy, smalltalk-format
 msgid "The user %1 has been removed."
 msgstr "Käyttäjä %1 on poistettu listalta %2."
 
 # nlsref 6,40
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:368
+#: default/mail_tt2/report.tt2:371
 #, smalltalk-format
 msgid "Your configuration regarding list %1 has been updated."
 msgstr "Listaan %1 liittyvät asetuksesi on päivitetty."
 
 # nlsref 4,18
 #. (report_param.cmd)
-#: default/mail_tt2/report.tt2:371
+#: default/mail_tt2/report.tt2:374
 #, fuzzy, smalltalk-format
 msgid "Command '%1' found: ignoring end of message."
 msgstr "Löytyi komento '%1': viestin loppuosaa ei käsitellä."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:374
+#: default/mail_tt2/report.tt2:377
 #, smalltalk-format
 msgid "There is no message to moderate for list '%1'."
 msgstr "Listalle '%1' ei ole moderoitavia viestejä."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:378
+#: default/mail_tt2/report.tt2:381
 #, smalltalk-format
 msgid "Including list owners into list %1 was skipped."
 msgstr "Listan omistajien lisääminen listalle %1 ohitettiin."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:380
+#: default/mail_tt2/report.tt2:383
 #, smalltalk-format
 msgid "Including moderators into list %1 was skipped."
 msgstr "Moderaattoreiden lisääminen listalle %1 ohitettiin."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:382
+#: default/mail_tt2/report.tt2:385
 #, smalltalk-format
 msgid "Including subscribers into list %1 was skipped."
 msgstr "Tilaajien lisääminen listalle %1 ohitettiin."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:387
+#: default/mail_tt2/report.tt2:390
 msgid "List owners were included from data source \"%1\" into list %2."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:389
+#: default/mail_tt2/report.tt2:392
 msgid "Moderators were included from data source \"%1\" into list %2."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:391
+#: default/mail_tt2/report.tt2:394
 msgid "Subscribers were included from data source \"%1\" into list %2."
 msgstr "Tilaajat tietolähteestä \"%1\" lisättiin listalle %2."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:396
+#: default/mail_tt2/report.tt2:399
 msgid "Including list owners from data source \"%1\" into list %2 failed."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:398
+#: default/mail_tt2/report.tt2:401
 msgid "Including moderators from data source \"%1\" into list %2 failed."
 msgstr ""
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:400
+#: default/mail_tt2/report.tt2:403
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
-msgstr ""
-
-#. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:404
-#, smalltalk-format
-msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
 #: default/mail_tt2/report.tt2:407
 #, smalltalk-format
+msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
+msgstr ""
+
+#. (report_param.result.added,report_param.result.held,report_param.result.updated)
+#: default/mail_tt2/report.tt2:410
+#, smalltalk-format
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
-#: default/mail_tt2/report.tt2:410
+#: default/mail_tt2/report.tt2:413
 #, smalltalk-format
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:413
+#: default/mail_tt2/report.tt2:416
 #, fuzzy
 msgid "You're not allowed to make sync, time limit in action"
 msgstr "sinulla ei ole oikeuksia toteuttaa tätä toimintoa."
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:416
+#: default/mail_tt2/report.tt2:419
 #, smalltalk-format
 msgid "%1 addresses have been removed"
 msgstr "%1:n osoitteet on poistettu"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:419
+#: default/mail_tt2/report.tt2:422
 #, smalltalk-format
 msgid "%1: action completed"
 msgstr "%1: tehtävä suoritettu"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:422
+#: default/mail_tt2/report.tt2:425
 #, smalltalk-format
 msgid "%1: action will complete soon"
 msgstr "%1: tehtävä suoritetaan hetken kuluttua"
 
-#: default/mail_tt2/report.tt2:425
+#: default/mail_tt2/report.tt2:428
 msgid "Configuration file has been updated"
 msgstr "Asetustiedosto on päivitetty"
 
-#: default/mail_tt2/report.tt2:428
+#: default/mail_tt2/report.tt2:431
 msgid "No parameter was edited"
 msgstr "Yhtään parametriä ei muutettu"
 
-#: default/mail_tt2/report.tt2:431
+#: default/mail_tt2/report.tt2:434
 msgid "List has been purged"
 msgstr "Lista on poistettu koko järjestelmästä"
 
-#: default/mail_tt2/report.tt2:434
+#: default/mail_tt2/report.tt2:437
 msgid "List has been closed"
 msgstr "Lista on suljettu"
 
-#: default/mail_tt2/report.tt2:437
+#: default/mail_tt2/report.tt2:440
 msgid "List has been restored"
 msgstr "Lista on palautettu"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:440
+#: default/mail_tt2/report.tt2:443
 #, smalltalk-format
 msgid "File %1 successfully uploaded!"
 msgstr "Tiedoston %1 lähetys onnistui!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:443
+#: default/mail_tt2/report.tt2:446
 #, smalltalk-format
 msgid "File %1 unzipped!"
 msgstr "Paketti %1 unzipattu!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:446
+#: default/mail_tt2/report.tt2:449
 #, smalltalk-format
 msgid "Old file %1 has been erased"
 msgstr "Vanha tiedosto %1 on poistettu"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:449
+#: default/mail_tt2/report.tt2:452
 #, smalltalk-format
 msgid "File %1 waiting for moderation"
 msgstr "Tiedosto %1 odottaa moderointia"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:452
+#: default/mail_tt2/report.tt2:455
 #, smalltalk-format
 msgid "File %1 saved"
 msgstr "Tiedosto %1 tallennettiin"
 
-#: default/mail_tt2/report.tt2:455
+#: default/mail_tt2/report.tt2:458
 msgid "Your password has been emailed to you"
 msgstr "Salasanasi on lähetetty sähköpostissa"
 
-#: default/mail_tt2/report.tt2:458
+#: default/mail_tt2/report.tt2:461
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "Valitaksesi salasana mene 'asetukset' sivulle, ylävalikon kautta."
 
 #. (report_param.list)
-#: default/mail_tt2/report.tt2:461
+#: default/mail_tt2/report.tt2:464
 #, smalltalk-format
 msgid "No message and no document to moderate for list %1"
 msgstr "Ei viestejä eikä dokumentteja moderoitavana listalla %1"
 
-#: default/mail_tt2/report.tt2:464
+#: default/mail_tt2/report.tt2:467
 #, fuzzy
 msgid "The list of list subscribers has been built/updated."
 msgstr "Lista listan jäsenistä on tehty/päivitetty."
 
-#: default/mail_tt2/report.tt2:467
+#: default/mail_tt2/report.tt2:470
 #, fuzzy
 msgid "The list of list owners has been built/updated."
 msgstr "Lista listan jäsenistä on tehty/päivitetty."
 
-#: default/mail_tt2/report.tt2:470
+#: default/mail_tt2/report.tt2:473
 #, fuzzy
 msgid "The list of list moderators has been built/updated."
 msgstr "Lista listan jäsenistä on tehty/päivitetty."
 
-#: default/mail_tt2/report.tt2:473
+#: default/mail_tt2/report.tt2:476
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr ""
 "Lista listan jäsenistä tehdään/päivitetään pian (muutamassa minuutissa)."
 
-#: default/mail_tt2/report.tt2:476
+#: default/mail_tt2/report.tt2:479
 msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:479
+#: default/mail_tt2/report.tt2:482
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:482
+#: default/mail_tt2/report.tt2:485
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
 msgstr ""
 
 # nlsref 4,26
-#: default/mail_tt2/report.tt2:485
+#: default/mail_tt2/report.tt2:488
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr "Asianosaisille tilaajille on ilmoittettu poistetuista aiheista."
 
-#: default/mail_tt2/report.tt2:488
+#: default/mail_tt2/report.tt2:491
 msgid "You have been authenticated"
 msgstr "Olet tunnistautunut."
 
 #. (report_param.orig_file,report_param.new_file)
-#: default/mail_tt2/report.tt2:491
+#: default/mail_tt2/report.tt2:494
 #, smalltalk-format
 msgid "File %1 has been renamed to %2"
 msgstr "Tiedosto %1 on muutettu nimelle %2"
 
-#: default/mail_tt2/report.tt2:494
+#: default/mail_tt2/report.tt2:497
 msgid ""
 "List has been set to the pending status. The listmaster needs to approve it."
 msgstr "Lista on merkitty odottaa-tilaan; ylläpitäjän täytyy hyväksyä se"
 
-#: default/mail_tt2/report.tt2:497
+#: default/mail_tt2/report.tt2:500
 msgid "List name has been lowercased"
 msgstr "Listan nimi on muutettu pienellä kirjoitetuksi"
 
-#: default/mail_tt2/report.tt2:500
+#: default/mail_tt2/report.tt2:503
 msgid "Aliases have been installed."
 msgstr "Postilista-aliakset on asennettu."
 
 #. (report_param.notified_user)
-#: default/mail_tt2/report.tt2:503
+#: default/mail_tt2/report.tt2:506
 #, smalltalk-format
 msgid "User %1 has been notified"
 msgstr "Käyttäjälle %1 on ilmoitettu"
 
-#: default/mail_tt2/report.tt2:506
+#: default/mail_tt2/report.tt2:509
 msgid "You have logged out"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:509
+#: default/mail_tt2/report.tt2:512
 msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
 msgstr ""
 
 # nlsref 4,19
-#: default/mail_tt2/report.tt2:521
+#: default/mail_tt2/report.tt2:524
 msgid "Command not understood: ignoring end of message."
 msgstr "Komentoa ei ymmärretty: viestin loppuosaa ei käsitellä."
 
-#: default/mail_tt2/report.tt2:524
+#: default/mail_tt2/report.tt2:527
 msgid "Unknown action"
 msgstr "Tunnistamaton toiminto"
 
 # nlsref 6,263
-#: default/mail_tt2/report.tt2:527
+#: default/mail_tt2/report.tt2:530
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature (be aware that Sympa can't check signature if you use the "
@@ -13519,32 +13526,32 @@ msgstr ""
 "komennon antamiseen)."
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:531
+#: default/mail_tt2/report.tt2:534
 #, smalltalk-format
 msgid "Syntax errors with the following parameters: %1"
 msgstr "Muotovirheitä seuraavissa parametreissa: %1"
 
 # nlsref 6,13
-#: default/mail_tt2/report.tt2:533
+#: default/mail_tt2/report.tt2:536
 msgid "Command syntax error."
 msgstr "Komennossa virheellinen rakenne."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:541
+#: default/mail_tt2/report.tt2:544
 #, smalltalk-format
 msgid "%1: unknown list"
 msgstr "%1: tuntematon lista"
 
 # nlsref 6,91
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:544
+#: default/mail_tt2/report.tt2:547
 #, smalltalk-format
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "postituslista %1 ei tarjoa tilaaja-asetuksia."
 
 # nlsref 6,30
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:547
+#: default/mail_tt2/report.tt2:550
 #, fuzzy, smalltalk-format
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
@@ -13555,28 +13562,28 @@ msgstr ""
 
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:550
+#: default/mail_tt2/report.tt2:553
 #, smalltalk-format
 msgid "E-mail address %1 was not found in list %2."
 msgstr "Sähköpostiosoitetta %1 ei löytynyt listalta %2."
 
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:554
+#: default/mail_tt2/report.tt2:557
 #, fuzzy, smalltalk-format
 msgid "E-mail address %1 was not found in the owners of list %2."
 msgstr "Sähköpostiosoitetta %1 ei löytynyt listalta %2."
 
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:556
+#: default/mail_tt2/report.tt2:559
 #, fuzzy, smalltalk-format
 msgid "E-mail address %1 was not found in the moderators of list %2."
 msgstr "Sähköpostiosoitetta %1 ei löytynyt listalta %2."
 
 # nlsref 6,45
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:560
+#: default/mail_tt2/report.tt2:563
 #, smalltalk-format
 msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
@@ -13587,61 +13594,61 @@ msgstr ""
 
 # nlsref 16,19
 #. (report_param.reception_mode)
-#: default/mail_tt2/report.tt2:564
+#: default/mail_tt2/report.tt2:567
 #, smalltalk-format
 msgid "%1 is not an available reception mode"
 msgstr "%1-vastaanottotila ei ole käytössä"
 
 # nlsref 6,90
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:566
+#: default/mail_tt2/report.tt2:569
 #, fuzzy, smalltalk-format
 msgid "List %1 allows only these reception modes: "
 msgstr "Listalla %1 on sallittu vain seuraavat vastaanottovaihtoehdot: %2"
 
 # nlsref 16,19
 #. (report_param.visibility)
-#: default/mail_tt2/report.tt2:579
+#: default/mail_tt2/report.tt2:582
 #, fuzzy, smalltalk-format
 msgid "%1 is not an available visibility"
 msgstr "%1-vastaanottotila ei ole käytössä"
 
 # nlsref 16,19
 #. (report_param.profile)
-#: default/mail_tt2/report.tt2:582
+#: default/mail_tt2/report.tt2:585
 #, fuzzy, smalltalk-format
 msgid "%1 is not an available owner profile"
 msgstr "%1-vastaanottotila ei ole käytössä"
 
-#: default/mail_tt2/report.tt2:585
+#: default/mail_tt2/report.tt2:588
 #, fuzzy
 msgid "no changed properties"
 msgstr "ominaisuudet"
 
-#: default/mail_tt2/report.tt2:588
+#: default/mail_tt2/report.tt2:591
 msgid "Archives are empty for this list"
 msgstr "Listan arkistot ovat tyhjät"
 
 # nlsref 6,8
-#: default/mail_tt2/report.tt2:591
+#: default/mail_tt2/report.tt2:594
 msgid "Required file does not exist."
 msgstr "Vaadittua tiedostoa ei ole olemassa."
 
 # nlsref 6,84
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:597
+#: default/mail_tt2/report.tt2:600
 #, smalltalk-format
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "Käyttäjä '%1' on jo listan '%2' tilaaja."
 
 #. (statdesc)
-#: default/mail_tt2/report.tt2:601
+#: default/mail_tt2/report.tt2:604
 #, smalltalk-format
 msgid "Service unavailable because list status is '%1'"
 msgstr "Palvelu ei ole käytettävissä koska listan tila on '%1'"
 
 #. (report_param.email,report_param.listname,report_param.max_list_members)
-#: default/mail_tt2/report.tt2:604
+#: default/mail_tt2/report.tt2:607
 #, smalltalk-format
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
@@ -13649,7 +13656,7 @@ msgid ""
 msgstr ""
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:608
+#: default/mail_tt2/report.tt2:611
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
@@ -13660,7 +13667,7 @@ msgstr ""
 "Kokeile kanonisen osoitteesi käyttämistä."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:610
+#: default/mail_tt2/report.tt2:613
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your "
@@ -13672,7 +13679,7 @@ msgstr ""
 "Kokeile kanonisen osoitteesi käyttämistä."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:612
+#: default/mail_tt2/report.tt2:615
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
@@ -13683,7 +13690,7 @@ msgstr ""
 "Kokeile kanonisen osoitteesi käyttämistä."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:614
+#: default/mail_tt2/report.tt2:617
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
@@ -13694,7 +13701,7 @@ msgstr ""
 "Kokeile kanonisen osoitteesi käyttämistä."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:616
+#: default/mail_tt2/report.tt2:619
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
@@ -13705,7 +13712,7 @@ msgstr ""
 "Kokeile kanonisen osoitteesi käyttämistä."
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:618 default/mail_tt2/report.tt2:620
+#: default/mail_tt2/report.tt2:621 default/mail_tt2/report.tt2:623
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
@@ -13718,7 +13725,7 @@ msgstr ""
 
 # nlsref 6,16
 #. (report_param.command)
-#: default/mail_tt2/report.tt2:622
+#: default/mail_tt2/report.tt2:625
 #, fuzzy
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
@@ -13731,7 +13738,7 @@ msgstr ""
 
 # nlsref 6,41
 #. (report_param.listname,report_param.key)
-#: default/mail_tt2/report.tt2:627
+#: default/mail_tt2/report.tt2:630
 #, fuzzy, smalltalk-format
 msgid ""
 "Unable to access the message on list %1 with key %2.\n"
@@ -13742,7 +13749,7 @@ msgstr ""
 "Varoitus: Tämä viesti on voitu jo lähettää listan toimittajan toimesta."
 
 # nlsref 4,38
-#: default/mail_tt2/report.tt2:631
+#: default/mail_tt2/report.tt2:634
 msgid ""
 "Failed to moderate a message. It was probably moderated by another moderator."
 msgstr ""
@@ -13751,7 +13758,7 @@ msgstr ""
 
 # nlsref 6,68
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:634
+#: default/mail_tt2/report.tt2:637
 #, smalltalk-format
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
@@ -13761,45 +13768,45 @@ msgstr ""
 "varmennettu."
 
 # nlsref 4,38
-#: default/mail_tt2/report.tt2:638
+#: default/mail_tt2/report.tt2:641
 #, fuzzy
 msgid "Failed to get the held message; it has probably been confirmed"
 msgstr ""
 "Viestin moderointi epäonnistui. Joku toinen moderaattori on todennäköisesti "
 "jo käsitellyt viestin."
 
-#: default/mail_tt2/report.tt2:641
+#: default/mail_tt2/report.tt2:644
 #, fuzzy
 msgid "No lists available."
 msgstr "Ei tarjollaolevia postilistoja"
 
-#: default/mail_tt2/report.tt2:644
+#: default/mail_tt2/report.tt2:647
 msgid "Wrong parameters"
 msgstr "Virheelliset parametrit"
 
-#: default/mail_tt2/report.tt2:647
+#: default/mail_tt2/report.tt2:650
 msgid "Authorization rejected. Maybe you forgot to log in?"
 msgstr ""
 
 #. (report_param.new_robot)
-#: default/mail_tt2/report.tt2:650
+#: default/mail_tt2/report.tt2:653
 #, smalltalk-format
 msgid "%1: unknown robot"
 msgstr "%1: tuntematon listarobotti"
 
 #. (report_param.family)
-#: default/mail_tt2/report.tt2:653
+#: default/mail_tt2/report.tt2:656
 #, smalltalk-format
 msgid "%1: unknown family"
 msgstr "%1: tuntematon family (listan ryhmä)"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:656
+#: default/mail_tt2/report.tt2:659
 #, smalltalk-format
 msgid "You are already logged in as %1"
 msgstr "Olet jo kirjautunut sisään käyttäjänä %1"
 
-#: default/mail_tt2/report.tt2:659
+#: default/mail_tt2/report.tt2:662
 msgid ""
 "You cannot receive a password reminder. This could be because your password "
 "is managed outside of Sympa by a Single Sign-On system or LDAP directory."
@@ -13807,25 +13814,25 @@ msgstr ""
 "Salasanamuistutus ei ole mahdollinen, koska salasanasi on todennäköisesti "
 "tallennettu ulkoiseen järjestelmään (esim. Single Sign-On tai LDAP)."
 
-#: default/mail_tt2/report.tt2:662
+#: default/mail_tt2/report.tt2:665
 msgid "Please provide an email address"
 msgstr "Ole hyvä ja anna sähköpostiosoite"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:665
+#: default/mail_tt2/report.tt2:668
 #, smalltalk-format
 msgid "Missing argument %1"
 msgstr "Puuttuva argumentti %1"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:668
+#: default/mail_tt2/report.tt2:671
 #, smalltalk-format
 msgid ""
 "The name you want to use for your list (%1) is prohibited by the "
 "configuration of the server."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:671
+#: default/mail_tt2/report.tt2:674
 msgid ""
 "You didn't define the web page you want to use to create your newsletter. "
 "Please specify either an URL or a file to upload."
@@ -13833,7 +13840,7 @@ msgstr ""
 "Et määritellyt WWW-osoitetta, jota haluat käyttää uutiskirjeessäsi. Ole hyvä "
 "ja määrittele WWW-osoite tai lähtettävä tiedosto."
 
-#: default/mail_tt2/report.tt2:674
+#: default/mail_tt2/report.tt2:677
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -13843,54 +13850,54 @@ msgstr ""
 "valita kumpaa käytetään. Määrittele lomakkeelle vain toinen: WWW-osoite tai "
 "lähetettävä tiedosto."
 
-#: default/mail_tt2/report.tt2:677
+#: default/mail_tt2/report.tt2:680
 msgid ""
 "The page could not be parsed properly. Please check the content of web page "
 "or file you submitted."
 msgstr ""
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:681
+#: default/mail_tt2/report.tt2:684
 #, smalltalk-format
 msgid "Wrong value for parameter %1"
 msgstr "Väärä arvo parametrille %1"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:687
+#: default/mail_tt2/report.tt2:690
 msgid "Address \"%1\" is incorrect"
 msgstr "Osoite \"%1\" on virheellinen"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:690
+#: default/mail_tt2/report.tt2:693
 msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr ""
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:694
+#: default/mail_tt2/report.tt2:697
 msgid "Address \"%1\" is the address for the list owners"
 msgstr ""
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:696
+#: default/mail_tt2/report.tt2:699
 msgid "Address \"%1\" is the address for the list moderators"
 msgstr ""
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:698
+#: default/mail_tt2/report.tt2:701
 msgid "Address \"%1\" is the address of the list"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:702
+#: default/mail_tt2/report.tt2:705
 msgid "Provided password is incorrect"
 msgstr "Annettu salasana on virheellinen"
 
-#: default/mail_tt2/report.tt2:705
+#: default/mail_tt2/report.tt2:708
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 "Salasanaa ei ole määritelty. Tilaa muistutus määrittääksesi uuden salasanan"
 
-#: default/mail_tt2/report.tt2:708
+#: default/mail_tt2/report.tt2:711
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post a "
 "reminder"
@@ -13899,47 +13906,47 @@ msgstr ""
 "sinulle salasanamuistutusta"
 
 #. (report_param.nb_days)
-#: default/mail_tt2/report.tt2:711
+#: default/mail_tt2/report.tt2:714
 #, smalltalk-format
 msgid "The period is too long (%1 days)"
 msgstr "Aikaväli on liian pitkä (%1 päivää)"
 
 #. (report_param.page)
-#: default/mail_tt2/report.tt2:714
+#: default/mail_tt2/report.tt2:717
 #, smalltalk-format
 msgid "No page %1"
 msgstr "Sivua %1 ei ole"
 
-#: default/mail_tt2/report.tt2:717
+#: default/mail_tt2/report.tt2:720
 msgid "Missing filter"
 msgstr "Puuttuva suodatin"
 
-#: default/mail_tt2/report.tt2:720
+#: default/mail_tt2/report.tt2:723
 msgid "Check the additional information"
 msgstr "Tarkista lisätiedot"
 
 #. (report_param.file)
-#: default/mail_tt2/report.tt2:723
+#: default/mail_tt2/report.tt2:726
 #, smalltalk-format
 msgid "%1: file not editable"
 msgstr "%1: tiedostoon ei voi muokattavissa"
 
 #. (report_param.email,report_param.list)
-#: default/mail_tt2/report.tt2:726
+#: default/mail_tt2/report.tt2:729
 #, smalltalk-format
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 on jo listan %2 tilaaja"
 
-#: default/mail_tt2/report.tt2:729
+#: default/mail_tt2/report.tt2:732
 msgid "Please provide your password"
 msgstr "Anna salasanasi"
 
-#: default/mail_tt2/report.tt2:732
+#: default/mail_tt2/report.tt2:735
 msgid "The passwords you typed do not match"
 msgstr "Antamasi salasanat eivät ole samat"
 
 #. (report_param.reason)
-#: default/mail_tt2/report.tt2:735
+#: default/mail_tt2/report.tt2:738
 #, smalltalk-format
 msgid ""
 "The password you typed does not match this sites standards of strength: %1. "
@@ -13947,276 +13954,276 @@ msgid ""
 msgstr ""
 
 #. (report_param.tpl)
-#: default/mail_tt2/report.tt2:738
+#: default/mail_tt2/report.tt2:741
 #, smalltalk-format
 msgid "Provided path is incorrect for template '%1'"
 msgstr "Annettu polku on väärä '%1 -mallille'"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:741
+#: default/mail_tt2/report.tt2:744
 #, smalltalk-format
 msgid "Cannot open file '%1'"
 msgstr "Tiedostoa '%1 ei voi avata'"
 
-#: default/mail_tt2/report.tt2:744
+#: default/mail_tt2/report.tt2:747
 msgid "You need to provide list name"
 msgstr "Sinun pitää antaa listan nimi"
 
 # tagging?
-#: default/mail_tt2/report.tt2:747
+#: default/mail_tt2/report.tt2:750
 msgid "Tagging message is required for this list"
 msgstr "Tämä lista vaatii viestin taggaamisen."
 
-#: default/mail_tt2/report.tt2:751
+#: default/mail_tt2/report.tt2:754
 msgid "Tag message with topic is required for this list"
 msgstr "Tämä lista vaatii viestin aiheen syöttämisen"
 
-#: default/mail_tt2/report.tt2:754
+#: default/mail_tt2/report.tt2:757
 msgid "You did not select an action to perform"
 msgstr "Et valinnut toteutettavaa toimintoa"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:757
+#: default/mail_tt2/report.tt2:760
 #, smalltalk-format
 msgid "No bounce for user  %1"
 msgstr "Ei toimittamattomia viestejä käyttäjällä %1"
 
-#: default/mail_tt2/report.tt2:760
+#: default/mail_tt2/report.tt2:763
 msgid "List has no bouncing subscribers"
 msgstr "Listalla ei ole tavoittamattomia tilaajia"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:763
+#: default/mail_tt2/report.tt2:766
 #, smalltalk-format
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr "%1 on muutanut asetustiedostoa. Muutoksiasi ei voi tallentaa."
 
-#: default/mail_tt2/report.tt2:766
+#: default/mail_tt2/report.tt2:769
 msgid "Topic \"other\" is a reserved word"
 msgstr "Aihe ”muu” on varattu sana"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:769
+#: default/mail_tt2/report.tt2:772
 #, smalltalk-format
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr "Parametri '%1' on pakollinen. Ohitetaan poistaminen."
 
 #. (report_param.value,report_param.p_name)
-#: default/mail_tt2/report.tt2:772
+#: default/mail_tt2/report.tt2:775
 #, smalltalk-format
 msgid "Duplicate value '%1' for parameter '%2'. Ignoring change."
 msgstr ""
 
 #. (report_param.param)
-#: default/mail_tt2/report.tt2:775
+#: default/mail_tt2/report.tt2:778
 #, smalltalk-format
 msgid "Parameter '%1' must have values"
 msgstr "Parametrillä '%1' täytyy olla arvo"
 
 #. (report_param.param,report_param.val)
-#: default/mail_tt2/report.tt2:778
+#: default/mail_tt2/report.tt2:781
 #, smalltalk-format
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "Parametrin '%1' arvo '%2' on virheellinen"
 
 # nlsref 16,70
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:781
+#: default/mail_tt2/report.tt2:784
 #, smalltalk-format
 msgid "The list '%1' is already closed"
 msgstr "Lista '%1' on jo suljettu"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:784
+#: default/mail_tt2/report.tt2:787
 #, smalltalk-format
 msgid "The list '%1' is not closed"
 msgstr "Lista '%1' ei ole suljettu"
 
 #. (report_param.bad_listname)
-#: default/mail_tt2/report.tt2:787
+#: default/mail_tt2/report.tt2:790
 #, smalltalk-format
 msgid "'%1': bad list name"
 msgstr "'%1': virheellinen listannimi"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:790
+#: default/mail_tt2/report.tt2:793
 #, smalltalk-format
 msgid "'%1' list already exists"
 msgstr "lista '%1' on jo olemassa"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:793
+#: default/mail_tt2/report.tt2:796
 #, smalltalk-format
 msgid "Incorrect list name '%1': matches one of service aliases"
 msgstr "Virheellinen listanimi '%1': sama kuin yksi palvelualiaksista"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:796
+#: default/mail_tt2/report.tt2:799
 #, smalltalk-format
 msgid "Failed to remove list aliases for list %1"
 msgstr "Lista-aliaksien poistaminen listalta %1 epäonnistui"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:799
+#: default/mail_tt2/report.tt2:802
 #, smalltalk-format
 msgid "%1: No such file or directory"
 msgstr "%1: Tiedostoa tai hakemistoa ei ole"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:802
+#: default/mail_tt2/report.tt2:805
 #, smalltalk-format
 msgid "Unable to read %1: empty document"
 msgstr "Tiedoston %1 lukeminen epäonnistui: tyhjä tiedosto"
 
 # nlsref 16,70
-#: default/mail_tt2/report.tt2:805
+#: default/mail_tt2/report.tt2:808
 msgid "There is no shared documents"
 msgstr "Jaettuja tiedostoja ei ole"
 
 # nlsref 16,70
-#: default/mail_tt2/report.tt2:808
+#: default/mail_tt2/report.tt2:811
 msgid "The shared document space is empty"
 msgstr "Jaettujen tiedostojen alue on tyhjä"
 
-#: default/mail_tt2/report.tt2:811
+#: default/mail_tt2/report.tt2:814
 msgid "The shared directory cannot have any description"
 msgstr "Jaetulla hakemistolla ei voi olla kuvausta"
 
-#: default/mail_tt2/report.tt2:814
+#: default/mail_tt2/report.tt2:817
 msgid "No description specified"
 msgstr "Ei kuvausta"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:817
+#: default/mail_tt2/report.tt2:820
 #, smalltalk-format
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Kuvauksen laatiminen ei onnistu, tiedostoa '%1' ei ole olemassa"
 
-#: default/mail_tt2/report.tt2:820
+#: default/mail_tt2/report.tt2:823
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr ""
 "Levylle tallennettua tietoa on muutettu. Tekemiäsi muutoksia ei voida "
 "tallentaa."
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:823
+#: default/mail_tt2/report.tt2:826
 #, smalltalk-format
 msgid "%1: incorrect name"
 msgstr "%1: virheellinen nimi"
 
-#: default/mail_tt2/report.tt2:827
+#: default/mail_tt2/report.tt2:830
 msgid "Failed: your content is empty"
 msgstr "Epäonnistui: sisältö on tyhjä"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:830
+#: default/mail_tt2/report.tt2:833
 #, smalltalk-format
 msgid "Cannot overwrite file %1:"
 msgstr "Tiedostoa %1 ei voi ylikirjoittaa:"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:833
+#: default/mail_tt2/report.tt2:836
 #, smalltalk-format
 msgid "A directory named '%1' already exists:"
 msgstr "Hakemisto %1 on jo olemassa:"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:836
+#: default/mail_tt2/report.tt2:839
 #, smalltalk-format
 msgid "This is an already existing document: '%1'"
 msgstr "Tiedosto '%1 on jo olemassa"
 
-#: default/mail_tt2/report.tt2:839
+#: default/mail_tt2/report.tt2:842
 msgid "No name specified"
 msgstr "Nimeä ei määritelty"
 
 # ylittää vai ylitti?
-#: default/mail_tt2/report.tt2:842
+#: default/mail_tt2/report.tt2:845
 msgid "The document repository exceed disk quota."
 msgstr "Tiedostovaraston levytilarajoitus on saavutettu."
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:845
+#: default/mail_tt2/report.tt2:848
 #, smalltalk-format
 msgid "Cannot upload file %1:"
 msgstr "Tiedostoa %1 ei voida lähettää:"
 
 #. (report_param.dir)
-#: default/mail_tt2/report.tt2:848
+#: default/mail_tt2/report.tt2:851
 #, smalltalk-format
 msgid "You're not authorized to upload an INDEX.HTML file in %1"
 msgstr "Sinulla ei ole oikeuksia ladata INDEX.HTML-tiedostoa hakemistoon %1"
 
-#: default/mail_tt2/report.tt2:851
+#: default/mail_tt2/report.tt2:854
 msgid "The upload failed, try it again"
 msgstr "Tiedoston lähettäminen epäonnistui, yritä uudestaan"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:854
+#: default/mail_tt2/report.tt2:857
 #, smalltalk-format
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr "Hakemistoa %1 ja sen sisältöä ei voitu kopioida: %2"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:857
+#: default/mail_tt2/report.tt2:860
 #, smalltalk-format
 msgid "File %1 was not copied: %2 "
 msgstr "Tiedostoa %1 ei kopioitu: %2"
 
 #. (report_param.directory)
-#: default/mail_tt2/report.tt2:860
+#: default/mail_tt2/report.tt2:863
 #, smalltalk-format
 msgid "Failed: %1 not empty"
 msgstr "Epäonnistui: %1 ei ole tyhjä"
 
 # nlsref 16,74
-#: default/mail_tt2/report.tt2:863
+#: default/mail_tt2/report.tt2:866
 msgid "No certificate for this list"
 msgstr "Tällä listalla ei ole varmennetta"
 
-#: default/mail_tt2/report.tt2:866
+#: default/mail_tt2/report.tt2:869
 msgid "This list has no message topic"
 msgstr "Listalla ei ole viestiaihetta"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:869
+#: default/mail_tt2/report.tt2:872
 #, smalltalk-format
 msgid "No entry for user '%1'"
 msgstr "Ei tietoja käyttäjästä '%1'"
 
-#: default/mail_tt2/report.tt2:872
+#: default/mail_tt2/report.tt2:875
 msgid "Please select archive months"
 msgstr "Valitse arkistokuukaudet"
 
-#: default/mail_tt2/report.tt2:875
+#: default/mail_tt2/report.tt2:878
 msgid "No SOAP service"
 msgstr "Ei SOAP-palvelua"
 
 # nlsref 6,15
-#: default/mail_tt2/report.tt2:878
+#: default/mail_tt2/report.tt2:881
 msgid "Authentication failed"
 msgstr "Tunnistus epäonnistui"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:881
+#: default/mail_tt2/report.tt2:884
 #, smalltalk-format
 msgid "This Template '%1' already exists"
 msgstr "Malli %1 on jo olemassa"
 
 #. (report_param.file_del)
-#: default/mail_tt2/report.tt2:884
+#: default/mail_tt2/report.tt2:887
 #, smalltalk-format
 msgid "Cannot delete this file '%1'"
 msgstr "Tiedostoa '%1' ei voi poistaa"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:890
+#: default/mail_tt2/report.tt2:893
 #, fuzzy, smalltalk-format
 msgid "Failed to update member email '%1' in list '%2'."
 msgstr "Käyttäjien lisääminen listalle '%1' epäonnistui"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:893
+#: default/mail_tt2/report.tt2:896
 #, smalltalk-format
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
@@ -14225,25 +14232,25 @@ msgstr ""
 "omistajalle on ilmoitettu asiasta."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:896
+#: default/mail_tt2/report.tt2:899
 #, fuzzy, smalltalk-format
 msgid "Failed to delete member email '%1' in list '%2'."
 msgstr "Käyttäjien lisääminen listalle '%1' epäonnistui"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:900
+#: default/mail_tt2/report.tt2:903
 #, fuzzy, smalltalk-format
 msgid "Failed to update owner email '%1' in list '%2'."
 msgstr "Käyttäjien lisääminen listalle '%1' epäonnistui"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:902
+#: default/mail_tt2/report.tt2:905
 #, fuzzy, smalltalk-format
 msgid "Failed to update moderator email '%1' in list '%2'."
 msgstr "Käyttäjien lisääminen listalle '%1' epäonnistui"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:907
+#: default/mail_tt2/report.tt2:910
 #, fuzzy, smalltalk-format
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
@@ -14252,7 +14259,7 @@ msgstr ""
 "omistajalle on ilmoitettu asiasta."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:909
+#: default/mail_tt2/report.tt2:912
 #, fuzzy, smalltalk-format
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
@@ -14261,23 +14268,23 @@ msgstr ""
 "omistajalle on ilmoitettu asiasta."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:914
+#: default/mail_tt2/report.tt2:917
 #, fuzzy, smalltalk-format
 msgid "Failed to delete owner email '%1' in list '%2'."
 msgstr "Käyttäjien lisääminen listalle '%1' epäonnistui"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:916
+#: default/mail_tt2/report.tt2:919
 #, fuzzy, smalltalk-format
 msgid "Failed to delete moderator email '%1' in list '%2'."
 msgstr "Käyttäjien lisääminen listalle '%1' epäonnistui"
 
-#: default/mail_tt2/report.tt2:920
+#: default/mail_tt2/report.tt2:923
 msgid "Address was not changed."
 msgstr ""
 
 #. (report_param.error)
-#: default/mail_tt2/report.tt2:923
+#: default/mail_tt2/report.tt2:926
 #, smalltalk-format
 msgid ""
 "Your message cannot be personalized due to error: %1.  Please check template "
@@ -14285,13 +14292,13 @@ msgid ""
 msgstr ""
 
 #. (report_param.value,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:926
+#: default/mail_tt2/report.tt2:929
 #, smalltalk-format
 msgid "%1: all list owners must be in the following domains: %2."
 msgstr ""
 
 #. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:929
+#: default/mail_tt2/report.tt2:932
 #, smalltalk-format
 msgid ""
 "Unable to reduce the number of list owners in required domains to %1. "
@@ -14299,7 +14306,7 @@ msgid ""
 msgstr ""
 
 #. (report_param.lists)
-#: default/mail_tt2/report.tt2:932
+#: default/mail_tt2/report.tt2:935
 #, smalltalk-format
 msgid ""
 "You are the only owner of the following list(s): %1. Please give ownership "
@@ -14307,7 +14314,7 @@ msgid ""
 "from all your lists though."
 msgstr ""
 
-#: default/mail_tt2/report.tt2:935
+#: default/mail_tt2/report.tt2:938
 msgid ""
 "You are not authorized to delete your account if you are not using the built-"
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
@@ -14315,50 +14322,50 @@ msgid ""
 msgstr ""
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:938
+#: default/mail_tt2/report.tt2:941
 #, smalltalk-format
 msgid "Unknown authentication service %1."
 msgstr "Tuntematon tunnistautumispalvelu %1."
 
-#: default/mail_tt2/report.tt2:941
+#: default/mail_tt2/report.tt2:944
 msgid "Unable to send archive: no message id found."
 msgstr "Arkiston lähettäminen ei onnistunut: Viestin tunnistetta ei löytynyt."
 
-#: default/mail_tt2/report.tt2:944
+#: default/mail_tt2/report.tt2:947
 #, fuzzy
 msgid "Unable to view archived message: no message id found."
 msgstr "Arkiston lähettäminen ei onnistunut: Viestin tunnistetta ei löytynyt."
 
-#: default/mail_tt2/report.tt2:947
+#: default/mail_tt2/report.tt2:950
 #, fuzzy
 msgid "This list is not configured for tracking."
 msgstr "Lista vaatii aiheen määrittelyn."
 
 #. (report_param.msgid)
-#: default/mail_tt2/report.tt2:950
+#: default/mail_tt2/report.tt2:953
 #, smalltalk-format
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr "Viestiä, joka Message-ID on '%1', ei löydy arkistosta."
 
 #. (report_param.msgid)
-#: default/mail_tt2/report.tt2:953
+#: default/mail_tt2/report.tt2:956
 #, fuzzy, smalltalk-format
 msgid "Unknown scenario '%1'."
 msgstr "Tuntematon virhe."
 
 # nlsref 6,2
 #. (report_param.month)
-#: default/mail_tt2/report.tt2:956
+#: default/mail_tt2/report.tt2:959
 #, smalltalk-format
 msgid "Unable to find month '%1'"
 msgstr "Kuukautta '%1 ei löytynyt'"
 
-#: default/mail_tt2/report.tt2:959
+#: default/mail_tt2/report.tt2:962
 #, fuzzy
 msgid "You are not allowed to get the privilege of this user."
 msgstr "Et voi tilata tätä listaa."
 
-#: default/mail_tt2/report.tt2:962
+#: default/mail_tt2/report.tt2:965
 msgid "Failed to get your email address from the authentication service."
 msgstr "Sähköpostiosoitteen hakeminen tunnistautumispalvelulta epäonnistui."
 
@@ -15493,6 +15500,20 @@ msgstr "Web-keskustelupostilista"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Intranet-postituslista"
+
+#: default/web_tt2/suboptions.tt2:122 default/web_tt2/suboptions.tt2:125
+#: default/web_tt2/suboptions.tt2:127 default/web_tt2/suspend_request.tt2:93
+#: default/web_tt2/suspend_request.tt2:97
+#: default/web_tt2/suspend_request.tt2:98 default/web_tt2/viewlogs.tt2:30
+#: default/web_tt2/viewlogs.tt2:34
+msgid "dd-mm-yyyy"
+msgstr ""
+
+#~ msgid "Calendar"
+#~ msgstr "Kalenteri"
+
+#~ msgid "Su:Mo:Tu:We:Th:Fr:Sa"
+#~ msgstr "S:M:T:K:T:P:L"
 
 #~ msgid ""
 #~ "IF list context defined, apply list template if exist\n"

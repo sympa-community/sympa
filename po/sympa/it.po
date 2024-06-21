@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2023-12-30 09:47:29+0000\n"
+"POT-Creation-Date: 2024-04-26 10:39:23+0000\n"
 "PO-Revision-Date: 2023-10-20 13:32+0000\n"
 "Last-Translator: stefano.antonelli <stefano.antonelli@cnaf.infn.it>\n"
 "Language-Team: Italiano\n"
@@ -89,6 +89,7 @@ msgstr "lista"
 msgid "family"
 msgstr ""
 
+#: default/web_tt2/ls_templates.tt2:59 default/web_tt2/show_sessions.tt2:9
 #: src/lib/Sympa/CLI.pm:419
 #, fuzzy
 msgid "domain"
@@ -186,13 +187,12 @@ msgstr "indirizzo@nascosto"
 msgid "Sun:Mon:Tue:Wed:Thu:Fri:Sat"
 msgstr "dom:lun:mar:mer:gio:ven:sab"
 
-#: default/mhonarc_rc.tt2:751 default/web_tt2/head_javascript.tt2:19
-#: src/lib/Sympa/Language.pm:633 src/lib/Sympa/Template.pm:296
+#: default/mhonarc_rc.tt2:751 src/lib/Sympa/Language.pm:633
+#: src/lib/Sympa/Template.pm:296
 msgid "Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"
 msgstr "Domenica:Lunedì:Martedì:Mercoledì:Giovedì:Venerdì:Sabato"
 
-#: default/mhonarc_rc.tt2:763 default/web_tt2/head_javascript.tt2:25
-#: src/lib/Sympa/Language.pm:637
+#: default/mhonarc_rc.tt2:763 src/lib/Sympa/Language.pm:637
 msgid "Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"
 msgstr "gen:feb:mar:apr:mag:giu:lug:ago:set:ott:nov:dic"
 
@@ -288,7 +288,6 @@ msgstr "automatico"
 
 #: default/web_tt2/copy_template.tt2:23 default/web_tt2/copy_template.tt2:59
 #: default/web_tt2/copy_template.tt2:64 default/web_tt2/edit_template.tt2:30
-#: default/web_tt2/ls_templates.tt2:53 default/web_tt2/show_sessions.tt2:9
 #: default/web_tt2/view_template.tt2:33 src/lib/Sympa/ListOpt.pm:94
 msgid "robot"
 msgstr "robot"
@@ -935,9 +934,9 @@ msgstr "(data non riconosciuta)"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:1212 src/cgi/wwsympa.fcgi.in:3031
-#: src/cgi/wwsympa.fcgi.in:6087 src/cgi/wwsympa.fcgi.in:6090
-#: src/cgi/wwsympa.fcgi.in:9003 src/cgi/wwsympa.fcgi.in:9880
+#: src/cgi/wwsympa.fcgi.in:1163 src/cgi/wwsympa.fcgi.in:2873
+#: src/cgi/wwsympa.fcgi.in:5925 src/cgi/wwsympa.fcgi.in:5928
+#: src/cgi/wwsympa.fcgi.in:8815 src/cgi/wwsympa.fcgi.in:9687
 #: src/lib/Sympa/Template.pm:326 src/lib/Sympa/Upgrade.pm:1004
 #: src/lib/Sympa/Upgrade.pm:2050
 msgid "%d %b %Y at %H:%M:%S"
@@ -1009,15 +1008,15 @@ msgstr ""
 #. https://perldoc.perl.org/POSIX#strftime for details.
 #: default/web_tt2/suboptions.tt2:14 default/web_tt2/suboptions.tt2:16
 #: default/web_tt2/suboptions.tt2:94 default/web_tt2/suboptions.tt2:98
-#: src/cgi/wwsympa.fcgi.in:10013 src/cgi/wwsympa.fcgi.in:10016
-#: src/cgi/wwsympa.fcgi.in:13825 src/cgi/wwsympa.fcgi.in:13829
-#: src/cgi/wwsympa.fcgi.in:14967 src/cgi/wwsympa.fcgi.in:15056
-#: src/cgi/wwsympa.fcgi.in:15162 src/cgi/wwsympa.fcgi.in:16358
-#: src/cgi/wwsympa.fcgi.in:16360 src/cgi/wwsympa.fcgi.in:4958
-#: src/cgi/wwsympa.fcgi.in:5029 src/cgi/wwsympa.fcgi.in:8657
-#: src/cgi/wwsympa.fcgi.in:9378 src/cgi/wwsympa.fcgi.in:9426
-#: src/cgi/wwsympa.fcgi.in:9693 src/cgi/wwsympa.fcgi.in:9696
-#: src/cgi/wwsympa.fcgi.in:9732 src/cgi/wwsympa.fcgi.in:9734
+#: src/cgi/wwsympa.fcgi.in:13599 src/cgi/wwsympa.fcgi.in:13603
+#: src/cgi/wwsympa.fcgi.in:14708 src/cgi/wwsympa.fcgi.in:14797
+#: src/cgi/wwsympa.fcgi.in:14903 src/cgi/wwsympa.fcgi.in:16095
+#: src/cgi/wwsympa.fcgi.in:16097 src/cgi/wwsympa.fcgi.in:4795
+#: src/cgi/wwsympa.fcgi.in:4866 src/cgi/wwsympa.fcgi.in:8486
+#: src/cgi/wwsympa.fcgi.in:9190 src/cgi/wwsympa.fcgi.in:9238
+#: src/cgi/wwsympa.fcgi.in:9500 src/cgi/wwsympa.fcgi.in:9503
+#: src/cgi/wwsympa.fcgi.in:9539 src/cgi/wwsympa.fcgi.in:9541
+#: src/cgi/wwsympa.fcgi.in:9820 src/cgi/wwsympa.fcgi.in:9823
 #: src/lib/Sympa/Aliases/Template.pm:51 src/lib/Sympa/Message/Template.pm:105
 #: src/lib/Sympa/Message/Template.pm:108 src/lib/Sympa/Message/Template.pm:115
 msgid "%d %b %Y"
@@ -1087,7 +1086,7 @@ msgstr "Gestione degli alias"
 msgid "Mail server"
 msgstr "Server di posta"
 
-#: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:258
+#: default/web_tt2/edit_list_request.tt2:20 default/web_tt2/nav.tt2:262
 #: src/lib/Sympa/Config/Schema.pm:68
 msgid "List definition"
 msgstr "Definizione della lista"
@@ -1100,7 +1099,7 @@ msgstr "Ricezione"
 msgid "Sending related"
 msgstr "Relativo agli invii"
 
-#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/nav.tt2:268
+#: default/web_tt2/edit_list_request.tt2:27 default/web_tt2/nav.tt2:272
 #: src/lib/Sympa/Config/Schema.pm:79
 msgid "Sending/receiving setup"
 msgstr "Impostazione degli invii/ricezioni"
@@ -1109,13 +1108,13 @@ msgstr "Impostazione degli invii/ricezioni"
 msgid "Distribution"
 msgstr "Distribuzione"
 
-#: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:278
+#: default/web_tt2/edit_list_request.tt2:34 default/web_tt2/nav.tt2:282
 #: src/lib/Sympa/Config/Schema.pm:89
 msgid "Privileges"
 msgstr "Privilegi"
 
 #: default/web_tt2/edit_list_request.tt2:41 default/web_tt2/my.tt2:65
-#: default/web_tt2/nav.tt2:288 default/web_tt2/nav.tt2:89
+#: default/web_tt2/nav.tt2:292 default/web_tt2/nav.tt2:91
 #: default/web_tt2/serveradmin.tt2:141 default/web_tt2/suspend_request.tt2:69
 #: src/lib/Sympa/Config/Schema.pm:1817 src/lib/Sympa/Config/Schema.pm:94
 msgid "Archives"
@@ -1127,8 +1126,8 @@ msgstr "Archivi"
 msgid "Bounce management and tracking"
 msgstr "Gestisci bounce e tracking"
 
-#: default/web_tt2/edit_list_request.tt2:48 default/web_tt2/nav.tt2:298
-#: default/web_tt2/nav.tt2:414 default/web_tt2/review.tt2:39
+#: default/web_tt2/edit_list_request.tt2:48 default/web_tt2/nav.tt2:302
+#: default/web_tt2/nav.tt2:418 default/web_tt2/review.tt2:39
 #: src/lib/Sympa/Config/Schema.pm:100
 msgid "Bounces"
 msgstr "Bounce"
@@ -1149,7 +1148,7 @@ msgstr "Filtro anti spam basato sulle etichette"
 msgid "Directories"
 msgstr "Cartelle"
 
-#: default/web_tt2/edit_list_request.tt2:59 default/web_tt2/nav.tt2:348
+#: default/web_tt2/edit_list_request.tt2:59 default/web_tt2/nav.tt2:352
 #: src/lib/Sympa/Config/Schema.pm:126
 msgid "Miscellaneous"
 msgstr "Varie"
@@ -1180,7 +1179,7 @@ msgstr ""
 "esterni: Crypt-OpenSSL-X509 e Crypt-SMIME.\n"
 "Autenticazione con client TLS. Richiede un modulo esterno: IO-Socket-SSL"
 
-#: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:308
+#: default/web_tt2/edit_list_request.tt2:55 default/web_tt2/nav.tt2:312
 #: src/lib/Sympa/Config/Schema.pm:154
 msgid "Data sources setup"
 msgstr "Configurazione dell'origine dei dati"
@@ -1201,7 +1200,7 @@ msgstr ""
 msgid "DKIM and ARC"
 msgstr "DKIM e ARC"
 
-#: default/web_tt2/edit_list_request.tt2:57 default/web_tt2/nav.tt2:318
+#: default/web_tt2/edit_list_request.tt2:57 default/web_tt2/nav.tt2:322
 #: src/lib/Sympa/Config/Schema.pm:161
 msgid "DKIM/DMARC/ARC"
 msgstr "DKIM/DMARC/ARC"
@@ -2072,7 +2071,7 @@ msgstr ""
 "distribuisce: Reply-To:"
 
 # nlsref 16,91
-#: default/web_tt2/edit_config.tt2:25 default/web_tt2/skinsedit.tt2:65
+#: default/web_tt2/edit_config.tt2:30 default/web_tt2/skinsedit.tt2:65
 #: src/lib/Sympa/Config/Schema.pm:1134
 msgid "value"
 msgstr "valore"
@@ -2638,7 +2637,7 @@ msgstr ""
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
 #: default/web_tt2/list_menu.tt2:250 default/web_tt2/list_menu.tt2:253
-#: default/web_tt2/nav.tt2:493 default/web_tt2/nav.tt2:502
+#: default/web_tt2/nav.tt2:498 default/web_tt2/nav.tt2:507
 #: src/lib/Sympa/Config/Schema.pm:1701
 msgid "Shared documents"
 msgstr "Documenti condivisi"
@@ -5288,7 +5287,7 @@ msgstr ""
 msgid "URL of SympaSOAP behind proxy"
 msgstr "URL di SymaSOAP dietro il proxy"
 
-#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:371
+#: default/web_tt2/get_inactive_lists.tt2:15 default/web_tt2/nav.tt2:375
 #: default/web_tt2/set_pending_list_request.tt2:62
 #: src/lib/Sympa/Config/Schema.pm:6173
 msgid "Owners"
@@ -5317,7 +5316,7 @@ msgstr "nome"
 msgid "private information"
 msgstr "informazioni riservate"
 
-#: default/web_tt2/subscriber_table.tt2:158 src/lib/Sympa/Config/Schema.pm:6223
+#: default/web_tt2/subscriber_table.tt2:160 src/lib/Sympa/Config/Schema.pm:6223
 #: src/lib/Sympa/Config/Schema.pm:6318
 msgid "subscribed"
 msgstr "Sottoscritto"
@@ -5341,7 +5340,7 @@ msgstr "ora ultima inclusione da sorgente dati esterna"
 
 # #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:376
+#: default/web_tt2/get_inactive_lists.tt2:16 default/web_tt2/nav.tt2:380
 #: default/web_tt2/set_pending_list_request.tt2:67
 #: src/lib/Sympa/Config/Schema.pm:6275
 msgid "Moderators"
@@ -5388,7 +5387,7 @@ msgstr "Sommario:"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:7264 src/cgi/wwsympa.fcgi.in:7998
+#: src/cgi/wwsympa.fcgi.in:7102 src/cgi/wwsympa.fcgi.in:7836
 #: src/lib/Sympa/Request/Handler/index.pm:77
 #: src/lib/Sympa/Spindle/ProcessDigest.pm:178
 msgid "%a, %d %b %Y %H:%M:%S"
@@ -5438,7 +5437,7 @@ msgstr "contiene la parola del dizionario '%s'"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:15619 src/lib/Sympa/WWW/SharedDocument.pm:346
+#: src/cgi/wwsympa.fcgi.in:15360 src/lib/Sympa/WWW/SharedDocument.pm:346
 msgid "%d %b %Y %H:%M:%S"
 msgstr "%d %b %Y %H:%M:%S"
 
@@ -5630,68 +5629,68 @@ msgstr "Archivio di %s, ultimo messaggio"
 
 #. This entry contains date/time conversions.  See
 #. https://perldoc.perl.org/POSIX#strftime for details.
-#: src/cgi/wwsympa.fcgi.in:1215
+#: src/cgi/wwsympa.fcgi.in:1166
 msgid "%H:%M:%S"
 msgstr "%H:%M:%S"
 
-#: src/cgi/wwsympa.fcgi.in:4150
+#: src/cgi/wwsympa.fcgi.in:3992
 msgid "Your lists"
 msgstr "Le tue liste "
 
 # nlsref 15,9
-#: src/cgi/wwsympa.fcgi.in:12247 src/cgi/wwsympa.fcgi.in:12712
+#: src/cgi/wwsympa.fcgi.in:12025 src/cgi/wwsympa.fcgi.in:12490
 msgid "New file"
 msgstr "Nuovo file"
 
-#: src/cgi/wwsympa.fcgi.in:12251
+#: src/cgi/wwsympa.fcgi.in:12029
 msgid "New directory"
 msgstr "Nuova cartella"
 
-#: src/cgi/wwsympa.fcgi.in:12718
+#: src/cgi/wwsympa.fcgi.in:12496
 msgid "New bookmark"
 msgstr "Nuovo segnalibro"
 
-#: src/cgi/wwsympa.fcgi.in:15143
+#: src/cgi/wwsympa.fcgi.in:14884
 msgid "Mail sending"
 msgstr "Invio mail"
 
-#: src/cgi/wwsympa.fcgi.in:15145
+#: src/cgi/wwsympa.fcgi.in:14886
 msgid "Subscription additions"
 msgstr "Aggiunte di sottoscrizione"
 
-#: src/cgi/wwsympa.fcgi.in:15146
+#: src/cgi/wwsympa.fcgi.in:14887
 msgid "Unsubscription"
 msgstr "Revoca della sottoscrizione"
 
-#: src/cgi/wwsympa.fcgi.in:15147
+#: src/cgi/wwsympa.fcgi.in:14888
 msgid "Users deleted by admin"
 msgstr "utenti cancellati dall'amministratore"
 
-#: src/cgi/wwsympa.fcgi.in:15149
+#: src/cgi/wwsympa.fcgi.in:14890
 msgid "Users deleted automatically"
 msgstr "utenti cancellati automaticamente"
 
-#: src/cgi/wwsympa.fcgi.in:15150
+#: src/cgi/wwsympa.fcgi.in:14891
 msgid "File uploading"
 msgstr "Caricamento del file"
 
 # nlsref 16,34
-#: src/cgi/wwsympa.fcgi.in:15151
+#: src/cgi/wwsympa.fcgi.in:14892
 msgid "File creation"
 msgstr "Creazione del file"
 
-#: src/cgi/wwsympa.fcgi.in:15152
+#: src/cgi/wwsympa.fcgi.in:14893
 msgid "Directory creation"
 msgstr "Creazione della directory"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
-#: src/cgi/wwsympa.fcgi.in:16367
+#: src/cgi/wwsympa.fcgi.in:16104
 #, c-format
 msgid "topic (%s)"
 msgstr "Argomento (%s)"
 
-#: default/web_tt2/subscriber_table.tt2:164 src/cgi/wwsympa.fcgi.in:16385
+#: default/web_tt2/subscriber_table.tt2:166 src/cgi/wwsympa.fcgi.in:16122
 msgid "included"
 msgstr "Incluso"
 
@@ -5903,7 +5902,7 @@ msgstr "Archivio della lista"
 #: default/web_tt2/edit_list_request.tt2:62
 #: default/web_tt2/edit_list_request.tt2:9 default/web_tt2/editfile.tt2:6
 #: default/web_tt2/modindex.tt2:148 default/web_tt2/modindex.tt2:4
-#: default/web_tt2/nav.tt2:443 default/web_tt2/nav.tt2:495
+#: default/web_tt2/nav.tt2:447 default/web_tt2/nav.tt2:500
 #: default/web_tt2/nav.tt2:7 default/web_tt2/pref.tt2:7
 #: default/web_tt2/rename_list_request.tt2:7 default/web_tt2/review.tt2:21
 #: default/web_tt2/reviewbouncing.tt2:5 default/web_tt2/skinsedit.tt2:18
@@ -6112,7 +6111,7 @@ msgstr "Mittente"
 #: default/web_tt2/arcsearch_form.tt2:71 default/web_tt2/docindex.tt2:23
 #: default/web_tt2/latest_arc.tt2:19 default/web_tt2/modindex.tt2:28
 #: default/web_tt2/sigindex.tt2:20 default/web_tt2/subindex.tt2:23
-#: default/web_tt2/viewlogs.tt2:109 default/web_tt2/viewlogs.tt2:114
+#: default/web_tt2/viewlogs.tt2:111 default/web_tt2/viewlogs.tt2:116
 msgid "Date"
 msgstr "Data"
 
@@ -6128,17 +6127,17 @@ msgstr "Campo di ricerca esteso:"
 msgid "List Options Menu"
 msgstr "Le opzioni della tua lista "
 
-#: default/web_tt2/aside_menu.tt2:32 default/web_tt2/aside_menu.tt2:42
+#: default/web_tt2/aside_menu.tt2:33 default/web_tt2/aside_menu.tt2:43
 #: default/web_tt2/footer.tt2:3 default/web_tt2/header.tt2:10
-#: default/web_tt2/header.tt2:30
+#: default/web_tt2/header.tt2:31
 msgid "SYMPA logo"
 msgstr "SYMPA logo"
 
-#: default/web_tt2/aside_menu.tt2:48
+#: default/web_tt2/aside_menu.tt2:49
 msgid "General Menu"
 msgstr "Menu generale"
 
-#: default/web_tt2/aside_menu.tt2:64
+#: default/web_tt2/aside_menu.tt2:66
 msgid "User Information"
 msgstr "Informazioni sull'utente"
 
@@ -6373,7 +6372,7 @@ msgstr "sorgente dello scenario"
 #: default/web_tt2/config_common.tt2:96 default/web_tt2/confirm_action.tt2:215
 #: default/web_tt2/confirm_action.tt2:328
 #: default/web_tt2/confirm_action.tt2:352 default/web_tt2/d_upload.tt2:14
-#: default/web_tt2/manage_template.tt2:47 default/web_tt2/picture_upload.tt2:16
+#: default/web_tt2/manage_template.tt2:44 default/web_tt2/picture_upload.tt2:16
 #: default/web_tt2/review.tt2:309
 msgid "Delete"
 msgstr "Elimina"
@@ -6410,7 +6409,7 @@ msgstr "Vuoi davvero eliminare gli archivi selezionati?"
 
 #: default/web_tt2/confirm_action.tt2:117
 #: default/web_tt2/confirm_action.tt2:170 default/web_tt2/confirm_action.tt2:58
-#: default/web_tt2/review.tt2:173 default/web_tt2/reviewbouncing.tt2:165
+#: default/web_tt2/review.tt2:173 default/web_tt2/reviewbouncing.tt2:167
 #: default/web_tt2/search_user.tt2:90
 msgid "Delete selected email addresses"
 msgstr "Rimuovi gli indirizzi email selezionati"
@@ -6574,7 +6573,7 @@ msgid "Are you sure you wish to restore list %1?"
 msgstr "Sei sicuro di voler ripristinare la lista %1?"
 
 #: default/web_tt2/confirm_action.tt2:285
-#: default/web_tt2/get_closed_lists.tt2:43
+#: default/web_tt2/get_closed_lists.tt2:47
 msgid "Purge selected lists"
 msgstr "Elimina le liste selezionate."
 
@@ -6699,7 +6698,7 @@ msgstr "Conferma"
 
 #: default/web_tt2/confirm_action.tt2:589
 #: default/web_tt2/d_install_shared.tt2:12 default/web_tt2/d_upload.tt2:22
-#: default/web_tt2/manage_template.tt2:72
+#: default/web_tt2/manage_template.tt2:69
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -6738,9 +6737,9 @@ msgid "Scope: "
 msgstr "Ambito: "
 
 #: default/web_tt2/copy_template.tt2:17 default/web_tt2/copy_template.tt2:34
-#: default/web_tt2/copy_template.tt2:72 default/web_tt2/edit_config.tt2:27
+#: default/web_tt2/copy_template.tt2:72 default/web_tt2/edit_config.tt2:36
 #: default/web_tt2/edit_list_request.tt2:246
-#: default/web_tt2/edit_template.tt2:42 default/web_tt2/ls_templates.tt2:51
+#: default/web_tt2/edit_template.tt2:42 default/web_tt2/ls_templates.tt2:53
 #: default/web_tt2/serveradmin.tt2:237 default/web_tt2/view_template.tt2:27
 #: default/web_tt2/view_template.tt2:45
 msgid "default"
@@ -6751,7 +6750,7 @@ msgid "(this template is the default included in the distribution)"
 msgstr "(questo template è di default incluso nella distribuzione)"
 
 #: default/web_tt2/copy_template.tt2:20 default/web_tt2/copy_template.tt2:55
-#: default/web_tt2/edit_template.tt2:27 default/web_tt2/ls_templates.tt2:52
+#: default/web_tt2/edit_template.tt2:27 default/web_tt2/ls_templates.tt2:56
 #: default/web_tt2/view_template.tt2:30
 msgid "site"
 msgstr "sito"
@@ -6971,27 +6970,27 @@ msgstr "naviga"
 
 #: default/web_tt2/d_control.tt2:63 default/web_tt2/d_control.tt2:67
 #: default/web_tt2/d_editfile.tt2:57 default/web_tt2/d_properties.tt2:68
-#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:279
-#: default/web_tt2/ls_templates.tt2:138 default/web_tt2/ls_templates.tt2:168
-#: default/web_tt2/ls_templates.tt2:190 default/web_tt2/search_user.tt2:74
+#: default/web_tt2/d_properties.tt2:71 default/web_tt2/d_read.tt2:295
+#: default/web_tt2/ls_templates.tt2:159 default/web_tt2/ls_templates.tt2:191
+#: default/web_tt2/ls_templates.tt2:215 default/web_tt2/search_user.tt2:74
 msgid "edit"
 msgstr "modifica"
 
 #: default/web_tt2/d_control.tt2:74 default/web_tt2/d_editfile.tt2:64
-#: default/web_tt2/d_properties.tt2:77 default/web_tt2/d_read.tt2:145
-#: default/web_tt2/d_read.tt2:284 default/web_tt2/d_read.tt2:52
+#: default/web_tt2/d_properties.tt2:77 default/web_tt2/d_read.tt2:161
+#: default/web_tt2/d_read.tt2:300 default/web_tt2/d_read.tt2:52
 msgid "delete"
 msgstr "elimina"
 
 #: default/web_tt2/d_control.tt2:79 default/web_tt2/d_editfile.tt2:71
-#: default/web_tt2/d_properties.tt2:83 default/web_tt2/d_read.tt2:155
-#: default/web_tt2/d_read.tt2:294 default/web_tt2/d_read.tt2:58
+#: default/web_tt2/d_properties.tt2:83 default/web_tt2/d_read.tt2:171
+#: default/web_tt2/d_read.tt2:310 default/web_tt2/d_read.tt2:58
 msgid "access"
 msgstr "accesso"
 
 #: default/web_tt2/d_control.tt2:85 default/web_tt2/d_editfile.tt2:78
-#: default/web_tt2/d_properties.tt2:88 default/web_tt2/d_read.tt2:165
-#: default/web_tt2/d_read.tt2:304 default/web_tt2/d_read.tt2:64
+#: default/web_tt2/d_properties.tt2:88 default/web_tt2/d_read.tt2:181
+#: default/web_tt2/d_read.tt2:320 default/web_tt2/d_read.tt2:64
 msgid "properties"
 msgstr "proprietà"
 
@@ -7044,7 +7043,7 @@ msgid "Replace the file %1 with your file"
 msgstr "Sostituisci il file %1 con il tuo file"
 
 #: default/web_tt2/d_editfile.tt2:121 default/web_tt2/d_editfile.tt2:98
-#: default/web_tt2/d_read.tt2:387 default/web_tt2/d_read.tt2:405
+#: default/web_tt2/d_read.tt2:403 default/web_tt2/d_read.tt2:421
 msgid "Publish"
 msgstr "Pubblica"
 
@@ -7123,110 +7122,110 @@ msgstr "Contenuto della cartella root"
 msgid "Empty folder"
 msgstr "Cartella vuota"
 
-#: default/web_tt2/d_read.tt2:92 default/web_tt2/d_read.tt2:94
+#: default/web_tt2/d_read.tt2:94 default/web_tt2/d_read.tt2:98
 #: default/web_tt2/list_menu.tt2:116
 msgid "Document"
 msgstr "Documento"
 
-#: default/web_tt2/d_read.tt2:100 default/web_tt2/d_read.tt2:98
+#: default/web_tt2/d_read.tt2:104 default/web_tt2/d_read.tt2:108
 #: default/web_tt2/docindex.tt2:17 default/web_tt2/latest_d_read.tt2:21
 #: default/web_tt2/modindex.tt2:22
 msgid "Author"
 msgstr "Autore"
 
-#: default/web_tt2/d_read.tt2:104 default/web_tt2/d_read.tt2:106
+#: default/web_tt2/d_read.tt2:114 default/web_tt2/d_read.tt2:118
 msgid "Size (Kb)"
 msgstr "Dimensioni (Kb)"
 
-#: default/web_tt2/d_read.tt2:110 default/web_tt2/d_read.tt2:112
+#: default/web_tt2/d_read.tt2:124 default/web_tt2/d_read.tt2:128
 #: default/web_tt2/latest_d_read.tt2:19 default/web_tt2/subscriber_table.tt2:87
 msgid "Last update"
 msgstr "Ultimo aggiornamento"
 
-#: default/web_tt2/d_read.tt2:116
+#: default/web_tt2/d_read.tt2:132
 msgid "Actions"
 msgstr "Azioni"
 
-#: default/web_tt2/d_read.tt2:134 default/web_tt2/d_read.tt2:237
+#: default/web_tt2/d_read.tt2:150 default/web_tt2/d_read.tt2:253
 #: default/web_tt2/editsubscriber.tt2:110 default/web_tt2/latest_d_read.tt2:52
 msgid "Unknown"
 msgstr "Sconosciuto"
 
-#: default/web_tt2/d_read.tt2:195 default/web_tt2/d_read.tt2:202
-#: default/web_tt2/editsubscriber.tt2:57 default/web_tt2/head_javascript.tt2:26
+#: default/web_tt2/d_read.tt2:211 default/web_tt2/d_read.tt2:218
+#: default/web_tt2/editsubscriber.tt2:57 default/web_tt2/head_javascript.tt2:21
 #: default/web_tt2/latest_d_read.tt2:31 default/web_tt2/latest_d_read.tt2:37
 #: default/web_tt2/picture_upload.tt2:23
-#: default/web_tt2/subscriber_table.tt2:139
+#: default/web_tt2/subscriber_table.tt2:141
 msgid "Open in a new window"
 msgstr "Apri in una nuova finestra"
 
-#: default/web_tt2/d_read.tt2:230
+#: default/web_tt2/d_read.tt2:246
 msgid "to moderate"
 msgstr "da moderare"
 
-#: default/web_tt2/d_read.tt2:267
+#: default/web_tt2/d_read.tt2:283
 msgid "moderate"
 msgstr "Modera"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:326
+#: default/web_tt2/d_read.tt2:342
 #, smalltalk-format
 msgid "Create a new folder inside folder %1"
 msgstr "Crea una nuova cartella all'interno della cartella %1"
 
-#: default/web_tt2/d_read.tt2:328
+#: default/web_tt2/d_read.tt2:344
 msgid "Create a new folder inside root folder"
 msgstr "Crea una nuova cartella all'interno della cartella root"
 
-#: default/web_tt2/d_read.tt2:331
+#: default/web_tt2/d_read.tt2:347
 msgid "Folder name"
 msgstr "Nome della cartella"
 
-#: default/web_tt2/d_read.tt2:334 default/web_tt2/d_read.tt2:350
+#: default/web_tt2/d_read.tt2:350 default/web_tt2/d_read.tt2:366
 msgid "Create"
 msgstr "Crea"
 
-#: default/web_tt2/d_read.tt2:346
+#: default/web_tt2/d_read.tt2:362
 msgid "Create a new file"
 msgstr "Crea un nuovo file"
 
-#: default/web_tt2/d_read.tt2:347
+#: default/web_tt2/d_read.tt2:363
 msgid "File name"
 msgstr "Nome del file"
 
-#: default/web_tt2/d_read.tt2:361
+#: default/web_tt2/d_read.tt2:377
 msgid "Add a bookmark"
 msgstr "Aggiungi un segnalibro"
 
-#: default/web_tt2/d_read.tt2:362
+#: default/web_tt2/d_read.tt2:378
 msgid "title"
 msgstr "titolo"
 
-#: default/web_tt2/d_read.tt2:365
+#: default/web_tt2/d_read.tt2:381
 msgid "URL"
 msgstr "URL"
 
-#: default/web_tt2/d_read.tt2:368 default/web_tt2/review.tt2:103
+#: default/web_tt2/d_read.tt2:384 default/web_tt2/review.tt2:103
 msgid "Add"
 msgstr "Aggiungi"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:381
+#: default/web_tt2/d_read.tt2:397
 #, smalltalk-format
 msgid "Upload a file inside folder %1"
 msgstr "Carica un file nella cartella %1"
 
-#: default/web_tt2/d_read.tt2:383
+#: default/web_tt2/d_read.tt2:399
 msgid "Upload a file inside folder SHARED"
 msgstr "Carica un file nella cartella SHARED"
 
 #. (shared_doc.name)
-#: default/web_tt2/d_read.tt2:399
+#: default/web_tt2/d_read.tt2:415
 #, smalltalk-format
 msgid "Unzip a file inside the folder %1"
 msgstr "Decomprimi un file nella cartella %1"
 
-#: default/web_tt2/d_read.tt2:401
+#: default/web_tt2/d_read.tt2:417
 msgid "Unzip a file inside the folder SHARED"
 msgstr "Decomprimi un file nella cartella SHARED"
 
@@ -7258,7 +7257,7 @@ msgstr "Lista dei documenti condivisi da moderare"
 
 #: default/mhonarc_rc.tt2:266 default/mhonarc_rc.tt2:426
 #: default/web_tt2/docindex.tt2:11 default/web_tt2/get_closed_lists.tt2:16
-#: default/web_tt2/modindex.tt2:16 default/web_tt2/reviewbouncing.tt2:95
+#: default/web_tt2/modindex.tt2:16 default/web_tt2/reviewbouncing.tt2:96
 #: default/web_tt2/search_user.tt2:11 default/web_tt2/show_exclude.tt2:19
 #: default/web_tt2/sigindex.tt2:11 default/web_tt2/subindex.tt2:11
 #: default/web_tt2/subscriber_table.tt2:11
@@ -7316,7 +7315,7 @@ msgid "robot %1"
 msgstr "robot %1"
 
 #. (list)
-#: default/web_tt2/dump_scenario.tt2:31 default/web_tt2/ls_templates.tt2:54
+#: default/web_tt2/dump_scenario.tt2:31 default/web_tt2/ls_templates.tt2:62
 #, smalltalk-format
 msgid "list %1"
 msgstr "lista %1"
@@ -7365,20 +7364,20 @@ msgstr "*: Elemento richiesto"
 msgid "%1:"
 msgstr "%1:"
 
-#: default/web_tt2/edit_config.tt2:4 default/web_tt2/nav.tt2:119
+#: default/web_tt2/edit_config.tt2:4 default/web_tt2/nav.tt2:121
 #, fuzzy
 msgid "View domain config"
 msgstr "Visualizza la configurazione principale"
 
-#: default/web_tt2/edit_config.tt2:24 default/web_tt2/serveradmin.tt2:235
+#: default/web_tt2/edit_config.tt2:27 default/web_tt2/serveradmin.tt2:235
 msgid "parameter name"
 msgstr "nome del parametro"
 
-#: default/web_tt2/edit_config.tt2:26
+#: default/web_tt2/edit_config.tt2:33
 msgid "apply to"
 msgstr "applica a"
 
-#: default/web_tt2/edit_config.tt2:55
+#: default/web_tt2/edit_config.tt2:65
 msgid "main conf"
 msgstr "configurazione principale"
 
@@ -7436,7 +7435,7 @@ msgstr "pagine HTML"
 #: default/web_tt2/editfile.tt2:52 default/web_tt2/editfile.tt2:57
 #: default/web_tt2/editfile.tt2:62 default/web_tt2/editfile.tt2:67
 #: default/web_tt2/editfile.tt2:80 default/web_tt2/editfile.tt2:85
-#: default/web_tt2/editfile.tt2:99 default/web_tt2/manage_template.tt2:44
+#: default/web_tt2/editfile.tt2:99 default/web_tt2/manage_template.tt2:41
 #: default/web_tt2/serveradmin.tt2:176 default/web_tt2/serveradmin.tt2:188
 msgid "Edit"
 msgstr "Modifica"
@@ -7588,7 +7587,7 @@ msgstr "Immagine:"
 #. (current_subscriber.email)
 #. (u.email)
 #: default/web_tt2/editsubscriber.tt2:59
-#: default/web_tt2/subscriber_table.tt2:140
+#: default/web_tt2/subscriber_table.tt2:142
 #, smalltalk-format
 msgid "%1's picture"
 msgstr "Foto di %1"
@@ -7601,7 +7600,7 @@ msgstr "Modifica della tua immagine per questa lista"
 #: default/mail_tt2/listmaster_notification.tt2:330
 #: default/mail_tt2/listmaster_notification.tt2:369
 #: default/mail_tt2/listmaster_notification.tt2:435
-#: default/mail_tt2/lists.tt2:6 default/mail_tt2/report.tt2:824
+#: default/mail_tt2/lists.tt2:6 default/mail_tt2/report.tt2:827
 #: default/web_tt2/editsubscriber.tt2:74 default/web_tt2/editsubscriber.tt2:82
 #: default/web_tt2/rss.tt2:4 default/web_tt2/subindex.tt2:54
 msgid ":"
@@ -7680,7 +7679,7 @@ msgstr ""
 "perché il tuo nuovo indirizzo non è permesso per la sottoscrizione/revoca "
 "della sottoscrizione"
 
-#: default/mail_tt2/report.tt2:684 default/web_tt2/error.tt2:64
+#: default/mail_tt2/report.tt2:687 default/web_tt2/error.tt2:64
 msgid "You need to login"
 msgstr "E' necessario effettuare l'accesso"
 
@@ -7695,7 +7694,7 @@ msgstr "Con motore Sympa %1"
 msgid "Biggests Lists"
 msgstr "Liste più grandi"
 
-#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:366
+#: default/web_tt2/get_biggest_lists.tt2:9 default/web_tt2/nav.tt2:370
 msgid "Subscribers"
 msgstr "Utenti iscritti"
 
@@ -7719,11 +7718,11 @@ msgstr "Argomento della lista"
 msgid "Requested by"
 msgstr "Richiesto da"
 
-#: default/web_tt2/get_closed_lists.tt2:46
+#: default/web_tt2/get_closed_lists.tt2:50
 msgid " No closed lists"
 msgstr "Liste non chiuse"
 
-#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:79
+#: default/web_tt2/get_inactive_lists.tt2:3 default/web_tt2/nav.tt2:81
 #: default/web_tt2/serveradmin.tt2:11
 msgid "View Lists sorted by Last Message Date"
 msgstr "Viste le liste ordinate dalla data dell'ultima messaggio"
@@ -7753,7 +7752,7 @@ msgstr "Creatore"
 msgid "none so far"
 msgstr "finora nessuna"
 
-#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:76
+#: default/web_tt2/get_latest_lists.tt2:4 default/web_tt2/nav.tt2:78
 #: default/web_tt2/serveradmin.tt2:10
 msgid "View Lists sorted by Creation Date"
 msgstr "Liste ordinate per data di creazione "
@@ -7771,35 +7770,27 @@ msgstr "Liste in attesa"
 msgid "Requested date"
 msgstr "Data della richiesta"
 
-#: default/web_tt2/get_pending_lists.tt2:32
+#: default/web_tt2/get_pending_lists.tt2:36
 msgid " No pending lists"
 msgstr "Liste in attesa "
 
 #: default/web_tt2/head_javascript.tt2:14
-msgid "Calendar"
-msgstr "Calendario"
-
-#: default/web_tt2/head_javascript.tt2:16
 msgid "Close"
 msgstr "Chiuso"
 
-#: default/web_tt2/head_javascript.tt2:17
+#: default/web_tt2/head_javascript.tt2:15
 msgid "Copied!"
 msgstr ""
 
-#: default/web_tt2/head_javascript.tt2:18
+#: default/web_tt2/head_javascript.tt2:16
 msgid "Copy permalink"
 msgstr ""
 
 #: default/web_tt2/head_javascript.tt2:20
-msgid "Su:Mo:Tu:We:Th:Fr:Sa"
-msgstr "D:L:M:M:G:V:S"
-
-#: default/web_tt2/head_javascript.tt2:24
 msgid "Please Wait..."
 msgstr "Per piacere aspetta "
 
-#: default/web_tt2/head_javascript.tt2:27
+#: default/web_tt2/head_javascript.tt2:22
 msgid "Reset"
 msgstr "Resetta"
 
@@ -7846,20 +7837,25 @@ msgstr ""
 msgid "What would you like to do ?"
 msgstr "Cosa vorresti fare?"
 
-#: default/web_tt2/home.tt2:43 default/web_tt2/home.tt2:48
-#: default/web_tt2/home.tt2:71 default/web_tt2/home.tt2:76
+#: default/web_tt2/home.tt2:31 default/web_tt2/home.tt2:34
+#: default/web_tt2/home.tt2:36
+msgid "Home Submenu"
+msgstr ""
+
+#: default/web_tt2/home.tt2:45 default/web_tt2/home.tt2:50
+#: default/web_tt2/home.tt2:73 default/web_tt2/home.tt2:78
 #: default/web_tt2/my.tt2:2 default/web_tt2/user_menu.tt2:23
 msgid "My lists"
 msgstr "Le mie liste"
 
-#: default/web_tt2/home.tt2:52 default/web_tt2/home.tt2:57
+#: default/web_tt2/home.tt2:54 default/web_tt2/home.tt2:59
 #: default/web_tt2/nav.tt2:17 default/web_tt2/nav.tt2:5
 msgid "Create list"
 msgstr "Crea una lista"
 
-#: default/web_tt2/home.tt2:102 default/web_tt2/home.tt2:61
-#: default/web_tt2/home.tt2:66 default/web_tt2/home.tt2:80
-#: default/web_tt2/home.tt2:85 default/web_tt2/home.tt2:97
+#: default/web_tt2/home.tt2:104 default/web_tt2/home.tt2:63
+#: default/web_tt2/home.tt2:68 default/web_tt2/home.tt2:82
+#: default/web_tt2/home.tt2:87 default/web_tt2/home.tt2:99
 #: default/web_tt2/sympa_menu.tt2:53
 msgid "Search for List(s)"
 msgstr "Cerca nelle liste: "
@@ -7874,7 +7870,7 @@ msgstr ""
 "email2@dom2 Nome2\n"
 "..."
 
-#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:167
+#: default/web_tt2/import.tt2:15 default/web_tt2/reviewbouncing.tt2:169
 #: default/web_tt2/search_user.tt2:64 default/web_tt2/show_exclude.tt2:48
 msgid "quiet"
 msgstr "senza notifica"
@@ -7893,7 +7889,7 @@ msgstr "Liste incluso %1"
 msgid "Following lists are including list %1."
 msgstr "Le seguente liste sono incluse %1"
 
-#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:571
+#: default/mail_tt2/info_report.tt2:31 default/mail_tt2/report.tt2:574
 #: default/web_tt2/including_lists.tt2:21
 #: default/web_tt2/including_lists.tt2:26 default/web_tt2/list_menu.tt2:40
 #: default/web_tt2/list_menu.tt2:47 default/web_tt2/list_menu.tt2:52
@@ -8141,7 +8137,7 @@ msgstr "Amministra"
 msgid "Moderate"
 msgstr "Modera"
 
-#: default/web_tt2/list_menu.tt2:107 default/web_tt2/viewlogs.tt2:59
+#: default/web_tt2/list_menu.tt2:107 default/web_tt2/viewlogs.tt2:61
 msgid "Message"
 msgstr "Messaggio"
 
@@ -8153,7 +8149,7 @@ msgstr "Iscrizioni"
 msgid "Unsubscriptions"
 msgstr "Revoche della sottoscrizione "
 
-#: default/web_tt2/list_menu.tt2:149 default/web_tt2/nav.tt2:141
+#: default/web_tt2/list_menu.tt2:149 default/web_tt2/nav.tt2:143
 msgid "Statistics"
 msgstr "Statistiche"
 
@@ -8368,23 +8364,23 @@ msgstr "Aggiorna"
 msgid "This table contain all templates you can copy or see"
 msgstr "Questa tabella contiene tutti i modelli che puoi copiare o vedere"
 
-#: default/web_tt2/ls_templates.tt2:50
+#: default/web_tt2/ls_templates.tt2:51
 msgid "template name"
 msgstr "nome del template"
 
-#: default/web_tt2/ls_templates.tt2:118 default/web_tt2/ls_templates.tt2:145
-#: default/web_tt2/modindex.tt2:46 default/web_tt2/tracking.tt2:41
+#: default/web_tt2/ls_templates.tt2:137 default/web_tt2/ls_templates.tt2:166
+#: default/web_tt2/modindex.tt2:46 default/web_tt2/tracking.tt2:43
 msgid "view"
 msgstr "visualizza"
 
-#: default/web_tt2/ls_templates.tt2:119 default/web_tt2/ls_templates.tt2:140
-#: default/web_tt2/ls_templates.tt2:147 default/web_tt2/ls_templates.tt2:169
-#: default/web_tt2/ls_templates.tt2:191
+#: default/web_tt2/ls_templates.tt2:138 default/web_tt2/ls_templates.tt2:161
+#: default/web_tt2/ls_templates.tt2:168 default/web_tt2/ls_templates.tt2:192
+#: default/web_tt2/ls_templates.tt2:216
 msgid "cp"
 msgstr "cp"
 
-#: default/web_tt2/ls_templates.tt2:142 default/web_tt2/ls_templates.tt2:170
-#: default/web_tt2/ls_templates.tt2:192
+#: default/web_tt2/ls_templates.tt2:163 default/web_tt2/ls_templates.tt2:193
+#: default/web_tt2/ls_templates.tt2:217
 msgid "rm"
 msgstr "rm"
 
@@ -8431,48 +8427,48 @@ msgid "Modify or delete existing rejection messages"
 msgstr "Modifica o cancella il messaggio di rifiuto"
 
 # nlsref 15,7
-#: default/web_tt2/manage_template.tt2:10 default/web_tt2/manage_template.tt2:8
+#: default/web_tt2/manage_template.tt2:8
 msgid "Listing rejection messages"
 msgstr "Lista dei messaggi di rifiuto"
 
-#: default/web_tt2/manage_template.tt2:13
+#: default/web_tt2/manage_template.tt2:10
 msgid "Use as default"
 msgstr "Usa come predefinito"
 
-#: default/web_tt2/manage_template.tt2:14
+#: default/web_tt2/manage_template.tt2:11
 msgid "Message name"
 msgstr "Nome del messaggio"
 
 # #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
-#: default/web_tt2/manage_template.tt2:15
+#: default/web_tt2/manage_template.tt2:12
 msgid "Operation"
 msgstr "Operazione"
 
-#: default/web_tt2/manage_template.tt2:54
+#: default/web_tt2/manage_template.tt2:51
 msgid "There are currently no Rejection Messages available"
 msgstr "Non ci sono messaggi di rifiuto disponibili"
 
 # nlsref 15,7
 #. (message_template)
-#: default/web_tt2/manage_template.tt2:63
+#: default/web_tt2/manage_template.tt2:60
 #, fuzzy, smalltalk-format
 msgid "Edit rejection message %1"
 msgstr "messaggio di rifiuto del moderatore"
 
-#: default/web_tt2/manage_template.tt2:71
+#: default/web_tt2/manage_template.tt2:68
 msgid "Save Message"
 msgstr "Salva il messaggio"
 
-#: default/web_tt2/manage_template.tt2:79
+#: default/web_tt2/manage_template.tt2:76
 msgid "Create new rejection messages"
 msgstr "Crea un nuovo messaggio di rifiuto"
 
-#: default/web_tt2/manage_template.tt2:85
+#: default/web_tt2/manage_template.tt2:82
 msgid "New message name:"
 msgstr "Nome del nuovo messaggio:"
 
-#: default/web_tt2/manage_template.tt2:87
+#: default/web_tt2/manage_template.tt2:84
 msgid "create"
 msgstr "crea"
 
@@ -8566,129 +8562,129 @@ msgid "No subscription."
 msgstr "Nessuna iscrizione."
 
 # nlsref 15,18
-#: default/web_tt2/nav.tt2:27
+#: default/web_tt2/nav.tt2:28
 msgid "Create a list using a template"
 msgstr "Crea una lista usando un modello"
 
-#: default/web_tt2/nav.tt2:33
+#: default/web_tt2/nav.tt2:34
 msgid "Copy an existing list"
 msgstr "Copia una lista esistente."
 
-#: default/web_tt2/nav.tt2:43 default/web_tt2/nav.tt2:52
+#: default/web_tt2/nav.tt2:44 default/web_tt2/nav.tt2:53
 #: default/web_tt2/sympa_menu.tt2:41
 msgid "Listmaster Admin"
 msgstr "Amministratore Listmaster"
 
-#: default/web_tt2/nav.tt2:67 default/web_tt2/serveradmin.tt2:4
+#: default/web_tt2/nav.tt2:69 default/web_tt2/serveradmin.tt2:4
 msgid "Lists"
 msgstr "Liste"
 
-#: default/web_tt2/nav.tt2:70 default/web_tt2/serveradmin.tt2:8
+#: default/web_tt2/nav.tt2:72 default/web_tt2/serveradmin.tt2:8
 msgid "View Pending (Requested) lists"
 msgstr "Mostra le liste in attesa (richieste)"
 
-#: default/web_tt2/nav.tt2:73 default/web_tt2/serveradmin.tt2:9
+#: default/web_tt2/nav.tt2:75 default/web_tt2/serveradmin.tt2:9
 msgid "View Closed Lists"
 msgstr "Mostra le liste chiuse"
 
-#: default/web_tt2/nav.tt2:361 default/web_tt2/nav.tt2:85
+#: default/web_tt2/nav.tt2:365 default/web_tt2/nav.tt2:87
 #: default/web_tt2/serveradmin.tt2:81
 #: default/web_tt2/set_pending_list_request.tt2:58
 msgid "Users"
 msgstr "Utenti"
 
-#: default/web_tt2/nav.tt2:93 default/web_tt2/serveradmin.tt2:167
+#: default/web_tt2/nav.tt2:95 default/web_tt2/serveradmin.tt2:167
 msgid "Templates"
 msgstr "Modelli"
 
-#: default/web_tt2/nav.tt2:97 default/web_tt2/serveradmin.tt2:217
+#: default/web_tt2/nav.tt2:99 default/web_tt2/serveradmin.tt2:217
 msgid "Skins, CSS and colors"
 msgstr "Temi, CSS e colori"
 
-#: default/web_tt2/nav.tt2:107 default/web_tt2/serveradmin.tt2:17
+#: default/web_tt2/nav.tt2:109 default/web_tt2/serveradmin.tt2:17
 #, fuzzy
 msgid "Domains"
 msgstr "Dominio"
 
 # nlsref 8,7
-#: default/web_tt2/nav.tt2:130 default/web_tt2/serveradmin.tt2:66
+#: default/web_tt2/nav.tt2:132 default/web_tt2/serveradmin.tt2:66
 msgid "Families"
 msgstr "Famiglie"
 
-#: default/web_tt2/nav.tt2:151 default/web_tt2/serveradmin.tt2:271
+#: default/web_tt2/nav.tt2:153 default/web_tt2/serveradmin.tt2:271
 msgid "Translating Sympa"
 msgstr "Tradurre Sympa"
 
-#: default/web_tt2/nav.tt2:159 default/web_tt2/serveradmin.tt2:277
+#: default/web_tt2/nav.tt2:161 default/web_tt2/serveradmin.tt2:277
 msgid "Submitting a bug, a feature request"
 msgstr "Bug e nuove funzionalità"
 
 # nlsref 8,1
-#: default/web_tt2/nav.tt2:168 default/web_tt2/nav.tt2:179
+#: default/web_tt2/nav.tt2:170 default/web_tt2/nav.tt2:181
 msgid "Index of lists"
 msgstr "Indice delle liste"
 
-#: default/web_tt2/nav.tt2:193 default/web_tt2/nav.tt2:202
+#: default/web_tt2/nav.tt2:196 default/web_tt2/nav.tt2:205
 msgid "others"
 msgstr "Altre "
 
-#: default/web_tt2/nav.tt2:219 default/web_tt2/viewlogs.tt2:43
+#: default/web_tt2/nav.tt2:222 default/web_tt2/viewlogs.tt2:45
 msgid "All"
 msgstr "Tutti"
 
 # nlsref 16,61
-#: default/web_tt2/nav.tt2:228 default/web_tt2/nav.tt2:233
+#: default/web_tt2/nav.tt2:231 default/web_tt2/nav.tt2:236
 msgid "Basic Operations"
 msgstr "Operazioni di base"
 
-#: default/web_tt2/nav.tt2:249
+#: default/web_tt2/nav.tt2:253
 msgid "Edit List Config"
 msgstr "Modifica la configurazione della lista"
 
 # nlsref 15,13
-#: default/web_tt2/nav.tt2:328
+#: default/web_tt2/nav.tt2:332
 msgid "List description/homepage"
 msgstr "Lista descrizione/homepage"
 
-#: default/web_tt2/nav.tt2:338
+#: default/web_tt2/nav.tt2:342
 msgid "Message templates"
 msgstr "template del messaggio"
 
-#: default/web_tt2/nav.tt2:390 default/web_tt2/review.tt2:35
+#: default/web_tt2/nav.tt2:394 default/web_tt2/review.tt2:35
 msgid "Blocklist"
 msgstr "Blacklist"
 
-#: default/web_tt2/nav.tt2:402
+#: default/web_tt2/nav.tt2:406
 msgid "Manage Archives"
 msgstr "Gestisci archivi"
 
-#: default/web_tt2/nav.tt2:426
+#: default/web_tt2/nav.tt2:430
 msgid "Logs"
 msgstr "Log"
 
-#: default/web_tt2/nav.tt2:438 default/web_tt2/nav.tt2:452
+#: default/web_tt2/nav.tt2:442 default/web_tt2/nav.tt2:456
 msgid "Sending an HTML page to the list"
 msgstr "Invia una pagina html alla lista"
 
-#: default/web_tt2/nav.tt2:440 default/web_tt2/nav.tt2:454
+#: default/web_tt2/nav.tt2:444 default/web_tt2/nav.tt2:458
 msgid "Sending a message to the list"
 msgstr "Invia un messaggio alla lista"
 
 # nlsref 15,6
-#: default/web_tt2/nav.tt2:473
+#: default/web_tt2/nav.tt2:478
 msgid "Send a message"
 msgstr "Invia un messaggio"
 
-#: default/web_tt2/nav.tt2:483
+#: default/web_tt2/nav.tt2:488
 msgid "Send an html page"
 msgstr "Invia una pagina html"
 
 # nlsref 6,81
-#: default/web_tt2/nav.tt2:513
+#: default/web_tt2/nav.tt2:519
 msgid "User mode"
 msgstr "Modalità utente"
 
-#: default/web_tt2/nav.tt2:519
+#: default/web_tt2/nav.tt2:525
 msgid "Expert mode"
 msgstr "Modalità esperto"
 
@@ -8809,7 +8805,7 @@ msgstr "La tua immagine nella lista degli iscritti"
 msgid "In the members page"
 msgstr "Nella lista degli iscritti"
 
-#: default/web_tt2/pref.tt2:5 default/web_tt2/viewlogs.tt2:63
+#: default/web_tt2/pref.tt2:5 default/web_tt2/viewlogs.tt2:65
 msgid "User preferences"
 msgstr "Preferenze dell'utente"
 
@@ -9120,7 +9116,7 @@ msgstr "Utenti esclusi"
 msgid "List of exclude"
 msgstr "Lista di esclusione"
 
-#: default/web_tt2/review.tt2:189 default/web_tt2/reviewbouncing.tt2:99
+#: default/web_tt2/review.tt2:189 default/web_tt2/reviewbouncing.tt2:100
 #: default/web_tt2/show_exclude.tt2:24 default/web_tt2/sigindex.tt2:17
 #: default/web_tt2/subindex.tt2:17 default/web_tt2/subscriber_table.tt2:20
 #: default/web_tt2/subscriber_table.tt2:25 default/web_tt2/viewlogs.tt2:13
@@ -9132,31 +9128,31 @@ msgid "Since"
 msgstr "Da"
 
 #: default/web_tt2/review.tt2:213 default/web_tt2/reviewbouncing.tt2:42
-#: default/web_tt2/viewlogs.tt2:247
+#: default/web_tt2/viewlogs.tt2:249
 msgid "Page size"
 msgstr "Per pagina"
 
 #: default/web_tt2/review.tt2:237 default/web_tt2/reviewbouncing.tt2:64
-#: default/web_tt2/viewlogs.tt2:267
+#: default/web_tt2/viewlogs.tt2:269
 msgid "Change"
 msgstr "Cambia"
 
-#: default/web_tt2/review.tt2:243 default/web_tt2/reviewbouncing.tt2:148
-#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:274
+#: default/web_tt2/review.tt2:243 default/web_tt2/reviewbouncing.tt2:150
+#: default/web_tt2/reviewbouncing.tt2:72 default/web_tt2/viewlogs.tt2:276
 msgid "Previous page"
 msgstr "Pagina precedente"
 
 #. (page,total_page)
 #. ($PAGENUM$,$NUMOFPAGES$)
 #: default/mhonarc_rc.tt2:220 default/mhonarc_rc.tt2:362
-#: default/web_tt2/review.tt2:247 default/web_tt2/reviewbouncing.tt2:152
-#: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:278
+#: default/web_tt2/review.tt2:247 default/web_tt2/reviewbouncing.tt2:154
+#: default/web_tt2/reviewbouncing.tt2:76 default/web_tt2/viewlogs.tt2:280
 #, smalltalk-format
 msgid "page %1 / %2"
 msgstr "pagina %1 / %2"
 
-#: default/web_tt2/review.tt2:251 default/web_tt2/reviewbouncing.tt2:156
-#: default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:282
+#: default/web_tt2/review.tt2:251 default/web_tt2/reviewbouncing.tt2:158
+#: default/web_tt2/reviewbouncing.tt2:80 default/web_tt2/viewlogs.tt2:284
 msgid "Next page"
 msgstr "Prossima pagina"
 
@@ -9196,7 +9192,7 @@ msgstr "Visualizza utente"
 msgid "Table which display family lists"
 msgstr "Tabella che mostra le famiglie delle liste"
 
-#: default/web_tt2/review_family.tt2:6 default/web_tt2/viewlogs.tt2:146
+#: default/web_tt2/review_family.tt2:6 default/web_tt2/viewlogs.tt2:148
 msgid "Status"
 msgstr "Stato"
 
@@ -9212,35 +9208,35 @@ msgstr "Gestisci bounce"
 msgid "Table to display list bounces"
 msgstr "Tabella dei bounce della lista"
 
-#: default/web_tt2/reviewbouncing.tt2:100
+#: default/web_tt2/reviewbouncing.tt2:101
 msgid "Bounce score"
 msgstr "Tasso di bounce"
 
-#: default/web_tt2/reviewbouncing.tt2:101
+#: default/web_tt2/reviewbouncing.tt2:102
 msgid "Details"
 msgstr "Dettagli"
 
-#: default/web_tt2/reviewbouncing.tt2:104
+#: default/web_tt2/reviewbouncing.tt2:105
 msgid "Number of bounces"
 msgstr "Numero di rimbalzi"
 
-#: default/web_tt2/reviewbouncing.tt2:105
+#: default/web_tt2/reviewbouncing.tt2:106
 msgid "First bounce"
 msgstr "Primo bounce"
 
-#: default/web_tt2/reviewbouncing.tt2:106
+#: default/web_tt2/reviewbouncing.tt2:107
 msgid "Last bounce"
 msgstr "Ultimo bounce"
 
-#: default/web_tt2/reviewbouncing.tt2:134
+#: default/web_tt2/reviewbouncing.tt2:135
 msgid "no score"
 msgstr "nessun punteggio"
 
-#: default/web_tt2/reviewbouncing.tt2:173
+#: default/web_tt2/reviewbouncing.tt2:175
 msgid "Reset errors for selected users"
 msgstr "Azzera gli errori per gli indirizzi selezionati"
 
-#: default/web_tt2/reviewbouncing.tt2:180
+#: default/web_tt2/reviewbouncing.tt2:182
 msgid "No bouncing members"
 msgstr "Membri senza boucing"
 
@@ -9451,6 +9447,13 @@ msgstr "argomenti"
 msgid "bounce"
 msgstr "bounce"
 
+# #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
+# nlsref 16,26
+#: default/web_tt2/search_user.tt2:20
+#, fuzzy
+msgid "operations"
+msgstr "Operazione"
+
 #: default/web_tt2/search_user.tt2:41
 msgid "member"
 msgstr "membro"
@@ -9482,7 +9485,7 @@ msgstr "Sympa URL:"
 msgid "Listmaster(s):"
 msgstr "Listmaster:"
 
-#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:569
+#: default/mail_tt2/info_report.tt2:29 default/mail_tt2/report.tt2:572
 #: default/web_tt2/serveradmin.tt2:50
 msgid ", and "
 msgstr "e"
@@ -10213,8 +10216,8 @@ msgstr "La tua sottoscrizione è sospesa"
 msgid "From:"
 msgstr "Da:"
 
-#: default/web_tt2/suboptions.tt2:123 default/web_tt2/suboptions.tt2:96
-#: default/web_tt2/suspend_request.tt2:94
+#: default/web_tt2/suboptions.tt2:125 default/web_tt2/suboptions.tt2:96
+#: default/web_tt2/suspend_request.tt2:95
 msgid "To:"
 msgstr "A:"
 
@@ -10241,13 +10244,12 @@ msgstr ""
 "sospensione previene la consegna di email, questo può essere utile se sei "
 "fuori dall'ufficio per qualche momento"
 
-#: default/web_tt2/suboptions.tt2:122 default/web_tt2/suboptions.tt2:125
-#: default/web_tt2/suboptions.tt2:127 default/web_tt2/suspend_request.tt2:93
-#: default/web_tt2/suspend_request.tt2:97
-#: default/web_tt2/suspend_request.tt2:98 default/web_tt2/viewlogs.tt2:30
-#: default/web_tt2/viewlogs.tt2:34
-msgid "dd-mm-yyyy"
-msgstr "gg-mm-aaaa"
+#: default/web_tt2/suboptions.tt2:124 default/web_tt2/suboptions.tt2:128
+#: default/web_tt2/suspend_request.tt2:94
+#: default/web_tt2/suspend_request.tt2:98 default/web_tt2/viewlogs.tt2:31
+#: default/web_tt2/viewlogs.tt2:36
+msgid "yyyy-mm-dd"
+msgstr ""
 
 #: default/web_tt2/suboptions.tt2:130 default/web_tt2/suspend_request.tt2:99
 msgid "Suspend my membership indefinitely"
@@ -10277,7 +10279,7 @@ msgstr ""
 
 #. (list)
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:325 default/web_tt2/subscribe.tt2:21
+#: default/mail_tt2/report.tt2:328 default/web_tt2/subscribe.tt2:21
 #, smalltalk-format
 msgid "You've made a subscription request to %1."
 msgstr "Hai chiesto di iscriverti alla lista %1"
@@ -10315,11 +10317,11 @@ msgstr "Fonte dei dati"
 msgid "Sub date"
 msgstr "Abbonato da"
 
-#: default/web_tt2/subscriber_table.tt2:121
+#: default/web_tt2/subscriber_table.tt2:123
 msgid "bouncing"
 msgstr "Errato"
 
-#: default/mail_tt2/report.tt2:594 default/web_tt2/subscriber_table.tt2:197
+#: default/mail_tt2/report.tt2:597 default/web_tt2/subscriber_table.tt2:199
 msgid "List has no subscribers"
 msgstr "La lista non ha iscritti"
 
@@ -10531,7 +10533,7 @@ msgstr "Data di notifica"
 msgid "Notification"
 msgstr "Notifica"
 
-#: default/web_tt2/tracking.tt2:52 default/web_tt2/viewbounce.tt2:3
+#: default/web_tt2/tracking.tt2:54 default/web_tt2/viewbounce.tt2:3
 msgid "View notification"
 msgstr "Mostra notifica"
 
@@ -10591,119 +10593,119 @@ msgstr "corrisponde con:"
 msgid "Search by date from:"
 msgstr "Cerca per data dal:"
 
-#: default/web_tt2/viewlogs.tt2:31
+#: default/web_tt2/viewlogs.tt2:32
 msgid "to:"
 msgstr "al:"
 
-#: default/web_tt2/viewlogs.tt2:35
+#: default/web_tt2/viewlogs.tt2:37
 msgid "ex: 24-05-2006"
 msgstr "es: 24-05-2006"
 
-#: default/web_tt2/viewlogs.tt2:38
+#: default/web_tt2/viewlogs.tt2:40
 msgid "Search by type:"
 msgstr "Cerca per tipo:"
 
 # nlsref 6,15
-#: default/web_tt2/viewlogs.tt2:47
+#: default/web_tt2/viewlogs.tt2:49
 msgid "Authentication"
 msgstr "Autenticazione"
 
 # #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
-#: default/web_tt2/viewlogs.tt2:51
+#: default/web_tt2/viewlogs.tt2:53
 msgid "Bounce management"
 msgstr "Gestisci bounce"
 
-#: default/web_tt2/viewlogs.tt2:55
+#: default/web_tt2/viewlogs.tt2:57
 msgid "List Management"
 msgstr "Gestione della lista"
 
 # #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
-#: default/web_tt2/viewlogs.tt2:67
+#: default/web_tt2/viewlogs.tt2:69
 msgid "User management"
 msgstr "Gestione degli utenti"
 
 # #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,7
-#: default/web_tt2/viewlogs.tt2:71
+#: default/web_tt2/viewlogs.tt2:73
 msgid "Web documents management"
 msgstr "Gestione dei documenti web"
 
-#: default/web_tt2/viewlogs.tt2:78
+#: default/web_tt2/viewlogs.tt2:80
 msgid "Search by IP:"
 msgstr "Cerca per IP:"
 
-#: default/web_tt2/viewlogs.tt2:83
+#: default/web_tt2/viewlogs.tt2:85
 msgid "View"
 msgstr "Mostra"
 
-#: default/web_tt2/viewlogs.tt2:88
+#: default/web_tt2/viewlogs.tt2:90
 msgid "Search period: "
 msgstr "Periodo di ricerca:"
 
-#: default/web_tt2/viewlogs.tt2:90
+#: default/web_tt2/viewlogs.tt2:92
 msgid "to"
 msgstr "a"
 
 #. (list)
-#: default/web_tt2/viewlogs.tt2:96
+#: default/web_tt2/viewlogs.tt2:98
 #, smalltalk-format
 msgid "Research was carried out in list <strong>%1</strong>."
 msgstr "La ricerca è stata condotta nella lista <strong>%1</strong>."
 
 #. (total_results)
-#: default/web_tt2/viewlogs.tt2:101
+#: default/web_tt2/viewlogs.tt2:103
 #, smalltalk-format
 msgid "%1 results"
 msgstr "%1 risultato/i"
 
-#: default/web_tt2/viewlogs.tt2:105
+#: default/web_tt2/viewlogs.tt2:107
 msgid "Logs table"
 msgstr "tabella dei log"
 
-#: default/web_tt2/viewlogs.tt2:120
+#: default/web_tt2/viewlogs.tt2:122
 msgid "List"
 msgstr "Lista"
 
-#: default/web_tt2/viewlogs.tt2:126 default/web_tt2/viewlogs.tt2:131
+#: default/web_tt2/viewlogs.tt2:128 default/web_tt2/viewlogs.tt2:133
 msgid "Action"
 msgstr "Azione"
 
-#: default/web_tt2/viewlogs.tt2:137
+#: default/web_tt2/viewlogs.tt2:139
 msgid "Parameters"
 msgstr "Parametri"
 
-#: default/web_tt2/viewlogs.tt2:140
+#: default/web_tt2/viewlogs.tt2:142
 msgid "Target Email"
 msgstr "Email obiettivo"
 
-#: default/web_tt2/viewlogs.tt2:143
+#: default/web_tt2/viewlogs.tt2:145
 msgid "Message ID"
 msgstr "ID del messaggio"
 
 # nlsref 1,3
-#: default/web_tt2/viewlogs.tt2:149
+#: default/web_tt2/viewlogs.tt2:151
 msgid "Error type"
 msgstr "Tipo di errore"
 
-#: default/web_tt2/viewlogs.tt2:154 default/web_tt2/viewlogs.tt2:159
+#: default/web_tt2/viewlogs.tt2:156 default/web_tt2/viewlogs.tt2:161
 msgid "User Email"
 msgstr "Email dell'utente"
 
-#: default/web_tt2/viewlogs.tt2:166
+#: default/web_tt2/viewlogs.tt2:168
 msgid "User IP"
 msgstr "IP dell'utente"
 
-#: default/web_tt2/viewlogs.tt2:170
+#: default/web_tt2/viewlogs.tt2:172
 msgid "Service"
 msgstr "Servizio"
 
-#: default/web_tt2/viewlogs.tt2:205
+#: default/web_tt2/viewlogs.tt2:207
 msgid "view other events related to this message id."
 msgstr "visualizza altri eventi legati a questo id di messaggio."
 
-#: default/web_tt2/viewlogs.tt2:206
+#: default/web_tt2/viewlogs.tt2:208
 msgid "Other events"
 msgstr "Altri eventi"
 
@@ -11018,7 +11020,7 @@ msgstr "La lista %1 non è stata creata."
 #. (report_param.listname)
 #: default/mail_tt2/delivery_status_notification.tt2:57
 #: default/mail_tt2/delivery_status_notification.tt2:60
-#: default/mail_tt2/report.tt2:537
+#: default/mail_tt2/report.tt2:540
 #, smalltalk-format
 msgid "List '%1' does not exist."
 msgstr "La lista '%1' non esiste."
@@ -12320,7 +12322,7 @@ msgstr "Il sottoscrittore '%1' non è stato trovato nella lista %2"
 #. (filepath)
 #. (report_param.filename)
 #: default/mail_tt2/listmaster_notification.tt2:380
-#: default/mail_tt2/report.tt2:887
+#: default/mail_tt2/report.tt2:890
 #, smalltalk-format
 msgid "Unable to read file: '%1'."
 msgstr "Non sono in grado di leggere il file: '%1'"
@@ -12460,13 +12462,13 @@ msgstr "Impossibile creare la lista."
 
 # nlsref 6,2
 #: default/mail_tt2/listmaster_notification.tt2:401
-#: default/mail_tt2/report.tt2:243
+#: default/mail_tt2/report.tt2:246
 msgid "Unable to load list topics."
 msgstr "Impossibile caricare gli argomenti di lista."
 
 # nlsref 6,2
 #: default/mail_tt2/listmaster_notification.tt2:402
-#: default/mail_tt2/report.tt2:246
+#: default/mail_tt2/report.tt2:249
 msgid "Unable to load create_list templates."
 msgstr "Impossibile caricare i modelli create_list."
 
@@ -12617,7 +12619,7 @@ msgstr "Errore cookie : '%1' non definito, autenticazione fallita. "
 #. (list.name,new_listname)
 #. (report_param.listname,report_param.new_listname)
 #: default/mail_tt2/listmaster_notification.tt2:425
-#: default/mail_tt2/report.tt2:282
+#: default/mail_tt2/report.tt2:285
 #, smalltalk-format
 msgid "Unable to rename list '%1' to '%2'."
 msgstr "Impossibile rinominare la lista '%1' in '%2'. "
@@ -13366,7 +13368,15 @@ msgstr ""
 "Questa azione è limitata ai listmaster e ai proprietari della lista con "
 "privilegi."
 
+# nlsref 6,46
 #: default/mail_tt2/report.tt2:204
+#, fuzzy
+msgid "This action is restricted to listmasters, list owners or moderators."
+msgstr ""
+"Il comando MODINDEX può essere usato solo da proprietari e moderatori della "
+"lista."
+
+#: default/mail_tt2/report.tt2:207
 msgid ""
 "This action is restricted to the document author, listmasters, or privileged "
 "list owners."
@@ -13374,32 +13384,32 @@ msgstr ""
 "Questa azione è limitata all'autore del documento, ai listmaster e ai "
 "proprietari della lista con privilegi."
 
-#: default/mail_tt2/report.tt2:207
+#: default/mail_tt2/report.tt2:210
 msgid "This action is restricted to privileged list owners."
 msgstr "Questa azione è limitata ai proprietari della lista con privilegi."
 
-#: default/mail_tt2/report.tt2:210
+#: default/mail_tt2/report.tt2:213
 msgid "This action is restricted to super-listmasters."
 msgstr "Questa azione è limitata ai super-listmaster."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:213
+#: default/mail_tt2/report.tt2:216
 #, smalltalk-format
 msgid "Rights to this action are '%2' for a '%1'."
 msgstr "Il diritto su questa azione è '%2' per un '%1'."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:216
+#: default/mail_tt2/report.tt2:219
 msgid "You need to login."
 msgstr "E' necessario effettuare l'accesso."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:219
+#: default/mail_tt2/report.tt2:222
 msgid "This action is impossible because editing is a moderated function."
 msgstr "Questa azione è impossibile perché la modifica è un'azione moderata."
 
 #. (role,right)
-#: default/mail_tt2/report.tt2:222
+#: default/mail_tt2/report.tt2:225
 msgid ""
 "This action is impossible for directories because editing is a moderated "
 "function."
@@ -13407,74 +13417,74 @@ msgstr ""
 "Questa azione è impossibile per le directories perché la modifica è "
 "un'azione moderata."
 
-#: default/mail_tt2/report.tt2:225
+#: default/mail_tt2/report.tt2:228
 msgid "The list is closed."
 msgstr "La lista è chiusa."
 
-#: default/mail_tt2/report.tt2:228
+#: default/mail_tt2/report.tt2:231
 msgid "you are not allowed to perform this action."
 msgstr "Non ti è permessa questa azione."
 
 #. (report_param.year_month)
-#: default/mail_tt2/report.tt2:240
+#: default/mail_tt2/report.tt2:243
 #, smalltalk-format
 msgid "Archives from %1 are not accessible"
 msgstr "Gli archivi di %1 non sono accessibili"
 
-#: default/mail_tt2/report.tt2:249
+#: default/mail_tt2/report.tt2:252
 msgid "Failed to include members"
 msgstr "Impossibile includere i membri"
 
-#: default/mail_tt2/report.tt2:252
+#: default/mail_tt2/report.tt2:255
 msgid "Failed to include list admins"
 msgstr "Impossibile aggiungere gli amministratori di lista"
 
-#: default/mail_tt2/report.tt2:255
+#: default/mail_tt2/report.tt2:258
 msgid "No owner is defined for the list"
 msgstr "Non è stato definito alcun proprietario per la lista"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:258
+#: default/mail_tt2/report.tt2:261
 #, smalltalk-format
 msgid "The exportation failed for list '%1'"
 msgstr "Impossibile esportare la lista '%1'"
 
 #. (name)
-#: default/mail_tt2/report.tt2:261
+#: default/mail_tt2/report.tt2:264
 #, smalltalk-format
 msgid "Cannot create '%1'."
 msgstr "Impossibile creare %1'"
 
 #. (name)
-#: default/mail_tt2/report.tt2:264
+#: default/mail_tt2/report.tt2:267
 #, smalltalk-format
 msgid "Cannot unzip file '%1'."
 msgstr "Impossibile decomprimere il file '%1'."
 
 # nlsref 6,68
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:267
+#: default/mail_tt2/report.tt2:270
 #, smalltalk-format
 msgid "Unable to access the message authenticated with key %1"
 msgstr "Impossibile accedere al messaggio identificato con chiave %1"
 
 # nlsref 16,46
-#: default/mail_tt2/report.tt2:270
+#: default/mail_tt2/report.tt2:273
 msgid "Database error."
 msgstr "Errore database."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:273
+#: default/mail_tt2/report.tt2:276
 msgid "Failed to update database."
 msgstr "Aggiornamento del database fallito."
 
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:276
+#: default/mail_tt2/report.tt2:279
 msgid "Failed to update a file."
 msgstr "Aggiornamento del file fallito."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:279
+#: default/mail_tt2/report.tt2:282
 #, smalltalk-format
 msgid ""
 "Failed creating list '%1'. The list might already exist or list name might "
@@ -13484,29 +13494,29 @@ msgstr ""
 "della lista potrebbe contenere dei caratteri non ammessi."
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:285
+#: default/mail_tt2/report.tt2:288
 msgid "Attempts to add some users in database failed."
 msgstr "Tentativo di aggiungere alcuni utenti nel database fallito."
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:288
+#: default/mail_tt2/report.tt2:291
 #, fuzzy
 msgid "Attempts to delete some users in database failed."
 msgstr "Tentativo di aggiungere alcuni utenti nel database fallito."
 
 # nlsref 6,262
-#: default/mail_tt2/report.tt2:300
+#: default/mail_tt2/report.tt2:303
 msgid "Your message signature was successfully verified using S/MIME."
 msgstr "La tua firma è stata verificata con successo usando S/MIME."
 
 # nlsref 6,262
-#: default/mail_tt2/report.tt2:303
+#: default/mail_tt2/report.tt2:306
 msgid "Your message contains a DKIM signature. It was successfully verified"
 msgstr ""
 "Il tuo messaggio contiene una firma DKIM. È stata verificata con successo"
 
 # nlsref 6,25
-#: default/mail_tt2/report.tt2:306
+#: default/mail_tt2/report.tt2:309
 msgid ""
 "Your request to subscribe/unsubscribe has been forwarded to the list's "
 "owners for approval. You will receive a notification when you have been "
@@ -13516,17 +13526,17 @@ msgstr ""
 "proprietari della lista per l'approvazione. Riceverai una notifica quando "
 "hai sottoscritto (o revocato la sottoscrizione)"
 
-#: default/mail_tt2/report.tt2:310
+#: default/mail_tt2/report.tt2:313
 msgid "Your request has been forwarded to the list owner"
 msgstr "La tua richiesta è stata mandata al proprietario della lista"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:314
+#: default/mail_tt2/report.tt2:317
 #, smalltalk-format
 msgid "Your request has been forwarded to the user %1"
 msgstr "La tua richiesta è stata inoltrata all'utente %1"
 
-#: default/mail_tt2/report.tt2:316 default/mail_tt2/report.tt2:326
+#: default/mail_tt2/report.tt2:319 default/mail_tt2/report.tt2:329
 msgid ""
 "To confirm your identity and prevent anyone from subscribing you to this "
 "list against your will, a message containing an validation link was sent to "
@@ -13537,13 +13547,13 @@ msgstr ""
 "è stato inviato all'indirizzo di posta elettronico fornito."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:322
+#: default/mail_tt2/report.tt2:325
 #, smalltalk-format
 msgid "You clicked a link to unsubscribe the address %1 from list %2."
 msgstr "Hai cliccato un link per disisiscrivere l'indirizzo %1 dalla lista %2"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:323
+#: default/mail_tt2/report.tt2:326
 #, smalltalk-format
 msgid ""
 "A confirmation was just sent to this address. By clicking the link it "
@@ -13553,7 +13563,7 @@ msgstr ""
 "link che contiene sarai definitivamente disiscritto dalla lista %1"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:327
+#: default/mail_tt2/report.tt2:330
 #, smalltalk-format
 msgid ""
 "Check your mailbox for new messages and click this link. This will confirm "
@@ -13563,7 +13573,7 @@ msgstr ""
 "contenuto. Questo confermerà la tua iscrizione alla lista %1."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:329
+#: default/mail_tt2/report.tt2:332
 #, smalltalk-format
 msgid ""
 "We need to check your identity before validating your unsubscription request "
@@ -13578,7 +13588,7 @@ msgstr ""
 "fornisci un indirizzo di posta elettronica sotto per ricevere il link di "
 "validazione."
 
-#: default/mail_tt2/report.tt2:330
+#: default/mail_tt2/report.tt2:333
 msgid ""
 "We've sent you an email including a validation link. Please check your "
 "mailbox to read this email and use this validation link."
@@ -13588,7 +13598,7 @@ msgstr ""
 "validazione"
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:335
+#: default/mail_tt2/report.tt2:338
 #, fuzzy, smalltalk-format
 msgid "%1 owners added"
 msgstr "(%1 proprietari)"
@@ -13596,275 +13606,275 @@ msgstr "(%1 proprietari)"
 # #-#-#-#-#  it.po (PACKAGE VERSION)  #-#-#-#-#
 # nlsref 16,26
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:337
+#: default/mail_tt2/report.tt2:340
 #, fuzzy, smalltalk-format
 msgid "%1 moderators added"
 msgstr "(%1 Moderatori)"
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:339
+#: default/mail_tt2/report.tt2:342
 #, smalltalk-format
 msgid "%1 subscribers added"
 msgstr "Aggiunti %1 iscritti"
 
 # nlsref 6,36
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:343
+#: default/mail_tt2/report.tt2:346
 #, smalltalk-format
 msgid "Information regarding user %1 has been updated for list %2."
 msgstr "Le informazioni sull'utente %1 sono state aggiornate per la lista %2."
 
 # nlsref 6,37
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:346
+#: default/mail_tt2/report.tt2:349
 #, smalltalk-format
 msgid "User %1 is now subscriber of list %2."
 msgstr "L'utente %1 è ora iscritto alla lista %2."
 
 # nlsref 6,37
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:350
+#: default/mail_tt2/report.tt2:353
 #, fuzzy, smalltalk-format
 msgid "User %1 is now unsubscribed from list %2."
 msgstr "L'utente %1 è ora iscritto alla lista %2."
 
 # nlsref 6,85
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:353
+#: default/mail_tt2/report.tt2:356
 #, smalltalk-format
 msgid "User %1 has been invited to subscribe in list %2."
 msgstr "L'utente %1 e stato invitato a iscriversi alla lista %2."
 
 # nlsref 6,78
 #. (report_param.total,report_param.listname)
-#: default/mail_tt2/report.tt2:356
+#: default/mail_tt2/report.tt2:359
 #, smalltalk-format
 msgid "Subscription reminder sent to each of %1 %2 subscribers."
 msgstr "Promemoria di iscrizione inviato a tutti gli iscritti a %1 %2."
 
 #. (report_param.count)
-#: default/mail_tt2/report.tt2:359
+#: default/mail_tt2/report.tt2:362
 #, smalltalk-format
 msgid "The Reminder has been sent to %1 users."
 msgstr "Il promemoria è stato inviato a %1 utente/i."
 
 # nlsref 6,38
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:362
+#: default/mail_tt2/report.tt2:365
 #, smalltalk-format
 msgid "The user %1 has been removed from the list %2."
 msgstr "L'utente %1 è stato rimosso dalla lista %2."
 
 # nlsref 6,38
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:365
+#: default/mail_tt2/report.tt2:368
 #, fuzzy, smalltalk-format
 msgid "The user %1 has been removed."
 msgstr "L'utente %1 è stato rimosso dalla lista %2."
 
 # nlsref 6,40
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:368
+#: default/mail_tt2/report.tt2:371
 #, smalltalk-format
 msgid "Your configuration regarding list %1 has been updated."
 msgstr "La tua configurazione relativa alla lista %1 è stata aggiornata."
 
 # nlsref 4,18
 #. (report_param.cmd)
-#: default/mail_tt2/report.tt2:371
+#: default/mail_tt2/report.tt2:374
 #, smalltalk-format
 msgid "Command '%1' found: ignoring end of message."
 msgstr "Comando '%1' trovato: ignorata la fine del messaggio."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:374
+#: default/mail_tt2/report.tt2:377
 #, smalltalk-format
 msgid "There is no message to moderate for list '%1'."
 msgstr "Non ci sono messaggi da moderare per la lista '%1'."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:378
+#: default/mail_tt2/report.tt2:381
 #, smalltalk-format
 msgid "Including list owners into list %1 was skipped."
 msgstr ""
 "L'inclusione dei proprietari dell'elenco nell'elenco %1 è stata saltata."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:380
+#: default/mail_tt2/report.tt2:383
 #, smalltalk-format
 msgid "Including moderators into list %1 was skipped."
 msgstr "L'inclusione dei moderatori nell'elenco %1 è stata saltata."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:382
+#: default/mail_tt2/report.tt2:385
 #, smalltalk-format
 msgid "Including subscribers into list %1 was skipped."
 msgstr "L'inclusione iscritti nella lista %1 è stata saltata."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:387
+#: default/mail_tt2/report.tt2:390
 msgid "List owners were included from data source \"%1\" into list %2."
 msgstr ""
 "I proprietari di lista sono stati inclusi dalla sorgente dati \"%1\" nella "
 "lista %2."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:389
+#: default/mail_tt2/report.tt2:392
 msgid "Moderators were included from data source \"%1\" into list %2."
 msgstr ""
 "I moderatori sono stati inclusi dalla sorgente dati \"%1\" nella lista %2."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:391
+#: default/mail_tt2/report.tt2:394
 msgid "Subscribers were included from data source \"%1\" into list %2."
 msgstr ""
 "Gli iscritti erano stati inclusi dalla sorgente dati \"%1\" nell'elenco %2."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:396
+#: default/mail_tt2/report.tt2:399
 msgid "Including list owners from data source \"%1\" into list %2 failed."
 msgstr ""
 "Inclusione dei proprietari lista dalla sorgente dati \"%1\" nella lista %2 "
 "fallita."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:398
+#: default/mail_tt2/report.tt2:401
 msgid "Including moderators from data source \"%1\" into list %2 failed."
 msgstr ""
 "Inclusione dei moderatori dalla sorgente dati \"%1\" nella lista %2 fallita."
 
 #. (report_param.name,report_param.listname)
-#: default/mail_tt2/report.tt2:400
+#: default/mail_tt2/report.tt2:403
 msgid "Including subscribers from data source \"%1\" into list %2 failed."
 msgstr ""
 "Inclusione degli iscritti dalla sorgente dati \"%1\" nella lista %2 fallita."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:404
+#: default/mail_tt2/report.tt2:407
 #, smalltalk-format
 msgid "Inclusion entirely failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 "Inclusione fallita completamente (%1 aggiunti, %2 trattenuti, %3 aggiornati)."
 
 #. (report_param.result.added,report_param.result.held,report_param.result.updated)
-#: default/mail_tt2/report.tt2:407
+#: default/mail_tt2/report.tt2:410
 #, smalltalk-format
 msgid "Inclusion partially failed (%1 added, %2 held, %3 updated)."
 msgstr ""
 "Inclusione parzialmente fallita (%1 aggiunti, %2 trattenuti, %3 aggiornati)."
 
 #. (report_param.result.added,report_param.result.deleted,report_param.result.updated)
-#: default/mail_tt2/report.tt2:410
+#: default/mail_tt2/report.tt2:413
 #, smalltalk-format
 msgid "Inclusion succeeded (%1 added, %2 deleted, %3 updated)."
 msgstr ""
 "L'inclusione ha avuto successo (%1 aggiunti, %2 cancellati, %3 aggiornati)."
 
-#: default/mail_tt2/report.tt2:413
+#: default/mail_tt2/report.tt2:416
 msgid "You're not allowed to make sync, time limit in action"
 msgstr ""
 "Non sei autorizzato a effettuare una sincronizzazione, limitazione temporale "
 "in corso"
 
 #. (report_param.total)
-#: default/mail_tt2/report.tt2:416
+#: default/mail_tt2/report.tt2:419
 #, smalltalk-format
 msgid "%1 addresses have been removed"
 msgstr "%1 indirizzi rimossi"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:419
+#: default/mail_tt2/report.tt2:422
 #, smalltalk-format
 msgid "%1: action completed"
 msgstr "%1: azione completata"
 
 #. (report_param.action)
-#: default/mail_tt2/report.tt2:422
+#: default/mail_tt2/report.tt2:425
 #, smalltalk-format
 msgid "%1: action will complete soon"
 msgstr "L'azione %1 verrà completata al più presto"
 
-#: default/mail_tt2/report.tt2:425
+#: default/mail_tt2/report.tt2:428
 msgid "Configuration file has been updated"
 msgstr "Il file di configurazione è stato aggiornato."
 
-#: default/mail_tt2/report.tt2:428
+#: default/mail_tt2/report.tt2:431
 msgid "No parameter was edited"
 msgstr "Nessun parametro è stato modificato"
 
-#: default/mail_tt2/report.tt2:431
+#: default/mail_tt2/report.tt2:434
 msgid "List has been purged"
 msgstr "La lista è stata eliminata"
 
-#: default/mail_tt2/report.tt2:434
+#: default/mail_tt2/report.tt2:437
 msgid "List has been closed"
 msgstr "La lista è stata chiusa"
 
-#: default/mail_tt2/report.tt2:437
+#: default/mail_tt2/report.tt2:440
 msgid "List has been restored"
 msgstr "La lista è stata ripristinata"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:440
+#: default/mail_tt2/report.tt2:443
 #, smalltalk-format
 msgid "File %1 successfully uploaded!"
 msgstr "%1 inserito con successo!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:443
+#: default/mail_tt2/report.tt2:446
 #, smalltalk-format
 msgid "File %1 unzipped!"
 msgstr "File %1 decompresso!"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:446
+#: default/mail_tt2/report.tt2:449
 #, smalltalk-format
 msgid "Old file %1 has been erased"
 msgstr "Il vecchio file %1 è stato rimosso"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:449
+#: default/mail_tt2/report.tt2:452
 #, smalltalk-format
 msgid "File %1 waiting for moderation"
 msgstr "File %1 in attesa d'essere moderato"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:452
+#: default/mail_tt2/report.tt2:455
 #, smalltalk-format
 msgid "File %1 saved"
 msgstr "File %1 salvato"
 
-#: default/mail_tt2/report.tt2:455
+#: default/mail_tt2/report.tt2:458
 msgid "Your password has been emailed to you"
 msgstr "La tua password ti è stata spedita"
 
-#: default/mail_tt2/report.tt2:458
+#: default/mail_tt2/report.tt2:461
 msgid "To choose your password go to 'preferences', from the upper menu."
 msgstr "Per scegliere la password vai alle 'Opzioni' dal menu superiore."
 
 #. (report_param.list)
-#: default/mail_tt2/report.tt2:461
+#: default/mail_tt2/report.tt2:464
 #, smalltalk-format
 msgid "No message and no document to moderate for list %1"
 msgstr "Non ci sono messaggi o documenti da moderare per la lista %1."
 
-#: default/mail_tt2/report.tt2:464
+#: default/mail_tt2/report.tt2:467
 msgid "The list of list subscribers has been built/updated."
 msgstr "L'elenco degli iscritti di lista è stato creato/aggiornato."
 
-#: default/mail_tt2/report.tt2:467
+#: default/mail_tt2/report.tt2:470
 msgid "The list of list owners has been built/updated."
 msgstr "L'elenco dei proprietari di lista è stato creato/aggiornato."
 
-#: default/mail_tt2/report.tt2:470
+#: default/mail_tt2/report.tt2:473
 msgid "The list of list moderators has been built/updated."
 msgstr "L'elenco dei moderatori di lista è stato creato/aggiornato."
 
-#: default/mail_tt2/report.tt2:473
+#: default/mail_tt2/report.tt2:476
 msgid "The list of list members will be built/updated soon (a few minutes)."
 msgstr "L'elenco degli iscritti verrà creato/aggiornato in pochi minuti"
 
-#: default/mail_tt2/report.tt2:476
+#: default/mail_tt2/report.tt2:479
 msgid ""
 "The list of list subscribers will be built/updated soon (in an hour). If you "
 "wish immediate update, click \"Synchronize members with data sources\"."
@@ -13873,7 +13883,7 @@ msgstr ""
 "un'ora). Se si desidera un aggiornamento immediato, fare clic su "
 "\"Sincronizza membri con le sorgenti dati\"."
 
-#: default/mail_tt2/report.tt2:479
+#: default/mail_tt2/report.tt2:482
 msgid ""
 "The list of list owners will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize owners with data sources\"."
@@ -13882,7 +13892,7 @@ msgstr ""
 "un'ora). Se si desidera un aggiornamento immediato, fare clic su "
 "\"Sincronizza proprietari con sorgenti dati\"."
 
-#: default/mail_tt2/report.tt2:482
+#: default/mail_tt2/report.tt2:485
 msgid ""
 "The list of moderators will be built/updated soon (in an hour). If you wish "
 "immediate update, click \"Synchronize moderators with data sources\"."
@@ -13892,47 +13902,47 @@ msgstr ""
 "con sorgenti dati\"."
 
 # nlsref 4,26
-#: default/mail_tt2/report.tt2:485
+#: default/mail_tt2/report.tt2:488
 msgid "Concerned subscribers have been notified about deleted topics."
 msgstr ""
 "Gli gli interessati fra gli iscritti sono stati notificati della "
 "cancellazione dell'argomento."
 
-#: default/mail_tt2/report.tt2:488
+#: default/mail_tt2/report.tt2:491
 msgid "You have been authenticated"
 msgstr "Sei stato autenticato"
 
 #. (report_param.orig_file,report_param.new_file)
-#: default/mail_tt2/report.tt2:491
+#: default/mail_tt2/report.tt2:494
 #, smalltalk-format
 msgid "File %1 has been renamed to %2"
 msgstr "Il file %1 è stato rinominato in %2"
 
-#: default/mail_tt2/report.tt2:494
+#: default/mail_tt2/report.tt2:497
 msgid ""
 "List has been set to the pending status. The listmaster needs to approve it."
 msgstr ""
 "L'attivazione della lista è in sospeso; il Listmaster deve confermarla."
 
-#: default/mail_tt2/report.tt2:497
+#: default/mail_tt2/report.tt2:500
 msgid "List name has been lowercased"
 msgstr "Il nome della lista è stato trasformato in minuscolo"
 
-#: default/mail_tt2/report.tt2:500
+#: default/mail_tt2/report.tt2:503
 msgid "Aliases have been installed."
 msgstr "Gli alias sono stati installati."
 
 #. (report_param.notified_user)
-#: default/mail_tt2/report.tt2:503
+#: default/mail_tt2/report.tt2:506
 #, smalltalk-format
 msgid "User %1 has been notified"
 msgstr "L'utente %1 è stato notificato"
 
-#: default/mail_tt2/report.tt2:506
+#: default/mail_tt2/report.tt2:509
 msgid "You have logged out"
 msgstr "Sei stato sconnesso "
 
-#: default/mail_tt2/report.tt2:509
+#: default/mail_tt2/report.tt2:512
 msgid ""
 "You have been unsubscribed from all your lists and your account has been "
 "deleted"
@@ -13941,16 +13951,16 @@ msgstr ""
 "è stato cancellato"
 
 # nlsref 4,19
-#: default/mail_tt2/report.tt2:521
+#: default/mail_tt2/report.tt2:524
 msgid "Command not understood: ignoring end of message."
 msgstr "Comando non riconosciuto: ignorato il resto del messaggio."
 
-#: default/mail_tt2/report.tt2:524
+#: default/mail_tt2/report.tt2:527
 msgid "Unknown action"
 msgstr "Azione sconosciuta"
 
 # nlsref 6,263
-#: default/mail_tt2/report.tt2:527
+#: default/mail_tt2/report.tt2:530
 msgid ""
 "Your message was not a multipart/signed message or Sympa could not verify "
 "the signature (be aware that Sympa can't check signature if you use the "
@@ -13961,32 +13971,32 @@ msgstr ""
 "controllare la firma se usi l'header oggetto per inviare un comando)."
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:531
+#: default/mail_tt2/report.tt2:534
 #, smalltalk-format
 msgid "Syntax errors with the following parameters: %1"
 msgstr "Errore nella sintassi dei seguenti parametri: %1"
 
 # nlsref 6,13
-#: default/mail_tt2/report.tt2:533
+#: default/mail_tt2/report.tt2:536
 msgid "Command syntax error."
 msgstr "Errore di sintassi nel comando."
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:541
+#: default/mail_tt2/report.tt2:544
 #, smalltalk-format
 msgid "%1: unknown list"
 msgstr "%1: lista sconosciuta"
 
 # nlsref 6,91
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:544
+#: default/mail_tt2/report.tt2:547
 #, smalltalk-format
 msgid "%1 mailing list does not provide subscriber preferences."
 msgstr "La mailing list %1 non prevede opzioni per gli iscritti."
 
 # nlsref 6,30
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:547
+#: default/mail_tt2/report.tt2:550
 #, smalltalk-format
 msgid ""
 "Your e-mail address %1 has not been found in the list %2. Maybe you "
@@ -13997,28 +14007,28 @@ msgstr ""
 
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:550
+#: default/mail_tt2/report.tt2:553
 #, smalltalk-format
 msgid "E-mail address %1 was not found in list %2."
 msgstr "L'indirizzo %1 non è presente nella lista %2."
 
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:554
+#: default/mail_tt2/report.tt2:557
 #, fuzzy, smalltalk-format
 msgid "E-mail address %1 was not found in the owners of list %2."
 msgstr "L'indirizzo %1 non è presente nella lista %2."
 
 # nlsref 6,33
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:556
+#: default/mail_tt2/report.tt2:559
 #, fuzzy, smalltalk-format
 msgid "E-mail address %1 was not found in the moderators of list %2."
 msgstr "L'indirizzo %1 non è presente nella lista %2."
 
 # nlsref 6,45
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:560
+#: default/mail_tt2/report.tt2:563
 #, smalltalk-format
 msgid ""
 "List %1 does not accept the DIGEST mode. Your configuration has not been "
@@ -14029,60 +14039,60 @@ msgstr ""
 
 # nlsref 16,19
 #. (report_param.reception_mode)
-#: default/mail_tt2/report.tt2:564
+#: default/mail_tt2/report.tt2:567
 #, smalltalk-format
 msgid "%1 is not an available reception mode"
 msgstr "%1 non è una modalità di ricezione disponibile"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:566
+#: default/mail_tt2/report.tt2:569
 #, smalltalk-format
 msgid "List %1 allows only these reception modes: "
 msgstr "La lista %1 permette solo queste modalità di ricezione: "
 
 # nlsref 16,19
 #. (report_param.visibility)
-#: default/mail_tt2/report.tt2:579
+#: default/mail_tt2/report.tt2:582
 #, fuzzy, smalltalk-format
 msgid "%1 is not an available visibility"
 msgstr "%1 non è una modalità di ricezione disponibile"
 
 # nlsref 16,19
 #. (report_param.profile)
-#: default/mail_tt2/report.tt2:582
+#: default/mail_tt2/report.tt2:585
 #, fuzzy, smalltalk-format
 msgid "%1 is not an available owner profile"
 msgstr "%1 non è una modalità di ricezione disponibile"
 
-#: default/mail_tt2/report.tt2:585
+#: default/mail_tt2/report.tt2:588
 #, fuzzy
 msgid "no changed properties"
 msgstr "proprietà"
 
-#: default/mail_tt2/report.tt2:588
+#: default/mail_tt2/report.tt2:591
 msgid "Archives are empty for this list"
 msgstr "Gli archivi della lista sono vuoti"
 
 # nlsref 6,8
-#: default/mail_tt2/report.tt2:591
+#: default/mail_tt2/report.tt2:594
 msgid "Required file does not exist."
 msgstr "Il file richiesto non esiste."
 
 # nlsref 6,84
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:597
+#: default/mail_tt2/report.tt2:600
 #, smalltalk-format
 msgid "The User '%1' is already subscriber of list '%2'."
 msgstr "L'utente '%1' e già iscritto alla lista '%2'."
 
 #. (statdesc)
-#: default/mail_tt2/report.tt2:601
+#: default/mail_tt2/report.tt2:604
 #, smalltalk-format
 msgid "Service unavailable because list status is '%1'"
 msgstr "Servizio non disponibile poiché lo stato della lista è '%1'"
 
 #. (report_param.email,report_param.listname,report_param.max_list_members)
-#: default/mail_tt2/report.tt2:604
+#: default/mail_tt2/report.tt2:607
 #, smalltalk-format
 msgid ""
 "Unable to add user '%1' in list '%2'. Attempt to exceed the max number of "
@@ -14092,7 +14102,7 @@ msgstr ""
 "eccedere il numero massimo di membri (%3) per questa lista"
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:608
+#: default/mail_tt2/report.tt2:611
 msgid ""
 "The authentication process failed. You probably confirmed your subscription "
 "using a different email address. Please try using your canonical address."
@@ -14102,7 +14112,7 @@ msgstr ""
 "usare un indirizzo corretto"
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:610
+#: default/mail_tt2/report.tt2:613
 msgid ""
 "The authentication process failed. You probably confirmed your "
 "unsubscription using a different email address. Please try using your "
@@ -14113,7 +14123,7 @@ msgstr ""
 "elettronica. Per piacere prova ad usare l'indirizzo corretto"
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:612
+#: default/mail_tt2/report.tt2:615
 msgid ""
 "The authentication process failed. You probably confirmed your addition "
 "using a different email address. Please try using your canonical address."
@@ -14123,7 +14133,7 @@ msgstr ""
 "prova ad usare un indirizzo corretto"
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:614
+#: default/mail_tt2/report.tt2:617
 msgid ""
 "The authentication process failed. You probably confirmed your invitation "
 "using a different email address. Please try using your canonical address."
@@ -14133,7 +14143,7 @@ msgstr ""
 "prova ad usare il tuo indirizzo corretto"
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:616
+#: default/mail_tt2/report.tt2:619
 msgid ""
 "The authentication process failed. You probably confirmed your deletion "
 "using a different email address. Please try using your canonical address."
@@ -14143,7 +14153,7 @@ msgstr ""
 "piacere prova ad usare un indirizzo corretto"
 
 # nlsref 6,16
-#: default/mail_tt2/report.tt2:618 default/mail_tt2/report.tt2:620
+#: default/mail_tt2/report.tt2:621 default/mail_tt2/report.tt2:623
 msgid ""
 "The authentication process failed. You probably confirmed your request of "
 "subscription reminder using a different email address. Please try using your "
@@ -14155,7 +14165,7 @@ msgstr ""
 
 # nlsref 6,16
 #. (report_param.command)
-#: default/mail_tt2/report.tt2:622
+#: default/mail_tt2/report.tt2:625
 msgid ""
 "The authentication process failed. You probably confirmed your \"%1\" "
 "command using a different email address. Please try using your canonical "
@@ -14167,7 +14177,7 @@ msgstr ""
 
 # nlsref 6,41
 #. (report_param.listname,report_param.key)
-#: default/mail_tt2/report.tt2:627
+#: default/mail_tt2/report.tt2:630
 #, smalltalk-format
 msgid ""
 "Unable to access the message on list %1 with key %2.\n"
@@ -14179,7 +14189,7 @@ msgstr ""
 "moderatori della lista"
 
 # nlsref 4,38
-#: default/mail_tt2/report.tt2:631
+#: default/mail_tt2/report.tt2:634
 msgid ""
 "Failed to moderate a message. It was probably moderated by another moderator."
 msgstr ""
@@ -14188,7 +14198,7 @@ msgstr ""
 
 # nlsref 6,68
 #. (report_param.key)
-#: default/mail_tt2/report.tt2:634
+#: default/mail_tt2/report.tt2:637
 #, smalltalk-format
 msgid ""
 "Unable to access the message authenticated with key %1. The message may "
@@ -14198,42 +14208,42 @@ msgstr ""
 "%1. Il messaggio potrebbe essere già stato confermato"
 
 # nlsref 4,38
-#: default/mail_tt2/report.tt2:638
+#: default/mail_tt2/report.tt2:641
 msgid "Failed to get the held message; it has probably been confirmed"
 msgstr ""
 "Ho fallito nell'ottenere il messaggio; probabilmente è stato confermato"
 
-#: default/mail_tt2/report.tt2:641
+#: default/mail_tt2/report.tt2:644
 msgid "No lists available."
 msgstr "Nessuna lista di posta disponibile. "
 
-#: default/mail_tt2/report.tt2:644
+#: default/mail_tt2/report.tt2:647
 msgid "Wrong parameters"
 msgstr "Parametri errati"
 
-#: default/mail_tt2/report.tt2:647
+#: default/mail_tt2/report.tt2:650
 msgid "Authorization rejected. Maybe you forgot to log in?"
 msgstr "Autorizzazione negata. Hai dimenticato forse di autenticarti?"
 
 #. (report_param.new_robot)
-#: default/mail_tt2/report.tt2:650
+#: default/mail_tt2/report.tt2:653
 #, smalltalk-format
 msgid "%1: unknown robot"
 msgstr "%1: robot sconosciuto"
 
 #. (report_param.family)
-#: default/mail_tt2/report.tt2:653
+#: default/mail_tt2/report.tt2:656
 #, smalltalk-format
 msgid "%1: unknown family"
 msgstr "%1: famiglia sconosciuta"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:656
+#: default/mail_tt2/report.tt2:659
 #, smalltalk-format
 msgid "You are already logged in as %1"
 msgstr "Hai già effettuato l'accesso come %1"
 
-#: default/mail_tt2/report.tt2:659
+#: default/mail_tt2/report.tt2:662
 msgid ""
 "You cannot receive a password reminder. This could be because your password "
 "is managed outside of Sympa by a Single Sign-On system or LDAP directory."
@@ -14241,18 +14251,18 @@ msgstr ""
 "Impossibile inviare un promemoria della password; probabilmente la tua "
 "password è gestita fuori da Sympa. (sistemi Single Sign-On o LDAP directory)."
 
-#: default/mail_tt2/report.tt2:662
+#: default/mail_tt2/report.tt2:665
 msgid "Please provide an email address"
 msgstr "Inserisci il tuo indirizzo di posta elettronica"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:665
+#: default/mail_tt2/report.tt2:668
 #, smalltalk-format
 msgid "Missing argument %1"
 msgstr "Argomento %1 mancante"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:668
+#: default/mail_tt2/report.tt2:671
 #, smalltalk-format
 msgid ""
 "The name you want to use for your list (%1) is prohibited by the "
@@ -14261,7 +14271,7 @@ msgstr ""
 "Il nome che vuoi usare per la lista (%1) è proibito dalla configurazione del "
 "server."
 
-#: default/mail_tt2/report.tt2:671
+#: default/mail_tt2/report.tt2:674
 msgid ""
 "You didn't define the web page you want to use to create your newsletter. "
 "Please specify either an URL or a file to upload."
@@ -14269,7 +14279,7 @@ msgstr ""
 "Non hai specificato la pagina web che vuoi usare per creare la newsletter. "
 "Per favore specifica un URL o un file da caricare."
 
-#: default/mail_tt2/report.tt2:674
+#: default/mail_tt2/report.tt2:677
 msgid ""
 "You specified both an URL and a file to upload. Sympa can't choose which one "
 "to send. Please fill the form with one of them only. A web page OR a file to "
@@ -14278,7 +14288,7 @@ msgstr ""
 "Hai specificato sia una URL sia un file da caricare. Sympa non può scegliere "
 "quale dei due inviare; una URL o un file."
 
-#: default/mail_tt2/report.tt2:677
+#: default/mail_tt2/report.tt2:680
 msgid ""
 "The page could not be parsed properly. Please check the content of web page "
 "or file you submitted."
@@ -14287,47 +14297,47 @@ msgstr ""
 "controlla il contenuto della pagina web o il file che hai inserito"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:681
+#: default/mail_tt2/report.tt2:684
 #, smalltalk-format
 msgid "Wrong value for parameter %1"
 msgstr "Valore errato per il parametro %1"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:687
+#: default/mail_tt2/report.tt2:690
 msgid "Address \"%1\" is incorrect"
 msgstr "L'indirizzo \"%1\" è errato"
 
 #. (report_param.email || report_param.value)
-#: default/mail_tt2/report.tt2:690
+#: default/mail_tt2/report.tt2:693
 msgid "Address \"%1\" belongs to a blocklisted domain"
 msgstr "L'indirizzo \"%1\" appartiene ad un dominio in blacklist"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:694
+#: default/mail_tt2/report.tt2:697
 msgid "Address \"%1\" is the address for the list owners"
 msgstr ""
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:696
+#: default/mail_tt2/report.tt2:699
 msgid "Address \"%1\" is the address for the list moderators"
 msgstr ""
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:698
+#: default/mail_tt2/report.tt2:701
 msgid "Address \"%1\" is the address of the list"
 msgstr ""
 
-#: default/mail_tt2/report.tt2:702
+#: default/mail_tt2/report.tt2:705
 msgid "Provided password is incorrect"
 msgstr "La password inserita è sbagliata"
 
-#: default/mail_tt2/report.tt2:705
+#: default/mail_tt2/report.tt2:708
 msgid ""
 "You did not choose a password, request a reminder of the initial password"
 msgstr ""
 "Non hai scelto una password, richiedi un promemoria della password iniziale"
 
-#: default/mail_tt2/report.tt2:708
+#: default/mail_tt2/report.tt2:711
 msgid ""
 "Your password is stored in an LDAP directory, therefore Sympa cannot post a "
 "reminder"
@@ -14336,47 +14346,47 @@ msgstr ""
 "inviarti un promemoria"
 
 #. (report_param.nb_days)
-#: default/mail_tt2/report.tt2:711
+#: default/mail_tt2/report.tt2:714
 #, smalltalk-format
 msgid "The period is too long (%1 days)"
 msgstr "Il periodo è troppo lungo (%1 giorni)"
 
 #. (report_param.page)
-#: default/mail_tt2/report.tt2:714
+#: default/mail_tt2/report.tt2:717
 #, smalltalk-format
 msgid "No page %1"
 msgstr "Nessuna pagina %1"
 
-#: default/mail_tt2/report.tt2:717
+#: default/mail_tt2/report.tt2:720
 msgid "Missing filter"
 msgstr "Manca il filtro"
 
-#: default/mail_tt2/report.tt2:720
+#: default/mail_tt2/report.tt2:723
 msgid "Check the additional information"
 msgstr "Controlla le informazioni addizionali"
 
 #. (report_param.file)
-#: default/mail_tt2/report.tt2:723
+#: default/mail_tt2/report.tt2:726
 #, smalltalk-format
 msgid "%1: file not editable"
 msgstr "%1: file non modificabile"
 
 #. (report_param.email,report_param.list)
-#: default/mail_tt2/report.tt2:726
+#: default/mail_tt2/report.tt2:729
 #, smalltalk-format
 msgid "%1 is already subscribed to the list %2"
 msgstr "%1 è già iscritto alla lista %2"
 
-#: default/mail_tt2/report.tt2:729
+#: default/mail_tt2/report.tt2:732
 msgid "Please provide your password"
 msgstr "Inserisci la tua password"
 
-#: default/mail_tt2/report.tt2:732
+#: default/mail_tt2/report.tt2:735
 msgid "The passwords you typed do not match"
 msgstr "Le due password sono differenti"
 
 #. (report_param.reason)
-#: default/mail_tt2/report.tt2:735
+#: default/mail_tt2/report.tt2:738
 #, smalltalk-format
 msgid ""
 "The password you typed does not match this sites standards of strength: %1. "
@@ -14386,276 +14396,276 @@ msgstr ""
 "questo sito: %1. Per piacere scegli una password più forte"
 
 #. (report_param.tpl)
-#: default/mail_tt2/report.tt2:738
+#: default/mail_tt2/report.tt2:741
 #, smalltalk-format
 msgid "Provided path is incorrect for template '%1'"
 msgstr "Il percorso inserito per il modello '%1' è errato"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:741
+#: default/mail_tt2/report.tt2:744
 #, smalltalk-format
 msgid "Cannot open file '%1'"
 msgstr "Impossibile aprire il file '%1'"
 
-#: default/mail_tt2/report.tt2:744
+#: default/mail_tt2/report.tt2:747
 msgid "You need to provide list name"
 msgstr "E' necessario inserire il nome della lista"
 
-#: default/mail_tt2/report.tt2:747
+#: default/mail_tt2/report.tt2:750
 msgid "Tagging message is required for this list"
 msgstr "Questa lista richiede di etichettare il messaggio"
 
-#: default/mail_tt2/report.tt2:751
+#: default/mail_tt2/report.tt2:754
 msgid "Tag message with topic is required for this list"
 msgstr "Questa lista richiede un etichetta con argomento per i messaggi"
 
-#: default/mail_tt2/report.tt2:754
+#: default/mail_tt2/report.tt2:757
 msgid "You did not select an action to perform"
 msgstr "Non hai selezionato alcuna azione"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:757
+#: default/mail_tt2/report.tt2:760
 #, smalltalk-format
 msgid "No bounce for user  %1"
 msgstr "Nessun bounce per l'indirizzo email  %1"
 
-#: default/mail_tt2/report.tt2:760
+#: default/mail_tt2/report.tt2:763
 msgid "List has no bouncing subscribers"
 msgstr "La lista non ha indirizzi respinti"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:763
+#: default/mail_tt2/report.tt2:766
 #, smalltalk-format
 msgid "Config file has been modified by %1. Cannot apply your changes"
 msgstr ""
 "Il file di configurazione è stato modificato da %1. impossibile applicare i "
 "tuoi cambiamenti"
 
-#: default/mail_tt2/report.tt2:766
+#: default/mail_tt2/report.tt2:769
 msgid "Topic \"other\" is a reserved word"
 msgstr "L'argomento \"altro\" è una parola riservata"
 
 #. (report_param.p_name)
-#: default/mail_tt2/report.tt2:769
+#: default/mail_tt2/report.tt2:772
 #, smalltalk-format
 msgid "Parameter '%1' is mandatory. Ignoring deletion."
 msgstr "Il parametro '%1' è obbligatorio. Cancellazione ignorata."
 
 #. (report_param.value,report_param.p_name)
-#: default/mail_tt2/report.tt2:772
+#: default/mail_tt2/report.tt2:775
 #, smalltalk-format
 msgid "Duplicate value '%1' for parameter '%2'. Ignoring change."
 msgstr "Valore duplicato '%1' per il parametro '%2' Ignora i cambiamenti."
 
 #. (report_param.param)
-#: default/mail_tt2/report.tt2:775
+#: default/mail_tt2/report.tt2:778
 #, smalltalk-format
 msgid "Parameter '%1' must have values"
 msgstr "Il parametro '%1' deve contenere dei valori"
 
 #. (report_param.param,report_param.val)
-#: default/mail_tt2/report.tt2:778
+#: default/mail_tt2/report.tt2:781
 #, smalltalk-format
 msgid "Parameter '%1' has got wrong value: '%2'"
 msgstr "Il parametro '%1' contiene valori errati: '%2'"
 
 # nlsref 16,70
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:781
+#: default/mail_tt2/report.tt2:784
 #, smalltalk-format
 msgid "The list '%1' is already closed"
 msgstr "La lista '%1' è già chiusa"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:784
+#: default/mail_tt2/report.tt2:787
 #, smalltalk-format
 msgid "The list '%1' is not closed"
 msgstr "La lista '%1' non è chiusa"
 
 #. (report_param.bad_listname)
-#: default/mail_tt2/report.tt2:787
+#: default/mail_tt2/report.tt2:790
 #, smalltalk-format
 msgid "'%1': bad list name"
 msgstr "'%1': nome di lista non valido"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:790
+#: default/mail_tt2/report.tt2:793
 #, smalltalk-format
 msgid "'%1' list already exists"
 msgstr "La lista '%1' è già presente"
 
 #. (report_param.new_listname)
-#: default/mail_tt2/report.tt2:793
+#: default/mail_tt2/report.tt2:796
 #, smalltalk-format
 msgid "Incorrect list name '%1': matches one of service aliases"
 msgstr ""
 "Nome di lista non corretto '%1': corrisponde ad uno degli alias di servizio"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:796
+#: default/mail_tt2/report.tt2:799
 #, smalltalk-format
 msgid "Failed to remove list aliases for list %1"
 msgstr "Impossibile rimuovere gli alias email per la lista %1"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:799
+#: default/mail_tt2/report.tt2:802
 #, smalltalk-format
 msgid "%1: No such file or directory"
 msgstr "%1: File o directory inesistente"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:802
+#: default/mail_tt2/report.tt2:805
 #, smalltalk-format
 msgid "Unable to read %1: empty document"
 msgstr "Impossibile leggere %1: documento vuoto"
 
 # nlsref 16,70
-#: default/mail_tt2/report.tt2:805
+#: default/mail_tt2/report.tt2:808
 msgid "There is no shared documents"
 msgstr "Non ci sono documenti condivisi"
 
 # nlsref 16,70
-#: default/mail_tt2/report.tt2:808
+#: default/mail_tt2/report.tt2:811
 msgid "The shared document space is empty"
 msgstr "Lo spazio documenti condivisi è vuoto"
 
-#: default/mail_tt2/report.tt2:811
+#: default/mail_tt2/report.tt2:814
 msgid "The shared directory cannot have any description"
 msgstr "La cartella condivisa non può avere alcuna descrizione"
 
-#: default/mail_tt2/report.tt2:814
+#: default/mail_tt2/report.tt2:817
 msgid "No description specified"
 msgstr "Nessuna descrizione specificata"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:817
+#: default/mail_tt2/report.tt2:820
 #, smalltalk-format
 msgid "Unable to describe, the document '%1' does not exist"
 msgstr "Impossibile inserire una descrizione, il documento '%1' non esiste"
 
-#: default/mail_tt2/report.tt2:820
+#: default/mail_tt2/report.tt2:823
 msgid "Data has changed on disk. Cannot apply your changes"
 msgstr "I dati su disco sono cambiati. Impossibile applicare le tue modifiche"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:823
+#: default/mail_tt2/report.tt2:826
 #, smalltalk-format
 msgid "%1: incorrect name"
 msgstr "%1: nome errato"
 
-#: default/mail_tt2/report.tt2:827
+#: default/mail_tt2/report.tt2:830
 msgid "Failed: your content is empty"
 msgstr "Errore: contenuto vuoto"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:830
+#: default/mail_tt2/report.tt2:833
 #, smalltalk-format
 msgid "Cannot overwrite file %1:"
 msgstr "Impossibile sovrascrivere il file %1:"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:833
+#: default/mail_tt2/report.tt2:836
 #, smalltalk-format
 msgid "A directory named '%1' already exists:"
 msgstr "La cartella '%1' è già presente:"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:836
+#: default/mail_tt2/report.tt2:839
 #, smalltalk-format
 msgid "This is an already existing document: '%1'"
 msgstr "Il documento è già presente: '%1'"
 
-#: default/mail_tt2/report.tt2:839
+#: default/mail_tt2/report.tt2:842
 msgid "No name specified"
 msgstr "Nessun nome specificato"
 
-#: default/mail_tt2/report.tt2:842
+#: default/mail_tt2/report.tt2:845
 msgid "The document repository exceed disk quota."
 msgstr "Il repository dei documenti ha ecceduto il limite disco"
 
 #. (report_param.path)
-#: default/mail_tt2/report.tt2:845
+#: default/mail_tt2/report.tt2:848
 #, smalltalk-format
 msgid "Cannot upload file %1:"
 msgstr "Impossibile caricare il file %1:"
 
 #. (report_param.dir)
-#: default/mail_tt2/report.tt2:848
+#: default/mail_tt2/report.tt2:851
 #, smalltalk-format
 msgid "You're not authorized to upload an INDEX.HTML file in %1"
 msgstr "Non sei autorizzato a caricare un file INDEX.HTML in %1"
 
-#: default/mail_tt2/report.tt2:851
+#: default/mail_tt2/report.tt2:854
 msgid "The upload failed, try it again"
 msgstr "Upload fallito, riprova"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:854
+#: default/mail_tt2/report.tt2:857
 #, smalltalk-format
 msgid "Directory %1 and its contents could not be copied: %2"
 msgstr ""
 "La cartella %1 e il suo contenuto potrebbero non essere stati copiati: %2"
 
 #. (report_param.name,report_param.reason)
-#: default/mail_tt2/report.tt2:857
+#: default/mail_tt2/report.tt2:860
 #, smalltalk-format
 msgid "File %1 was not copied: %2 "
 msgstr "File %1 non copiato: %2 "
 
 #. (report_param.directory)
-#: default/mail_tt2/report.tt2:860
+#: default/mail_tt2/report.tt2:863
 #, smalltalk-format
 msgid "Failed: %1 not empty"
 msgstr "Errore: %1 non è vuoto"
 
-#: default/mail_tt2/report.tt2:863
+#: default/mail_tt2/report.tt2:866
 msgid "No certificate for this list"
 msgstr "Nessun certificato per questa lista"
 
-#: default/mail_tt2/report.tt2:866
+#: default/mail_tt2/report.tt2:869
 msgid "This list has no message topic"
 msgstr "Questa lista non ha un argomento per i messaggi"
 
 #. (report_param.email)
-#: default/mail_tt2/report.tt2:869
+#: default/mail_tt2/report.tt2:872
 #, smalltalk-format
 msgid "No entry for user '%1'"
 msgstr "Nessun dato per l'utente '%1'"
 
-#: default/mail_tt2/report.tt2:872
+#: default/mail_tt2/report.tt2:875
 msgid "Please select archive months"
 msgstr "Seleziona i mesi dall'archivio"
 
-#: default/mail_tt2/report.tt2:875
+#: default/mail_tt2/report.tt2:878
 msgid "No SOAP service"
 msgstr "Nessun servizio SOAP"
 
 # nlsref 6,15
-#: default/mail_tt2/report.tt2:878
+#: default/mail_tt2/report.tt2:881
 msgid "Authentication failed"
 msgstr "Procedura di autenticazione fallita"
 
 #. (report_param.argument)
-#: default/mail_tt2/report.tt2:881
+#: default/mail_tt2/report.tt2:884
 #, smalltalk-format
 msgid "This Template '%1' already exists"
 msgstr "Questo Template '%1' esiste già"
 
 #. (report_param.file_del)
-#: default/mail_tt2/report.tt2:884
+#: default/mail_tt2/report.tt2:887
 #, smalltalk-format
 msgid "Cannot delete this file '%1'"
 msgstr "Impossibile cancellare il file '%1'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:890
+#: default/mail_tt2/report.tt2:893
 #, smalltalk-format
 msgid "Failed to update member email '%1' in list '%2'."
 msgstr ""
 "Ho fallitto nell'aggiornamento del email dell'utente '%1' nella lista '%2'"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:893
+#: default/mail_tt2/report.tt2:896
 #, smalltalk-format
 msgid ""
 "Failed to update member email in list '%1', list owner has been notified."
@@ -14664,26 +14674,26 @@ msgstr ""
 "della lista è stato avvisato."
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:896
+#: default/mail_tt2/report.tt2:899
 #, smalltalk-format
 msgid "Failed to delete member email '%1' in list '%2'."
 msgstr "Ho fallito nel cancellare email dell'utente '%1' nella lista '%2'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:900
+#: default/mail_tt2/report.tt2:903
 #, smalltalk-format
 msgid "Failed to update owner email '%1' in list '%2'."
 msgstr ""
 "Ho fallito nell'aggiornare email del proprietario '%1' nella lista '%2'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:902
+#: default/mail_tt2/report.tt2:905
 #, smalltalk-format
 msgid "Failed to update moderator email '%1' in list '%2'."
 msgstr "Ho fallito nell'aggiornare email del moderatori '%1' nella lista '%2'"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:907
+#: default/mail_tt2/report.tt2:910
 #, smalltalk-format
 msgid ""
 "Failed to update owner email in list '%1', listmaster has been notified."
@@ -14692,7 +14702,7 @@ msgstr ""
 "listmaster è stato notificato"
 
 #. (report_param.listname)
-#: default/mail_tt2/report.tt2:909
+#: default/mail_tt2/report.tt2:912
 #, smalltalk-format
 msgid ""
 "Failed to update moderator email in list '%1', listmaster has been notified."
@@ -14701,23 +14711,23 @@ msgstr ""
 "stato notificato "
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:914
+#: default/mail_tt2/report.tt2:917
 #, smalltalk-format
 msgid "Failed to delete owner email '%1' in list '%2'."
 msgstr "Ho fallito nel cancellare il proprietario email '%1' nella lista '%2'"
 
 #. (report_param.email,report_param.listname)
-#: default/mail_tt2/report.tt2:916
+#: default/mail_tt2/report.tt2:919
 #, smalltalk-format
 msgid "Failed to delete moderator email '%1' in list '%2'."
 msgstr "Ho fallito nel cancellare email del moderatore '%1' nella lista '%2' "
 
-#: default/mail_tt2/report.tt2:920
+#: default/mail_tt2/report.tt2:923
 msgid "Address was not changed."
 msgstr "L'indirizzo non è stato cambiato"
 
 #. (report_param.error)
-#: default/mail_tt2/report.tt2:923
+#: default/mail_tt2/report.tt2:926
 #, smalltalk-format
 msgid ""
 "Your message cannot be personalized due to error: %1.  Please check template "
@@ -14727,14 +14737,14 @@ msgstr ""
 "piacere controlla la sintassi del template"
 
 #. (report_param.value,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:926
+#: default/mail_tt2/report.tt2:929
 #, smalltalk-format
 msgid "%1: all list owners must be in the following domains: %2."
 msgstr ""
 "%1: tutti i proprietari della lista devono essere nei seguenti domini: %2"
 
 #. (report_param.value,report_param.owner_domain_min,report_param.owner_domain)
-#: default/mail_tt2/report.tt2:929
+#: default/mail_tt2/report.tt2:932
 #, smalltalk-format
 msgid ""
 "Unable to reduce the number of list owners in required domains to %1. "
@@ -14745,7 +14755,7 @@ msgstr ""
 "minimi di %2 %3"
 
 #. (report_param.lists)
-#: default/mail_tt2/report.tt2:932
+#: default/mail_tt2/report.tt2:935
 #, smalltalk-format
 msgid ""
 "You are the only owner of the following list(s): %1. Please give ownership "
@@ -14756,7 +14766,7 @@ msgstr ""
 "proprietà ad altre persone prima di cancellare il tuo account. Tuttavia, "
 "puoi revocare la tua sottoscrizione da tutte le liste "
 
-#: default/mail_tt2/report.tt2:935
+#: default/mail_tt2/report.tt2:938
 msgid ""
 "You are not authorized to delete your account if you are not using the built-"
 "in authentication (i.e. you are using a LDAP authentication, a SSO system, "
@@ -14767,50 +14777,50 @@ msgstr ""
 "un sistema SSO, ecc.)"
 
 #. (report_param.name)
-#: default/mail_tt2/report.tt2:938
+#: default/mail_tt2/report.tt2:941
 #, smalltalk-format
 msgid "Unknown authentication service %1."
 msgstr "Servizio di autenticazione sconosciuto %1"
 
-#: default/mail_tt2/report.tt2:941
+#: default/mail_tt2/report.tt2:944
 msgid "Unable to send archive: no message id found."
 msgstr "Impossibile inviare l'archivio: non trovato ID del messaggio."
 
-#: default/mail_tt2/report.tt2:944
+#: default/mail_tt2/report.tt2:947
 #, fuzzy
 msgid "Unable to view archived message: no message id found."
 msgstr "Impossibile inviare l'archivio: non trovato ID del messaggio."
 
-#: default/mail_tt2/report.tt2:947
+#: default/mail_tt2/report.tt2:950
 #, fuzzy
 msgid "This list is not configured for tracking."
 msgstr "Questa lista è configurata in modo da richiedere uno o più argomenti."
 
 #. (report_param.msgid)
-#: default/mail_tt2/report.tt2:950
+#: default/mail_tt2/report.tt2:953
 #, smalltalk-format
 msgid "No message found in archives matching Message-ID '%1'."
 msgstr "Nessun messaggio trovato nell'archivio per l'id '%1'."
 
 #. (report_param.msgid)
-#: default/mail_tt2/report.tt2:953
+#: default/mail_tt2/report.tt2:956
 #, smalltalk-format
 msgid "Unknown scenario '%1'."
 msgstr "Scenario sconosciuto '%1'"
 
 # nlsref 6,2
 #. (report_param.month)
-#: default/mail_tt2/report.tt2:956
+#: default/mail_tt2/report.tt2:959
 #, smalltalk-format
 msgid "Unable to find month '%1'"
 msgstr "Impossibile trovare il mese '%1'"
 
-#: default/mail_tt2/report.tt2:959
+#: default/mail_tt2/report.tt2:962
 #, fuzzy
 msgid "You are not allowed to get the privilege of this user."
 msgstr "Non ti è permesso iscriverti a questa lista."
 
-#: default/mail_tt2/report.tt2:962
+#: default/mail_tt2/report.tt2:965
 msgid "Failed to get your email address from the authentication service."
 msgstr ""
 "Impossibile recuperare il tuo indirizzo email dal sistema di autenticazione."
@@ -15933,6 +15943,15 @@ msgstr "Forum web"
 #: doc/samples/intranet/create_list_templates/intranet_list/comment.tt2:1
 msgid "Mailing list for intranets"
 msgstr "Lista intranet"
+
+#~ msgid "Calendar"
+#~ msgstr "Calendario"
+
+#~ msgid "Su:Mo:Tu:We:Th:Fr:Sa"
+#~ msgstr "D:L:M:M:G:V:S"
+
+#~ msgid "dd-mm-yyyy"
+#~ msgstr "gg-mm-aaaa"
 
 #~ msgid ""
 #~ "IF list context defined, apply list template if exist\n"
