@@ -9106,6 +9106,8 @@ sub do_get_closed_lists {
             $list->{'admin'}{'subject'};
         $param->{'closed'}{$list->{'name'}}{'by'} =
             $list->{'admin'}{'creation'}{'email'};
+        $param->{'closed'}{$list->{'name'}}{'update_epoch'} =
+            $list->{'admin'}{'update'}{'date_epoch'};
     }
 
     return 1;
