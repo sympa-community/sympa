@@ -36,8 +36,11 @@
                             <td headers="h_name">
                                 <a href="[% 'admin' | url_rel([list.key]) %]">[% list.key %]</a>
                             </td>
-                            <td headers="hsubject">[% list.value.subject %]</td>
+                            <td headers="h_subject">[% list.value.subject %]</td>
                             <td headers="h_owner">[% list.value.by %]</td>
+                            <td headers="h_update">
+                                [% list.value.update_epoch | optdesc('unixtime') %]
+                            </td>
                         </tr>
                 [% END %]
             </table>
