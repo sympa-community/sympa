@@ -1,6 +1,7 @@
 <!-- import.tt2 -->
 <form action="[% path_cgi %]" method="POST" class="add-request" name="multipleadd">
     <input type="hidden" name="list" value="[% list %]" />
+    <input type="hidden" name="previous_action" value="[% action %]" />
     <div>
         <textarea name="dump" id="dump" cols="80" rows="25"
                   data-tooltip aria-haspopup="true"
@@ -15,9 +16,11 @@
             <label for="quiet">[%|loc%]quiet[%END%]</label>
         [% END ~%]
         <input class="MainMenuLinks" type="submit" name="action_import"
-               value="[%|loc%]Add subscribers[%END%]" />
-	or <input class="MainMenuLinks" type="submit"
-               name="action_invite" value="Invite" />
+               value="[%|loc%]Add[%END%]" />
+    </div>
+    <div>
+        <input class="MainMenuLinks" type="submit"
+              name="action_invite" value="[%|loc%]Invite[%END%]" />
     </div>
 </form>
 <!-- end import.tt2 -->
