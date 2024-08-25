@@ -1151,35 +1151,9 @@ sub load_trusted_application {
     return load_generic_conf_file($config_file, \%trusted_applications);
 }
 
-## load trusted_application.conf configuration file
-sub load_crawlers_detection {
-    my $that = shift || '*';
-
-    my %crawlers_detection_conf = (
-        'user_agent_string' => {
-            'occurrence' => '0-n',
-            'format'     => '.+'
-        }
-    );
-
-    my $config_file =
-        Sympa::search_fullpath($that, 'crawlers_detection.conf');
-    return undef unless $config_file and -r $config_file;
-    my $hashtab =
-        load_generic_conf_file($config_file, \%crawlers_detection_conf);
-    my $hashhash;
-
-    foreach my $kword (keys %{$hashtab}) {
-        # ignore comments and default
-        next
-            unless ($crawlers_detection_conf{$kword});
-        foreach my $value (@{$hashtab->{$kword}}) {
-            $hashhash->{$kword}{$value} = 'true';
-        }
-    }
-
-    return $hashhash;
-}
+# load crawlers_detection.conf configuration file
+# Deprecated.
+#sub load_crawlers_detection;
 
 ############################################################
 #  load_generic_conf_file
@@ -1645,8 +1619,6 @@ sub _load_server_specific_secondary_config_files {
 
     ## Load nrcpt_by_domain.conf
     $param->{'config_hash'}{'nrcpt_by_domain'} = load_nrcpt_by_domain();
-    $param->{'config_hash'}{'crawlers_detection'} =
-        load_crawlers_detection($param->{'config_hash'}{'robot_name'});
 }
 
 sub _infer_robot_parameter_values {

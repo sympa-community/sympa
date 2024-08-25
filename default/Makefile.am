@@ -28,7 +28,6 @@ nobase_nodist_default_DATA = \
 nobase_default_DATA = \
 	auth.conf \
 	charset.conf \
-	crawlers_detection.conf \
 	create_list.conf \
 	edit_list.conf \
 	ldap_alias_entry.tt2 \
