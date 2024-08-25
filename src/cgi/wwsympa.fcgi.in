@@ -3034,11 +3034,11 @@ sub do_login {
             and $u->{'wrong_login_count'}
             and $u->{'wrong_login_count'} >
             Conf::get_robot_conf($robot, 'max_wrong_password')) {
-            $param->{'login_error'} = 'password_reset';
+            $param->{'reason'}      = 'resetpasswd';
+            $param->{'login_error'} = 'password_reset';    # Compat.<=6.2.72
             return _do_login_exit($failure_referer || $ldap_auth_info,
                 'renewpasswd');
         } else {
-            #$param->{'login_error'} = 'wrong_password';
             return _do_login_exit($failure_referer, 1);
         }
 
@@ -3881,7 +3881,7 @@ sub do_requestpasswd {
         arg             => join(',', $email, $reason),
         previous_action => (
             $in{'previous_action'}
-                || ($reason ? 'firstpasswd' : 'renewpasswd')
+                || ($reason eq 'firstpasswd' ? 'firstpasswd' : 'renewpasswd')
         )
     );
     return $next_action unless $next_action eq '1';
@@ -3937,8 +3937,7 @@ sub do_requestpasswd {
         $param->{'login_error'} = 'unable_to_create_ticket';
     }
 
-    return 1 unless ($param->{'previous_action'});
-    return $param->{'previous_action'};
+    return 1;
 }
 
 sub do_my {
