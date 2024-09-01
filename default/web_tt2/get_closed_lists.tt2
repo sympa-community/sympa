@@ -7,10 +7,10 @@
         <h2>[%|loc%]Closed lists[%END%]</h2>
 
         [% IF closed.size %]
-            <table  class="responsive table_style">
+            <table class="responsive table_style">
                 <caption>[%|loc%]Closed lists[%END%]</caption>
                 <tr class="color_light">
-                    <th>
+                    <th id="h_selection">
                         <a href="#"
                            data-tooltip aria-haspopup="true"
                            title="[%|loc%]Toggle Selection[%END%]"
@@ -18,9 +18,9 @@
                             <i class="far fa-check-square"></i>
                         </a>
                     </th>
-                    <th>[%|loc%]list name[%END%]</th>
-                    <th>[%|loc%]list subject[%END%]</th>
-                    <th>[%|loc%]Requested by[%END%]</th>
+                    <th id="h_name">[%|loc%]list name[%END%]</th>
+                    <th id="h_subject">[%|loc%]list subject[%END%]</th>
+                    <th id="h_owner">[%|loc%]Requested by[%END%]</th>
                 </tr>
 
                 [% FOREACH list = closed %]
@@ -29,10 +29,14 @@
                     [% ELSE %]
                         <tr class="color0">[% SET dark = 1 %]
                     [% END %]
-                            <td><input type="checkbox" name="selected_lists" value="[% list.key %]" /></td>
-                            <td><a href="[% 'admin' | url_rel([list.key]) %]">[% list.key %]</a></td>
-                            <td>[% list.value.subject %]</td>
-                            <td>[% list.value.by %]</td>
+                            <td headers="h_selection">
+                                <input type="checkbox" name="selected_lists" value="[% list.key %]" />
+                            </td>
+                            <td headers="h_name">
+                                <a href="[% 'admin' | url_rel([list.key]) %]">[% list.key %]</a>
+                            </td>
+                            <td headers="hsubject">[% list.value.subject %]</td>
+                            <td headers="h_owner">[% list.value.by %]</td>
                         </tr>
                 [% END %]
             </table>

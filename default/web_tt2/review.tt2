@@ -102,6 +102,10 @@
                     <input class="MainMenuLinks" type="submit"
                            name="action_add" value="[%|loc%]Add[%END%]" />
                 </div>
+                <div>
+                    <input class="MainMenuLinks" type="submit"
+                           name="action_invite" value="[%|loc%]Invite[%END%]" />
+                </div>
             </fieldset>
         </form>
         <h4>[%|loc%]To add multiple users:[%END%]</h4>
@@ -186,16 +190,16 @@
                  <table  class="responsive listOfItems">
                      <caption>[%|loc%]List of exclude[%END%]</caption>
                      <tr>
-                         <th>[%|loc%]Email[%END%]</th>
-                         <th>[%|loc%]Since[%END%]</th>
+                         <th id="h_email">[%|loc%]Email[%END%]</th>
+                         <th id="h_date">[%|loc%]Since[%END%]</th>
                      </tr>
 
                      [% IF user.email %]
                          [% IF exclude_users %]
                              [% FOREACH exc = exclude_users %]
                                  <tr class="color0">
-                                     <td>&nbsp;[% exc.email %]&nbsp;</td>
-                                     <td>&nbsp;[% exc.since %]&nbsp;</td>
+                                     <td headers="h_email">[% exc.email %]</td>
+                                     <td headers="h_date">[% exc.since %]</td>
                                  </tr>
                              [% END %]
                          [% END %]

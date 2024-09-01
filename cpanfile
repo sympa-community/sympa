@@ -147,6 +147,9 @@ requires 'Text::LineFold', '>= 2018.012';
 # Used to get time with sub-second precision
 requires 'Time::HiRes', '>= 1.29';
 
+# Used to get Unix time from local time
+requires 'Time::Local', '>= 1.23';
+
 # Used to create URI containing non URI-canonical characters.
 # Note: '3.28' is the version included in URI-1.35.
 requires 'URI::Escape', '>= 3.28';
@@ -192,7 +195,7 @@ recommends 'Net::SMTP';
 # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
 recommends 'Unicode::Normalize', '>= 1.03';
 
-recommends 'Unicode::UTF8', '>= 0.58';
+recommends 'Unicode::UTF8', '>= 0.60';
 
 ### Features
 ##
@@ -265,6 +268,11 @@ feature 'Encode::Locale', 'Useful when running command line utilities in the con
     requires 'Encode::Locale', '>= 1.02';
 };
 
+feature 'macos', 'Requirements specific to macOS.' => sub {
+    # Use dlopen() for macOS Big Sur or later.
+    requires 'ExtUtils::MakeMaker', '>= 7.58';
+};
+
 feature 'remote-list-including', 'Required when including members of a remote list.' => sub {
     requires 'LWP::Protocol::https';
 };
@@ -319,7 +327,7 @@ feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
     # Note: Perl 5.8.1 bundles version 0.23.
     # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
     requires 'Unicode::Normalize', '>= 1.03';
-    requires 'Unicode::UTF8', '>= 0.58';
+    requires 'Unicode::UTF8', '>= 0.60';
 };
 
 on 'test' => sub {

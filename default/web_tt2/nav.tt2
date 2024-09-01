@@ -13,14 +13,15 @@
                 <i class="fa fa-plus"></i>
             </span>
             <div class="title-bar-right">
-                <div class="title-bar-title">
+                <div class="title-bar-title" id="sympa-nav-bar-title">
                     <span>[%|loc%]Create list[%END%]</span>
                 </div>
                 <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
             </div>
         </div>
 
-        <nav class="top-bar" id="sympa-nav-bar">
+        <nav class="top-bar" id="sympa-nav-bar"
+         role="navigation" aria-labelledby="sympa-nav-bar-title">
             <menu class="top-bar-left">
                 <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                     <li>
@@ -48,14 +49,15 @@
             <i class="fa fa-wrench"></i>
         </span>
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>[%|loc%]Listmaster Admin[%END%]</span>
             </div>
             <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
     </div>
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-bar-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 [% IF (subaction == '' or subaction == 'm_lists') and action != 'skinsedit' %]
@@ -63,41 +65,38 @@
                 [% ELSE %]
                     [% SET class = '' %]
                 [% END %]
-                <li class="[% class %]"><a href="[% 'serveradmin/m_lists' | url_rel %]">[%|loc%]Lists[%END%]</a>
+                <li id="sm-lists" class="[% class %]">
+                    <a href="[% 'serveradmin/m_lists' | url_rel %]#sm-lists">[%|loc%]Lists[%END%]</a>
                     <ul class="vertical menu">
                         <li>
-                            <a href="[% 'get_pending_lists' | url_rel %]">[%|loc%]View Pending (Requested) lists[%END%]</a>
+                            <a href="[% 'get_pending_lists' | url_rel %]#sm-lists">[%|loc%]View Pending (Requested) lists[%END%]</a>
                         </li>
                         <li>
-                            <a href="[% 'get_closed_lists' | url_rel %]">[%|loc%]View Closed Lists[%END%]</a>
+                            <a href="[% 'get_closed_lists' | url_rel %]#sm-lists">[%|loc%]View Closed Lists[%END%]</a>
                         </li>
                         <li>
-                            <a href="[% 'get_latest_lists' | url_rel %]">[%|loc%]View Lists sorted by Creation Date[%END%]</a>
+                            <a href="[% 'get_latest_lists' | url_rel %]#sm-lists">[%|loc%]View Lists sorted by Creation Date[%END%]</a>
                         </li>
                         <li>
-                            <a href="[% 'get_inactive_lists' | url_rel %]">[%|loc%]View Lists sorted by Last Message Date[%END%]</a>
+                            <a href="[% 'get_inactive_lists' | url_rel %]#sm-lists">[%|loc%]View Lists sorted by Last Message Date[%END%]</a>
                         </li>
                     </ul>
                 </li>
                 [% IF subaction == 'users' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'serveradmin/users' | url_rel %]">[%|loc%]Users[%END%]</a>
+                    <li id="sm-users" class="[% class %]">
+                        <a href="[% 'serveradmin/users' | url_rel %]#sm-users">[%|loc%]Users[%END%]</a>
                     </li>
                 [% IF subaction == 'archives' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'serveradmin/archives' | url_rel %]">[%|loc%]Archives[%END%]</a>
-                    </li>
-                [% IF subaction == 'logs' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'serveradmin/logs' | url_rel %]">[%|loc%]System log[%END%]</a>
+                    <li id="sm-archives" class="[% class %]">
+                        <a href="[% 'serveradmin/archives' | url_rel %]#sm-archives">[%|loc%]Archives[%END%]</a>
                     </li>
                 [% IF subaction == 'templates' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'serveradmin/templates' | url_rel %]">[%|loc%]Templates[%END%]</a>
+                    <li id="sm-templates" class="[% class %]">
+                        <a href="[% 'serveradmin/templates' | url_rel %]#sm-templates">[%|loc%]Templates[%END%]</a>
                     </li>
                 [% IF action == 'skinsedit' %][% SET class = 'active' %][% ELSE %][% SET class = '' %][% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'skinsedit' | url_rel %]">[%|loc%]Skins, CSS and colors[%END%]</a>
+                    <li id="sm-skins" class="[% class %]">
+                        <a href="[% 'skinsedit' | url_rel %]#sm-skins">[%|loc%]Skins, CSS and colors[%END%]</a>
                     </li>
                 [% IF main_robot && robots ~%]
                     [% IF subaction == 'vhosts' %]
@@ -105,8 +104,8 @@
                     [% ELSE %]
                         [% SET class = '' %]
                     [% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'serveradmin/vhosts' | url_rel %]">
+                    <li id="sm-domains" class="[% class %]">
+                        <a href="[% 'serveradmin/vhosts' | url_rel %]#sm-domains">
                             [%|loc%]Domains[%END%]
                         </a>
                     </li>
@@ -117,8 +116,8 @@
                     [% ELSE %]
                         [% SET class = '' %]
                     [% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'edit_config' | url_rel %]">
+                    <li id="sm-config" class="[% class %]">
+                        <a href="[% 'edit_config' | url_rel %]#sm-config">
                             [%|loc%]View domain config[%END%]
                         </a>
                     </li>
@@ -129,25 +128,37 @@
                     [% ELSE %]
                         [% SET class = '' %]
                     [% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'serveradmin/families' | url_rel %]">[%|loc%]Families[%END%]</a>
+                    <li id="sm-families" class="[% class %]">
+                        <a href="[% 'serveradmin/families' | url_rel %]#sm-families">[%|loc%]Families[%END%]</a>
                     </li>
                 [% END %]
-                [% IF subaction == 'translation' %]
+
+                [% IF subaction == 'stats' %]
                     [% SET class = 'active' %]
                 [% ELSE %]
                     [% SET class = '' %]
                 [% END %]
                 <li class="[% class %]">
-                    <a href="[% 'serveradmin/translation' | url_rel %]">[%|loc%]Translating Sympa[%END%]</a>
+                    <a href="[% 'serveradmin/stats' | url_rel %]">
+                        [%|loc%]Statistics[%END%]
+                    </a>
+                </li>
+
+                [% IF subaction == 'translation' %]
+                    [% SET class = 'active' %]
+                [% ELSE %]
+                    [% SET class = '' %]
+                [% END %]
+                <li id="sm-translation" class="[% class %]">
+                    <a href="[% 'serveradmin/translation' | url_rel %]#sm-translation">[%|loc%]Translating Sympa[%END%]</a>
                 </li>
                 [% IF subaction == 'tracker' %]
                     [% SET class = 'active' %]
                 [% ELSE %]
                     [% SET class = '' %]
                 [% END %]
-                <li class="[% class %]">
-                    <a href="[% 'serveradmin/tracker' | url_rel %]">[%|loc%]Submitting a bug, a feature request[%END%]</a>
+                <li id="sm-tracker" class="[% class %]">
+                    <a href="[% 'serveradmin/tracker' | url_rel %]#sm-tracker">[%|loc%]Submitting a bug, a feature request[%END%]</a>
                 </li>
             </ul>
         </menu>
@@ -166,14 +177,15 @@
             <i class="fa fa-list"></i>
         </span>
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>[%|loc%]Index of lists[%END%]</span>
             </div>
             <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
     </div>
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-var-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 [% FOREACH letter IN letters %]
@@ -220,7 +232,7 @@
 
     <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>[%|loc%]Basic Operations[%END%]</span>
             </div>
             <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
@@ -233,10 +245,12 @@
         [% SET class = '' %]
     [% END %]
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-bar-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
-                <li class="[% class %]"><a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Edit List Config[%END%]</a>
+                <li id="lm-config" class="[% class %]">
+                    <a href="[% 'edit_list_request' | url_rel([list,'description']) %]">[%|loc%]Edit List Config[%END%]</a>
                     <ul class="vertical menu">
                         [% IF group == 'description' %]
                             [% SET class = 'active' %]
@@ -244,7 +258,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'edit_list_request' | url_rel([list,'description']) %]" >
+                            <a href="[% 'edit_list_request' | url_rel([list,'description']) %]#lm-config" >
                                 [%|loc%]List definition[%END%]
                             </a>
                         </li>
@@ -254,7 +268,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'edit_list_request' | url_rel([list,'sending']) %]" >
+                            <a href="[% 'edit_list_request' | url_rel([list,'sending']) %]#lm-config" >
                                 [%|loc%]Sending/receiving setup[%END%]
                             </a>
                         </li>
@@ -264,7 +278,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'edit_list_request' | url_rel([list,'command']) %]" >
+                            <a href="[% 'edit_list_request' | url_rel([list,'command']) %]#lm-config" >
                                 [%|loc%]Privileges[%END%]
                             </a>
                         </li>
@@ -274,7 +288,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'edit_list_request' | url_rel([list,'archives']) %]" >
+                            <a href="[% 'edit_list_request' | url_rel([list,'archives']) %]#lm-config" >
                                 [%|loc%]Archives[%END%]
                             </a>
                         </li>
@@ -284,7 +298,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'edit_list_request' | url_rel([list,'bounces']) %]" >
+                            <a href="[% 'edit_list_request' | url_rel([list,'bounces']) %]#lm-config" >
                                 [%|loc%]Bounces[%END%]
                             </a>
                         </li>
@@ -294,7 +308,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'edit_list_request' | url_rel([list,'data_source']) %]" >
+                            <a href="[% 'edit_list_request' | url_rel([list,'data_source']) %]#lm-config" >
                                 [%|loc%]Data sources setup[%END%]
                             </a>
                         </li>
@@ -304,7 +318,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'edit_list_request' | url_rel([list,'dkim']) %]" >
+                            <a href="[% 'edit_list_request' | url_rel([list,'dkim']) %]#lm-config" >
                                 [%|loc%]DKIM/DMARC/ARC[%END%]
                             </a>
                         </li>
@@ -314,7 +328,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'editfile' | url_rel([list,'description_templates']) %]">
+                            <a href="[% 'editfile' | url_rel([list,'description_templates']) %]#lm-config">
                                 [%|loc%]List description/homepage[%END%]
                             </a>
                         </li>
@@ -324,7 +338,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'editfile' | url_rel([list,'message_templates']) %]">
+                            <a href="[% 'editfile' | url_rel([list,'message_templates']) %]#lm-config">
                                 [%|loc%]Message templates[%END%]
                             </a>
                         </li>
@@ -334,7 +348,7 @@
                             [% SET class = '' %]
                         [% END %]
                         <li class="[% class %]">
-                            <a href="[% 'edit_list_request' | url_rel([list,'other']) %]" >
+                            <a href="[% 'edit_list_request' | url_rel([list,'other']) %]#lm-config" >
                                 [%|loc%]Miscellaneous[%END%]
                             </a>
                         </li>
@@ -346,23 +360,23 @@
                     [% ELSE %]
                         [% SET class = '' %]
                     [%END%]
-                    <li class="[% class %]">
+                    <li id="lm-users" class="[% class %]">
                         <a href="#">
                             [%|loc%]Users[%END%]
                         </a>
                         <ul class="vertical menu">
                             <li [% IF page.match('^\d+$') %]class="active"[%END%]>
-                                <a href="[% 'review' | url_rel([list]) %]" >
+                                <a href="[% 'review' | url_rel([list]) %]#lm-users" >
                                     [%|loc%]Subscribers[%END%]
                                 </a>
                             </li>
                             <li [% IF page == 'owner' %]class="active"[%END%]>
-                                <a href="[% 'review' | url_rel([list,'owner']) %]" >
+                                <a href="[% 'review' | url_rel([list,'owner']) %]#lm-users" >
                                     [%|loc%]Owners[%END%]
                                 </a>
                             </li>
                             <li [% IF page == 'editor' %]class="active"[%END%]>
-                                <a href="[% 'review' | url_rel([list,'editor']) %]" >
+                                <a href="[% 'review' | url_rel([list,'editor']) %]#lm-users" >
                                     [%|loc%]Moderators[%END%]
                                 </a>
                             </li>
@@ -375,8 +389,8 @@
                     [% ELSE %]
                         [% SET class = '' %]
                     [% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'blocklist' | url_rel([list]) %]" >
+                    <li id="lm-blocklist" class="[% class %]">
+                        <a href="[% 'blocklist' | url_rel([list]) %]#lm-blocklist" >
                             [%|loc%]Blocklist[%END%]
                         </a>
                     </li>
@@ -387,8 +401,8 @@
                     [% ELSE %]
                         [% SET class = '' %]
                     [% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'arc_manage' | url_rel([list]) %]">
+                    <li id="archives" class="[% class %]">
+                        <a href="[% 'arc_manage' | url_rel([list]) %]#lm-archives">
                             [%|loc%]Manage Archives[%END%]
                         </a>
                     </li>
@@ -399,8 +413,8 @@
                     [% ELSE %]
                         [% SET class = '' %]
                     [% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'reviewbouncing' | url_rel([list]) %]">
+                    <li id="lm-bounces" class="[% class %]">
+                        <a href="[% 'reviewbouncing' | url_rel([list]) %]#lm-bounces">
                             [%|loc%]Bounces[%END%]
                         </a>
                     </li>
@@ -411,8 +425,8 @@
                     [% ELSE %]
                         [% SET class = '' %]
                     [% END %]
-                    <li class="[% class %]">
-                        <a href="[% 'viewlogs' | url_rel([list]) %]" >
+                    <li id="lm-logs" class="[% class %]">
+                        <a href="[% 'viewlogs' | url_rel([list]) %]#lm-logs" >
                             [%|loc%]Logs[%END%]
                         </a>
                     </li>
@@ -436,7 +450,7 @@
 
     <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>
                     [% IF subaction == "html_news_letter" ~%]
                         [%|loc%]Sending an HTML page to the list[%END%]
@@ -455,7 +469,8 @@
         [% SET class = '' %]
     [% END %]
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-bar-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 <li class="[% class %]">
@@ -488,14 +503,15 @@
 
     <div class="title-bar" data-responsive-toggle="sympa-nav-bar" data-hide-for="medium">
         <div class="title-bar-right">
-            <div class="title-bar-title">
+            <div class="title-bar-title" id="sympa-nav-bar-title">
                 <span>[%|loc%]Shared documents[%END%]</span>
             </div>
             <a class="menu-icon" href="#" data-toggle="sympa-nav-bar"></a>
         </div>
     </div>
 
-    <nav class="top-bar" id="sympa-nav-bar">
+    <nav class="top-bar" id="sympa-nav-bar"
+     role="navigation" aria-labelledby="sympa-nav-bar-title">
         <menu class="top-bar-left">
             <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
                 <li class="[% UNLESS expert_page %]active not-click[%END%]">

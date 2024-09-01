@@ -156,26 +156,6 @@ $(function() {
     }
 });
 
-/* Loading jQuery-UI Datepicker Widget. */
-$(function() {
-    var options = {
-        buttonText:      sympa.calendarButtonText,
-        changeMonth:     true,
-        changeYear:      true,
-        dateFormat:      'dd-mm-yy',
-        dayNames:        sympa.dayNames,
-        dayNamesMin:     sympa.dayNamesMin,
-        firstDay:        sympa.calendarFirstDay,
-        monthNamesShort: sympa.monthNamesShort,
-        shortYearCutoff: 50,
-        showOn:          "button"
-    };
-    $('#date_deb').datepicker(options);
-    $('#date_from').datepicker(options);
-    $('#date_fin').datepicker(options);
-    $('#date_to').datepicker(options);
-});
-
 /* Emulates AJAX reveal modal button of Foundation 5. */
 /* The element specified by data-reveal-id is the container of content
  * specified by href attribute of the item which have data-reveal-ajax="true".
@@ -200,14 +180,17 @@ $(function() {
 
 // Show "Please wait..." spinner icon.
 $(function() {
-	var loadingText =
-	$('<h1 id="loadingText"><i class="fa fa-spinner fa-spin-pulse"></i> ' +
-		sympa.loadingText + '</h1>');
-	$('#loading').append(loadingText);
+    var loadingText =
+        $('<h1 id="loadingText"><i class="fa fa-spinner fa-spin-pulse"></i> ' +
+        sympa.loadingText + '</h1>');
+    $('#loading').append(loadingText);
 
-	$('.heavyWork').on('click', function(){
-		$('#loading').show();
-	});
+    $(window).on('pagehide', function(){
+        $('#loading').hide();
+    });
+    $('.heavyWork').on('click', function(){
+        $('#loading').show();
+    });
 });
 
 // fade effect for notification boxes
@@ -356,6 +339,18 @@ $(function(){
 
             return false;
         });
+    });
+});
+
+/* Align the scrollable calendar. */
+$(function() {
+    $('.calendarLinksCurrentPage').each(function(){
+        var curmonth = $(this);
+        var container = $('#ArcCalendar');
+
+        container.scrollTop(
+            curmonth.position().top - container.position().top -
+            (container.height() - curmonth.height()) / 2);
     });
 });
 

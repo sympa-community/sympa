@@ -15,11 +15,11 @@
     <table  class="listOfItems text_center">
         <caption>[%|loc%]Message tracking[%END%]</caption>
         <tr>
-            <th>[%|loc%]Recipient Email[%END%]</th>
-            <th>[%|loc%]Reception Option[%END%]</th>
-            <th>[%|loc%]Delivery Status[%END%]</th>
-            <th>[%|loc%]Notification Date[%END%]</th>
-            <th>[%|loc%]Notification[%END%]</th>
+            <th id="h_email">[%|loc%]Recipient Email[%END%]</th>
+            <th id="h_reception">[%|loc%]Reception Option[%END%]</th>
+            <th id="h_status">[%|loc%]Delivery Status[%END%]</th>
+            <th id="h_date">[%|loc%]Notification Date[%END%]</th>
+            <th id="h_detail">[%|loc%]Notification[%END%]</th>
         </tr>
         [% FOREACH u = tracking_info %]
             [% IF dark == '1' %]
@@ -29,11 +29,13 @@
                 [% SET dark = 1 %]
                 <tr class="color0">
             [% END %]
-                    <td>[% u.recipient %]</td>
-                    <td>[%|optdesc('reception')%][% u.reception_option %][%END%]</td>
-                    <td>[% u.status %]</td>
-                    <td>[% u.arrival_date %]</td>
-                    <td>
+                    <td headers="h_email">[% u.recipient %]</td>
+                    <td headers="h_reception">
+                        [%|optdesc('reception')%][% u.reception_option %][%END%]
+                    </td>
+                    <td headers="h_status">[% u.status %]</td>
+                    <td headers="h_date">[% u.arrival_date %]</td>
+                    <td headers="h_detail">
                         [% IF u.status %]
                             [%# Button to load AJAX content to reveal modal. See Foundation docs. ~%]
                             <a href="[% 'ajax/viewbounce' | url_rel([list],{email=>u.recipient,envid=>u.envid,previous_action=>action}) %]"

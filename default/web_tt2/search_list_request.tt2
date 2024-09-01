@@ -2,7 +2,11 @@
 <h2><i class="fa fa-search"></i> [%|loc%]Search for list(s)[%END%]</h2>
 <form action="[% path_cgi %]" method="post">
     <fieldset>
-        <input type="text" size="14" name="filter_list" value="[% filter_list %]" title="[%|loc%]Enter a list name[%END%]" placeholder="[%|loc%]Enter a list name[%END%]"/>
+        <label for="filter_list">[%|loc%]Search keywords:[%END%]</label>
+        <input type="text" id="filter_list" size="14"
+         name="filter_list" value="[% filter_list %]"
+         title="[%|loc%]Enter a list name[%END%]"
+         placeholder="[%|loc%]Enter a list name[%END%]"/>
         <input type="hidden" name="action" value="search_list" />
         <input class="MainMenuLinks heavyWork" type="submit" name="action_search_list" value="[%|loc%]Search lists[%END%]" />
     </fieldset>

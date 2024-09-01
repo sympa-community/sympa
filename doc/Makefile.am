@@ -54,7 +54,6 @@ man5_MANS = \
 	auth.conf.5 \
 	automatic_lists_description.conf.5 \
 	charset.conf.5 \
-	crawlers_detection.conf.5 \
 	edit_list.conf.5 \
 	ldap_alias_manager.conf.5 \
 	list_config.5 \
@@ -71,7 +70,6 @@ EXTRA_DIST = $(nobase_doc_DATA) \
 	auth.conf.pod \
 	automatic_lists_description.conf.pod \
 	charset.conf.pod \
-	crawlers_detection.conf.pod \
 	edit_list.conf.pod \
 	ldap_alias_manager.conf.pod \
 	list_config.pod \

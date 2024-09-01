@@ -199,11 +199,6 @@ a:visited {
     text-decoration: none;
 }
 
-a:focus {
-    outline: 0;
-    text-decoration: none;
-}
-
 a:hover, a:active {
     color: [% color_6 %];
     outline: 0;
@@ -1431,6 +1426,11 @@ span.divider{
 }
 
 /* Calendar in mhonarc_rc.tt2 */
+#ArcCalendar {
+    overflow-y: auto;
+    max-height: 9em;
+}
+
 ul.calendar {
     margin-left:0!important;
     padding-left:0!important;
@@ -2112,5 +2112,12 @@ p.retraitita, span.retraitita {
 a, li {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+[%# Accessibility %]
+[%# See https://github.com/sympa-community/sympa/issues/1752 %]
+select[multiple] option {
+    overflow-x: scroll;
+}
+[%# End Accessibility %]
 
 [%# end css.tt2 %]

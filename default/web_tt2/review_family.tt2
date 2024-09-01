@@ -3,18 +3,22 @@
 <table class="responsive listOfItems">
     <caption>[%|loc%]Table which display family lists[%END%]</caption>
     <tr>
-        <th>[%|loc%]Status[%END%]</th>
-        <th>[%|loc%]List name[%END%]</th>
-        <th>[%|loc%]Instantiation date[%END%]</th>
-        <th>[%|loc%]Subject[%END%]</th>
+        <th id="h_status">[%|loc%]Status[%END%]</th>
+        <th id="h_name">[%|loc%]List name[%END%]</th>
+        <th id="h_date">[%|loc%]Instantiation date[%END%]</th>
+        <th id="h_subject">[%|loc%]Subject[%END%]</th>
     </tr>
 
     [% FOREACH list = family_lists %]
         <tr>
-            <td>[% list.status | optdesc('status')%]</td>
-            <td><a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a></td>
-            <td>[% list.instantiation_date_epoch | optdesc('unixtime') %]</td>
-            <td>[% list.subject %]</td>
+            <td headers="h_status">[% list.status | optdesc('status')%]</td>
+            <td headers="h_name">
+                <a href="[% 'admin' | url_rel([list.name]) %]">[% list.name %]</a>
+            </td>
+            <td headers="h_date">
+                [% list.instantiation_date_epoch | optdesc('unixtime') %]
+            </td>
+            <td headers="h_subject">[% list.subject %]</td>
         </tr>
     [% END %]
 </table>
