@@ -315,8 +315,10 @@ sub guessed_to_utf8 {
 
     my $utf8;
     if ($Unicode::UTF8::VERSION) {
-        $utf8 =
-            eval { Unicode::UTF8::decode_utf8($text, Encode::FB_CROAK()) };
+        $utf8 = Unicode::UTF8::decode_utf8($text)
+            if Unicode::UTF8::valid_utf8($text);
+    } else {
+        $utf8 = eval { Encode::decode_utf8($text, Encode::FB_CROAK()) };
     }
     unless (defined $utf8) {
         foreach my $charset (map { $_ ? @$_ : () } @legacy_charsets{@langs}) {
