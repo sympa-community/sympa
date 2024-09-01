@@ -40,6 +40,7 @@ use MIME::EncWords;
 use MIME::Lite::HTML;
 use POSIX qw();
 use Time::Local qw();
+use Unicode::UTF8;
 use URI;
 use Data::Dumper;    # tentative
 
@@ -1112,6 +1113,15 @@ while ($query = Sympa::WWW::FastCGI->new) {
 
     ## Get params in a hash
     %in = $query->Vars;
+    while (my ($k, $v) = each %in) {
+        next if ref $v;
+        next if Encode::is_utf8($v);
+        unless (Unicode::UTF8::valid_utf8($v)) {
+            $log->syslog('err', 'Parameter in invalid UTF-8 %s="%s": Ignored',
+                $k, sprintf("\\x%*v02X", "\\x", $v));
+            delete $in{$k};
+        }
+    }
 
     # Determin robot.
     $robot = $ENV{SYMPA_DOMAIN};
@@ -1953,8 +1963,8 @@ sub _split_params {
         $ajax = 1;
     }
 
-    if ($#params >= 0) {
-        $in{'action'} = $params[0];
+    if (@params) {
+        $in{'action'} = shift @params;
         my $args;
         if (defined $action_args{$in{'action'}}) {
             $args = $action_args{$in{'action'}};
@@ -1962,21 +1972,25 @@ sub _split_params {
             $args = $action_args{'default'};
         }
 
-        my $i = 1;
         foreach my $p (@$args) {
-            my $pname;
-            ## More than 1 param
+            my ($k, $v);
             if ($p =~ /^\@(\w+)$/) {
-                $pname = $1;
-                $in{$pname} = join '/', @params[$i .. $#params];
-                $in{$pname} .= '/' if $ending_slash;
-                last;
+                $k = $1;
+                $v = join '/', @params;
+                $v .= '/' if $ending_slash;
             } else {
-                $pname = $p;
-                $in{$pname} = $params[$i];
+                $k = $p;
+                $v = shift @params;
             }
-            wwslog('debug', 'Incoming parameter: %s=%s', $pname, $in{$pname});
-            $i++;
+            $in{$k} = $v;
+
+            unless (Encode::is_utf8($v) or Unicode::UTF8::valid_utf8($v)) {
+                $log->syslog('err',
+                    'Parameter in invalid UTF-8 %s="%s": Ignored',
+                    $k, sprintf("\\x%*v02X", "\\x", $v));
+                delete $in{$k};
+            }
+            last if 0 == index $p, '@';
         }
     }
 }
