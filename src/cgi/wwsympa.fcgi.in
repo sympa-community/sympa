@@ -7887,27 +7887,24 @@ sub do_distribute {
 
     my @ids = split /\0/, $in{'id'};
     $param->{'id'} = [@ids];
-    my @topics = grep { defined $_ and length $_ } split /\0/, $in{'topic'};
+    my @topics =
+        grep { $list->is_available_msg_topic($_) } split /\0/, $in{'topic'};
     $param->{'topic'} = [@topics];
     $param->{'topic_required'} =
         ($list->is_there_msg_topic and $list->is_msg_topic_tagging_required);
 
     # Action confirmed?
-    if ($param->{'topic_required'}) {
-        my $response_action = (
-            @topics    # Topics are required.
-                or ($in{'response_action'}
-                and $in{'response_action'} eq 'cancel')
-            )
-            ? $in{'response_action'}
-            : undef;
-        my $next_action = $session->confirm_action(
-            $in{'action'}, $response_action,
-            arg             => join(',', sort @ids),
-            previous_action => ($in{'previous_action'} || 'modindex')
-        );
-        return $next_action unless $next_action eq '1';
+    unless ('cancel' eq ($in{'response_action'} // '')) {
+        # Redo confirmation if topics are required.
+        undef $in{'response_action'}
+            if not @topics and $param->{'topic_required'};
     }
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', sort @ids),
+        previous_action => ($in{'previous_action'} || 'modindex')
+    );
+    return $next_action unless $next_action eq '1';
 
     # Load message list.
     my @mail_command = ();
