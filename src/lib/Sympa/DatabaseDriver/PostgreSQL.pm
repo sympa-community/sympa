@@ -61,18 +61,11 @@ sub connect {
 
     # - Configure Postgres to use ISO format dates.
     # - Set client encoding to UTF8.
-    # - Create a temporary view "dual" for portable SQL statements.
     # Note: utf8 flagging must be disabled so that we will consistently use
     #   UTF-8 bytestring as internal format.
-    # Note: PostgreSQL <= 8.0.x didn't support temporary view but >= 7.3.x
-    #   supported CREATE OR REPLACE statement.
     $self->__dbh->{pg_enable_utf8} = 0;    # For DBD::Pg 3.x
     $self->__dbh->do("SET DATESTYLE TO 'ISO';");
     $self->__dbh->do("SET NAMES 'utf8'");
-    defined $self->__dbh->do(
-        q{CREATE TEMPORARY VIEW dual AS SELECT 'X'::varchar(1) AS dummy;})
-        or $self->__dbh->do(
-        q{CREATE OR REPLACE VIEW dual AS SELECT 'X'::varchar(1) AS dummy;});
 
     return 1;
 }
