@@ -112,7 +112,7 @@ requires 'MIME::Base64', '>= 3.11';
 requires 'MIME::Charset', '>= 1.011.3';
 
 # Required to decode/encode SMTP header fields without breaking character encoding
-requires 'MIME::EncWords', '>= 1.014';
+requires 'MIME::EncWords', '>= 1.015';
 
 # Used to compose HTML mail from the web interface
 requires 'MIME::Lite::HTML', '>= 1.23';
