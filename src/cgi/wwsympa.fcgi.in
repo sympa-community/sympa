@@ -7598,6 +7598,10 @@ sub do_distribute {
         $spool_mod->remove($handle, action => 'distribute');
     }
 
+    # Don't need to do anything if all messages were filtered out
+    # by the "already_moderated" clause above.
+    return 'modindex' if (@mail_command == 0);
+    
     # Commands are injected into incoming spool directly with "md5"
     # authentication level.
     my $cmd_message = Sympa::Message->new(
