@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2018, 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2018, 2019, 2020, 2024 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -148,8 +148,10 @@ sub _twist {
     ## Lock config before openning the config file
     my $lock_fh = Sympa::LockedFile->new($list->{'dir'} . '/config', 5, '>');
     unless ($lock_fh) {
-        $log->syslog('err', 'Impossible to create %s/config: %s',
-            $list->{'dir'}, $ERRNO);
+        $log->syslog(
+            'err',          'Impossible to create %s/config: %s',
+            $list->{'dir'}, Sympa::LockedFile->last_error
+        );
         $self->add_stash($request, 'intern');
         return undef;
     }
