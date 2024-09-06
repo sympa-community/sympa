@@ -1029,7 +1029,9 @@ sub do_verify_netmask {
     return 0 unless defined $ENV{'REMOTE_ADDR'};
 
     my @cidr;
-    if ($args[0] eq 'default' or $args[0] eq 'any') {
+    unless (length($args[0] // '')) {
+        ;
+    } elsif ($args[0] eq 'default' or $args[0] eq 'any') {
         # Compatibility with Net::Netmask, adding IPv6 feature.
         @cidr = ('0.0.0.0/0', '::/0');
     } else {
@@ -1048,7 +1050,7 @@ sub do_verify_netmask {
     }
     unless (@cidr) {
         $log->syslog('err', 'Error rule syntax: failed to parse netmask "%s"',
-            $args[0]);
+            $args[0] // '');
         die {};
     }
 
@@ -1084,6 +1086,7 @@ sub do_is_owner {
     my $condition_key = shift;
     my @args          = @_;
 
+    return 0 unless defined $args[0] and defined $args[1];
     return 0 if $args[1] eq 'nobody';
 
     # The list is local or in another local robot
@@ -1156,14 +1159,14 @@ sub do_match {
     my @args          = @_;
 
     # Nothing can match an empty regexp.
-    return 0 unless length $args[1];
+    return 0 unless length($args[1] // '');
 
     # wrap matches with eval{} to avoid crash by malformed regexp.
     my $r = 0;
     if (ref $args[0] eq 'ARRAY') {
         eval {
             foreach my $arg (@{$args[0]}) {
-                if ($arg =~ /$args[1]/i) {
+                if (($arg // '') =~ /$args[1]/i) {
                     $r = 1;
                     last;
                 }
@@ -1171,7 +1174,7 @@ sub do_match {
         };
     } else {
         eval {
-            if ($args[0] =~ /$args[1]/i) {
+            if (($args[0] // '') =~ /$args[1]/i) {
                 $r = 1;
             }
         };

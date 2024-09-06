@@ -153,16 +153,12 @@ sub new {
     $name =~ tr/A-Z/a-z/;
 
     ## Reject listnames with reserved list suffixes
-    my $regx = Conf::get_robot_conf($robot, 'list_check_regexp');
-    if ($regx) {
-        if ($name =~ /^(\S+)-($regx)$/) {
-            $log->syslog(
-                'err',
-                'Incorrect name: listname "%s" matches one of service aliases',
-                $name
-            ) unless ($options->{'just_try'});
-            return undef;
-        }
+    my $sfxs = Conf::get_robot_conf($robot, 'list_check_suffixes') // [];
+    if (grep { lc("-$_") eq substr $name, -length("-$_") } @$sfxs) {
+        $log->syslog('err',
+            'Incorrect listname %s matches one of service aliases', $name)
+            unless $options->{'just_try'};
+        return undef;
     }
 
     my $status;
