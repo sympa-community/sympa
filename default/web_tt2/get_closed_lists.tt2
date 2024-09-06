@@ -21,6 +21,7 @@
                     <th id="h_name">[%|loc%]list name[%END%]</th>
                     <th id="h_subject">[%|loc%]list subject[%END%]</th>
                     <th id="h_owner">[%|loc%]Requested by[%END%]</th>
+                    <th id="h_update">[%|loc%]Last update[%END%]</th>
                 </tr>
 
                 [% FOREACH list = closed %]
@@ -35,8 +36,11 @@
                             <td headers="h_name">
                                 <a href="[% 'admin' | url_rel([list.key]) %]">[% list.key %]</a>
                             </td>
-                            <td headers="hsubject">[% list.value.subject %]</td>
+                            <td headers="h_subject">[% list.value.subject %]</td>
                             <td headers="h_owner">[% list.value.by %]</td>
+                            <td headers="h_update">
+                                [% list.value.update_epoch | optdesc('unixtime') %]
+                            </td>
                         </tr>
                 [% END %]
             </table>
