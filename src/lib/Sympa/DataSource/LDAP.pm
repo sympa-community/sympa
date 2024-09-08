@@ -69,13 +69,15 @@ sub _open_operation {
     my $ldap_filter = $options{filter} || $self->{filter};
     my $ldap_attrs  = $options{attrs}  || $self->{attrs};
     my $ldap_scope  = $options{scope}  || $self->{scope};
+    my $ldap_deref  = $options{deref}  || $self->{deref};
 
     my @args = (
-        base   => $ldap_suffix,
-        filter => $ldap_filter,
-        attrs  => [split /\s*,\s*/, $ldap_attrs],
-        scope  => $ldap_scope,
-        control=> $self->{_page} ? [$self->{_page}] : []
+        base    => $ldap_suffix,
+        filter  => $ldap_filter,
+        attrs   => [split /\s*,\s*/, $ldap_attrs],
+        scope   => $ldap_scope,
+        deref   => $ldap_deref,
+        control => $self->{_page} ? [$self->{_page}] : []
     );
 
     my $mesg = $self->{_db}->do_operation('search', @args);

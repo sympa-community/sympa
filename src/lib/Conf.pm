@@ -685,12 +685,13 @@ sub _load_auth {
             'get_dn_by_uid_filter'   => '.+',
             'get_dn_by_email_filter' => '.+',
             'email_attribute'        => Sympa::Regexps::ldap_attrdesc(),
-            'alternative_email_attribute' => '.*',                 # Obsoleted
+            'alternative_email_attribute' => '.*',             # Obsoleted
             'scope'                       => 'base|one|sub',
-            'authentication_info_url'     => 'http(s)?:/.*',
-            'use_tls'                     => 'starttls|ldaps|none',
-            'use_ssl'                     => '1',                  # Obsoleted
-            'use_start_tls'               => '1',                  # Obsoleted
+            'deref'                   => 'never|search|find|always',
+            'authentication_info_url' => 'http(s)?:/.*',
+            'use_tls'                 => 'starttls|ldaps|none',
+            'use_ssl'       => '1',                            # Obsoleted
+            'use_start_tls' => '1',                            # Obsoleted
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_[123]',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
@@ -722,6 +723,7 @@ sub _load_auth {
             'timeout'       => '\d+',
             'suffix'        => '.+',
             'scope'         => 'base|one|sub',
+            'deref'         => 'never|search|find|always',
             'get_email_by_uid_filter' => '.+',
             'email_attribute'         => Sympa::Regexps::ldap_attrdesc(),
             'use_tls'                 => 'starttls|ldaps|none',
@@ -749,6 +751,7 @@ sub _load_auth {
             'timeout'       => '\d+',
             'suffix'        => '.+',
             'scope'         => 'base|one|sub',
+            'deref'         => 'never|search|find|always',
             'get_email_by_uid_filter' => '.+',
             'email_attribute'         => Sympa::Regexps::ldap_attrdesc(),
             'use_tls'                 => 'starttls|ldaps|none',
@@ -883,10 +886,12 @@ sub _load_auth {
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
+                    $current_paragraph->{'deref'} ||= 'find';
                 } elsif ($current_paragraph->{'auth_type'} eq 'generic_sso') {
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
+                    $current_paragraph->{'deref'} ||= 'find';
                     ## default value for http_header_value_separator is ';'
                     $current_paragraph->{'http_header_value_separator'} ||=
                         ';';
@@ -903,6 +908,7 @@ sub _load_auth {
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
+                    $current_paragraph->{'deref'} ||= 'find';
                 } elsif ($current_paragraph->{'auth_type'} eq 'user_table') {
                     ;
                 } elsif ($current_paragraph->{'auth_type'} eq 'cgi') {

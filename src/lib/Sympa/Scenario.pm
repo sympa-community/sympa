@@ -1401,6 +1401,7 @@ sub do_search {
             base   => "$ldap_conf{'suffix'}",
             filter => "$filter",
             scope  => "$ldap_conf{'scope'}",
+            deref  => "$ldap_conf{'deref'}",
             attrs  => ['1.1']
         );
         unless ($mesg) {
@@ -1580,7 +1581,8 @@ sub _load_ldap_configuration {
         return;
     }
 
-    my @valid_options = qw(host suffix filter scope bind_dn bind_password
+    my @valid_options =
+        qw(host suffix filter scope deref bind_dn bind_password
         use_tls ssl_version ssl_ciphers ssl_cert ssl_key
         ca_verify ca_path ca_file);
     my @required_options = qw(host suffix filter);
@@ -1593,6 +1595,7 @@ sub _load_ldap_configuration {
         'suffix'        => undef,
         'filter'        => undef,
         'scope'         => 'sub',
+        'deref'         => 'find',
         'bind_dn'       => undef,
         'bind_password' => undef
     );

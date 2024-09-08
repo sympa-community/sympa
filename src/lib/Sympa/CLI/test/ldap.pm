@@ -89,6 +89,7 @@ sub _run {
         base   => ($options->{suffix} // ''),
         filter => $filter,
         scope  => ($options->{scope} || 'sub'),
+        deref  => ($options->{deref} || 'find'),
         attrs =>
             ($options->{attrs} ? [split /\s*,\s*/, $options->{attrs}] : ['']),
     ) or die sprintf "Search  impossible: %s\n", $db->error;
