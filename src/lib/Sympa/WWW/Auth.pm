@@ -260,7 +260,6 @@ sub ldap_authentication {
         filter  => $filter,
         scope   => $ldap->{'scope'},
         deref   => $ldap->{'deref'},
-        timeout => $ldap->{'timeout'}
     );
     unless ($mesg and $entry = $mesg->shift_entry) {
         $log->syslog(
@@ -341,7 +340,6 @@ sub get_email_by_net_id {
         filter  => $filter,
         scope   => $auth->{scope},
         deref   => $auth->{deref},
-        timeout => $auth->{timeout},
         attrs   => [$auth->{email_attribute}],
     );
 
