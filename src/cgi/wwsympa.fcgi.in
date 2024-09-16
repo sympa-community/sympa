@@ -3627,8 +3627,6 @@ sub is_ldap_user {
         return undef;
     }
 
-    my $filter;
-
     foreach my $ldap (@ldap_servers) {
         # skip ldap auth service if the user id or email do not match regexp
         # auth service parameter
@@ -3641,33 +3639,24 @@ sub is_ldap_user {
             next;
         }
 
-        if (Sympa::Tools::Text::valid_email($userid)) {
-            $filter = $ldap->{'get_dn_by_email_filter'};
-        } else {
-            $filter = $ldap->{'get_dn_by_uid_filter'};
-        }
+        my $filter =
+            Sympa::Tools::Text::valid_email($userid)
+            ? $ldap->{get_dn_by_email_filter}
+            : $ldap->{get_dn_by_uid_filter};
         $filter =~ s/\[sender\]/$userid/ig;
 
-        ## !! une fonction get_dn_by_email/uid
+        my $mesg = $db->do_operation('search', filter => $filter);
 
-        my $mesg = $db->do_operation(
-            'search',
-            base    => $ldap->{'suffix'},
-            filter  => "$filter",
-            scope   => $ldap->{'scope'},
-            deref   => $ldap->{'deref'},
-        );
-
-        unless ($mesg and $mesg->count()) {
+        unless ($mesg and $mesg->count) {
             wwslog('notice',
                 'No entry in the LDAP Directory Tree of %s for %s',
                 $ldap->{'host'}, $userid);
-            $db->disconnect();
-            last;
+            $db->disconnect;
+            return undef;
+        } else {
+            $db->disconnect;
+            return $ldap->{'authentication_info_url'} || 'none';
         }
-
-        $db->disconnect();
-        return $ldap->{'authentication_info_url'} || 'none';
     }
 
     return undef;

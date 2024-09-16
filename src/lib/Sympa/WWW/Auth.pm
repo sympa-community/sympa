@@ -236,8 +236,6 @@ sub ldap_authentication {
         and defined $ldap->{regexp}
         and $auth !~ /$ldap->{regexp}/i;
 
-    my $entry;
-
     my $filter;
     if ($whichfilter eq 'uid_filter') {
         $filter = $ldap->{'get_dn_by_uid_filter'};
@@ -247,20 +245,15 @@ sub ldap_authentication {
     my $escaped_auth = Net::LDAP::Util::escape_filter_value($auth);
     $filter =~ s/\[sender\]/$escaped_auth/ig;
 
-    # Get the user's entry.
     my $db = Sympa::Database->new('LDAP', %$ldap);
     unless ($db and $db->connect) {
         $log->syslog('err', 'Unable to connect to the LDAP Server "%s": %s',
             $ldap->{host}, ($db and $db->error));
         return undef;
     }
-    my $mesg = $db->do_operation(
-        'search',
-        base    => $ldap->{'suffix'},
-        filter  => $filter,
-        scope   => $ldap->{'scope'},
-        deref   => $ldap->{'deref'},
-    );
+
+    my $entry;
+    my $mesg = $db->do_operation('search', filter => $filter);
     unless ($mesg and $entry = $mesg->shift_entry) {
         $log->syslog(
             'notice', 'Authentication for "%s" failed: %s',
@@ -336,11 +329,8 @@ sub get_email_by_net_id {
 
     my $mesg = $db->do_operation(
         'search',
-        base    => $auth->{suffix},
-        filter  => $filter,
-        scope   => $auth->{scope},
-        deref   => $auth->{deref},
-        attrs   => [$auth->{email_attribute}],
+        filter => $filter,
+        attrs  => $auth->{email_attribute}
     );
 
     unless ($mesg and $mesg->count) {

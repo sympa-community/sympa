@@ -1345,13 +1345,18 @@ sub do_search {
 
         die {} unless %ldap_conf;
 
+        # Minimalist variable parser ; only parse [x] or [x->y].
+        # Should be extended with the code from _verify().
         my $filter = $ldap_conf{'filter'};
-
-        ## Minimalist variable parser ; only parse [x] or [x->y]
-        ## should be extended with the code from _verify()
-        while ($filter =~ /\[(\w+(\-\>[\w\-]+)?)\]/x) {
-            my ($full_var) = ($1);
-            my ($var, $key) = split /\-\>/, $full_var;
+        $filter =~ s{
+          \[
+          (
+            \w+
+            ( -> [-\w]+ )?
+          )
+          \]
+        }{
+            my ($var, $key) = split /->/, $1, 2;
 
             unless (defined $context->{$var}) {
                 $log->syslog('err',
@@ -1360,21 +1365,21 @@ sub do_search {
                 die {};
             }
 
-            if (defined $key) {    ## Should be a hash
-                unless (defined $context->{$var}{$key}) {
+            if (defined $key) {    # Should be a hash
+                unless (ref $context->{$var} eq 'HASH'
+                and defined $context->{$var}{$key}) {
                     $log->syslog('err',
                         'Failed to parse variable "%s.%s" in filter "%s"',
                         $var, $key, $file);
                     die {};
                 }
 
-                $filter =~ s/\[$full_var\]/$context->{$var}{$key}/;
-            } else {               ## Scalar
-                $filter =~ s/\[$full_var\]/$context->{$var}/;
+                $context->{$var}{$key};
+            } else {               # Scalar
+                $context->{$var};
 
             }
-        }
-
+        }egix;
         # $filter =~ s/\[sender\]/$sender/g;
 
         if (defined($persistent_cache{'named_filter'}{$filter_file}{$filter})
@@ -1396,14 +1401,8 @@ sub do_search {
 
         ## The 1.1 OID correponds to DNs ; it prevents the LDAP server from
         ## preparing/providing too much data
-        my $mesg = $db->do_operation(
-            'search',
-            base   => "$ldap_conf{'suffix'}",
-            filter => "$filter",
-            scope  => "$ldap_conf{'scope'}",
-            deref  => "$ldap_conf{'deref'}",
-            attrs  => ['1.1']
-        );
+        my $mesg =
+            $db->do_operation('search', filter => $filter, attrs => ['1.1']);
         unless ($mesg) {
             $log->syslog('err', "Unable to perform LDAP search");
             die {};

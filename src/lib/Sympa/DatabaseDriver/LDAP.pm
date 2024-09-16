@@ -196,15 +196,25 @@ sub disconnect {
 }
 
 sub do_operation {
+    $log->syslog('debug3', '(%s, %s, ...)', @_);
     my $self      = shift;
     my $operation = shift;
     my %params    = @_;
 
-    my $mesg;
+    my %args =
+        map {
+        my $v = $params{$_} // $self->{$_};
+        if (defined $v) {
+            my $k = {suffix => 'base'}->{$_} // $_;
+            $v = [split /\s*,\s*/, $v]
+                if 'attrs' eq $_ and not ref $v;
+            ($k => $v);
+        } else {
+            ();
+        }
+        } qw(suffix scope deref filter attrs control);
 
-    $log->syslog('debug3', 'Will perform operation "%s"', $operation);
-
-    $mesg = $self->__dbh->search(%params);
+    my $mesg = $self->__dbh->search(%args);
     if ($mesg->code) {
         # Check connection to database in case it would be the cause of the
         # problem.  As LDAP doesn't support ping(), once disconnect and then
@@ -214,7 +224,7 @@ sub do_operation {
             $log->syslog('err', 'Unable to get a handle to %s', $self);
             return undef;
         } else {
-            $mesg = $self->__dbh->search(%params);
+            $mesg = $self->__dbh->search(%args);
             if ($mesg->code) {
                 $self->{_error_code}   = $mesg->code;
                 $self->{_error_string} = $mesg->error;
