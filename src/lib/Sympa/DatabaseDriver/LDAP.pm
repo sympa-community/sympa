@@ -45,7 +45,7 @@ use constant optional_parameters => [
         ssl_cert ssl_key ca_verify ca_path ca_file
         timeout)
 ];
-use constant required_modules => [qw(Net::LDAP)];
+use constant required_modules => [qw(Net::LDAP Net::LDAP::Util)];
 use constant optional_modules => [qw(IO::Socket::SSL)];
 
 sub _new {
@@ -253,6 +253,14 @@ sub error {
 #sub escape_dn_value;
 #sub escape_filter_value;
 
+sub quote {
+    my $self   = shift;
+    my $string = shift;
+
+    return undef unless defined $string;
+    return Net::LDAP::Util::escape_filter_value($string);
+}
+
 1;
 
 =encoding utf-8
@@ -291,6 +299,8 @@ B<Obsoleted>.
 
 I<Instance method>.
 See L<Net::LDAP::Util/escape_filter_value>.
+
+As of 6.2.74, use quote() instead.
 
 =back
 

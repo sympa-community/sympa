@@ -3643,7 +3643,7 @@ sub is_ldap_user {
             Sympa::Tools::Text::valid_email($userid)
             ? $ldap->{get_dn_by_email_filter}
             : $ldap->{get_dn_by_uid_filter};
-        $filter =~ s/\[sender\]/$userid/ig;
+        $filter =~ s/\[sender\]/$db->quote($userid)/egi;
 
         my $mesg = $db->do_operation('search', filter => $filter);
 

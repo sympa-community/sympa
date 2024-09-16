@@ -29,7 +29,6 @@ package Sympa::WWW::Auth;
 use strict;
 use warnings;
 use Digest::MD5;
-BEGIN { eval 'use Net::LDAP::Util'; }
 
 use Sympa;
 use Conf;
@@ -224,10 +223,6 @@ sub ldap_authentication {
     my $whichfilter = shift;
 
     die 'bug in logic. Ask developer' unless $ldap->{auth_type} eq 'ldap';
-    unless ($Net::LDAP::Util::VERSION) {
-        $log->syslog('err', 'Net::LDAP::Util required. Install it');
-        return undef;
-    }
 
     # Skip ldap auth mechanism if an email address was provided and it does
     # not match the corresponding regexp.
@@ -236,21 +231,18 @@ sub ldap_authentication {
         and defined $ldap->{regexp}
         and $auth !~ /$ldap->{regexp}/i;
 
-    my $filter;
-    if ($whichfilter eq 'uid_filter') {
-        $filter = $ldap->{'get_dn_by_uid_filter'};
-    } elsif ($whichfilter eq 'email_filter') {
-        $filter = $ldap->{'get_dn_by_email_filter'};
-    }
-    my $escaped_auth = Net::LDAP::Util::escape_filter_value($auth);
-    $filter =~ s/\[sender\]/$escaped_auth/ig;
-
     my $db = Sympa::Database->new('LDAP', %$ldap);
     unless ($db and $db->connect) {
         $log->syslog('err', 'Unable to connect to the LDAP Server "%s": %s',
             $ldap->{host}, ($db and $db->error));
         return undef;
     }
+
+    my $filter =
+          ($whichfilter eq 'uid_filter')   ? $ldap->{get_dn_by_uid_filter}
+        : ($whichfilter eq 'email_filter') ? $ldap->{get_dn_by_email_filter}
+        :                                    undef;
+    $filter =~ s/\[sender\]/$db->quote($auth)/egi if defined $filter;
 
     my $entry;
     my $mesg = $db->do_operation('search', filter => $filter);
@@ -325,7 +317,13 @@ sub get_email_by_net_id {
     }
 
     my $filter = $auth->{get_email_by_uid_filter};
-    $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;
+    $filter =~ s{
+      \[
+      ( [-\w]+ )
+      \]
+    }{
+        $db->quote($attributes->{lc $1} // '')
+    }egix;
 
     my $mesg = $db->do_operation(
         'search',

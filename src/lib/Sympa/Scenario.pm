@@ -1345,6 +1345,13 @@ sub do_search {
 
         die {} unless %ldap_conf;
 
+        my $db = Sympa::Database->new('LDAP', %ldap_conf);
+        unless ($db and $db->connect) {
+            $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
+                $ldap_conf{'host'});
+            die {};
+        }
+
         # Minimalist variable parser ; only parse [x] or [x->y].
         # Should be extended with the code from _verify().
         my $filter = $ldap_conf{'filter'};
@@ -1374,29 +1381,22 @@ sub do_search {
                     die {};
                 }
 
-                $context->{$var}{$key};
+                $db->quote($context->{$var}{$key});
             } else {               # Scalar
-                $context->{$var};
+                $db->quote($context->{$var});
 
             }
         }egix;
-        # $filter =~ s/\[sender\]/$sender/g;
+        # $filter =~ s/\[sender\]/$db->quote($sender)/egi;
 
         if (defined($persistent_cache{'named_filter'}{$filter_file}{$filter})
             && (time <=
                 $persistent_cache{'named_filter'}{$filter_file}{$filter}
                 {'update'} + $timeout)
-            ) {                    ## Cache has 1hour lifetime
+            ) {    # Cache has 1hour lifetime
             $log->syslog('notice', 'Using previous LDAP named filter cache');
             return $persistent_cache{'named_filter'}{$filter_file}{$filter}
                 {'value'};
-        }
-
-        my $db = Sympa::Database->new('LDAP', %ldap_conf);
-        unless ($db and $db->connect) {
-            $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
-                $ldap_conf{'host'});
-            die {};
         }
 
         ## The 1.1 OID correponds to DNs ; it prevents the LDAP server from
