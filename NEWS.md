@@ -1,11 +1,20 @@
 # Change Log
 
-## [6.2.74](https://github.com/sympa-community/sympa/tree/6.2.74) (2023-XX-XX)
+## [6.2.74](https://github.com/sympa-community/sympa/tree/6.2.74) (2024-XX-XX)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.72...6.2.74)
 
 **Incompatible changes:**
 
+- Notes for packagers:
+
+  - On recent releases, some external Perl modules including Unicode-UTF8
+    [\#1884](https://github.com/sympa-community/sympa/issues/1884) have been
+    made mandatory.  Check updates on `cpanfile`.
+  - Some distributions including Debian and the descendants separate `perldoc`
+    from the package for Perl.  On this case activating `perldoc` is
+    encouraged for better user experiences.
+    [\#1832](https://github.com/sympa-community/sympa/pull/1832)
 
 **Implemented enhancements:**
 
