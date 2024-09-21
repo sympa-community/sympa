@@ -39,8 +39,8 @@ use MIME::EncWords;
 use Text::LineFold;
 use Unicode::GCString;
 use URI::Escape qw();
-BEGIN { eval 'use Unicode::Normalize qw()'; }
-BEGIN { eval 'use Unicode::UTF8 qw()'; }
+use Unicode::Normalize qw();
+use Unicode::UTF8;
 
 use Sympa::Language;
 use Sympa::Regexps;
@@ -141,15 +141,11 @@ sub canonic_text {
     my $utext;
     if (Encode::is_utf8($text)) {
         $utext = $text;
-    } elsif ($Unicode::UTF8::VERSION) {
+    } else {
         no warnings 'utf8';
         $utext = Unicode::UTF8::decode_utf8($text);
-    } else {
-        $utext = Encode::decode_utf8($text);
     }
-    if ($Unicode::Normalize::VERSION) {
-        $utext = Unicode::Normalize::normalize('NFC', $utext);
-    }
+    $utext = Unicode::Normalize::normalize('NFC', $utext);
 
     # Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL,
     # and EIMS:
@@ -313,13 +309,8 @@ sub guessed_to_utf8 {
         and length $text
         and $text =~ /[^\x00-\x7F]/;
 
-    my $utf8;
-    if ($Unicode::UTF8::VERSION) {
-        $utf8 = Unicode::UTF8::decode_utf8($text)
-            if Unicode::UTF8::valid_utf8($text);
-    } else {
-        $utf8 = eval { Encode::decode_utf8($text, Encode::FB_CROAK()) };
-    }
+    my $utf8 = Unicode::UTF8::decode_utf8($text)
+        if Unicode::UTF8::valid_utf8($text);
     unless (defined $utf8) {
         foreach my $charset (map { $_ ? @$_ : () } @legacy_charsets{@langs}) {
             $utf8 =
@@ -332,8 +323,7 @@ sub guessed_to_utf8 {
     }
 
     # Apply NFC: e.g. for modified-NFD by Mac OS X.
-    $utf8 = Unicode::Normalize::normalize('NFC', $utf8)
-        if $Unicode::Normalize::VERSION;
+    $utf8 = Unicode::Normalize::normalize('NFC', $utf8);
 
     return Encode::encode_utf8($utf8);
 }
