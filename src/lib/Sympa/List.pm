@@ -7,9 +7,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2024 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -153,16 +153,12 @@ sub new {
     $name =~ tr/A-Z/a-z/;
 
     ## Reject listnames with reserved list suffixes
-    my $regx = Conf::get_robot_conf($robot, 'list_check_regexp');
-    if ($regx) {
-        if ($name =~ /^(\S+)-($regx)$/) {
-            $log->syslog(
-                'err',
-                'Incorrect name: listname "%s" matches one of service aliases',
-                $name
-            ) unless ($options->{'just_try'});
-            return undef;
-        }
+    my $sfxs = Conf::get_robot_conf($robot, 'list_check_suffixes') // [];
+    if (grep { lc("-$_") eq substr $name, -length("-$_") } @$sfxs) {
+        $log->syslog('err',
+            'Incorrect listname %s matches one of service aliases', $name)
+            unless $options->{'just_try'};
+        return undef;
     }
 
     my $status;
@@ -364,7 +360,11 @@ sub update_stats {
 
     my $lock_fh = Sympa::LockedFile->new($self->{'dir'} . '/stats', 2, '+>>');
     unless ($lock_fh) {
-        $log->syslog('err', 'Could not create new lock');
+        $log->syslog(
+            'err',
+            'Could not create new lock: %s',
+            Sympa::LockedFile->last_error
+        );
         return;
     }
 
@@ -552,7 +552,11 @@ sub save_config {
     ## Lock file
     my $lock_fh = Sympa::LockedFile->new($config_file_name, 5, '+<');
     unless ($lock_fh) {
-        $log->syslog('err', 'Could not create new lock');
+        $log->syslog(
+            'err',
+            'Could not create new lock: %s',
+            Sympa::LockedFile->last_error
+        );
         return undef;
     }
 
@@ -675,7 +679,11 @@ sub load {
         my $lock_fh =
             Sympa::LockedFile->new($self->{'dir'} . '/config', 5, '<');
         unless ($lock_fh) {
-            $log->syslog('err', 'Could not create new lock');
+            $log->syslog(
+                'err',
+                'Could not create new lock: %s',
+                Sympa::LockedFile->last_error
+            );
             return undef;
         }
 
@@ -704,7 +712,11 @@ sub load {
         my $lock_fh =
             Sympa::LockedFile->new($self->{'dir'} . '/config', 5, '+<');
         unless ($lock_fh) {
-            $log->syslog('err', 'Could not create new lock');
+            $log->syslog(
+                'err',
+                'Could not create new lock: %s',
+                Sympa::LockedFile->last_error
+            );
             return undef;
         }
 
@@ -3363,7 +3375,8 @@ sub add_list_admin {
 
     $self->_cache_publish_expiry('admin_user') if $total;
 
-    push @$stash_ref, ['notice', 'add_performed', {total => $total}]
+    push @$stash_ref,
+        ['notice', 'add_performed', {total => $total, role => $role}]
         if $total;
     return $total;
 }
@@ -3665,7 +3678,7 @@ sub is_included {
     unless (
         $sdm
         and $sth = $sdm->do_prepared_query(
-            q{SELECT COUNT(*)
+            q{SELECT DISTINCT target_inclusion
               FROM inclusion_table
               WHERE source_inclusion = ?},
             $self->get_id
@@ -3675,10 +3688,35 @@ sub is_included {
             $self);
         return 1;    # Fake positive result.
     }
-    my ($num) = $sth->fetchrow_array;
+    my $rows = $sth->fetchall_arrayref;
     $sth->finish;
+    unless (defined $rows) {
+        return 1;    # Fake positive result.
+    }
 
-    return $num;
+    foreach my $row (@$rows) {
+        my $id = $row->[0];
+        next unless length($id // '');
+        my $l = __PACKAGE__->new($id);
+        return 1 if $l;
+
+        # The target list could be deleted manually and fake entry remains in
+        # inclusion_table.  Delete it.
+        unless (
+            $sdm
+            and $sth = $sdm->do_prepared_query(
+                q{DELETE FROM inclusion_table
+                  WHERE source_inclusion = ? AND target_inclusion = ?},
+                $self->get_id, $id
+            )
+        ) {
+            $log->syslog('err',
+                'Failed to delete inclusion information on list %s', $self);
+            return 1;    # Fake positive result.
+        }
+    }
+
+    return 0;
 }
 
 # If a list is not 'open' and allow_subscribe_if_pending has been set to
@@ -4214,7 +4252,7 @@ sub get_including_lists {
     unless (
         $sdm
         and $sth = $sdm->do_prepared_query(
-            q{SELECT target_inclusion AS "target"
+            q{SELECT target_inclusion
               FROM inclusion_table
               WHERE source_inclusion = ? AND role_inclusion = ?},
             $self->get_id, $role
@@ -4223,16 +4261,32 @@ sub get_including_lists {
         $log->syslog('err', 'Cannot get lists including %s', $self);
         return undef;
     }
+    my $rows = $sth->fetchall_arrayref;
+    $sth->finish;
+    unless (defined $rows) {
+        return undef;
+    }
 
     my @lists;
-    while (my $r = $sth->fetchrow_hashref('NAME_lc')) {
-        next unless $r and $r->{target};
-        my $l = __PACKAGE__->new($r->{target});
-        next unless $l;
+    foreach my $row (@$rows) {
+        my $id = $row->[0];
+        next unless length($id // '');
+        my $l = __PACKAGE__->new($id);
+        if ($l) {
+            push @lists, $l;
+            next;
+        }
 
-        push @lists, $l;
+        # The target list could be deleted manually and fake entry remains in
+        # inclusion_table.  Delete it.
+        $sdm and $sdm->do_prepared_query(
+            q{DELETE FROM inclusion_table
+              WHERE source_inclusion = ? AND role_inclusion = ? AND
+                    target_inclusion = ?},
+            $self->get_id, $role,
+            $id
+        );
     }
-    $sth->finish;
 
     return [@lists];
 }
@@ -4991,7 +5045,10 @@ sub _load_list_config_file {
     ## Lock file
     my $lock_fh = Sympa::LockedFile->new($config_file, 5, '<');
     unless ($lock_fh) {
-        $log->syslog('err', 'Could not create new lock on %s', $config_file);
+        $log->syslog(
+            'err',        'Could not create new lock on %s: %s',
+            $config_file, Sympa::LockedFile->last_error
+        );
         return undef;
     }
 

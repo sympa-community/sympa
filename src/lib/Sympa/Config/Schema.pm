@@ -939,7 +939,7 @@ our %pinfo = (
                 context    => [qw(list)],
                 order      => 2,
                 gettext_id => "hour",
-                format     => '\d+',
+                format     => '[01]?[0-9]|2[0-3]',
                 occurrence => '1',
                 length     => 2
             },
@@ -947,7 +947,7 @@ our %pinfo = (
                 context    => [qw(list)],
                 order      => 3,
                 gettext_id => "minute",
-                format     => '\d+',
+                format     => '[0-5]?[0-9]',
                 occurrence => '1',
                 length     => 2
             }
@@ -1252,7 +1252,7 @@ our %pinfo = (
         gettext_id => "Custom header field",
         gettext_comment =>
             'This parameter is optional. The headers specified will be added to the headers of messages distributed via the list. As of release 1.2.2 of Sympa, it is possible to put several custom header lines in the configuration file at the same time.',
-        format     => '\S+:\s+.*',
+        format_s   => '$header_field_name:.+',
         occurrence => '0-n',
         length     => 30
     },
@@ -1404,7 +1404,7 @@ our %pinfo = (
             'Header fields to be removed before message distribution',
         gettext_comment =>
             "The removal happens after Sympa's own header fields are added; therefore, it is a convenient way to remove Sympa's own header fields (like \"X-Loop:\" or \"X-no-archive:\") if you wish.",
-        format     => '\S+',
+        format_s   => '$header_field_name(:.+)?',
         default    => 'none',
         sample     => 'X-no-archive',
         occurrence => '0-n',
@@ -3517,7 +3517,17 @@ our %pinfo = (
                 format_s   => '$time_ranges',
                 occurrence => '0-1',
                 not_before => '6.2a.16',
-            }
+            },
+            pagesize => {
+                context => [qw(list)],
+                order   => 12,
+                gettext_comment =>
+                    'Number of records to fetch per batch (paging), for a LDAP server that supports paging. If not set or set to zero, do not use paging. Typically 1000 for an Active Directory server, to avoid "SizeLimit" errors',
+                gettext_id => "LDAP page size",
+                format     => '\d*',
+                length     => 6,
+                not_before => '6.2.74',
+            },
         },
         occurrence => '0-n'
     },
@@ -3742,7 +3752,17 @@ our %pinfo = (
                 format_s   => '$time_ranges',
                 occurrence => '0-1',
                 not_before => '6.2a.16',
-            }
+            },
+            pagesize => {
+                context => [qw(list)],
+                order   => 19,
+                gettext_comment =>
+                    'Number of records to fetch per batch (paging), for a LDAP server that supports paging. If not set or set to zero, do not use paging. Typically 1000 for an Active Directory server, to avoid "SizeLimit" errors',
+                gettext_id => "LDAP page size",
+                format     => '\d*',
+                length     => 6,
+                not_before => '6.2.74',
+            },
         },
         occurrence => '0-n'
     },
@@ -3872,11 +3892,9 @@ our %pinfo = (
         context    => [qw(list site)],
         order      => 60.12,
         group      => 'data_source',
-        gettext_id => "Inclusions timeout",
+        gettext_id => "TTL of user data",
         gettext_comment =>
             'Sympa caches user data extracted using the include parameter. Their TTL (time-to-live) within Sympa can be controlled using this parameter. The default value is 3600',
-        #gettext_comment =>
-        #    'Default timeout between two scheduled synchronizations of list members with data sources.',
         gettext_unit => 'seconds',
         format       => '\d+',
         default      => '3600',
@@ -3889,12 +3907,13 @@ our %pinfo = (
     },
 
     distribution_ttl => {
+        # Note: Unless defined, value of ttl parameter is used.
         context    => [qw(list site)],
         order      => 60.13,
         group      => 'data_source',
-        gettext_id => "Inclusions timeout for message distribution",
+        gettext_id => "TTL of user data for message distribution",
         gettext_comment =>
-            "This parameter defines the delay since the last synchronization after which the user's list will be updated before performing either of following actions:\n* Reviewing list members\n* Message distribution",
+            'This parameter defines the delay since the last synchronization after which the user data will be updated before performing message distribution',
         gettext_unit => 'seconds',
         format       => '\d+',
         length       => 6
@@ -6547,11 +6566,11 @@ __END__
 
 =head1 NAME
 
-Sympa::ListDef - Definition of list configuration parameters
+Sympa::Config::Schema - Definition of configuration parameters
 
 =head1 DESCRIPTION
 
-This module keeps definition of configuration parameters for each list.
+This module keeps definition of configuration parameters.
 
 =head2 Global variable
 
@@ -6567,10 +6586,10 @@ TBD.
 
 =item %pinfo
 
-This hash COMPLETELY defines ALL list parameters.
-It is then used to load, save, view, edit list config files.
+This hash COMPLETELY defines ALL parameters.
+It is then used to load, save, view, edit config files.
 
-List parameters format accepts the following keywords :
+A parameter definition accepts the following keywords:
 
 =over
 
@@ -6796,11 +6815,9 @@ TBD.
 
 =head1 SEE ALSO
 
-L<list_config(5)>,
+L<sympa_config(5)>,
 L<Sympa::List::Config>,
 L<Sympa::ListOpt>.
-
-L<sympa.conf(5)>, L<robot.conf(5)>.
 
 =head1 HISTORY
 

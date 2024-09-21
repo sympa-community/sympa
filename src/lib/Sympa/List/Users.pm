@@ -59,7 +59,7 @@ use constant _global_validations => {
         my $loglevel = 'debug';         # was set to 'info' during development
 
         # gather parameters
-        my $owner_domain = $config->get('owner_domain');
+        my $owner_domain = $config->get('owner_domain') // '';
         if (defined($self->get_change('owner_domain'))) {
             $owner_domain = $self->get_change('owner_domain');
         }

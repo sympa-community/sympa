@@ -1,12 +1,14 @@
 <!-- stats.tt2 -->
-<h3>[%|loc(listname)%]List %1 statistics[%END%]</h3>
+[% IF listconf ~%]
+    <h3>[%|loc(listname)%]List %1 statistics[%END%]</h3>
 
-<p>[%|loc%]This page displays overall information regarding the list activity[%END%]</p>
+    <p>[%|loc%]This page displays overall information regarding the list activity[%END%]</p>
 
 <p>
     <strong>[%|loc(shared_size)%]Shared document directory size: %1 kB[%END%]</strong><br />
     <strong>[%|loc(arc_size)%]Web archives size: %1 kB[%END%]</strong>
 </p>
+[%~ END %]
 
 [% FOREACH stat_id IN [ 'send_mail', 'add_or_subscribe', 'signoff', 'del', 'auto_del' ] ~%]
     [% SET o = stats.$stat_id ~%]
@@ -37,6 +39,9 @@
                                 }
                             },
                             yaxis: {
+                                [% IF o.max_value && o.max_value < 10 ~%]
+                                ticks: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                [% END ~%]
                                 tickOptions: {
                                     angle: 0,
                                     formatString: '%d'

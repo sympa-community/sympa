@@ -4,7 +4,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2021, 2022, 2023 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -236,13 +236,14 @@ nonCLI_modules = \
 	Sympa/Upgrade.pm \
 	Sympa/User.pm \
 	Sympa/WWW/Auth.pm \
+	Sympa/WWW/Crawlers.pm \
 	Sympa/WWW/FastCGI.pm \
 	Sympa/WWW/Marc.pm \
 	Sympa/WWW/Marc/Search.pm \
 	Sympa/WWW/SharedDocument.pm \
 	Sympa/WWW/Session.pm \
 	Sympa/WWW/SOAP.pm \
-	Sympa/WWW/SOAP/Transport.pm \
+	Sympa/WWW/SOAP/FastCGI.pm \
 	Sympa/WWW/Tools.pm
 nobase_modules_DATA = $(CLI_modules) $(nonCLI_modules)
 

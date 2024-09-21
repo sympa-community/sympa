@@ -11,11 +11,11 @@
     </p>
     <ul>
         <li>
-            [% "IF list context defined, apply list template if exist\nELSE apply robot defined template if exist\nELSE apply locally defined template if exist\nELSE apply template included in the distribution (these must not be edited because Sympa's update will over write these files)" | loc | replace("\n", '</li><li>') %]
+            [% "IF list context defined, apply list template if exist\nELSE apply domain defined template if exist\nELSE apply locally defined template if exist\nELSE apply template included in the distribution (these must not be edited because Sympa's update will over write these files)" | loc | replace("\n", '</li><li>') %]
         </li>
     </ul>
     <p>
-        [%|loc%]First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current robot or the named list.[%END%]
+        [%|loc%]First, you may list a category of templates. The list should include a default template and may include any templates designated for a particular list. You will then have an opportunity to copy and edit templates for the current domain or the named list.[%END%]
     </p>
 
     <form action="[% 'ls_templates' | url_rel %]" method="post">
@@ -46,22 +46,33 @@
     [% IF templates %]
         <table class="responsive ls_template">
             <caption>[%|loc%]This table contain all templates you can copy or see[%END%]</caption>
+            <thead>
             <tr>
-                <th>[%|loc%]template name[%END%]</th>
-                <th colspan="[% colspan_per_level.distrib %]">[%|loc%]default[%END%]</th>
-                <th colspan="[% colspan_per_level.site %]">[%|loc%]site[%END%]</th>
-                <th colspan="[% colspan_per_level.robot %]">[%|loc%]robot[%END%]</th>
-                <th colspan="[% colspan_per_level.list %]">[%|loc(list)%]list %1[%END%]</th>
+                <th id="h_name">[%|loc%]template name[%END%]</th>
+                <th id="h_default" colspan="[% colspan_per_level.distrib %]">
+                    [%|loc%]default[%END%]
+                </th>
+                <th id="h_site" colspan="[% colspan_per_level.site %]">
+                    [%|loc%]site[%END%]
+                </th>
+                <th id="h_domain" colspan="[% colspan_per_level.robot %]">
+                    [%|loc%]domain[%END%]
+                </th>
+                <th id="h_list" colspan="[% colspan_per_level.list %]">
+                    [%|loc(list)%]list %1[%END%]
+                </th>
             </tr>
             [% SET dark = 1 %]
-            <th>&nbsp;</th>
 
-            <!-- print list of languages -->
+            [%# print list of languages ~%]
+            <tr>
+            <th></th>
             [% FOREACH lang = lang_per_level.distrib %]
                 [%- IF lang.key == 'default' -%]
                     <th>&nbsp;</th>
                 [%- ELSE -%]
-                    <th class="neutral" lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]">
+                    <th id="h_default_[%lang.value.lang%]" class="neutral"
+                     lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]">
                         [%~ lang.value.lang | optdesc('lang',1) %]
                     </th>
                 [%- END %]
@@ -71,7 +82,8 @@
                 [%- IF lang.key == 'default' -%]
                     <th>&nbsp;</th>
                 [%- ELSE -%]
-                    <th class="neutral" lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]">
+                    <th id="h_site_[%lang.value.lang%]" class="neutral"
+                     lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]">
                         [%~ lang.key | optdesc('lang',1) %]
                     </th>
                 [%- END %]
@@ -81,7 +93,8 @@
                 [%- IF lang.key == 'default' -%]
                     <th>&nbsp;</th>
                 [%- ELSE -%]
-                    <th class="neutral" lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]">
+                    <th id="h_domain_[%lang.value.lang%]" class="neutral"
+                     lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]">
                         [%~ lang.key | optdesc('lang',1) %]
                     </th>
                 [%- END %]
@@ -91,22 +104,28 @@
                 [%- IF lang.key == 'default' -%]
                     <th>&nbsp;</th>
                 [%- ELSE -%]
-                    <th class="neutral" lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]">
+                    <th id="h_list_]%lang.value.lang%] class="neutral"
+                     lang="[%lang.value.lang%]" xml:lang="[%lang.value.lang%]">
                         [%~ lang.key | optdesc('lang',1) %]
                     </th>
                 [%- END %]
             [% END %]
+            </tr>
+            </thead>
 
+            <tbody>
             [% FOREACH file = templates %]
                 [% IF dark == '1' %]
                     <tr>[% SET dark = 0 %]
                 [% ELSE %]
                     <tr class="color0">[% SET dark=1 %]
                 [% END %]
-                        <td>[% file.key %]</td>
+                        <td headers="h_name">[% file.key %]</td>
 
                         [% FOREACH lang = file.value.distrib %]
-                            <td class="text_center">
+                            <td headers="h_default
+                             [%~IF lang.key != 'default'%] h_default_[%lang.key%][%END%]"
+                             class="text_center">
                                 [% IF lang.value %]
                                     <form action="[% 'edit_template' | url_rel %]" method="post">
                                         <fieldset>
@@ -124,7 +143,9 @@
                         [% END %]
 
                         [% FOREACH lang = file.value.site %]
-                            <td class="text_center">
+                            <td headers="h_site
+                             [%~IF lang.key != 'default'%] h_site_[%lang.key%][%END%]"
+                             class="text_center">
                                 [% IF lang.value %]
                                     <form action="[% 'edit_template' | url_rel %]" method="post">
                                         <fieldset>
@@ -156,7 +177,9 @@
                             <td></td>
                         [% ELSE %]
                             [% FOREACH lang = file.value.robot %]
-                                <td class="text_center">
+                                <td headers="h_domain
+                                 [%~IF lang.key != 'default'%] h_domain_[%lang.key%][%END%]"
+                                 class="text_center">
                                     [% IF lang.value %]
                                         <form action="[% 'edit_template' | url_rel %]" method="post">
                                             <fieldset>
@@ -177,7 +200,9 @@
 
                         [% IF list %]
                             [% FOREACH lang = file.value.list %]
-                                <td class="text_center">
+                                <td headers="h_list
+                                 [%~IF lang.key != 'default'%] h_list_[%lang.key%][%END%]"
+                                 class="text_center">
                                     [% IF lang.value %]
                                         <form action="[% 'edit_template' | url_rel %]" method="post">
                                             <fieldset>
@@ -200,6 +225,7 @@
                         [% END %]
                     </tr>
             [% END %]
+            </tbody>
         </table>
     [% END %]
 </p>

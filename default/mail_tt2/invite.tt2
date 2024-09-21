@@ -1,7 +1,8 @@
 [%# invite.tt2 ~%]
-From: [% requested_by %]
 Reply-To: [% conf.email %]@[% domain %]
 Subject: [%"Invitation to join list %1"|loc(list.name)|qencode%]
+
+[%|loc(list.name,requested_by)%]You are invited to %1 list by <%2>.[%END%]
 
 [%|loc(list.subject)%]This list is about %1, so you are probably concerned.[%END%]
 

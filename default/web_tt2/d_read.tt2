@@ -89,31 +89,47 @@
         <caption>[%|loc%]Listing of folder[%END%] [% shared_doc.name %]</caption>
         <tr>
             [% IF order_by != 'order_by_doc' ~%]
-                <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_doc'}) %]">[%|loc%]Document[%END%]</a> </th>
+                <th id="h_name">
+                    <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_doc'}) %]">
+                        [%|loc%]Document[%END%]
+                    </a>
+                </th>
             [%~ ELSE ~%]
-                <th class="sortby">[%|loc%]Document[%END%]</th>
+                <th id="h_name" class="sortby">[%|loc%]Document[%END%]</th>
             [%~ END %]
 
             [% IF order_by != 'order_by_author' ~%]
-                <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_author'}) %]">[%|loc%]Author[%END%]</a> </th>
+                <th id="h_author">
+                    <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_author'}) %]">
+                        [%|loc%]Author[%END%]
+                    </a>
+                </th>
             [%~ ELSE ~%]
-                <th class="sortby">[%|loc%]Author[%END%]</span></td>
+                <th id="h_author" class="sortby">[%|loc%]Author[%END%]</span></td>
             [%~ END %]
 
             [% IF order_by != 'order_by_size' ~%]
-                <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_size'}) %]">[%|loc%]Size (Kb)[%END%]</a> </th>
+                <th id="h_size">
+                    <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_size'}) %]">
+                        [%|loc%]Size (Kb)[%END%]
+                    </a>
+                </th>
             [%~ ELSE ~%]
-                <th class="sortby">[%|loc%]Size (Kb)[%END%]</th>
+                <th id="h_size" class="sortby">[%|loc%]Size (Kb)[%END%]</th>
             [%~ END %]
 
             [% IF order_by != 'order_by_date' ~%]
-                <th><a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_date'}) %]">[%|loc%]Last update[%END%]</a> </th>
+                <th id="h_date">
+                    <a href="[% 'd_read' | url_rel([list,shared_doc.paths_d],{order=>'order_by_date'}) %]">
+                        [%|loc%]Last update[%END%]
+                    </a>
+                </th>
             [%~ ELSE ~%]
-                <th class="sortby">[%|loc%]Last update[%END%]</span></td>
+                <th id="h_date" class="sortby">[%|loc%]Last update[%END%]</span></td>
             [%~ END %]
 
             [% IF expert_page ~%]
-                <th>[%|loc%]Actions[%END%]</th>
+                <th id="h_actions">[%|loc%]Actions[%END%]</th>
             [%~ END %]
         </tr>
 
@@ -121,13 +137,13 @@
             [% FOREACH s = shared_doc.children ~%]
                 [% NEXT UNLESS s.type == 'directory' ~%]
                 <tr class="color0">
-                    <td class="review_cels_mail">
+                    <td headers="h_name" class="review_cels_mail">
                         <a href="[% 'd_read' | url_rel([list,s.paths_d]) %]">
                             [% PROCESS SharedGetIcon shared_item = s %]
                             [% s.name %]
                         </a>
                     </td>
-                    <td class="review_cels">
+                    <td headers="h_author" class="review_cels">
                         [% IF s.owner ~%]
                             [% s.owner | mailto(s.owner) | obfuscate(listconf.spam_protection) %]
                         [%~ ELSE ~%]
@@ -135,10 +151,10 @@
                         [%~ END ~%]
                     </td>
                     <td>&nbsp;</td>
-                    <td class="review_cels"> [% s.date %] </td>
+                    <td headers="h_date" class="review_cels"> [% s.date %] </td>
 
                     [% IF expert_page ~%]
-                        <td class="review_cels text-right">
+                        <td headers="h_actions" class="review_cels text-right">
                             [% IF s.may_edit ~%]
                                 <a href="[% 'd_delete' | url_rel([list,s.paths_d],{previous_action=>action}) %]"
                                    class="tip-left" data-tooltip aria-haspopup="true"
@@ -172,7 +188,7 @@
                             [% IF is_editor ~%]
 
                             [%~ END %]
-                            </td>
+                        </td>
                     [%~ END %]
                 </tr>
             [%~ END %]
@@ -190,7 +206,7 @@
                 [%~ END %]
 
                 [% IF f.html ~%]
-                    <td class="review_cels_mail">
+                    <td headers="h_name" class="review_cels_mail">
                         <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]"
                            title="[%|loc%]Open in a new window[%END%]" target="html_window">
                             [% PROCESS SharedGetIcon shared_item = f %]
@@ -198,7 +214,7 @@
                         </a>
                     </td>
                 [%~ ELSIF f.url ~%]
-                    <td class="review_cels_mail">
+                    <td headers="h_name" class="review_cels_mail">
                         <a href="[% f.url %]" title="[%|loc%]Open in a new window[%END%]"
                            target="html_window">
                             [% PROCESS SharedGetIcon shared_item = f %]
@@ -208,7 +224,7 @@
                 [%~ ELSE ~%]
                     [% IF f.moderate ~%]
                         [% IF expert_page ~%]
-                            <td class="review_cels_mail">
+                            <td headers="h_name" class="review_cels_mail">
                                 <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">
                                     [% PROCESS SharedGetIcon shared_item = f %]
                                     [% f.name %]
@@ -216,7 +232,7 @@
                             </td>
                         [%~ END %]
                     [%~ ELSE ~%]
-                        <td class="review_cels_mail">
+                        <td headers="h_name" class="review_cels_mail">
                             <a href="[% 'd_read' | url_rel([list,f.paths_d]) %]">
                                 [% PROCESS SharedGetIcon shared_item = f %]
                                 [% f.name %]
@@ -227,10 +243,10 @@
 
                 [% IF f.moderate ~%]
                     [% IF expert_page ~%]
-                        <td class="review_cels">[%|loc%]to moderate[%END%]</td>
+                        <td headers="h_author" class="review_cels">[%|loc%]to moderate[%END%]</td>
                     [%~ END %]
                 [%~ ELSE ~%]
-                    <td class="review_cels">
+                    <td headers="h_author" class="review_cels">
                         [% IF f.owner.length ~%]
                             [% f.owner | mailto(f.owner) | obfuscate(listconf.spam_protection) %]
                         [%~ ELSE ~%]
@@ -241,24 +257,24 @@
 
                 [% IF f.moderate ~%]
                     [% IF expert_page ~%]
-                        <td class="review_cels">&nbsp;
+                        <td headers="h_size" class="review_cels">&nbsp;
                             [% IF !f.url ~%]
                                 [% f.size %]
                             [%~ END %]
                         </td>
-                        <td class="review_cels"> [% f.date %] </td>
+                        <td headers="h_date" class="review_cels"> [% f.date %] </td>
                     [%~ END %]
                 [%~ ELSE ~%]
-                    <td class="review_cels">&nbsp;
+                    <td headers="h_size" class="review_cels">&nbsp;
                         [%~ IF !f.url ~%]
                             [% f.size %]
                         [%~ END ~%]
                     </td>
-                    <td class="review_cels"> [% f.date %] </td>
+                    <td headers="h_date" class="review_cels"> [% f.date %] </td>
                 [%~ END %]
 
                 [% IF expert_page ~%]
-                    <td class="review_cels text-right">
+                    <td headers="h_actions" class="review_cels text-right">
                         [% IF is_editor ~%]
                             [% IF f.moderate ~%]
                                 [% IF expert_page ~%]

@@ -45,9 +45,13 @@ if [ ! "${OSTYPE}" ]; then
 fi
 
 # OSTYPE *is* defined on Solaris 10! (bug #3149)
+# OSTYPE has many variants on darwin platforms
 case "$OSTYPE" in
 *solaris*)
     OSTYPE=SunOS
+    ;;
+*[Dd]arwin*)
+    OSTYPE=darwin
     ;;
 Linux)
     if [ -f /etc/SuSE-release ] ; then
@@ -66,8 +70,8 @@ Linux)
     ;;
 esac
 
-##'echo -n' not supported with SH on Solaris
-if [ ${OSTYPE} = "SunOS" ]; then
+##'echo -n' not supported with SH on Solaris or darwin
+if [ "${OSTYPE}" = "SunOS" -o "${OSTYPE}" = "darwin"  ]; then
   echo_opt=""
 else
   echo_opt="-n"
@@ -97,6 +101,8 @@ sympa_status() {
 		for pid in $pids; do
 		    if [ "$OSTYPE" = "BSD" ]; then
 			running=`ps -axw | grep "^[[:space:]]*$pid[[:space:]]"`
+		    elif [ "$OSTYPE" = "darwin" ]; then
+			running=`ps -A | grep "$pid.*$comm"`
 		    else
 			running=`ps -A | grep "$pid ..* $comm"`
 		    fi
@@ -219,6 +225,8 @@ sympa_stop() {
 		    kill -TERM $pid >/dev/null 2>&1
 		    if [ "$OSTYPE" = "BSD" ]; then
 			running=`ps -axw | grep "^[[:space:]]*$pid[[:space:]]"`
+		    elif [ "$OSTYPE" = "darwin" ]; then
+			running=`ps -A | grep "$pid.*$comm"`
 		    else
 			running=`ps -A | grep "$pid ..* $comm"`
 		    fi
@@ -229,6 +237,8 @@ sympa_stop() {
 		    sleep 2
 		    if [ "$OSTYPE" = "BSD" ]; then
 			running=`ps -axw | grep "^[[:space:]]*$pid[[:space:]]"`
+		    elif [ "$OSTYPE" = "darwin" ]; then
+			running=`ps -A | grep "$pid .*$comm"`
 		    else
 			running=`ps -A | grep "$pid ..* $comm"`
 		    fi
@@ -258,7 +268,7 @@ sympa_stop() {
 
 
 # Check that networking is up.
-if [ ${OSTYPE} != "Linux" -a ${OSTYPE} != "BSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "Darwin" ]; then
+if [ ${OSTYPE} != "Linux" -a ${OSTYPE} != "BSD" -a ${OSTYPE} != "SunOS" -a ${OSTYPE} != "darwin" ]; then
     if [ "${NETWORKING}" = "no" ]
     then
 	    exit 0

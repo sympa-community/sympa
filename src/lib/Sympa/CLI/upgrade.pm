@@ -57,7 +57,10 @@ sub _upgrade {
     $options->{from} ||= Sympa::Upgrade::get_previous_version();
     $options->{to}   ||= Sympa::Constants::VERSION;
 
-    if ($options->{from} eq $options->{to}) {
+    if (!defined $options->{from}) {
+        $log->syslog('err', 'No previous version specified');
+        exit 1;
+    } elsif ($options->{from} eq $options->{to}) {
         $log->syslog('notice', 'Current version: %s; no upgrade is required',
             $options->{to});
         exit 0;

@@ -25,10 +25,10 @@
             [%- SWITCH scope -%]
                 [% CASE 'site' %]
                     <strong> [%|loc%]site[%END%] </strong>
-                    [%|loc%](this template is the default used by all robots unless redefined for a specific robot)[%END%]
+                    [%|loc%](this template is the default used by all domains unless redefined for a specific domain)[%END%]
                 [% CASE 'robot' %]
                     <strong> [%|loc%]robot[%END%] </strong>
-                    [%|loc(robot)%](this template is the default for all lists of robot %1 unless it is redefined for a specific list)[%END%]
+                    [%|loc(robot)%](this template is the default for all lists of domain %1 unless it is redefined for a specific list)[%END%]
                 [% CASE 'list' %]
                     <strong> [%|loc%]list[%END -%] </strong>
                     [%|loc(list,robot)%](this template is defined for list %1@%2)[%END%]

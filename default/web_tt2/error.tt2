@@ -45,7 +45,7 @@
         [%#####################-%]
         [%# AUTHORIZATION ERROR-%]
         [%#####################-%]
-        [% FOREACH auth = auth_rejects %]
+        [% FOREACH auth = auth_errors %]
             [%|loc(auth.action)%]AUTHORIZATION REJECT (%1)[%END-%]
             [% IF auth.change_email_failed %]
                 [%|loc(auth.listname)%]Could not change your subscription address for the list '%1' because your new address is not allowed to subscribe/unsubscribe:[%END%]

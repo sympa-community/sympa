@@ -182,7 +182,7 @@
 [%~ ELSIF report_entry == 'restricted_modindex' ~%]
 [%|loc%]The MODINDEX command is restricted to moderators.[%END%]
 
-[%~ ELSIF report_entry == 'action_owner_or_editor' ~%]
+[%~ ELSIF report_entry == 'action_editor_or_owner' ~%]
 [%|loc%]This action is restricted to list owners or moderators.[%END%]
 
 [%~ ELSIF report_entry == 'action_editor' ~%]
@@ -199,6 +199,9 @@
 
 [%~ ELSIF report_entry == 'action_listmaster_or_privileged_owner' ~%]
 [%|loc%]This action is restricted to listmasters or privileged list owners.[%END%]
+
+[%~ ELSIF report_entry == 'action_editor_or_listmaster_or_owner' ~%]
+[%|loc%]This action is restricted to listmasters, list owners or moderators.[%END%]
 
 [%~ ELSIF report_entry == 'action_listmaster_or_privileged_owner_or_author' ~%]
 [%|loc%]This action is restricted to the document author, listmasters, or privileged list owners.[%END%]
@@ -266,9 +269,6 @@
 [%~ ELSIF report_entry == 'auth_msg_failed' ~%]
   [%|loc(report_param.key)%]Unable to access the message authenticated with key %1[%END%]
 
-[%~ ELSIF report_entry == 'no_identified_user' ~%]
-  [%|loc%]Failed to get your email address from the authentication service.[%END%]
-
 [%~ ELSIF report_entry == 'db_error' ~%]
   [%|loc%]Database error.[%END%]
 
@@ -334,7 +334,13 @@
 [%~ END %]
 
 [%~ ELSIF report_entry == 'add_performed' ~%]
-[%|loc(report_param.total)%]%1 subscribers added[%END%]
+    [% IF report_param.role == 'owner' ~%]
+        [%|loc(report_param.total)%]%1 owners added[%END%]
+    [%~ ELSIF report_param.role == 'editor' ~%]
+        [%|loc(report_param.total)%]%1 moderators added[%END%]
+    [%~ ELSE ~%]
+        [%|loc(report_param.total)%]%1 subscribers added[%END%]
+    [%~ END %]
 
 [%~ ELSIF report_entry == 'updated_info' ~%]
 [%|loc(report_param.email,report_param.listname)%]Information regarding user %1 has been updated for list %2.[%END%]
@@ -954,6 +960,9 @@ Warning: this message may already have been sent by one of the list's moderators
 
 [%~ ELSIF report_entry == 'cannot_get_privilege' ~%]
   [%|loc()%]You are not allowed to get the privilege of this user.[%END%]
+
+[%~ ELSIF report_entry == 'no_identified_user' ~%]
+  [%|loc%]Failed to get your email address from the authentication service.[%END%]
 
 [%~ END ~%]
 

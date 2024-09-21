@@ -276,7 +276,16 @@ sub _get_sender_email {
                 $sender = Sympa::Tools::Text::canonic_email(
                     $sender_hdr[0]->address);
                 my $phrase = $sender_hdr[0]->phrase;
-                if (defined $phrase and length $phrase) {
+                if (length($phrase // '')) {
+                    # Unquote quoted strings in the phrase.
+                    # cf. RFC 5322, 3.2.4 and 3.2.5.
+                    $phrase =~ s{(?<!\S) " ((?:\\. | [^\\"])*) " (?!\S)}{
+                        my $qcontent = $1;
+                        $qcontent =~ s/\\(.)/$1/grs;
+                    }egsx;
+
+                    # Decode B- or Q-encoded words. Note that some (mistaken)
+                    # implementations may quote encoded words.
                     $gecos = MIME::EncWords::decode_mimewords($phrase,
                         Charset => 'UTF-8');
                     # Eliminate hostile characters.

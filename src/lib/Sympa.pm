@@ -249,42 +249,81 @@ sub _get_search_path {
 # They should be modified to fit in Sympa.
 my %diag_messages = (
     'default' => 'Other undefined Status',
-    # success
-    '2.1.5' => 'Destination address valid',
-    # forwarded to moderators
-    '2.3.0' => 'Other or undefined mail system status',
-    # no available family, dynamic list creation failed, etc.
-    '4.2.1' => 'Mailbox disabled, not accepting messages',
-    # no subscribers in dynamic list
-    '4.2.4' => 'Mailing list expansion problem',
-    # held for moderation
-    '4.3.0' => 'Other or undefined mail system status',
-    # unknown list address
-    '5.1.1' => 'Bad destination mailbox address',
-    # unknown robot
-    '5.1.2' => 'Bad destination system address',
-    # too large
-    '5.2.3' => 'Message length exceeds administrative limit',
-    # no owners defined in list at all, no listmasters defined at all
-    '5.2.4' => 'Mailing list expansion problem',
-    # could not store message into spool or mailer
-    '5.3.0' => 'Other or undefined mail system status',
-    # misconfigured family list
-    '5.3.5' => 'System incorrectly configured',
-    # loop detected
-    '5.4.6' => 'Routing loop detected',
-    # message contains commands
-    '5.6.0' => 'Other or undefined media error',
-    # no command found in message
-    '5.6.1' => 'Media not supported',
-    # failed to personalize (merge_feature)
-    '5.6.5' => 'Conversion Failed',
-    # virus found
-    '5.7.0' => 'Other or undefined security status',
-    # message is not authorized and is rejected
-    '5.7.1' => 'Delivery not authorized, message refused',
-    # failed to re-encrypt decrypted message
-    '5.7.5' => 'Cryptographic failure',
+
+    # Destination address valid
+    # [Sympa] held message was distributed by moderator
+    '2.1.5' => 'Message was successfully delivered',
+
+    # Other or undefined mail system status
+    # [Sympa] forwarded to moderators
+    '2.3.0' => 'Message has been forwarded to the list moderator(s)',
+
+    # Mailbox disabled, not accepting messages
+    # [Sympa] no available family, dynamic list creation failed, etc.
+    '4.2.1' => 'List could not be created',
+
+    # Mailing list expansion problem
+    # [Sympa] no subscribers in dynamic list
+    '4.2.4' => 'List does not exist',
+
+    # Other or undefined mail system status
+    # [Sympa] held for moderation
+    # Currently 2.3.0 is used instead. See GH issue #1699.
+    '4.3.0' => 'Message has been forwarded to the list moderator(s)',
+
+    # Bad destination mailbox address
+    # [Sympa] unknown list in existing mail domain
+    '5.1.1' => 'List does not exist',
+
+    # Bad destination system address
+    # [Sympa] unknown mail domain
+    '5.1.2' => 'List does not exist',
+
+    # Message length exceeds administrative limit
+    '5.2.3' =>
+        'Message could not be sent because its size was over the maximum size allowed on the list',
+
+    # Mailing list expansion problem
+    # [Sympa] no owners defined in list at all, no listmasters defined at all
+    '5.2.4' =>
+        'Impossible to forward message because of an internal server error',
+
+    # Other or undefined mail system status
+    # [Sympa] could not store message into spool or mailer
+    '5.3.0' =>
+        'Impossible to distribute message because of an internal server error',
+
+    # System incorrectly configured
+    # [Sympa] misconfigured family list
+    '5.3.5' => 'List could not be created',
+
+    # Routing loop detected
+    # [Sympa] loop detected FIXME:Not really used.
+    '5.4.6' => 'Loop detected',
+
+    # Other or undefined media error
+    # [Sympa] message contains commands
+    '5.6.0' => 'Message contains a line that can be interpreted as a command',
+
+    # Media not supported
+    # [Sympa] no command found in message
+    '5.6.1' => 'No command found in message',
+
+    # Conversion Failed
+    # [Sympa] failed to personalize the message
+    '5.6.5' => 'Message cannot be personalized',
+
+    # Other or undefined security status
+    # [Sympa] virus found
+    '5.7.0' => 'A virus in your mail',
+
+    # Delivery not authorized, message refused
+    # [Sympa] message is not authorized and is rejected
+    '5.7.1' => 'You are not allowed to send this message',
+
+    # Cryptographic failure
+    # [Sympa] failed to re-encrypt decrypted message FIXME:Not yet used
+    '5.7.5' => 'Failed to encrypt message',
 );
 
 # Old names: tools::send_dsn(), Sympa::ConfigurableObject::send_dsn().
@@ -767,16 +806,38 @@ sub is_listmaster {
 }
 
 # Old name: tools::get_message_id().
+#
+# Note:
+# The boundary of multipart message is generated based on this function
+# and its length, 2 octets longer, should be limited up to 70 octets
+# (See RFC 2046, 5.1.1). So as of 6.2.74, the length of the domain part will
+# be limited.  See also GH #1795.
 sub unique_message_id {
     my $that = shift;
 
-    my ($time, $usec) = Sympa::Tools::Time::gettimeofday();
     my $domain =
           (ref $that eq 'Sympa::List') ? $that->{'domain'}
         : ($that and $that ne '*') ? $that
         :                            $Conf::Conf{'domain'};
-    return sprintf '<sympa.%d.%d.%d.%d@%s>', $time, $usec, $PID,
-        (int rand 999), $domain;
+
+    my ($time, $usec) = Sympa::Tools::Time::gettimeofday();
+    my $base32 = sprintf '%s%s%s%s',
+        _base32($time, 35), _base32($usec, 20), _base32($PID, 35),
+        _base32(int(rand 1023), 10);
+
+    return sprintf '<sympa.%s@%s>', $base32, substr $domain, -39;
+}
+
+my @base32_alphabets = split '', '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+
+sub _base32 {
+    my $dec = shift;
+    my $prc = shift;
+
+    # Convert a (possiblly signed) decimal $dec to binary in $prc bits
+    # then encode it in base32.
+    my $vec = substr sprintf("%0${prc}b", $dec), -$prc;
+    return $vec =~ s/([01]{5})/$base32_alphabets[oct "0b$1"]/egr;
 }
 
 1;

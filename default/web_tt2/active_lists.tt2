@@ -18,11 +18,11 @@
 <table class="responsive listOfItems" >
     <caption>[%|loc(count)%] The %1 most active lists [%END%][%|loc(for)%] for %1 days [%END%]</caption>
     <tr class="color_light">
-        <th id="list_name"><strong>[%|loc%]List name[%END%]</strong></th>
-        <th id="message"><strong>[%|loc%]Number of messages[%END%]</strong></th>
-        <th id="average"><strong>[%|loc%]Average by day[%END%]</strong></th>
-        <th id="date"><strong>[%|loc%]Creation date[%END%]</strong></th>
-        <th id="subject"><strong>[%|loc%]Subject[%END%]</strong></th>
+        <th id="h_name"><strong>[%|loc%]List name[%END%]</strong></th>
+        <th id="h_number"><strong>[%|loc%]Number of messages[%END%]</strong></th>
+        <th id="h_average"><strong>[%|loc%]Average by day[%END%]</strong></th>
+        <th id="h_date"><strong>[%|loc%]Creation date[%END%]</strong></th>
+        <th id="h_subject"><strong>[%|loc%]Subject[%END%]</strong></th>
     </tr>
 
     [% SET dark = '0' %]
@@ -34,13 +34,13 @@
             <tr class="color0">
             [% SET dark = '1' %]
         [% END %]
-            <td headers="list_name">
+            <td headers="h_name">
                 <a href="[% 'info' | url_rel([l.name]) %]" ><strong>[%|obfuscate(conf.spam_protection) %][% l.name %]@[% domain %][% END %]</strong></a>
             </td>
-            <td class="text_center" headers="message"> [% l.msg_count %] </td>
-            <td class="text_center" headers="average"> [% l.average %] </td>
-            <td headers="date"> [% l.date %] </td>
-            <td headers="subject"> [% l.subject %] </td>
+            <td headers="h_number" class="text_center"> [% l.msg_count %] </td>
+            <td headers="h_average" class="text_center"> [% l.average %] </td>
+            <td headers="h_date"> [% l.date %] </td>
+            <td headers="h_subject"> [% l.subject %] </td>
          </tr>
     [% END %]
 </table>
