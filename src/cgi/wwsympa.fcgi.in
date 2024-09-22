@@ -3670,6 +3670,7 @@ sub is_ldap_user {
             base    => $ldap->{'suffix'},
             filter  => "$filter",
             scope   => $ldap->{'scope'},
+            deref   => $ldap->{'deref'},
             timeout => $ldap->{'timeout'}
         );
 

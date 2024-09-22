@@ -106,6 +106,14 @@ our %list_option = (
     'one'  => {'gettext_id' => 'one level'},
     'sub'  => {'gettext_id' => 'subtree'},
 
+    # include_ldap_2level_query.deref2, include_ldap_2level_query.deref1,
+    # include_ldap_query.deref
+    'never' => {'gettext_id' => 'never'},
+    'search' =>
+        {'gettext_id' => 'in searching subordinates of the base object'},
+    'find'   => {'gettext_id' => 'in locating the base object'},
+    'always' => {'gettext_id' => 'always'},
+
     # include_ldap_query.use_tls, include_ldap_2level_query.use_tls,
     # include_ldap_ca.use_tls, include_ldap_2level_ca.use_tls
     'starttls' => {'gettext_id' => 'use STARTTLS'},

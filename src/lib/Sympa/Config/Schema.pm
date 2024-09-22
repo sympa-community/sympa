@@ -348,7 +348,7 @@ our %pinfo = (
         gettext_id => 'Name of the database',
         gettext_comment =>
             "With SQLite, this must be the full path to database file.\nWith Oracle Database, this must be SID, net service name or easy connection identifier (to use net service name, db_host should be set to \"none\" and HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file).",
-        format => '.+',
+        format     => '.+',
         occurrence => '1',
     },
     db_user => {
@@ -1768,8 +1768,8 @@ our %pinfo = (
                 default    => 'owner',
             },
             quota => {
-                context => [qw(list domain site)],
-                order   => 3,
+                context      => [qw(list domain site)],
+                order        => 3,
                 gettext_id   => "quota",
                 gettext_unit => 'Kbytes',
                 format       => '\d+',
@@ -3469,6 +3469,15 @@ our %pinfo = (
                 occurrence => '1',
                 default    => 'sub'
             },
+            deref => {
+                context    => [qw(list)],
+                order      => 5.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
+            },
             timeout => {
                 context      => [qw(list)],
                 order        => 6,
@@ -3650,6 +3659,15 @@ our %pinfo = (
                 format     => ['base', 'one', 'sub'],
                 default    => 'sub'
             },
+            deref1 => {
+                context    => [qw(list)],
+                order      => 5.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
+            },
             timeout1 => {
                 context      => [qw(list)],
                 order        => 6,
@@ -3703,6 +3721,15 @@ our %pinfo = (
                 format     => ['base', 'one', 'sub'],
                 occurrence => '1',
                 default    => 'sub'
+            },
+            deref2 => {
+                context    => [qw(list)],
+                order      => 12.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
             },
             timeout2 => {
                 context      => [qw(list)],
@@ -3872,8 +3899,8 @@ our %pinfo = (
                 order   => 9,
                 gettext_id =>
                     "Directory where the database is stored (used for DBD::CSV only)",
-                format => '.+',
-                obsolete => 'db_name',
+                format    => '.+',
+                obsolete  => 'db_name',
                 not_after => '6.2.70',
             },
             nosync_time_ranges => {
@@ -4037,6 +4064,15 @@ our %pinfo = (
                 format     => ['base', 'one', 'sub'],
                 occurrence => '1',
                 default    => 'sub'
+            },
+            deref => {
+                context    => [qw(list)],
+                order      => 5.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
             },
             timeout => {
                 context      => [qw(list)],
@@ -4215,6 +4251,15 @@ our %pinfo = (
                 occurrence => '1',
                 default    => 'sub'
             },
+            deref1 => {
+                context    => [qw(list)],
+                order      => 5.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
+            },
             timeout1 => {
                 context      => [qw(list)],
                 order        => 6,
@@ -4268,6 +4313,15 @@ our %pinfo = (
                 format     => ['base', 'one', 'sub'],
                 occurrence => '1',
                 default    => 'sub'
+            },
+            deref2 => {
+                context    => [qw(list)],
+                order      => 12.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
             },
             timeout2 => {
                 context      => [qw(list)],
@@ -4432,8 +4486,8 @@ our %pinfo = (
                 order   => 9,
                 gettext_id =>
                     "Directory where the database is stored (used for DBD::CSV only)",
-                format => '.+',
-                obsolete => 'db_name',
+                format    => '.+',
+                obsolete  => 'db_name',
                 not_after => '6.2.70',
             },
             email_entry => {
