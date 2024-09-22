@@ -444,14 +444,65 @@ our %pinfo = (
         gettext_comment => 'Do not forget to configure syslog server.',
         format          => '\S+',
     },
-    log_socket_type => {
+    syslog_socket => {
         context    => [qw(site)],
         order      => 3.02,
         group      => 'logging',
-        importance => 100,
-        default    => 'unix',
-        gettext_id => 'Communication mode with syslog server',
-        format     => '\w+',
+        gettext_id => 'System log socket options',
+        gettext_comment =>
+            'The options to be used for system log socket. Options come from Sys::Syslog https://metacpan.org/pod/Sys::Syslog#setlogsock%28%29',
+        format => {
+            type => {
+                context    => [qw(site)],
+                order      => 1,
+                importance => 100,
+                gettext_id => 'Communication mode with syslog server',
+                gettext_comment =>
+                    'In most cases, an appropriate default value should be automatically chosen.',
+                format => [
+                    'native', 'tcp',    'udp',  'inet',
+                    'unix',   'stream', 'pipe', 'console',
+                ],
+                occurrence => '0-n',
+                split_char => ',',
+            },
+            path => {
+                context    => [qw(site)],
+                order      => 2,
+                gettext_id => 'Stream location',
+                gettext_comment =>
+                    'Defaults to the standard location on the system.',
+                format => '.+',
+            },
+            timeout => {
+                context      => [qw(site)],
+                order        => 3,
+                gettext_id   => 'Socket timeout',
+                gettext_unit => 'seconds',
+                format       => '\d+([.]\d+)?',
+            },
+            host => {
+                context         => [qw(site)],
+                order           => 4,
+                gettext_id      => 'Host name to send the messages to',
+                gettext_comment => 'Defaults to the local host.',
+                format_s        => '$host',
+            },
+            port => {
+                context    => [qw(site)],
+                order      => 5,
+                gettext_id => 'TCP or UDP port to connect to',
+                gettext_comment =>
+                    'Defaults to the standard port on the system.',
+                format => '\d+',
+            },
+        },
+        not_before => '6.2.73b.1',
+    },
+    log_socket_type => {
+        context    => [qw(site)],
+        obsolete   => 'syslog_socket.type',
+        not_after  => '6.2.72',
     },
     log_level => {
         context    => [qw(domain site)],    #FIXME "domain" possible?

@@ -52,11 +52,7 @@ sub _run {
     }
 
     ## Open the syslog and say we're read out stuff.
-    $log->openlog(
-        $Conf::Conf{'syslog'},
-        $Conf::Conf{'log_socket_type'},
-        service => 'sympa/health_check'
-    );
+    $log->openlog(service => 'sympa/health_check');
 
     ## Setting log_level using conf unless it is set by calling option
     #FIXME: Redundant code?

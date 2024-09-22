@@ -1517,6 +1517,11 @@ sub _infer_server_specific_parameter_values {
 
     $param->{'config_hash'}{'robot_name'} = '';
 
+    $param->{'config_hash'}{'syslog_socket.type'} = [
+        grep {length} split /\*,\*/,
+        ($param->{'config_hash'}{'syslog_socket.type'} // '')
+    ];
+
     $param->{'config_hash'}{'dkim_signer_domain'} ||=
         $param->{'config_hash'}{'domain'};
 
@@ -2000,9 +2005,6 @@ sub _load_wwsconf {
             'MHonArc is not installed or %s is not executable',
             $conf->{'mhonarc'});
     }
-
-    ## set default
-    $conf->{'log_facility'} ||= $config_hash->{'syslog'};
 
     foreach my $k (keys %$conf) {
         $config_hash->{$k} = $conf->{$k};

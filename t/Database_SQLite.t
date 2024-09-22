@@ -24,15 +24,14 @@ my $test_listmaster = 'dude@example.com';
 my $tempdir = File::Temp->newdir(CLEANUP => ($ENV{TEST_DEBUG} ? 0 : 1));
 
 %Conf::Conf = (
-    domain          => 'mail.example.org',    # mandatory
-    listmaster      => $test_listmaster,      # mandatory
-    db_type         => 'SQLite',
-    db_name         => ':memory:',
-    queuebulk       => $tempdir . '/bulk',
-    queuesubscribe  => $tempdir . '/auth',
-    home            => $tempdir,
-    log_socket_type => 'stream',
-    db_list_cache   => 'off',
+    domain         => 'mail.example.org',    # mandatory
+    listmaster     => $test_listmaster,      # mandatory
+    db_type        => 'SQLite',
+    db_name        => ':memory:',
+    queuebulk      => $tempdir . '/bulk',
+    queuesubscribe => $tempdir . '/auth',
+    home           => $tempdir,
+    db_list_cache  => 'off',
 );
 # Apply defaults.
 foreach my $pinfo (grep { $_->{name} and exists $_->{default} }

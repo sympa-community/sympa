@@ -83,7 +83,7 @@ unless (Conf::load()) {
         Conf::get_sympa_conf();
 }
 
-$log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+$log->openlog;
 
 my $mailer = Sympa::Mailer->instance;
 
@@ -112,7 +112,7 @@ if ($main::options{log_level}) {
 unless ($main::options{'foreground'}) {
     $process->daemonize;
 }
-$log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+$log->openlog;
 
 # Create and write the PID file.
 $process->write_pid(initial => 1);

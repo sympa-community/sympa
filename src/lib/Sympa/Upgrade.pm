@@ -2233,6 +2233,23 @@ sub upgrade {
         $log->syslog('notice', '...Done.');
     }
 
+    if (lower_version($previous_version, '6.2.74')) {
+        # syslog_socket.type no longer has the default.
+        # Previously, log_socket_type had a default value "unix".
+        if (open my $fh, '+<', Conf::get_sympa_conf()) {
+            my @p = grep {/\A\s*log_socket_type\s+\S+/} <$fh>;
+            if (not @p and seek $fh, 0, 2) {
+                my $human_date =
+                    $language->gettext_strftime('%d %b %Y at %H:%M:%S',
+                    localtime time);
+                printf $fh
+                    "\n\n# Upgrade from %s to %s\n# %s\nsyslog_socket.type unix\n",
+                    $previous_version, $new_version, $human_date;
+            }
+            close $fh;
+        }
+    }
+
     return 1;
 }
 

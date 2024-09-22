@@ -86,7 +86,7 @@ unless ($main::options{'foreground'}) {
     $process->daemonize;
 }
 
-$log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+$log->openlog;
 
 # Create and write the PID file.
 $process->write_pid(initial => 1);
@@ -203,7 +203,7 @@ sub _load {
     }
 
     ## Open the syslog and say we're read out stuff.
-    $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+    $log->openlog;
 
     # Enable SMTP logging if required
     $mailer->{log_smtp} = $main::options{'mail'}

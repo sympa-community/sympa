@@ -139,8 +139,7 @@ sub _fork_children {
                         close STDERR;
                         $process->direct_stderr_to_file;
                         $self->{_last_activity} = time;
-                        $log->openlog($Conf::Conf{'syslog'},
-                            $Conf::Conf{'log_socket_type'});
+                        $log->openlog;
                         $log->syslog('info',
                             'Bulk slave daemon started with PID %s', $PID);
                         last;

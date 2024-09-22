@@ -56,7 +56,7 @@ unless (defined Conf::load()) {
 
 my $log = Sympa::Log->instance;
 $log->{level} = $Conf::Conf{'log_level'};
-$log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+$log->openlog;
 
 my ($operation, $listname, $domain, $file) = @ARGV;
 
