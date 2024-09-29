@@ -843,20 +843,8 @@ sub check_arc_seals {
 
 # Old name: tools::remove_invalid_dkim_signature() which takes a message as
 # string and outputs idem without signature if invalid.
-sub remove_invalid_dkim_signature {
-    $log->syslog('debug2', '(%s)', @_);
-    my $self = shift;
-
-    return unless $self->get_header('DKIM-Signature');
-
-    my ($dkim_pass, @dummy) = $self->check_dkim_sigs;
-    unless ($dkim_pass) {
-        $log->syslog('info',
-            'DKIM signature of message %s is invalid, removing', $self);
-        $self->delete_header('DKIM-Signature');
-        delete $self->{dkim_pass};
-    }
-}
+# Deprecated.
+#sub remove_invalid_dkim_signature;
 
 sub as_entity {
     my $self = shift;
@@ -3838,6 +3826,8 @@ Returns:
 An array of the overall result of checking and authentication result(s).
 
 =item remove_invalid_dkim_signature ( )
+
+B<Deprecated> on Sympa 6.2.74.
 
 I<Instance method>.
 Verifies DKIM signatures included in the message,
