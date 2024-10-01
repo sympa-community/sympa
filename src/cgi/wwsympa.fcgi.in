@@ -37,6 +37,8 @@ use strict;
 ##use warnings;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 
+use Archive::Zip::SimpleUnzip qw();
+use Archive::Zip::SimpleZip qw();
 use DateTime;
 use DateTime::Format::Mail;
 use Digest::MD5;
@@ -49,16 +51,6 @@ use POSIX qw();
 use Time::Local qw();
 use URI;
 use Data::Dumper;    # tentative
-
-BEGIN {
-    # For some environments not providing Archive::Zip::Simple*, Archive::Zip
-    # may be used.  The latter is discouraged because it is memory-consuming.
-    eval 'use Archive::Zip::SimpleUnzip qw()';
-    eval 'use Archive::Zip::SimpleZip qw()';
-    require Archive::Zip
-        unless $Archive::Zip::SimpleUnzip::VERSION
-        and $Archive::Zip::SimpleZip::VERSION;
-}
 
 use Sympa;
 use Sympa::Archive;
@@ -12561,7 +12553,7 @@ sub do_d_unzip {
     }
 
     # Uploaded of the file.zip
-    my ($zip, $rv, $az);
+    my $zip;
     my $fh = $query->upload('uploaded_file');
     if (defined $fh) {
         my $ioh = $fh->handle;
@@ -12570,21 +12562,17 @@ sub do_d_unzip {
         # some of methods.  That's why destructive bless-ing is here.
         bless $ioh => 'IO::File';
 
-        if ($Archive::Zip::SimpleUnzip::VERSION) {
-            $zip = Archive::Zip::SimpleUnzip->new($ioh);
-            $rv  = defined $zip;
-            $az  = $Archive::Zip::SimpleUnzip::SimpleUnzipError;
-        } else {
-            $zip = Archive::Zip->new();
-            $az  = $zip->readFromFileHandle($ioh);
-            $rv  = (defined $az and $az == Archive::Zip::AZ_OK());
-        }
+        $zip = Archive::Zip::SimpleUnzip->new($ioh);
     }
-    unless ($rv) {
+    unless (defined $zip) {
         Sympa::WWW::Report::reject_report_web('intern', 'cannot_unzip',
             {name => $zip_name},
             $param->{'action'}, $list, $param->{'user'}{'email'}, $robot);
-        wwslog('err', 'Unable to read the zip file: %s', $az);
+        wwslog(
+            'err',
+            'Unable to read the zip file: %s',
+            $Archive::Zip::SimpleUnzip::SimpleUnzipError
+        );
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -12603,19 +12591,9 @@ sub do_d_unzip {
     my $status = 1;
     my %subpaths;
     my @langs = Sympa::Language::implicated_langs($language->get_lang);
-    my @members;
-    if ($Archive::Zip::SimpleUnzip::VERSION) {
-        @members = map { $zip->member($_) } $zip->names;
-    } else {
-        @members = grep { !$_->isEncrypted } $zip->members;
-    }
+    my @members = map { $zip->member($_) } $zip->names;
     foreach my $member (@members) {
-        my $path;
-        if ($Archive::Zip::SimpleUnzip::VERSION) {
-            $path = $member->name;
-        } else {
-            $path = $member->fileName;
-        }
+        my $path     = $member->name;
         my @subpaths = split m{/+},
             Sympa::Tools::Text::guessed_to_utf8($path, @langs);
         next unless @subpaths;
@@ -12664,29 +12642,17 @@ sub do_d_unzip {
         $subpaths{$path} = [@subpaths];
     }
     foreach my $member (@members) {
-        my $path;
-        if ($Archive::Zip::SimpleUnzip::VERSION) {
-            $path = $member->name;
-        } else {
-            $path = $member->fileName;
-        }
+        my $path     = $member->name;
         my $subpaths = $subpaths{$path};
         next unless $subpaths and @$subpaths;
 
-        my ($content, $rv, $az);
+        my $content;
         unless ($member->isDirectory) {
-            if ($Archive::Zip::SimpleUnzip::VERSION) {
-                $content = $member->content;
-                $rv      = defined $content;
-                $az      = $Archive::Zip::SimpleUnzip::SimpleUnzipError;
-            } else {
-                ($content, $az) = $member->contents;
-                $rv = (defined $az and $az == Archive::Zip::AZ_OK());
-            }
-            unless ($rv) {
+            $content = $member->content;
+            unless (defined $content) {
                 wwslog('err',
                     'Unable to extract member %s of the zip file: %s',
-                    $path, $az);
+                    $path, $Archive::Zip::SimpleUnzip::SimpleUnzipError);
                 web_db_log(
                     {   'robot'        => $robot,
                         'list'         => $list->{'name'},
@@ -16274,14 +16240,9 @@ sub do_arc_download {
     return undef unless defined check_authz('do_arc', 'archive_web_access');
 
     ##zip file name:listname_archives.zip
-    my $zip_file_name = sprintf '%s_archives.zip', $list->{'name'};
-    my $zip_abs_file = $Conf::Conf{'tmpdir'} . '/' . $zip_file_name;
-    my $zip;
-    if ($Archive::Zip::SimpleZip::VERSION) {
-        $zip = Archive::Zip::SimpleZip->new($zip_abs_file);
-    } else {
-        $zip = Archive::Zip->new;
-    }
+    my $zip_file_name     = sprintf '%s_archives.zip', $list->{'name'};
+    my $zip_abs_file      = $Conf::Conf{'tmpdir'} . '/' . $zip_file_name;
+    my $zip               = Archive::Zip::SimpleZip->new($zip_abs_file);
     my $number_of_members = 0;
 
     #Search for months to put in zip
@@ -16339,31 +16300,23 @@ sub do_arc_download {
             next;
         }
 
-        if ($Archive::Zip::SimpleZip::VERSION) {
-            $zip->add($archive->{directory}, Name => $arc_dirname);
-        } else {
-            $zip->addDirectory($archive->{directory}, $arc_dirname);
-        }
+        $zip->add($archive->{directory}, Name => $arc_dirname);
 
         while (1) {
             my ($message, $handle) = $archive->next;
             last unless $handle;
             next unless $message;
 
-            my ($rv, $az);
-            if ($Archive::Zip::SimpleZip::VERSION) {
-                $rv = $zip->addString($message->as_string,
-                    Name => sprintf('%s/%s', $arc_dirname, $handle->basename)
-                );
-                $az = $Archive::Zip::SimpleZip::SimpleZipError;
-            } else {
-                $rv = $zip->addString($message->as_string,
-                    sprintf('%s/%s', $arc_dirname, $handle->basename));
-                $az = 'unknown error';
-            }
+            my $rv = $zip->addString($message->as_string,
+                Name => sprintf('%s/%s', $arc_dirname, $handle->basename));
             unless ($rv) {
-                wwslog('info', 'Failed to add %s file in %s to archive: %s',
-                    $handle->basename, $archive, $az);
+                wwslog(
+                    'info',
+                    'Failed to add %s file in %s to archive: %s',
+                    $handle->basename,
+                    $archive,
+                    $Archive::Zip::SimpleZip::SimpleZipError
+                );
                 Sympa::WWW::Report::reject_report_web(
                     'intern',
                     'add_file_zip',
@@ -16414,17 +16367,11 @@ sub do_arc_download {
     }
 
     # Writing zip file.
-    my ($rv, $az);
-    if ($Archive::Zip::SimpleZip::VERSION) {
-        $rv = $zip->close;
-        $az = $Archive::Zip::SimpleZip::SimpleZipError;
-    } else {
-        $az = $zip->writeToFileNamed($zip_abs_file);
-        $rv = (defined $az and $az == Archive::Zip::AZ_OK());
-    }
-    unless ($rv) {
-        wwslog('info', 'Error while writing ZIP File %s: %s',
-            $zip_abs_file, $az);
+    unless ($zip->close) {
+        wwslog(
+            'info',        'Error while writing ZIP File %s: %s',
+            $zip_abs_file, $Archive::Zip::SimpleZip::SimpleZipError
+        );
         Sympa::WWW::Report::reject_report_web('intern', 'write_file_zip',
             {'zipfile' => $zip_file_name},
             $param->{'action'}, '', $param->{'user'}{'email'}, $robot);
