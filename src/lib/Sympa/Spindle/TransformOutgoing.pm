@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -103,7 +102,7 @@ sub _twist {
 
     # Add custom header fields
     foreach my $i (@{$list->{'admin'}{'custom_header'}}) {
-        $message->add_header($1, $2) if $i =~ /^([\S\-\:]*)\s(.*)$/;
+        $message->add_header(split /\s*:\s*/, $i, 2) if 0 < index $i, ':';
     }
 
     ## Add RFC 2919 header field
@@ -118,6 +117,13 @@ sub _twist {
     $list->add_list_header($message, 'id');
 
     ## Add RFC 2369 header fields
+    # At first, delete fields of parent list.  See RFC 2369, section 4.
+    foreach my $h (
+        qw(List-Help List-Subscribe List-Unsubscribe List-Owner
+        List-Unsubscribe-Post)
+    ) {
+        $message->delete_header($h);
+    }
     foreach my $field (
         @{  Sympa::Robot::list_params($list->{'domain'})
                 ->{'rfc2369_header_fields'}->{'format'}
@@ -137,7 +143,7 @@ sub _twist {
     ## Useful to remove some header fields that Sympa has set
     if ($list->{'admin'}{'remove_outgoing_headers'}) {
         foreach my $field (@{$list->{'admin'}{'remove_outgoing_headers'}}) {
-            my ($f, $v) = split /\s*:\s*/, $field;
+            my ($f, $v) = split /\s*:\s*/, $field, 2;
             if (defined $v) {
                 my @values = $message->get_header($f);
                 my $i;
@@ -180,7 +186,7 @@ if available.
 =item *
 
 Adds / modifies C<Reply-To> header field,
-if L<C<reply_to_header>|list_config(5)/reply_to_header> list option is
+if L<C<reply_to_header>|sympa_config(5)/reply_to_header> list option is
 enabled.
 
 =item *
@@ -206,21 +212,21 @@ Adds / overwrites following header fields:
 =item *
 
 Adds header fields specified by
-L<C<custom_header>|list_config(5)/custom_header> list configuration parameter,
+L<C<custom_header>|sympa_config(5)/custom_header> list configuration parameter,
 if any.
 
 =item *
 
 Adds RFC 2919 C<List-Id> field,
 RFC 2369 fields (according to
-L<C<rfc2369_header_fields>|list_config(5)/rfc2369_header_fields> list
+L<C<rfc2369_header_fields>|sympa_config(5)/rfc2369_header_fields> list
 configuration option) and RFC 5064 C<Archived-At> field (if archiving is
 enabled).
  
 =item *
 
 Removes header fields specified by
-L<C<remove_outgoing_headers>|list_config(5)/remove_outgoing_headers>
+L<C<remove_outgoing_headers>|sympa_config(5)/remove_outgoing_headers>
 list configuration parameter, if any.
 
 =back

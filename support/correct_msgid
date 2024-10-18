@@ -64,8 +64,8 @@ while (<$en_US>) {
     }
     next if "\"\"" eq $str or $id eq $str;
 
-    my $id_s  = eval $id;
-    my $str_s = eval $str;
+    my $id_s  = eval ($id =~ s/\@/\\\@/gr);
+    my $str_s = eval ($str =~ s/\@/\\\@/gr);
 
     my @locations = map {
         my $l = $_;
@@ -132,8 +132,10 @@ foreach my $loc (sort keys %changes) {
                 map { _esc_qq($_) } @$pair;
         } elsif ($loc =~ /[.]tt2\z/) {
             printf
-                "    s/([\\)\\]\\\'\\\"])%s([\\(\\[\\\'\\\"])/\$1%s\$2/ and \$changed++;\n",
+                "    s/([\\)\\]\\\'])%s([\\(\\[\\\'])/\$1%s\$2/ and \$changed++;\n",
                 map { _esc($_) } @$pair;
+            printf "    s/\\\"%s\\\"/\\\"%s\\\"/ and \$changed++;\n",
+                map { _esc_qq($_) } @$pair;
         } else {
             printf "    s/(\\s)%s\\n/\$1%s\n/ and \$changed++;\n",
                 map { _esc($_) } @$pair;

@@ -1,8 +1,4 @@
-title.gettext anyone no authentication if DKIM signature is OK
+title.gettext need authentication
 
-true()                               smtp          -> request_auth
-true()                               dkim,md5,smime          -> do_it
-
-
-
-
+true()                               smtp       -> request_auth
+true()                               md5,smime  -> do_it

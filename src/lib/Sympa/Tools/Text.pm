@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2020, 2021 The Sympa Community. See the
+# Copyright 2018, 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -30,16 +29,18 @@ package Sympa::Tools::Text;
 use strict;
 use warnings;
 use feature qw(fc);
+use Digest::MD5;
 use Encode qw();
 use English qw(-no_match_vars);
 use Encode::MIME::Header;    # 'MIME-Q' encoding.
 use HTML::Entities qw();
+use MIME::Base64 qw();       # encode_base64url() needs 3.11 or later.
 use MIME::EncWords;
 use Text::LineFold;
 use Unicode::GCString;
 use URI::Escape qw();
-BEGIN { eval 'use Unicode::Normalize qw()'; }
-BEGIN { eval 'use Unicode::UTF8 qw()'; }
+use Unicode::Normalize qw();
+use Unicode::UTF8;
 
 use Sympa::Language;
 use Sympa::Regexps;
@@ -57,7 +58,12 @@ sub addrencode {
 
     return undef unless $addr =~ /\S/;
 
+    # Eliminate hostile characters.
+    $phrase =~ s/(\r\n|\r|\n)(?=[ \t])//g;
+    $phrase =~ s/[\0\r\n]+//g;
+
     if ($phrase =~ /[^\s\x21-\x7E]/) {
+        # String containing Non-ASCII should be encoded.
         $phrase = MIME::EncWords::encode_mimewords(
             Encode::decode('utf8', $phrase),
             'Encoding'    => 'A',
@@ -66,10 +72,13 @@ sub addrencode {
             'Field'       => 'Resent-Sender', # almost longest
             'Minimal'     => 'DISPNAME',      # needs MIME::EncWords >= 1.012.
         );
-    } elsif ($phrase =~ /\S/) {
+    } elsif ($phrase =~ /[()<>\[\]:;\@\\,\"]/) {
+        # Otherwise, the string has to be quoted when it is not a
+        # dot-atom-text (RFC 5322 3.2.3).
         $phrase =~ s/([\\\"])/\\$1/g;
         $phrase = '"' . $phrase . '"';
     }
+
     if ($comment =~ /[^\s\x21-\x27\x2A-\x5B\x5D-\x7E]/) {
         $comment = MIME::EncWords::encode_mimewords(
             Encode::decode('utf8', $comment),
@@ -125,22 +134,18 @@ sub canonic_text {
     return undef unless defined $text;
 
     # Normalize text. See also discussion on
-    # https://listes.renater.fr/sympa/arc/sympa-developpers/2018-03/thrd1.html
+    # https://lists.sympa.community/msg/devel/2018-03/4QnaLDHkIC-7ZXa2e4npdQ
     #
     # N.B.: Corresponding modules are optional by now, and should be
     # mandatory in the future.
     my $utext;
     if (Encode::is_utf8($text)) {
         $utext = $text;
-    } elsif ($Unicode::UTF8::VERSION) {
+    } else {
         no warnings 'utf8';
         $utext = Unicode::UTF8::decode_utf8($text);
-    } else {
-        $utext = Encode::decode_utf8($text);
     }
-    if ($Unicode::Normalize::VERSION) {
-        $utext = Unicode::Normalize::normalize('NFC', $utext);
-    }
+    $utext = Unicode::Normalize::normalize('NFC', $utext);
 
     # Remove DOS linefeeds (^M) that cause problems with Outlook 98, AOL,
     # and EIMS:
@@ -304,11 +309,8 @@ sub guessed_to_utf8 {
         and length $text
         and $text =~ /[^\x00-\x7F]/;
 
-    my $utf8;
-    if ($Unicode::UTF8::VERSION) {
-        $utf8 =
-            eval { Unicode::UTF8::decode_utf8($text, Encode::FB_CROAK()) };
-    }
+    my $utf8 = Unicode::UTF8::decode_utf8($text)
+        if Unicode::UTF8::valid_utf8($text);
     unless (defined $utf8) {
         foreach my $charset (map { $_ ? @$_ : () } @legacy_charsets{@langs}) {
             $utf8 =
@@ -321,8 +323,7 @@ sub guessed_to_utf8 {
     }
 
     # Apply NFC: e.g. for modified-NFD by Mac OS X.
-    $utf8 = Unicode::Normalize::normalize('NFC', $utf8)
-        if $Unicode::Normalize::VERSION;
+    $utf8 = Unicode::Normalize::normalize('NFC', $utf8);
 
     return Encode::encode_utf8($utf8);
 }
@@ -397,6 +398,13 @@ sub _url_query_string {
             } sort keys %$query
         );
     }
+}
+
+sub permalink_id {
+    my $message_id = shift;
+
+    $message_id =~ s/[\s<>]//g;
+    return MIME::Base64::encode_base64url(Digest::MD5::md5($message_id));
 }
 
 sub pad {
@@ -846,6 +854,10 @@ Otherwise, pads left.
 Returns:
 
 Padded string.
+
+=item permalink_id ( $message_id )
+
+Calculates permalink ID from mesage ID.
 
 =item qdecode_filename ( $filename )
 

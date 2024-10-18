@@ -2,12 +2,12 @@
 <table  class="responsive listOfItems text_center">
     <caption>[%|loc%]Sessions list[%END%]</caption>
     <tr>
-        <th>[%|loc%]last hit date[%END%]</th>
-        <th>[%|loc%]start date[%END%]</th>
-        <th>[%|loc%]hit count[%END%]</th>
-        <th>[%|loc%]remote address[%END%]</th>
-        <th>[%|loc%]robot[%END%]</th>
-        <th>[%|loc%]User email[%END%]</th>
+        <th id="h_last">[%|loc%]last hit date[%END%]</th>
+        <th id="h_first">[%|loc%]start date[%END%]</th>
+        <th id="h_number">[%|loc%]hit count[%END%]</th>
+        <th id="h_host">[%|loc%]remote address[%END%]</th>
+        <th id="h_domain">[%|loc%]domain[%END%]</th>
+        <th id="h_email">[%|loc%]User email[%END%]</th>
     </tr>
     [% FOREACH session = sessions %]
         [% IF dark == '1' %]
@@ -17,12 +17,12 @@
             [% SET dark = '1' %]
             <tr class="color0">
         [% END %]
-                <td>[% session.date %]</td>
-                <td>[% session.start_date %]</td>
-                <td>[% session.hit_session %]</td>
-                <td>[% session.remote_addr_session %]</td>
-                <td>[% session.robot_session %]</td>
-                <td>[% session.email_session %]</td>
+                <td headers="h_last">[% session.date %]</td>
+                <td headers="h_first">[% session.start_date %]</td>
+                <td headers="h_number">[% session.hit_session %]</td>
+                <td headers="h_host">[% session.remote_addr_session %]</td>
+                <td headers="h_domain">[% session.robot_session %]</td>
+                <td headers="h_email">[% session.email_session %]</td>
             </tr>
     [% END %]
 </table>

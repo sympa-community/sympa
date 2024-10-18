@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2019, 2021 The Sympa Community. See the
+# Copyright 2018, 2019, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -40,7 +39,6 @@ use Sympa::Robot;
 use Sympa::Tools::Data;
 use Sympa::Tools::Text;
 use Sympa::User;
-use Sympa::WWW::Report;
 
 my $log = Sympa::Log->instance;
 
@@ -49,15 +47,18 @@ my $log = Sympa::Log->instance;
 
 ## authentication : via email or uid
 sub check_auth {
-    my $robot = shift;
-    my $auth  = shift;    ## User email or UID
-    my $pwd   = shift;    ## Password
-    $log->syslog('debug', '(%s)', $auth);
+    $log->syslog('debug', '(%s, %s, ?, ...)', @_);
+    my $robot   = shift;
+    my $auth    = shift;    ## User email or UID
+    my $pwd     = shift;    ## Password
+    my %options = @_;
+
+    my $stash_ref = $options{stash} || [];
 
     my ($canonic, $user);
 
     if (Sympa::Tools::Text::valid_email($auth)) {
-        return authentication($robot, $auth, $pwd);
+        return authentication($robot, $auth, $pwd, stash => $stash_ref);
     } else {
         ## This is an UID
         foreach my $ldap (@{$Conf::Conf{'auth_services'}{$robot}}) {
@@ -79,9 +80,8 @@ sub check_auth {
             };
 
         } else {
-            Sympa::WWW::Report::reject_report_web('user', 'incorrect_passwd',
-                {})
-                unless ($ENV{'SYMPA_SOAP'});
+            push @$stash_ref, ['user', 'incorrect_passwd']
+                unless $ENV{'SYMPA_SOAP'};
             $log->syslog('err', "Incorrect LDAP password");
             return undef;
         }
@@ -117,9 +117,15 @@ sub may_use_sympa_native_auth {
 }
 
 sub authentication {
-    my ($robot, $email, $pwd) = @_;
+    $log->syslog('debug', '(%s, %s, ?, ...)', @_);
+    my $robot   = shift;
+    my $email   = shift;
+    my $pwd     = shift;
+    my %options = @_;
+
+    my $stash_ref = $options{stash} || [];
+
     my ($user, $canonic);
-    $log->syslog('debug', '(%s)', $email);
 
     unless ($user = Sympa::User::get_global_user($email)) {
         $user = {'email' => $email};
@@ -133,9 +139,8 @@ sub authentication {
         # too many wrong login attemp
         Sympa::User::update_global_user($email,
             {wrong_login_count => $user->{'wrong_login_count'} + 1});
-        Sympa::WWW::Report::reject_report_web('user', 'too_many_wrong_login',
-            {})
-            unless ($ENV{'SYMPA_SOAP'});
+        push @$stash_ref, ['user', 'too_many_wrong_login']
+            unless $ENV{'SYMPA_SOAP'};
         $log->syslog('err',
             'Login is blocked: too many wrong password submission for %s',
             $email);
@@ -157,7 +162,7 @@ sub authentication {
             # Old style RC4 encrypted password.
             if ($user->{'password'} and $user->{'password'} =~ /\Acrypt[.]/) {
                 $log->syslog('notice',
-                    'Password in database seems encrypted. Run upgrade_sympa_password.pl to rehash passwords'
+                    'Password in database seems encrypted. Run \'sympa upgrade password\' to rehash passwords'
                 );
                 Sympa::send_notify_to_listmaster('*', 'password_encrypted',
                     {});
@@ -203,7 +208,7 @@ sub authentication {
             {wrong_login_count => ($user->{'wrong_login_count'} || 0) + 1});
     }
 
-    Sympa::WWW::Report::reject_report_web('user', 'incorrect_passwd', {})
+    push @$stash_ref, ['user', 'incorrect_passwd']
         unless $ENV{'SYMPA_SOAP'};
     $log->syslog('err', 'Incorrect password for user %s', $email);
 
@@ -254,6 +259,7 @@ sub ldap_authentication {
         base    => $ldap->{'suffix'},
         filter  => $filter,
         scope   => $ldap->{'scope'},
+        deref   => $ldap->{'deref'},
         timeout => $ldap->{'timeout'}
     );
     unless ($mesg and $entry = $mesg->shift_entry) {
@@ -301,61 +307,56 @@ sub ldap_authentication {
 # fetch user email using their cas net_id and the paragrapah number in auth.conf
 # NOTE: This might be moved to Robot package.
 sub get_email_by_net_id {
-
+    $log->syslog('debug', '(%s, %s, %s)', @_);
     my $robot      = shift;
-    my $auth_id    = shift;
+    my $auth       = shift;
     my $attributes = shift;
 
-    $log->syslog('debug', '(%s, %s)', $auth_id, $attributes->{'uid'});
-
-    if (defined $Conf::Conf{'auth_services'}{$robot}[$auth_id]
-        {'internal_email_by_netid'}) {
-        my $sso_config   = @{$Conf::Conf{'auth_services'}{$robot}}[$auth_id];
-        my $netid_cookie = $sso_config->{'netid_http_header'};
+    if (defined $auth->{internal_email_by_netid}) {
+        my $netid_cookie = $auth->{netid_http_header};
 
         $netid_cookie =~ s/(\w+)/$attributes->{$1}/ig;
 
         my $email =
             Sympa::Robot::get_netidtoemail_db($robot, $netid_cookie,
-            $Conf::Conf{'auth_services'}{$robot}[$auth_id]{'service_id'});
+            $auth->{service_id});
 
         return $email;
     }
 
-    my $ldap = $Conf::Conf{'auth_services'}{$robot}->[$auth_id];
-
-    my $db = Sympa::Database->new('LDAP', %$ldap);
-
-    unless ($db and $db->connect()) {
+    my %ldap = %$auth;
+    my $db = Sympa::Database->new('LDAP', %ldap);
+    unless ($db and $db->connect) {
         $log->syslog('err', 'Unable to connect to the LDAP server "%s"',
-            $ldap->{'host'});
+            $ldap{host});
         return undef;
     }
 
-    my $filter = $ldap->{'get_email_by_uid_filter'};
+    my $filter = $auth->{get_email_by_uid_filter};
     $filter =~ s/\[([\w-]+)\]/$attributes->{$1}/ig;
 
     my $mesg = $db->do_operation(
         'search',
-        base    => $ldap->{'suffix'},
+        base    => $auth->{suffix},
         filter  => $filter,
-        scope   => $ldap->{'scope'},
-        timeout => $ldap->{'timeout'},
-        attrs   => [$ldap->{'email_attribute'}],
+        scope   => $auth->{scope},
+        deref   => $auth->{deref},
+        timeout => $auth->{timeout},
+        attrs   => [$auth->{email_attribute}],
     );
 
-    unless ($mesg and $mesg->count()) {
+    unless ($mesg and $mesg->count) {
         $log->syslog('notice', "No entry in the LDAP Directory Tree of %s",
-            $ldap->{'host'});
-        $db->disconnect();
+            $ldap{host});
+        $db->disconnect;
         return undef;
     }
 
-    $db->disconnect();
+    $db->disconnect;
 
     # Return only the first attribute.
     foreach my $result ($mesg->entries) {
-        my $email = $result->get_value($ldap->{'email_attribute'});
+        my $email = $result->get_value($auth->{email_attribute});
         return undef unless Sympa::Tools::Text::valid_email($email);
         return Sympa::Tools::Text::canonic_email($email);
     }

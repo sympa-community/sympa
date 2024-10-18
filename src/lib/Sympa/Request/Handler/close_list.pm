@@ -4,8 +4,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2017, 2018 The Sympa Community. See the AUTHORS.md file at the
-# top-level directory of this distribution and at
+# Copyright 2017, 2018, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -168,11 +168,11 @@ sub _close {
     ) {
         push @users, $user->{'email'};
     }
-    $list->delete_list_member('users' => \@users);
+    $list->delete_list_member(\@users);
 
     # Remove entries from admin_table.
     foreach my $role (qw(editor owner)) {
-        $list->delete_list_admin($role, $list->get_admins_email($role));
+        $list->delete_list_admin($role, [$list->get_admins_email($role)]);
     }
 
     # Change status & save config.

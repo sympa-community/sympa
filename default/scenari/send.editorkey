@@ -1,6 +1,5 @@
 title.gettext Moderated
 
-is_editor([listname],[sender])                 smtp,dkim,smime,md5    -> do_it
-is_editor([listname],[header->X-sender][-1])       smtp,dkim,smime,md5    -> do_it
-true()                                         smtp,dkim,smime,md5    -> editorkey
-
+is_editor([listname],[sender])                 smtp,md5,smime    -> do_it
+is_editor([listname],[header->X-sender][-1])   smtp,md5,smime    -> do_it
+true()                                         smtp,md5,smime    -> editorkey

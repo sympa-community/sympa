@@ -2,7 +2,7 @@
 <div id="ErrorMsg" class="reveal medium" data-reveal
      aria-labelledby="[%|loc%]Error[%END%]" aria-hidden="true" role="dialog">
     <div class="alert-box alert radius">
-        <i class="fi-x"></i>
+        <i class="fa fa-xmark" aria-hidden="true"></i>
 
         [%###################-%]
         [%#### INTERN    ERROR -%]
@@ -15,15 +15,6 @@
                  report_param=i_err
             %]
             </br>
-        [% END %]
-
-        [%###################-%]
-        [%#### SYSTEM    ERROR -%]
-        [%###################-%]
-        [% FOREACH s_err = system_errors %]
-            [%|loc(s_err.action)%]SYSTEM ERROR (%1)[%END-%]
-            [% IF s_err.msg == 'a' %][% END %]
-            <br />
         [% END %]
 
         [%###################-%]
@@ -54,7 +45,7 @@
         [%#####################-%]
         [%# AUTHORIZATION ERROR-%]
         [%#####################-%]
-        [% FOREACH auth = auth_rejects %]
+        [% FOREACH auth = auth_errors %]
             [%|loc(auth.action)%]AUTHORIZATION REJECT (%1)[%END-%]
             [% IF auth.change_email_failed %]
                 [%|loc(auth.listname)%]Could not change your subscription address for the list '%1' because your new address is not allowed to subscribe/unsubscribe:[%END%]

@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2021 The Sympa Community. See the
+# Copyright 2017, 2021, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -407,7 +407,7 @@ sub _update_subscriber_bounce_history {
 #   find_notification_id_by_message
 ##############################################
 # return the tracking_id find by recipeint,message-id,listname and robot
-# tracking_id areinitialized by sympa.pl by Sympa::List::distribute_msg
+# tracking_id are initialized by sympa_msg.pl by Sympa::List::distribute_msg
 #
 # used by bulk.pl in order to set return_path when tracking is required.
 #
@@ -415,10 +415,9 @@ sub _update_subscriber_bounce_history {
 
 sub find_notification_id_by_message {
     $log->syslog('debug2', '(%s, %s, %s, %s)', @_);
-    my $recipient = shift;
-    my $msgid     = shift;
-    my $listname  = shift;
-    my $robot     = shift;
+    my $rcpt  = shift;
+    my $msgid = shift;
+    my $list  = shift;
 
     $msgid = Sympa::Tools::Text::canonic_message_id($msgid);
 
@@ -436,19 +435,18 @@ sub find_notification_id_by_message {
                     list_notification = ? AND robot_notification = ? AND
                     (message_id_notification = ? OR
                      message_id_notification = ?)},
-            $recipient,
-            $listname, $robot,
+            $rcpt,
+            $list->{'name'}, $list->{'domain'},
             $msgid,
             '<' . $msgid . '>'
         )
     ) {
         $log->syslog(
             'err',
-            'Unable to retrieve the tracking information for user %s, message %s, list %s@%s',
-            $recipient,
+            'Unable to retrieve the tracking information (rcpt=%s, msgid=%s, list=%s)',
+            $rcpt,
             $msgid,
-            $listname,
-            $robot
+            $list
         );
         return undef;
     }
@@ -459,13 +457,12 @@ sub find_notification_id_by_message {
     if (scalar @pk_notifications > 1) {
         $log->syslog(
             'err',
-            'Found more then one envelope ID maching (recipient=%s, msgis=%s, listname=%s, robot%s)',
-            $recipient,
+            'Found more than one envelope ID maching (rcpt=%s, msgid=%s, list=%s)',
+            $rcpt,
             $msgid,
-            $listname,
-            $robot
+            $list
         );
-        # we should return undef...
+        # FIXME: We should return undef...
     }
     return $pk_notifications[0];
 }

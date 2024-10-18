@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -108,13 +107,6 @@ sub connect {
             $self);
         return 1;
     }
-    # Disconnected: Transaction (if any) was aborted.
-    if (delete $self->{_sdbTransactionLevel}) {
-        $log->syslog('err', 'Transaction on database %s was aborted: %s',
-            $self, $DBI::errstr);
-        $self->set_persistent($self->{_sdbPrevPersistency});
-        return undef;
-    }
 
     # Do we have required parameters?
     foreach my $param (@{$self->required_parameters}) {
@@ -127,7 +119,9 @@ sub connect {
 
     # Check if required module such as DBD is installed.
     foreach my $module (@{$self->required_modules}) {
-        unless (eval "require $module") {
+        unless (
+            do { local $SIG{__DIE__}; eval "require $module" }
+        ) {
             $log->syslog(
                 'err',
                 'A module for %s is not installed. You should download and install %s',
@@ -140,7 +134,7 @@ sub connect {
         }
     }
     foreach my $module (@{$self->optional_modules}) {
-        eval "require $module";
+        do { local $SIG{__DIE__}; eval "require $module" };
     }
 
     # Set unique ID to determine connection.
@@ -413,56 +407,6 @@ sub prepare_query_log_values {
 # DEPRECATED: Use tools::eval_in_time() and fetchall_arrayref().
 #sub fetch();
 
-sub begin {
-    my $self = shift;
-
-    my $dbh = $self->__dbh;
-    return undef unless $dbh;
-
-    return undef unless $dbh->begin_work;
-
-    $self->{_sdbTransactionLevel} //= 0;
-    unless ($self->{_sdbTransactionLevel}++) {
-        $self->{_sdbPrevPersistency} = $self->set_persistent(0);
-    }
-
-    return 1;
-}
-
-sub _finalize_transaction {
-    my $self = shift;
-
-    unless (defined $self->{_sdbTransactionLevel}) {
-        return;
-    }
-    unless ($self->{_sdbTransactionLevel}) {
-        die 'bug in logic. Ask developer';
-    }
-    unless (--$self->{_sdbTransactionLevel}) {
-        $self->set_persistent($self->{_sdbPrevPersistency});
-    }
-}
-
-sub commit {
-    my $self = shift;
-
-    my $dbh = $self->__dbh;
-    return undef unless $dbh;
-
-    $self->_finalize_transaction;
-    return $dbh->commit;
-}
-
-sub rollback {
-    my $self = shift;
-
-    my $dbh = $self->__dbh;
-    return undef unless $dbh;
-
-    $self->_finalize_transaction;
-    return $dbh->rollback;
-}
-
 sub disconnect {
     my $self = shift;
 
@@ -485,6 +429,31 @@ sub error {
     my $dbh = $self->__dbh;
     return sprintf '(%s) %s', $dbh->state, ($dbh->errstr || '') if $dbh;
     return undef;
+}
+
+# Old name: Sympa::DatabaseManager::_check_db_field_type().
+sub is_sufficient_field_type {
+    my $self      = shift;
+    my $required  = shift;
+    my $effective = shift;
+
+    my ($required_type, $required_size, $effective_type, $effective_size);
+
+    if ($required =~ /^(\w+)(\((\d+)\))?$/) {
+        ($required_type, $required_size) = ($1, $3);
+    }
+
+    if ($effective =~ /^(\w+)(\((\d+)\))?$/) {
+        ($effective_type, $effective_size) = ($1, $3);
+    }
+
+    if (    ($effective_type // '') eq ($required_type // '')
+        and (not defined $required_size or $effective_size >= $required_size))
+    {
+        return 1;
+    }
+
+    return 0;
 }
 
 sub set_persistent {
@@ -593,16 +562,6 @@ TBD.
 I<Constructor>.
 Creates new database instance.
 
-=item begin ( )
-
-I<Instance method>, I<only for SQL>.
-Begin transaction.
-
-=item commit ( )
-
-I<Instance method>, I<only for SQL>.
-Commit transaction.
-
 =item do_operation ( $operation, options... )
 
 I<Instance method>, I<only for LDAP>.
@@ -632,11 +591,6 @@ $statement and parameters will be fed to sprintf().
 Returns:
 
 Statement handle (L<DBI::st> object or such), or C<undef>.
-
-=item rollback ( )
-
-I<Instance method>, I<only for SQL>.
-Rollback transaction.
 
 =back
 

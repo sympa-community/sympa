@@ -25,6 +25,8 @@ package Sympa::DataSource::LDAP;
 use strict;
 use warnings;
 
+use Net::LDAP::Control::Paged;
+
 use Sympa::Database;
 use Sympa::Log;
 
@@ -43,6 +45,13 @@ sub _open {
     return undef unless $db and $db->connect;
     $self->{_db} = $db;
 
+    my $pagesize = $options{pagesize} || $self->{pagesize};
+    if ($pagesize and $db->__dbh->root_dse->supported_control(
+            Net::LDAP::Constant::LDAP_CONTROL_PAGED()
+        )) {
+        $self->{_page} = Net::LDAP::Control::Paged->new( size => $pagesize );
+    }
+
     my $mesg = $self->_open_operation(%options);
     return undef unless $mesg;
 
@@ -60,20 +69,32 @@ sub _open_operation {
     my $ldap_filter = $options{filter} || $self->{filter};
     my $ldap_attrs  = $options{attrs}  || $self->{attrs};
     my $ldap_scope  = $options{scope}  || $self->{scope};
+    my $ldap_deref  = $options{deref}  || $self->{deref};
 
-    my $mesg = $self->{_db}->do_operation(
-        'search',
-        base   => $ldap_suffix,
-        filter => $ldap_filter,
-        attrs  => [split /\s*,\s*/, $ldap_attrs],
-        scope  => $ldap_scope
+    my @args = (
+        base    => $ldap_suffix,
+        filter  => $ldap_filter,
+        attrs   => [split /\s*,\s*/, $ldap_attrs],
+        scope   => $ldap_scope,
+        deref   => $ldap_deref,
+        control => $self->{_page} ? [$self->{_page}] : []
     );
+
+    my $mesg = $self->{_db}->do_operation('search', @args);
+
     unless ($mesg) {
         $log->syslog(
             'err',
             'LDAP search (single level) failed: %s with data source %s',
             $self->{_db}->error, $self
         );
+
+        if ($self->{_page}) {
+            # We had an abnormal exit, so let the server know we do not want any more
+            $self->{_page}->size(0);
+            $self->{_db}->do_operation('search', @args);
+        }
+
         return undef;
     }
 
@@ -108,7 +129,16 @@ sub _load_next {
     }
 
     my @retrieved;
-    my $mesg = $self->__dsh;
+    my $mesg;
+    my $cookie = $self->{_page} ? $self->{_page}->cookie : undef;
+    if (defined($cookie) and length($cookie)) {
+        # second page, or later one (but not post-last) of a paged search:
+        # load next page
+        $mesg = $self->_open_operation(%options);
+    }
+    else {
+        $mesg = $self->__dsh;
+    }
     while (my $entry = $mesg->shift_entry) {
         my $key_values = $entry->get_value($key_attr, asref => 1);
         next unless $key_values and @$key_values;
@@ -149,6 +179,13 @@ sub _load_next {
 
             last if $ldap_select eq 'first';
         }
+    }
+
+    if ($self->{_page} and $mesg) {
+        my $cookie = $mesg->control(
+            Net::LDAP::Constant::LDAP_CONTROL_PAGED
+        )->cookie;
+        $self->{_page}->cookie( $cookie );
     }
 
     return [@retrieved];

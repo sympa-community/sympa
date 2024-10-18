@@ -3,8 +3,8 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019, 2020 The Sympa Community. See the AUTHORS.md
-# file at the top-level directory of this distribution and at
+# Copyright 2019, 2020, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -103,7 +103,7 @@ __END__
 
 =head1 NAME
 
-Sympa::DataSource::file - Data source based on local file
+Sympa::DataSource::File - Data source based on local file
 
 =head1 DESCRIPTION
 

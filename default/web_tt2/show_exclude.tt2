@@ -15,24 +15,24 @@
                     <caption>[%|loc%]List of exclude[%END%]</caption>
                     <tr>
                         [% IF is_listmaster || is_owner  || may_add ~%]
-                            <th>
+                            <th id="h_selection">
                                 <a href="#" data-tooltip aria-haspopup="true" title="[%|loc%]Toggle Selection[%END%]" class="toggleButton">
-                                    <i class="fa fa-check-square-o"></i>
+                                    <i class="far fa-check-square"></i>
                                 </a>
                             </th>
                         [%~ END %]
-                        <th>[%|loc%]Email[%END%]</th>
-                        <th>[%|loc%]Since[%END%]</th>
+                        <th id="h_email">[%|loc%]Email[%END%]</th>
+                        <th id="h_date">[%|loc%]Since[%END%]</th>
                     </tr>
                     [% FOREACH exc = exclude_users ~%]
                         <tr class="color0">
                             [% IF is_listmaster || is_owner || may_add ~%]
-                                <td>
+                                <td headers="h_selection">
                                     <input type="checkbox" name="email" value="[% exc.email %]" />
                                 </td>
                             [%~ END %]
-                            <td>&nbsp;[% exc.email %]&nbsp;</td>
-                            <td>&nbsp;[% exc.since %]&nbsp;</td>
+                            <td headers="h_email">[% exc.email %]</td>
+                            <td headers="h_date">[% exc.since %]</td>
                         </tr>
                     [%~ END %]
                 </table>

@@ -67,11 +67,7 @@ unless (Conf::load()) {
     exit 1;
 }
 
-$log->openlog(
-    $Conf::Conf{'syslog'},
-    $Conf::Conf{'log_socket_type'},
-    database_backend => undef
-);
+$log->openlog(database_backend => undef);
 
 # setting log_level using conf unless it is set by calling option
 $log->{level} = $Conf::Conf{'log_level'};

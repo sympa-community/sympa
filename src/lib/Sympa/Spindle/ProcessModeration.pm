@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017 The Sympa Community. See the AUTHORS.md file at the top-level
-# directory of this distribution and at
+# Copyright 2017, 2024 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -34,7 +34,6 @@ use Sympa;
 use Conf;
 use Sympa::Language;
 use Sympa::Log;
-use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
 
@@ -191,12 +190,14 @@ sub _distribute {
 
     $message->add_header('X-Validation-by', $self->{distributed_by});
 
+    my @apply_on = @{$list->{'admin'}{'dkim_signature_apply_on'} || []};
     $message->{shelved}{dkim_sign} = 1
-        if Sympa::Tools::Data::is_in_array(
-        $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-        or Sympa::Tools::Data::is_in_array(
-        $list->{'admin'}{'dkim_signature_apply_on'},
-        'editor_validated_messages');
+        if grep { 'any' eq $_ } @apply_on
+        or (grep { 'smime_authenticated_messages' eq $_ } @apply_on
+        and $message->{'smime_signed'})
+        or (grep { 'dkim_authenticated_messages' eq $_ } @apply_on
+        and $message->{'dkim_pass'})
+        or grep { 'editor_validated_messages' eq $_ } @apply_on;
 
     # Notify author of message.
     $message->{envelope_sender} = $message->{sender};

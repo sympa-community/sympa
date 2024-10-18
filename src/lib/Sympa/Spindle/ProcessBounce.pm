@@ -8,8 +8,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2019, 2021 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -417,9 +417,9 @@ sub _twist {
                     if ($action and $action =~ /do_it/i) {
                         if ($list->is_list_member($original_rcpt)) {
                             $list->delete_list_member(
-                                'users'     => [$original_rcpt],
-                                'exclude'   => ' 1',
-                                'operation' => 'auto_del',
+                                [$original_rcpt],
+                                exclude   => 1,
+                                operation => 'auto_del'
                             );
 
                             $log->syslog(
@@ -479,13 +479,38 @@ sub _twist {
 
     # Bouncing addresses
 
-    # RFC 3464 compliance check, or analysis of bounced message.
-    my (%hash, $from);
+    # RFC 3464 compliance check.
+    my %stata;
     if ($list) {
-        _parse_dsn($message, \%hash) or _anabounce($message, \%hash, \$from);
+        foreach my $report (
+            _parse_multipart_report(
+                $message,
+                qw(message/delivery-status message/global-delivery-status)
+            )
+        ) {
+            next unless $report->{status};
+            my $status = $report->{status}->[0];
+            if ($status and $status =~ /\b(\d+[.]\d+[.]\d+)\b/) {
+                $status = $1;
+            } else {
+                next;
+            }
+
+            my $rcpt =
+                (      $report->{original_recipient}
+                    || $report->{final_recipient}
+                    || [])->[0];
+            next unless $rcpt;
+            $rcpt = $1 if $rcpt =~ /\@.+:\s*(.+)\z/;
+            $rcpt = $1 if $rcpt =~ /<(.+)>/;
+            $rcpt = Sympa::Tools::Text::canonic_email($rcpt);
+            next unless defined $rcpt;
+
+            $stata{$rcpt} = $status;
+        }
     }
 
-    if (%hash and $who and $unique) {
+    if ($unique and $who and grep {/\A[45][.]\d+[.]\d+/} values %stata) {
         # In this case the bounce result from a remind or a welcome
         # message; so try to remove the subscriber.
         $log->syslog('debug',
@@ -502,9 +527,9 @@ sub _twist {
         if ($action and $action =~ /do_it/i) {
             if ($list->is_list_member($who)) {
                 $list->delete_list_member(
-                    'users'     => [$who],
-                    'exclude'   => '1',
-                    'operation' => 'auto_del',
+                    [$who],
+                    exclude   => 1,
+                    operation => 'auto_del'
                 );
                 $log->syslog(
                     'notice',
@@ -548,10 +573,10 @@ sub _twist {
                 $list
             );
         }
-    } elsif (%hash and $who) {
+    } elsif (%stata and $who) {
         # VERP in use.
         my $tracking = Sympa::Tracking->new(context => $list);
-        my ($status) = values %hash;
+        my ($status) = values %stata;
 
         if ($tracking->store($message, $who, status => $status)) {
             $log->syslog('notice',
@@ -569,10 +594,10 @@ sub _twist {
 
             $numreported++;
         }
-    } elsif (%hash) {
+    } elsif (%stata) {
         my $tracking = Sympa::Tracking->new(context => $list);
 
-        while (my ($rcpt, $status) = each %hash) {
+        while (my ($rcpt, $status) = each %stata) {
             if ($tracking->store($message, $rcpt, status => $status)) {
                 $log->syslog('notice',
                     'Received bounce for email address <%s>, list %s',
@@ -601,43 +626,9 @@ sub _twist {
     return 1;
 }
 
-# Private subroutines.
-
-# RFC 3464 compliance check
 # Old names: Bounce::rfc1891(), _parse_dsn() in bounced.pl.
-sub _parse_dsn {
-    my $message = shift;
-    my $result  = shift;
-
-    foreach my $report (
-        _parse_multipart_report(
-            $message,
-            qw(message/delivery-status message/global-delivery-status)
-        )
-    ) {
-        next unless $report->{status};
-        my $status = $report->{status}->[0];
-        if ($status and $status =~ /\b(\d+[.]\d+[.]\d+)\b/) {
-            $status = $1;
-        } else {
-            next;
-        }
-
-        my $rcpt =
-            (      $report->{original_recipient}
-                || $report->{final_recipient}
-                || [])->[0];
-        next unless $rcpt;
-        $rcpt = $1 if $rcpt =~ /\@.+:\s*(.+)\z/;
-        $rcpt = $1 if $rcpt =~ /<(.+)>/;
-        $rcpt = Sympa::Tools::Text::canonic_email($rcpt);
-        next unless defined $rcpt;
-
-        $result->{$rcpt} = $status;
-    }
-
-    return scalar keys %$result;
-}
+# Merged into _twist().
+#sub _parse_dsn;
 
 # Old name: _parse_multipart_report() in bounced.pl.
 sub _parse_multipart_report {
@@ -731,1010 +722,17 @@ sub _decode_utf_8_addr_xtext {
     return $str;
 }
 
-# Equivalents relative to RFC 1893
-my %equiv = (
-    "user unknown"                                                => '5.1.1',
-    "receiver not found"                                          => '5.1.1',
-    "the recipient name is not recognized"                        => '5.1.1',
-    "sorry, no mailbox here by that name"                         => '5.1.1',
-    "utilisateur non recens\xE9 dans le carnet d'adresses public" => '5.1.1',
-    "unknown address"                                             => '5.1.1',
-    "unknown user"                                                => '5.1.1',
-    "550"                                                         => '5.1.1',
-    "le nom du destinataire n'est pas reconnu"                    => '5.1.1',
-    "user not listed in public name & address book"               => '5.1.1',
-    "no such address"                                             => '5.1.1',
-    "not known at this site."                                     => '5.1.1',
-    "user not known"                                              => '5.1.1',
-
-    "user is over the quota. you can try again later." => '4.2.2',
-    "quota exceeded"                                   => '4.2.2',
-    "write error to mailbox, disk quota exceeded"      => '4.2.2',
-    "user mailbox exceeds allowed size"                => '4.2.2',
-    "insufficient system storage"                      => '4.2.2',
-    "User's Disk Quota Exceeded:"                      => '4.2.2'
-);
-
-## Corrige une adresse SMTP
 # Old names: Bounce::corrige(), _corrige() in bounced.pl.
-sub _corrige {
+# DEPRECATED.
+#sub _corrige;
 
-    my ($adr, $from) = @_;
-
-    ## X400 address
-    if ($adr =~ /^\//) {
-
-        my (%x400, $newadr);
-
-        my @detail = split /\//, $adr;
-        foreach (@detail) {
-
-            my ($var, $val) = split /=/;
-            $x400{$var} = $val;
-            #print "\t$var <=> $val\n";
-
-        }
-
-        $newadr = $x400{PN} || "$x400{s}";
-        $newadr = "$x400{g}." . $newadr if $x400{g};
-        my ($l, $d) = split /\@/, $from;
-
-        $newadr .= "\@$d";
-
-        return $newadr;
-
-    } elsif ($adr =~ /\@/) {
-
-        return $adr;
-
-    } elsif ($adr =~ /\!/) {
-
-        my ($dom, $loc) = split /\!/, $adr;
-        return "$loc\@$dom";
-
-    } else {
-
-        my ($l, $d) = split /\@/, $from;
-        my $newadr = "$adr\@$d";
-
-        return $newadr;
-
-    }
-}
-
-# Analyse d'un rapport de non-remise
-# Param 1 : descripteur du fichier contenant le bounce
-# //    2 : reference d'un hash pour retourner @ en erreur
-# //    3 : reference d'un tableau pour retourner des stats
-# //    4 : reference d'un tableau pour renvoyer le bounce
 # Old names: Bounce::anabounce(), _anabounce() in bounced.pl.
-sub _anabounce {
-    my $message = shift;
-    my $result  = shift;
-    my $from    = shift;
+# DEPRECATED.
+#sub _anabounce;
 
-    my $msg_string = $message->as_string;
-    my $fic        = IO::Scalar->new(\$msg_string);
-
-    my $entete = 1;
-    my $type;
-    my %info;
-    my ($qmail,                $type_9,      $type_18,
-        $exchange,             $ibm_vm,      $lotus,
-        $sendmail_5,           $yahoo,       $type_21,
-        $exim,                 $vines,       $mercury_143,
-        $altavista,            $mercury_131, $type_31,
-        $type_32,              $exim_173,    $type_38,
-        $type_39,              $type_40,     $pmdf,
-        $following_recipients, $postfix,     $groupwise7
-    );
-
-    ## Le champ separateur de paragraphe est un ensemble
-    ## de lignes vides
-    local $RS = '';
-
-    ## Parcour du bounce, paragraphe par paragraphe
-    foreach (<$fic>) {
-        if ($entete) {
-            undef $entete;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            my ($champ_courant, %champ);
-            foreach (@paragraphe) {
-                if (/^(\S+):\s*(.*)$/) {
-                    $champ_courant = $1;
-                    $champ_courant =~ y/[A-Z]/[a-z]/;
-                    $champ{$champ_courant} = $2;
-                } elsif (/^\s+(.*)$/) {
-                    $champ{$champ_courant} .= " $1";
-                }
-
-                ## Le champ From:
-                if (defined $champ{from}) {
-                    my @addrs = Mail::Address->parse($champ{from});
-                    $$from = $addrs[0]->address if @addrs;
-                }
-            }
-            local $RS = '';
-
-            $champ{from} =~ s/^.*<(.+)[\>]$/$1/;
-            $champ{from} =~ y/[A-Z]/[a-z]/;
-
-            if ($champ{subject} =~
-                /^Returned mail: (Quota exceeded for user (\S+))$/) {
-
-                $info{$2}{error} = $1;
-                $type = 27;
-
-            } elsif ($champ{subject} =~
-                /^Returned mail: (message not deliverable): \<(\S+)\>$/) {
-
-                $info{$2}{error} = $1;
-                $type = 34;
-            }
-
-            unless (defined $champ{'x-failed-recipients'}) {
-                ;
-            } elsif ($champ{'x-failed-recipients'} =~ /^\s*(\S+)$/) {
-                $info{$1}{error} = "";
-            } elsif ($champ{'x-failed-recipients'} =~ /^\s*(\S+),/) {
-                for my $xfr (split(/\s*,\s*/, $champ{'x-failed-recipients'}))
-                {
-                    $info{$xfr}{error} = "";
-                }
-            }
-        } elsif (
-            /^\s*-+ The following addresses (had permanent fatal errors|had transient non-fatal errors|have delivery notifications) -+/m
-        ) {
-
-            my $adr;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/^(\S[^\(]*)/) {
-                    $adr = $1;
-                    my $error = $2;
-                    $adr =~ s/^[\"\<](.+)[\"\>]\s*$/$1/;
-                    #print "\tADR : #$adr#\n";
-                    $info{$adr}{error} = $error;
-                    $type = 1;
-
-                } elsif (/^\s+\(expanded from: (.+)\)/) {
-                    #print "\tEXPANDED $adr : $1\n";
-                    $info{$adr}{expanded} = $1;
-                    $info{$adr}{expanded} =~ s/^[\"\<](.+)[\"\>]$/$1/;
-                }
-            }
-            local $RS = '';
-
-        } elsif (/^\s+-+\sTranscript of session follows\s-+/m) {
-
-            my $adr;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/^(\d{3}\s)?(\S+|\".*\")\.{3}\s(.+)$/) {
-
-                    $adr = $2;
-                    my $cause = $3;
-                    $cause =~ s/^(.*) [\(\:].*$/$1/;
-                    foreach $a (split /,/, $adr) {
-
-                        $a =~ s/^[\"\<]([^\"\>]+)[\"\>]$/$1/;
-                        $info{$a}{error} = $cause;
-                        $type = 2;
-
-                    }
-                } elsif (/^\d{3}\s(too many hops).*to\s(.*)$/i) {
-
-                    $adr = $2;
-                    my $cause = $1;
-                    foreach $a (split /,/, $adr) {
-
-                        $a =~ s/^[\"\<](.+)[\"\>]$/$1/;
-                        $info{$a}{error} = $cause;
-                        $type = 2;
-
-                    }
-
-                } elsif (/^\d{3}\s.*\s([^\s\)]+)\.{3}\s(.+)$/) {
-
-                    $adr = $1;
-                    my $cause = $2;
-                    $cause =~ s/^(.*) [\(\:].*$/$1/;
-                    foreach $a (split /,/, $adr) {
-
-                        $a =~ s/^[\"\<](.+)[\"\>]$/$1/;
-                        $info{$a}{error} = $cause;
-                        $type = 2;
-
-                    }
-                }
-            }
-            local $RS = '';
-
-            ## Rapport Compuserve
-        } elsif (/^Receiver not found:/m) {
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                $info{$2}{error} = $1 if /^(.*): (\S+)/;
-                $type = 3;
-
-            }
-            local $RS = '';
-
-        } elsif (/^\s*-+ Special condition follows -+/m) {
-
-            my ($cause, $adr);
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/^(Unknown QuickMail recipient\(s\)):/) {
-                    $cause = $1;
-                    $type  = 4;
-
-                } elsif (/^\s+(.*)$/ and $cause) {
-
-                    $adr = $1;
-                    $adr =~ s/^[\"\<](.+)[\"\>]$/$1/;
-                    $info{$adr}{error} = $cause;
-                    $type = 4;
-
-                }
-            }
-            local $RS = '';
-
-        } elsif (/^Your message add?ressed to .* couldn\'t be delivered/m) {
-
-            my $adr;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/^Your message add?ressed to (.*) couldn\'t be delivered, for the following reason :/
-                ) {
-                    $adr = $1;
-                    $adr =~ s/^[\"\<](.+)[\"\>]$/$1/;
-                    $type = 5;
-
-                } else {
-
-                    /^(.*)$/;
-                    $info{$adr}{error} = $1;
-                    $type = 5;
-
-                }
-            }
-            local $RS = '';
-
-            ## Rapport X400
-        } elsif (
-            /^Your message was not delivered to:\s+(\S+)\s+for the following reason:\s+(.+)$/m
-        ) {
-
-            my ($adr, $error) = ($1, $2);
-            $error =~ s/Your message.*$//;
-            $info{$adr}{error} = $error;
-            $type = 6;
-
-            ## Rapport X400
-        } elsif (
-            /^Your message was not delivered to\s+(\S+)\s+for the following reason:\s+(.+)$/m
-        ) {
-
-            my ($adr, $error) = ($1, $2);
-            $error =~ s/\(.*$//;
-            $info{$adr}{error} = $error;
-            $type = 6;
-
-            ## Rapport X400
-        } elsif (/^Original-Recipient: rfc822; (\S+)\s+Action: (.*)$/m) {
-
-            $info{$1}{error} = $2;
-            $type = 16;
-
-            ## Rapport NTMail
-        } elsif (/^The requested destination was:\s+(.*)$/m) {
-
-            $type = 7;
-
-        } elsif ($type and $type == 7 and /^\s+(\S+)/) {
-
-            undef $type;
-            my $adr = $1;
-            $adr =~ s/^[\"\<](.+)[\"\>]$/$1/;
-            next unless $adr;
-            $info{$adr}{'error'} = '';
-
-            ## Rapport Qmail dans prochain paragraphe
-        } elsif (/^Hi\. This is the qmail-send program/m) {
-
-            $qmail = 1;
-
-            ## Rapport Qmail
-        } elsif ($qmail) {
-
-            undef $qmail if /^[^<]/;
-
-            if (/^<(\S+)>:\n(.*)/m) {
-
-                $info{$1}{error} = $2;
-                $type = 8;
-
-            }
-            local $RS = '';
-
-            ## Sendmail
-        } elsif (
-            /^Your message was not delivered to the following recipients:/m) {
-
-            $type_9 = 1;
-
-        } elsif ($type_9) {
-
-            undef $type_9;
-
-            if (/^\s*(\S+):\s+(.*)$/m) {
-
-                $info{$1}{error} = $2;
-                $type = 9;
-
-            }
-
-            ## Rapport Exchange dans prochain paragraphe
-        } elsif (/^The following recipient\(s\) could not be reached:/m
-            or /^did not reach the following recipient\(s\):/m) {
-
-            $exchange = 1;
-
-            ## Rapport Exchange
-        } elsif ($exchange) {
-
-            undef $exchange;
-
-            if (/^\s*(\S+).*\n\s+(.*)$/m) {
-
-                $info{$1}{error} = $2;
-                $type = 10;
-
-            }
-
-            ## IBM VM dans prochain paragraphe
-        } elsif (
-            /^Your mail item could not be delivered to the following users/m)
-        {
-
-            $ibm_vm = 1;
-
-            ## Rapport IBM VM
-        } elsif ($ibm_vm) {
-
-            undef $ibm_vm;
-
-            if (/^(.*)\s+\---->\s(\S+)$/m) {
-
-                $info{$2}{error} = $1;
-                $type = 12;
-
-            }
-            ## Rapport Lotus SMTP dans prochain paragraphe
-        } elsif (/^-+\s+Failure Reasons\s+-+/m) {
-
-            $lotus = 1;
-
-            ## Rapport Lotus SMTP
-        } elsif ($lotus) {
-
-            undef $lotus;
-
-            if (/^(.*)\n(\S+)$/m) {
-
-                $info{$2}{error} = $1;
-                $type = 13;
-
-            }
-            ## Rapport Sendmail 5 dans prochain paragraphe
-        } elsif (/^\-+\sTranscript of session follows\s\-+/m) {
-
-            $sendmail_5 = 1;
-
-            ## Rapport  Sendmail 5
-        } elsif ($sendmail_5) {
-
-            undef $sendmail_5;
-
-            if (/<(\S+)>\n\S+, (.*)$/m) {
-
-                $info{$1}{error} = $2;
-                $type = 14;
-
-            }
-            ## Rapport Smap
-        } elsif (/^\s+-+ Transcript of Report follows -+/) {
-
-            my $adr;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/^Rejected-For: (\S+),/) {
-
-                    $adr               = $1;
-                    $info{$adr}{error} = "";
-                    $type              = 17;
-
-                } elsif (/^\s+explanation (.*)$/) {
-
-                    $info{$adr}{error} = $1;
-
-                }
-            }
-            local $RS = '';
-
-        } elsif (/^\s*-+Message not delivered to the following:/) {
-
-            $type_18 = 1;
-
-        } elsif ($type_18) {
-
-            undef $type_18;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/^\s*(\S+)\s+(.*)$/) {
-
-                    $info{$1}{error} = $2;
-                    $type = 18;
-
-                }
-            }
-            local $RS = '';
-
-        } elsif (/unable to deliver following mail to recipient\(s\):/m) {
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/^\d+ <(\S+)>\.{3} (.+)$/) {
-
-                    $info{$1}{error} = $2;
-                    $type = 19;
-
-                }
-            }
-            local $RS = '';
-
-            ## Rapport de Yahoo dans paragraphe suivant
-        } elsif (/^Unable to deliver message to the following address\(es\)/m)
-        {
-
-            $yahoo = 1;
-
-            ## Rapport Yahoo
-        } elsif ($yahoo) {
-
-            undef $yahoo;
-
-            if (/^<(\S+)>:\s(.+)$/m) {
-
-                $info{$1}{error} = $2;
-                $type = 20;
-
-            }
-
-        } elsif (/^Content-Description: Session Transcript/m) {
-
-            $type_21 = 1;
-
-        } elsif ($type_21) {
-
-            undef $type_21;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/<(\S+)>\.{3} (.*)$/) {
-
-                    $info{$1}{error} = $2;
-                    $type = 21;
-
-                }
-            }
-            local $RS = '';
-
-        } elsif (
-            /^Your message has encountered delivery problems\s+to local user \S+\.\s+\(Originally addressed to (\S+)\)/m
-            or
-            /^Your message has encountered delivery problems\s+to (\S+)\.$/m
-            or
-            /^Your message has encountered delivery problems\s+to the following recipient\(s\):\s+(\S+)$/m
-        ) {
-
-            my $adr = $2 || $1;
-            $info{$adr}{error} = "";
-            $type = 22;
-
-        } elsif (/^(The user return_address (\S+) does not exist)/) {
-
-            $info{$2}{error} = $1;
-            $type = 23;
-
-            ## Rapport Exim paragraphe suivant
-        } elsif (
-            /^A message that you sent could not be delivered to (all|one or more) of its/m
-            or /(^|permanent error. )The following address\(es\) failed:/m) {
-
-            $exim = 1;
-
-            ## Rapport Exim
-        } elsif ($exim) {
-
-            undef $exim;
-
-            if (/^\s*(\S+):\s+(.*)$/m) {
-
-                $info{$1}{error} = $2;
-                $type = 24;
-
-            } elsif (/^\s*(\S+)\n+\s*(.*)$/m) {
-                my ($exim_user, $exim_msg) = ($1, $2);
-                if ($exim_msg =~ /MTP error.*: \d\d\d (\d\.\d\.\d) \w/i) {
-                    $info{$exim_user}{error} = $1;
-                } elsif ($exim_msg =~ /MTP error.*: (\d)\d\d \w/i) {
-                    $info{$exim_user}{error} =
-                        ($1 eq "5") ? "5.1.1" : "4.2.2";
-                }
-                $type = 24;
-
-            } elsif (/^\s*(\S+)$/m) {
-                $info{$1}{error} = "";
-            }
-
-            ## Rapport VINES-ISMTP par. suivant
-        } elsif (/^Message not delivered to recipients below/m) {
-
-            $vines = 1;
-
-            ## Rapport VINES-ISMTP
-        } elsif ($vines) {
-
-            undef $vines;
-
-            if (/^\s+\S+:.*\s+(\S+)$/m) {
-
-                $info{$1}{error} = "";
-                $type = 25;
-
-            }
-
-            ## Rapport Mercury 1.43 par. suivant
-        } elsif (
-            /^The local mail transport system has reported the following problems/m
-        ) {
-
-            $mercury_143 = 1;
-
-            ## Rapport Mercury 1.43
-        } elsif ($mercury_143) {
-
-            undef $mercury_143;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/<(\S+)>\s+(.*)$/) {
-
-                    $info{$1}{error} = $2;
-                    $type = 26;
-                }
-            }
-            local $RS = '';
-
-            ## Rapport de AltaVista Mail dans paragraphe suivant
-        } elsif (/unable to deliver mail to the following recipient\(s\):/m) {
-
-            $altavista = 1;
-
-            ## Rapport AltaVista Mail
-        } elsif ($altavista) {
-
-            undef $altavista;
-
-            if (/^(\S+):\n.*\n\s*(.*)$/m) {
-
-                $info{$1}{error} = $2;
-                $type = 27;
-
-            }
-
-            ## Rapport SMTP32
-        } elsif (/^(User mailbox exceeds allowed size): (\S+)$/m) {
-
-            $info{$2}{error} = $1;
-            $type = 28;
-
-        } elsif (/^The following recipients did not receive this message:$/m)
-        {
-
-            $following_recipients = 1;
-
-        } elsif ($following_recipients) {
-
-            undef $following_recipients;
-
-            if (/^\s+<(\S+)>/) {
-
-                $info{$1}{error} = "";
-                $type = 29;
-
-            }
-
-            ## Rapport Mercury 1.31 par. suivant
-        } elsif (
-            /^One or more addresses in your message have failed with the following/m
-        ) {
-
-            $mercury_131 = 1;
-
-            ## Rapport Mercury 1.31
-        } elsif ($mercury_131) {
-
-            undef $mercury_131;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/<(\S+)>\s+(.*)$/) {
-
-                    $info{$1}{error} = $2;
-                    $type = 30;
-                }
-            }
-            local $RS = '';
-
-        } elsif (/^The following recipients haven\'t received this message:/m)
-        {
-
-            $type_31 = 1;
-
-        } elsif ($type_31) {
-
-            undef $type_31;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/(\S+)$/) {
-
-                    $info{$1}{error} = "";
-                    $type = 31;
-                }
-            }
-            local $RS = '';
-
-        } elsif (/^The following destination addresses were unknown/m) {
-
-            $type_32 = 1;
-
-        } elsif ($type_32) {
-
-            undef $type_32;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/<(\S+)>/) {
-
-                    $info{$1}{error} = "";
-                    $type = 32;
-                }
-            }
-            local $RS = '';
-
-        } elsif (/^-+Transcript of session follows\s-+$/m) {
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/^(\S+)$/) {
-
-                    $info{$1}{error} = "";
-                    $type = 33;
-
-                } elsif (/<(\S+)>\.{3} (.*)$/) {
-
-                    $info{$1}{error} = $2;
-                    $type = 33;
-
-                }
-            }
-            local $RS = '';
-
-            ## Rapport Bigfoot
-        } elsif (/^The message you tried to send to <(\S+)>/m) {
-            $info{$1}{error} = "destination mailbox unavailable";
-
-        } elsif (/^The destination mailbox (\S+) is unavailable/m) {
-
-            $info{$1}{error} = "destination mailbox unavailable";
-
-        } elsif (
-            /^The following message could not be delivered because the address (\S+) does not exist/m
-        ) {
-
-            $info{$1}{error} = "user unknown";
-
-        } elsif (/^Error-For:\s+(\S+)\s/) {
-
-            $info{$1}{error} = "";
-
-            ## Rapport Exim 1.73 dans proc. paragraphe
-        } elsif (
-            /^The address to which the message has not yet been delivered is:/m
-        ) {
-
-            $exim_173 = 1;
-
-            ## Rapport Exim 1.73
-        } elsif ($exim_173) {
-
-            undef $exim_173;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/(\S+)/) {
-
-                    $info{$1}{error} = "";
-                    $type = 37;
-                }
-            }
-            local $RS = '';
-
-        } elsif (
-            /^This Message was undeliverable due to the following reason:/m) {
-
-            $type_38 = 1;
-
-        } elsif ($type_38) {
-
-            undef $type_38 if /Recipient:/;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/\s+Recipient:\s+<(\S+)>/) {
-
-                    $info{$1}{error} = "";
-                    $type = 38;
-
-                } elsif (/\s+Reason:\s+<(\S+)>\.{3} (.*)/) {
-
-                    $info{$1}{error} = $2;
-                    $type = 38;
-
-                }
-            }
-            local $RS = '';
-
-        } elsif (/Your message could not be delivered to:/m) {
-
-            $type_39 = 1;
-
-        } elsif ($type_39) {
-
-            undef $type_39;
-
-            if (/^(\S+)/) {
-
-                $info{$1}{error} = "";
-                $type = 39;
-
-            }
-        } elsif (/Session Transcription follow:/m) {
-
-            if (/^<+\s+\d+\s+(.*) for \((.*)\)$/m) {
-
-                $info{$2}{error} = $1;
-                $type = 43;
-
-            }
-
-        } elsif (
-            /^This message was returned to you for the following reasons:/m) {
-
-            $type_40 = 1;
-
-        } elsif ($type_40) {
-
-            undef $type_40;
-
-            if (/^\s+(.*): (\S+)/) {
-
-                $info{$2}{error} = $1;
-                $type = 40;
-
-            }
-
-            ## Rapport PMDF dans proc. paragraphe
-        } elsif (
-            /^Your message cannot be delivered to the following recipients:/m
-            or
-            /^Your message has been enqueued and undeliverable for \d day\s*to the following recipients/m
-        ) {
-
-            $pmdf = 1;
-
-            ## Rapport PMDF
-        } elsif ($pmdf) {
-
-            my $adr;
-            undef $pmdf;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/\s+Recipient address:\s+(\S+)/) {
-
-                    $adr               = $1;
-                    $info{$adr}{error} = "";
-                    $type              = 41;
-
-                } elsif (/\s+Reason:\s+(.*)$/) {
-
-                    $info{$adr}{error} = $1;
-                    $type = 41;
-
-                }
-            }
-            local $RS = '';
-
-            ## Rapport MDaemon
-        } elsif (/^(\S+) - (no such user here)\.$/m) {
-
-            $info{$1}{error} = $2;
-            $type = 42;
-
-            # Postfix dans le prochain paragraphe
-        } elsif (/^This is the Postfix program/m
-            || /^This is the mail system at host/m) {
-            $postfix = 1;
-            ## Rapport Postfix
-        } elsif ($postfix) {
-
-            undef $postfix
-                if /THIS IS A WARNING/;    # Pas la peine de le traiter
-
-            if (/^<(\S+)>:\s(.*)/m) {
-                my ($addr, $error) = ($1, $2);
-
-                if ($error =~ /^host\s[^:]*said:\s(\d+)/) {
-                    $info{$addr}{error} = $1;
-                } elsif ($error =~ /^([^:]+):/) {
-                    $info{$addr}{error} = $1;
-                } else {
-                    $info{$addr}{error} = $error;
-                }
-            }
-            local $RS = '';
-        } elsif (
-            /^The message that you sent was undeliverable to the following:/)
-        {
-
-            $groupwise7 = 1;
-
-        } elsif ($groupwise7) {
-
-            undef $groupwise7;
-
-            ## Parcour du paragraphe
-            my @paragraphe = split /\n/, $_;
-            local $RS = "\n";
-            foreach (@paragraphe) {
-
-                if (/^\s+(\S*) \((.+)\)/) {
-
-                    $info{$1}{error} = $2;
-
-                }
-            }
-
-            local $RS = '';
-
-            ## Wanadoo
-        } elsif (/^(\S+); Action: Failed; Status: \d.\d.\d \((.*)\)/m) {
-            $info{$1}{error} = $2;
-        }
-    }
-
-    my $count = 0;
-    ## On met les adresses au clair
-    foreach my $a1 (keys %info) {
-
-        next unless ($a1 and ref($info{$a1}));
-
-        $count++;
-        my ($a2, $a3);
-
-        $a2 = $a1;
-
-        unless (!$info{$a1}{expanded}
-            or ($a1 =~ /\@/ and $info{$a1}{expanded} !~ /\@/)) {
-
-            $a2 = $info{$a1}{expanded};
-
-        }
-
-        $a3 = _corrige($a2, $$from);
-        $a3 =~ y/[A-Z]/[a-z]/;
-        $a3 =~ s/^<(.*)>$/$1/;
-
-        if ($info{$a1}{error}) {
-            my $status = _canonicalize_status(lc($info{$a1}{error}));
-            $result->{$a3} = $status if $status;
-        }
-    }
-
-    return $count;
-}
-
-# Set error message to a status RFC 1893 compliant
 # Old name: _canonicalize_status() in bounced.pl.
-sub _canonicalize_status {
-
-    my $status = shift;
-
-    if ($status !~ /^\d+\.\d+\.\d+$/) {
-        if ($equiv{$status}) {
-            $status = $equiv{$status};
-        } else {
-            return undef;
-        }
-    }
-    return $status;
-}
+# DEPRECATED.
+#sub _canonicalize_status;
 
 1;
 __END__

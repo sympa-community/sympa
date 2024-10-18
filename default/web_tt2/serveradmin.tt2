@@ -14,10 +14,10 @@
 
 [% IF main_robot %]
     [% IF subaction == 'vhosts' %]
-        <h2>[%|loc%]Virtual Robots[%END%]</h2> <br />
+        <h2>[%|loc%]Domains[%END%]</h2> <br />
         [% IF robots %]
             <p>
-                [%|loc%]The following virtual robots are running on this server:[%END%]
+                [%|loc%]The following mail domains are running on this server:[%END%]
             </p>
             [% FOREACH vr = robots %]
                 <h4>
@@ -56,7 +56,7 @@
                 </ul>
             [% END %]
         [% ELSE %]
-            <p>[%|loc%]No Virtual Robot defined on this server[%END%]</p>
+            <p>[%|loc%]No additional mail domains defined on this server.[%END%]</p>
         [% END %]
     [% END %]
 [% END %]
@@ -83,7 +83,9 @@
     <form action="[% path_cgi %]" method="post">
         <fieldset>
             <div style="padding-bottom:1.0em;">
-                <input type="text" name="email" size="30" value="[% email %]" />
+                <label for="user_email">[%|loc%]Email address:[%END%]</label>
+                <input type="text" id="user_email" name="email" size="30"
+                 value="[% email %]" />
             </div>
             <input type="hidden" name="action" value="search_user" />
             <input class="MainMenuLinks" type="submit" name="action_search_user" value="[%|loc%]Search User[%END%]" />
@@ -92,9 +94,9 @@
 
     <hr>
     <h2>[%|loc%]Sessions[%END%]</h2>
+    <p>[%|loc%]View session information for users connected to this web interface:[%END%]</p>
     <form class="bold_label" action="[% path_cgi %]" method="post">
         <fieldset>
-            <span>[%|loc%]View session information for users connected to this web interface:[%END%]</span>
             <label for="session_delay">[%|loc%]Delay for active sessions (minutes)[%END%] </label>
             <input type="text" id="session_delay" name="session_delay" size="2" value="10" />
             <input type="checkbox" id="connected_only" name="connected_only" /> <label for="connected_only">[%|loc%]Show only currently connected users[%END%] </label><br />
@@ -126,6 +128,7 @@
     <p>[%|loc%]Listmasters can switch context (impersonate) other users; this may be useful when providing assistance or when testing privileges.  Enter the email address of the user you'd like to switch context to:[%END%]</p>
     <form class="bold_label" action="[% path_cgi %]" method="post">
         <fieldset>
+            <label for="session_email">[%|loc%]Email address:[%END%]</label>
             <input id="session_email" type="text" name="email" size="50"/>
             <div style="padding-top:1.0em; clear:both;">
                 <input class="MainMenuLinks" type="submit" name="action_set_session_email" value="[%|loc%]Switch User Context[%END%]" />
@@ -136,14 +139,14 @@
 
 [% IF subaction == 'archives' %]
     <h2>[%|loc%]Archives[%END%]</h2>
-    [%|loc%]It is possible to rebuild HTML archives for an individual list or for all lists (in batch).[%END%]
+    <p>[%|loc%]It is possible to rebuild HTML archives for an individual list or for all lists (in batch).[%END%]</p>
     <hr>
     <h3>[%|loc%]Rebuild archives for an individual list[%END%]</h3>
     <p>[%|loc%]Enter the name of the list that you'd like to rebuild HTML archives for:[%END%]</p>
 
     <form action="[% path_cgi %]" method="post">
         <fieldset>
-            <label for="list"></label>
+            <label for="list">[%|loc%]List name:[%END%]</label>
             <input id="list" type="text" name="list" size="20" />
             <div style="padding-top:1.0em; padding-bottom:0.25em; float:clear;">
                 <input class="MainMenuLinks" type="submit" name="action_rebuildarc" value="[%|loc%]Rebuild archive[%END%]" />
@@ -156,28 +159,6 @@
             <div style="padding-bottom: 1.0em; float:clear;">
                 <input class="MainMenuLinks" type="submit" name="action_rebuildallarc" value="[%|loc%]Rebuild all[%END%]" />
             </div>
-        </fieldset>
-    </form>
-[% END %]
-
-[% IF subaction == 'logs' %]
-    <h2>[%|loc%]System log[%END%]</h2>
-    <h3>[%|loc%]Sympa log level[%END%]</h3>
-    <p>[%|loc%]Set debug level for logs written to disk.  This setting is temporary, applying only for the lifetime of the fastcgi session hosting this interface.[%END%]</p>
-    <form class="bold_label" action="[% path_cgi %]" method="post">
-        <fieldset>
-            [%|loc%]Log level:[%END%]
-            <input id="log_level_0" type="radio" name="log_level" value="0" [%IF log_level == 0 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_0">0 </label>
-            <input id="log_level_1" type="radio" name="log_level" value="1" [%IF log_level == 1 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_1">1 </label>
-            <input id="log_level_2" type="radio" name="log_level" value="2" [%IF log_level == 2 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_2">2 </label>
-            <input id="log_level_3" type="radio" name="log_level" value="3" [%IF log_level == 3 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_3">3 </label>
-            <input id="log_level_4" type="radio" name="log_level" value="4" [%IF log_level == 4 %]checked="checked"[%END%]/>
-            <label class="inlineLabel" for="log_level_4">4 </label>
-            <input type="submit" name="action_set_loglevel" value="[%|loc%]Set log level[%END%]" />
         </fieldset>
     </form>
 [% END %]
@@ -209,7 +190,7 @@
     </form>
     <br />
     <p>
-        <a class="actionMenuLinks" href="https://translate.sympa.org/">
+        <a class="actionMenuLinks" href="https://translate.sympa.community/">
             [%|loc%]view translations[%END%]
         </a>
         <a class="actionMenuLinks" href="[% 'ls_templates' | url_rel %]">
@@ -251,9 +232,9 @@
                 <h4> [% confparam.title %] </h4>
                 <table class="responsive listOfItems">
                     <tr>
-                        <th>[%|loc%]parameter name[%END%]</th>
-                        <th>value</th>
-                        <th>[%|loc%]default[%END%]</th>
+                        <th id="h_name">[%|loc%]parameter name[%END%]</th>
+                        <th id="h_value">value</th>
+                        <th id="h_default">[%|loc%]default[%END%]</th>
                         <th>[%|loc%]semantic[%END%]</th>
                     </tr>
             [% ELSE %]
@@ -266,17 +247,7 @@
                 [% END %]
                         <td>[% confparam.name  %]</td>
                         <td>
-                            [% IF confparam.edit == '1' %]
-                                <form action="[% path_cgi %]" method="post">
-                                    <fieldset>
-                                        <input type="text" name="new_value"  value="[% confparam.current_value %]" style="width:75%"/>
-                                        <input type="hidden" name="conf_parameter_name" value="[% confparam.name  %]" />
-                                        <input class="MainMenuLinks" type="submit" name="action_set_param" value="[%|loc%]Set[%END%]" style="width:20%" />
-                                    </fieldset>
-                                </form>
-                            [% ELSE %]
-                                [% confparam.current_value %]
-                            [% END %]
+                            [% confparam.current_value %]
                         </td>
                         <td>[% confparam.default %]</td>
                         <td>[% confparam.query %]</td>
@@ -287,29 +258,24 @@
         [% close_table %]
     </div>
 [% END %]
+
+[% IF subaction == 'stats' ~%]
+    <h2>[%|loc(domain)%]Virtual domain %1 statistics[%END%]</h2>
+    <p>[%|loc%]This page displays overall information regarding the activity on this virtual domain.[%END%]</p>
+    <div class="columns">
+    [% PROCESS stats.tt2 %]
+    </div>
+[%~ END %]
+
 [% IF subaction == 'translation' %]
-    <h2>[%|loc%]Translating Sympa[%END%]</h2><br />
-    <div>
-        [%|loc%]Sympa is designed to allow easy internationalization of its user interface (service email messages and web interface). All translations for a language are gathered into a single PO file that can be manipulated by the standard GNU gettext tools.[%END%]
-    </div>
-    <div>
-        [%|loc%]Check our translation FAQ if you wish to translate the Sympa GUI into your native language: [%END%] <a href="https://translate.sympa.org/pages/help">https://translate.sympa.org/pages/help</a>
-    </div>
+    <h2>[%|loc%]Translating Sympa[%END%]</h2>
+    <p>[%|loc%]Sympa is designed to allow easy internationalization of its user interface (service email messages and web interface). All translations for a language are gathered into a single PO file that can be manipulated by the standard GNU gettext tools.[%END%]</p>
+    <p>[%|loc%]Check our translation FAQ if you wish to translate the Sympa GUI into your native language: [%END%] <a href="https://translate.sympa.community/pages/help">https://translate.sympa.community/pages/help</a></p>
 [% END %]
 
 [% IF subaction == 'tracker' %]
-    <h2>[%|loc%]Submitting a bug, a feature request[%END%]</h2><br />
-    <div>
-        [%|loc%]You can submit a problem or request a new feature: [%END%]<a href="https://github.com/sympa-community/sympa/issues/new/choose">https://github.com/sympa-community/sympa/issues/new/choose</a>
-    </div>
+    <h2>[%|loc%]Submitting a bug, a feature request[%END%]</h2>
+    <p>[%|loc%]You can submit a problem or request a new feature: [%END%]<a href="https://github.com/sympa-community/sympa/issues/new/choose">https://github.com/sympa-community/sympa/issues/new/choose</a></p>
 [% END %]
 
-
-[% IF subaction == 'logs' %]
-    [% IF loop_count %]
-        <p class="bottom_page">
-            [%|loc(process_id,loop_count,start_time)%]This FastCGI process (%1) has served %2 pages since %3.[%END%]
-        </p>
-    [% END %]
-[% END %]
 <!-- end serveradmin.tt2 (distrib) -->

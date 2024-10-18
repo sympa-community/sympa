@@ -41,7 +41,7 @@ workflow of Sympa.  For more details see documentation on each class.
                   /               v
  Incoming => [ProcessIncoming]    *2
                   \                              +-> (reject)
-                   +-> [DoForward] => (Mailer)  /
+                   +-> [DoForward] => Outgoing  /
                     \                          +-> [ToEditor] => Outgoing
                      +-> [DoMessage]          /
                                \             /---> [ToHeld] => Held

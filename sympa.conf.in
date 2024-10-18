@@ -1,6 +1,6 @@
 ########################################################################
 # Initial configuration
-# See https://sympa-community.github.io/manual/install/generate-initial-configuration.html
+# See https://www.sympa.community/manual/install/generate-initial-configuration.html
 ########################################################################
 
 domain              (You must define this parameter)
@@ -9,7 +9,7 @@ listmaster          (You must define this parameter)
 
 ########################################################################
 # Setup database
-# See https://sympa-community.github.io/manual/install/setup-database.html
+# See https://www.sympa.community/manual/install/setup-database.html
 ########################################################################
 
 db_type             (You must define this parameter)
@@ -19,18 +19,19 @@ db_name             sympa
 #db_user             user_name
 #db_passwd           (secret)
 #db_env
+#db_timeout
 
 ########################################################################
 # Configure system log
-# See https://sympa-community.github.io/manual/install/configure-system-log.html
+# See https://www.sympa.community/manual/install/configure-system-log.html
 ########################################################################
 
 #syslog              LOCAL1 
-#log_socket_type     unix
+#syslog_socket.type
 
 ########################################################################
 # Configure mail server
-# See https://sympa-community.github.io/manual/install/configure-mail-server.html
+# See https://www.sympa.community/manual/install/configure-mail-server.html
 ########################################################################
 
 #sendmail_aliases    @SENDMAIL_ALIASES@
@@ -41,7 +42,7 @@ db_name             sympa
 
 ########################################################################
 # Configure HTTP server
-# See https://sympa-community.github.io/manual/install/configure-http-server.html
+# See https://www.sympa.community/manual/install/configure-http-server.html
 ########################################################################
 
 #mhonarc             /usr/bin/mhonarc
@@ -55,10 +56,17 @@ db_name             sympa
 #wwsympa_url         (You must define this parameter to enable web interface)
 
 ########################################################################
+# SOAP/HTTP API
+# See https://www.sympa.community/manual/customize/soap-api.html
+########################################################################
+
+#soap_url            (You must define this parameter to enable SOAP API)
+
+########################################################################
 # Customizing Sympa
 # You can customize Sympa, its web interface and/or SOAP/HTTP service
 # defining more parameters in this file sympa.conf or robot.conf by each
 # domain.
-# For more details see https://sympa-community.github.io/manual/customize.html
+# For more details see https://www.sympa.community/manual/customize.html
 ########################################################################
 

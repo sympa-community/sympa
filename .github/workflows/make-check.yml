@@ -1,0 +1,78 @@
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+    branches-ignore:
+      - 'translation'
+
+jobs:
+  make-check:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - 'macos-13'
+          - 'macos-latest'
+          - 'ubuntu-latest'
+        perl:
+          - '5'
+          - '5.38'
+          - '5.36'
+          #- '5.34'
+          - '5.32'
+          - '5.30'
+          #- '5.28'
+          - '5.26'
+          - '5.24'
+          #- '5.22'
+          - '5.20'
+          #- '5.18'
+          - '5.16'
+    name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies for Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt update -y
+          sudo apt install -y gettext 
+      - name: Install dependencies for macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install automake
+          brew install openssl
+          brew install pkg-config
+      - name: Workaround for macOS
+        if: runner.os == 'macOS'
+        # For Crypt::SMIME
+        run: >
+          echo "PKG_CONFIG_PATH=$(brew --prefix openssl)/lib/pkgconfig"
+          >> $GITHUB_ENV
+      - name: Set up Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+          install-modules-with: cpanm
+          install-modules-args: >
+            --verbose --no-interactive
+            --with-develop
+            --with-feature=Data::Password --with-feature=ldap
+            --with-feature=smime
+            --with-feature=soap --with-feature=sqlite
+            ${{ startsWith(matrix.os, 'macos') && '--with-feature=macos' || '' }}
+      - name: Run tests
+        run: |
+          if [ "$(uname -s)" = "Linux" ]; then
+            # Workaround to avoid reference to older libcrypto by perl binary
+            export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu
+          fi
+          PERL5LIB= autoreconf -i
+          ./configure --with-defaultdir=`pwd`/default
+          cd src; make; cd ..
+          #make check-local TEST_FILES='xt/perltidy.t' || true
+          make check-local
+        shell: bash

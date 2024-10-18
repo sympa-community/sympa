@@ -11,16 +11,13 @@
 [%# A few configuration settings and miscellaneous vars. ~%]
 var sympa = {
     backText:           '[%"Back"|loc|escape_cstr%]',
-    calendarButtonText: '[%"Calendar"|loc|escape_cstr%]',
-    calendarFirstDay:   0,
     closeText:          '[%"Close"|loc|escape_cstr%]',
-    dayNames:           '[%"Sunday:Monday:Tuesday:Wednesday:Thursday:Friday:Saturday"|loc|escape_cstr%]'.split(":"),
-    dayNamesMin:        '[%"Su:Mo:Tu:We:Th:Fr:Sa"|loc|escape_cstr%]'.split(":"),
+    copiedText:         '[%"Copied!"|loc|escape_cstr%]',
+    copyPermalinkText:  '[%"Copy permalink"|loc|escape_cstr%]',
     home_url:           '[% path_cgi | escape_cstr %]/',
     icons_url:          '[% icons_url | escape_cstr %]',
     lang:               '[% lang | escape_cstr %]',
     loadingText:        '[%"Please Wait..."|loc|escape_cstr%]',
-    monthNamesShort:    '[%"Jan:Feb:Mar:Apr:May:Jun:Jul:Aug:Sep:Oct:Nov:Dec"|loc|escape_cstr%]'.split(":"),
     openInNewWinText:   '[%"Open in a new window"|loc|escape_cstr%]',
     resetText:          '[%"Reset"|loc|escape_cstr%]'
 };
@@ -32,7 +29,7 @@ var lang = '[% lang %]';
 [%# Now retrieving the javascript files ~%]
 <script src="[% static_content_url %]/js/jquery.js?v3.6.0"></script>
 <script src="[% static_content_url %]/js/jquery-migrate.js?v1.4.1"></script>
-<script src="[% static_content_url %]/js/jquery-ui/jquery-ui.js?v1.12.1"></script>
+<script src="[% static_content_url %]/js/jquery-ui/jquery-ui.js?v1.13.2"></script>
 [%# jqPlot ~%]
 <script src="[% static_content_url %]/js/jqplot/jquery.jqplot.min.js?v1.0.8"></script>
 <script src="[% static_content_url %]/js/jqplot/jqplot.categoryAxisRenderer.min.js?v1.0.8"></script>
@@ -40,7 +37,7 @@ var lang = '[% lang %]';
 <script src="[% static_content_url %]/js/jqplot/jqplot.canvasAxisTickRenderer.min.js?v1.0.8"></script>
 <script src="[% static_content_url %]/js/jqplot/jqplot.canvasTextRenderer.min.js?v1.0.8"></script>
 [%# Color picker ~%]
-<script src="[% static_content_url %]/js/jquery-minicolors/jquery.minicolors.min.js?v2.3.1"></script>
+<script src="[% static_content_url %]/js/jquery-minicolors/jquery.minicolors.min.js?v2.3.6"></script>
 [%# Sympa ~%]
 <script src="[% static_content_url %]/js/sympa.js?v[% version %]"></script>
 

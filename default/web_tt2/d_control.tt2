@@ -60,18 +60,18 @@
             [% ELSIF shared_doc.may_edit %]
                 <a class="actionMenuLinks"
                    href="[% 'd_editfile' | url_rel([list,shared_doc.paths_d]) %]">
-                    <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]
+                    <i class="fas fa-pencil-alt"></i> [%|loc%]edit[%END%]
                 </a>
             [% ELSE %]
                 <span class="actionMenuLinksInactive">
-                    <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]
+                    <i class="fas fa-pencil-alt"></i> [%|loc%]edit[%END%]
                 </span>
             [% END %]
 
             [% IF shared_doc.may_edit %]
                 <a class="actionMenuLinks"
                     href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
-                    <i class="fa fa-trash"></i> [%|loc%]delete[%END%]
+                    <i class="fas fa-trash-alt"></i> [%|loc%]delete[%END%]
                 </a>
             [% END %]
             [% IF shared_doc.may_control %]

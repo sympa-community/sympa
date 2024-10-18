@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2021 The Sympa Community. See the
+# Copyright 2017, 2021, 2023 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -35,6 +35,7 @@ use Scalar::Util;
 use Sys::Syslog qw();
 use Time::Local qw();
 
+use Sympa::Regexps;
 use Sympa::Tools::Time;
 
 use base qw(Class::Singleton);
@@ -48,14 +49,10 @@ sub _new_instance {
 
 # Old name: Log::do_openlog().
 sub openlog {
-    my $self        = shift;
-    my $facility    = shift;
-    my $socket_type = shift;
-    my %options     = @_;
+    my $self    = shift;
+    my %options = @_;
 
-    $self->{_facility}    = $facility;
-    $self->{_socket_type} = $socket_type;
-    $self->{_service}     = $options{service} || _daemon_name() || 'sympa';
+    $self->{_service} = $options{service} || _daemon_name() || 'sympa';
     $self->{_database_backend} =
         (exists $options{database_backend})
         ? $options{database_backend}
@@ -222,15 +219,30 @@ sub _daemon_name {
 sub _connect {
     my $self = shift;
 
-    if ($self->{_socket_type} =~ /^(unix|inet)$/i) {
-        Sys::Syslog::setlogsock(lc($self->{_socket_type}));
+    if (@{$Conf::Conf{'syslog_socket.type'} || []}) {
+        Sys::Syslog::setlogsock(
+            {   (type => $Conf::Conf{'syslog_socket.type'}),
+                map {
+                    length($Conf::Conf{"syslog_socket.$_"} // '')
+                        ? ($_ => $Conf::Conf{"syslog_socket.$_"})
+                        : ()
+                } qw(path timeout host port)
+            }
+        );
     }
+
+    my $facility =
+        (grep { $self->{_service} eq $_ }
+            qw(wwsympa sympasoap archived bounced task_manager)
+            and $Conf::Conf{'log_facility'})
+        || $Conf::Conf{'syslog'};
+
     # Close log may be useful: If parent processus did open log child
     # process inherit the openlog with parameters from parent process.
     Sys::Syslog::closelog;
     eval {
         Sys::Syslog::openlog(sprintf('%s[%s]', $self->{_service}, $PID),
-            'ndelay,nofatal', $self->{_facility});
+            'ndelay,nofatal', $facility);
     };
     if ($EVAL_ERROR && ($warning_date < time - $warning_timeout)) {
         warn sprintf 'No logs available: %s', $EVAL_ERROR;
@@ -490,24 +502,21 @@ sub get_first_db_log {
             @{$action_type{$select->{'type'}}};
     }
 
+    my $html_date_re = Sympa::Regexps::html_date();
     #if the search is between two date
-    if ($select->{'date_from'}) {
+    if (($select->{'date_from'} // '') =~ /\A$html_date_re\z/) {
         my ($yyyy, $mm, $dd) = split /[^\da-z]/i, $select->{'date_from'};
-        ($dd, $mm, $yyyy) = ($yyyy, $mm, $dd) if 31 < $dd;
-        $yyyy += ($yyyy < 50 ? 2000 : $yyyy < 100 ? 1900 : 0);
 
-        my $date_from = POSIX::mktime(0, 0, -1, $dd, $mm - 1, $yyyy - 1900);
-        unless ($select->{'date_to'}) {
+        my $date_from = POSIX::mktime(0, 0, -1, $dd + 0, $mm - 1, $yyyy - 1900);
+        unless (($select->{'date_to'} // '') =~ /\A$html_date_re\z/) {
             my $date_from2 =
-                POSIX::mktime(0, 0, 25, $dd, $mm - 1, $yyyy - 1900);
+                POSIX::mktime(0, 0, 25, $dd + 0, $mm - 1, $yyyy - 1900);
             $statement .= sprintf "AND date_logs >= %s AND date_logs <= %s ",
                 $date_from, $date_from2;
         } else {
             my ($yyyy, $mm, $dd) = split /[^\da-z]/i, $select->{'date_to'};
-            ($dd, $mm, $yyyy) = ($yyyy, $mm, $dd) if 31 < $dd;
-            $yyyy += ($yyyy < 50 ? 2000 : $yyyy < 100 ? 1900 : 0);
 
-            my $date_to = POSIX::mktime(0, 0, 25, $dd, $mm - 1, $yyyy - 1900);
+            my $date_to = POSIX::mktime(0, 0, 25, $dd + 0, $mm - 1, $yyyy - 1900);
             $statement .= sprintf "AND date_logs >= %s AND date_logs <= %s ",
                 $date_from, $date_to;
         }
@@ -625,11 +634,11 @@ sub aggregate_stat {
     unless (@res) {
         return 0;
     }
-    my $date_deb = $res[0] - ($res[0] % 3600);
+    my $date_deb = $res[0] - ($res[0] % 900);
 
-    # Hour to hour
+    # By each 15 minutes (some time zones have this time difference).
     my @slots;
-    for (my $i = $date_deb; $i <= $date_end; $i = $i + 3600) {
+    for (my $i = $date_deb; $i <= $date_end; $i += 900) {
         push @slots, $i;
     }
 
@@ -759,7 +768,7 @@ sub _aggregate_data {
 sub aggregate_daily_data {
     my $self = shift;
     $self->syslog('debug2', '(%s, %s)', @_);
-    my $list      = shift;
+    my $that      = shift;
     my $operation = shift;
 
     my $sdm;
@@ -769,42 +778,77 @@ sub aggregate_daily_data {
         return;
     }
 
-    my $result;
+    my $result = {};
+
+    my $cond;
+    my @vars;
+    if (ref $that eq 'Sympa::List') {
+        $cond = q{robot_counter = ? AND list_counter = ?};
+        @vars = ($that->{'domain'}, $that->{'name'});
+    } else {
+        $cond = q{robot_counter = ?};
+        @vars = ($that);
+    }
 
     my $sth;
-    my $row;
+
     unless (
         $sth = $sdm->do_prepared_query(
-            q{SELECT beginning_date_counter AS "date",
-                     count_counter AS "count"
-              FROM stat_counter_table
-              WHERE data_counter = ? AND
-                    robot_counter = ? AND list_counter = ?},
+            sprintf(
+                q{SELECT beginning_date_counter AS "date",
+                         count_counter AS "count"
+                  FROM stat_counter_table
+                  WHERE data_counter = ? AND %s}, $cond
+            ),
             $operation,
-            $list->{'domain'}, $list->{'name'}
+            @vars
         )
     ) {
         $self->syslog('err', 'Unable to get stat data %s for list %s',
-            $operation, $list);
+            $operation, $that);
         return;
     }
-    while ($row = $sth->fetchrow_hashref('NAME_lc')) {
-        my $midnight = Sympa::Tools::Time::get_midnight_time($row->{'date'});
-        $result->{$midnight} = 0 unless defined $result->{$midnight};
-        $result->{$midnight} += $row->{'count'};
+    while (my $row = $sth->fetchrow_hashref('NAME_lc')) {
+        _add_count($result, $row->{date}, $row->{count});
     }
     $sth->finish;
 
-    my @dates = sort { $a <=> $b } keys %$result;
-    return {} unless @dates;
-
-    for (my $date = $dates[0]; $date < $dates[-1]; $date += 86400) {
-        my $midnight = Sympa::Tools::Time::get_midnight_time($date);
-        $result->{$midnight} = 0 unless defined $result->{$midnight};
+    if (%{$result || {}}) {
+        # Fill in zeroes for missing days.
+        unless (
+            $sth = $sdm->do_prepared_query(
+                sprintf(
+                    q{SELECT MIN(beginning_date_counter),
+                             MAX(beginning_date_counter)
+                      FROM stat_counter_table
+                      WHERE %s}, $cond
+                ),
+                @vars
+            )
+        ) {
+            $self->syslog('err', 'Unable to get stat data %s for list %s',
+                $operation, $that);
+            return;
+        }
+        my ($min, $max) = $sth->fetchrow_array;
+        for (my $d = $min; $d <= $max; $d += 900) {
+            _add_count($result, $d, 0);
+        }
+        $sth->finish;
     }
+
     return $result;
 }
 
+sub _add_count {
+    my $result = shift;
+    my $date   = shift;
+    my $count  = shift;
+
+    my $midnight = Sympa::Tools::Time::get_midnight_time($date);
+    $result->{$midnight} //= 0;
+    $result->{$midnight} += $count;
+}
 1;
 __END__
 
@@ -819,7 +863,7 @@ Sympa::Log - Logging facility of Sympa
   use Sympa::Log;
 
   my $log = Sympa::Log->instance;
-  $log->openlog($facility, 'inet');
+  $log->openlog(facility => $facility);
   $log->{level} = 0;
   $log->syslog('info', '%s: Stat logging', $$);
 
@@ -836,7 +880,7 @@ TBD.
 I<Constructor>.
 Creates new singleton instance of L<Sympa::Log>.
 
-=item openlog ( $facility, $socket_type, [ options ... ] )
+=item openlog ( [ options ... ] )
 
 TBD.
 

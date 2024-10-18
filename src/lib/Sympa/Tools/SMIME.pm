@@ -51,18 +51,17 @@ sub find_keys {
     my (%certs, %keys);
     my $ext = ($operation eq 'sign' ? 'sign' : 'enc');
 
-    unless (opendir(D, $dir)) {
-        return undef;
-    }
+    my $dh;
+    return undef unless opendir $dh, $dir;
 
-    while (my $fn = readdir(D)) {
+    while (my $fn = readdir $dh) {
         if ($fn =~ /^cert\.pem/) {
             $certs{"$dir/$fn"} = 1;
         } elsif ($fn =~ /^private_key/) {
             $keys{"$dir/$fn"} = 1;
         }
     }
-    closedir(D);
+    closedir $dh;
 
     foreach my $c (keys %certs) {
         my $k = $c;

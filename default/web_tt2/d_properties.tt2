@@ -65,16 +65,16 @@
             [% ELSIF shared_doc.may_edit %]
               <a class="actionMenuLinks"
                 href="[% 'd_editfile' | url_rel([list,shared_doc.paths_d]) %]">
-                <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]</a>
+                <i class="fas fa-pencil-alt"></i> [%|loc%]edit[%END%]</a>
             [% ELSE %]
               <span class="actionMenuLinksInactive">
-                <i class="fa fa-pencil"></i> [%|loc%]edit[%END%]</span>
+                <i class="fas fa-pencil-alt"></i> [%|loc%]edit[%END%]</span>
             [% END %]
 
             [% IF shared_doc.may_edit %]
                 <a class="actionMenuLinks"
                    href="[% 'd_delete' | url_rel([list,shared_doc.paths_d],{previous_action=>action}) %]">
-                    <i class="fa fa-trash"></i> [%|loc%]delete[%END%]
+                    <i class="fas fa-trash-alt"></i> [%|loc%]delete[%END%]
                 </a>
             [% END %]
             [% IF shared_doc.may_control %]
@@ -120,7 +120,7 @@
                 [%|loc(shared_doc.name)%]Rename file %1[%END%]
             [% END %]
         </label>
-        <input size="50" maxlength="100" name="new_name" />
+        <input size="50" maxlength="100" name="new_name" id="new_name" />
 
         <input type="hidden" name="list"   value="[% list %]" />
         <input type="hidden" name="path"   value="[% shared_doc.paths.join("/") %]" />

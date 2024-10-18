@@ -43,7 +43,7 @@
     <br />
 
 
-    <h3>[%|loc%]Changing your email address[%END%]</h3>
+    <h3 id="pref-change-email">[%|loc%]Changing your email address[%END%]</h3>
 
     <p>[%|loc%]You can update your email address for all your list memberships at once. Any list owner or list moderator email addresses will also be updated.[%END%]</p>
     <form action="[% path_cgi %]" method="post">
@@ -58,22 +58,24 @@
     </form>
     <br />
 
-    [% UNLESS use_sso %]
-        <h4>[%|loc%]Changing your password[%END%]</h4>
+    [% UNLESS sso.size %]
+        <h3 id="pref-change-password">[%|loc%]Changing your password[%END%]</h3>
 
         <form action="[% path_cgi %]" method="post">
             <fieldset>
                 <label for="newpasswd1">[%|loc%]New password:[%END%]  </label>
-                <input type="password" name="newpasswd1" id="newpasswd1" size="25" />
+                <input type="password" name="newpasswd1" id="newpasswd1"
+                 size="25" autocomplete="new-password" />
                 <label for="newpasswd2">[%|loc%]Re-enter your new password:[%END%]  </label>
-                <input type="password" name="newpasswd2" id="newpasswd2" size="25" />
+                <input type="password" name="newpasswd2" id="newpasswd2"
+                 size="25" autocomplete="new-password" />
                 <input class="MainMenuLinks" type="submit" name="action_setpasswd" value="[%|loc%]Submit[%END%]" />
             </fieldset>
         </form>
     [% END %]
 
     [% IF session.auth == 'classic' AND conf.allow_account_deletion == 'on' %]
-        <h4>[%|loc%]Deleting your account[%END%]</h4>
+        <h3 id="pref-delete-account">[%|loc%]Deleting your account[%END%]</h3>
         <p>
             [%|loc%]Deleting your account will unsubscribe you from all your lists, remove your ownership of your lists and permanently delete your account.[%END%]
             <br />
@@ -82,7 +84,10 @@
         <form action="[% path_cgi %]" method="post">
             <fieldset>
                 <label for="password_for_account_deletion">[%|loc%]Enter your password:[%END%]</label>
-                <input type="password" name="passwd" id="password_for_account_deletion" size="25" />
+                [%# Note that autofilling password is disabled. ~%]
+                <input type="password" name="passwd"
+                 id="password_for_account_deletion" size="25"
+                 autocomplete="new-password" />
                 <input type="checkbox" name="i_understand_the_consequences" id="i_understand_the_consequences" required>
                 <label for="i_understand_the_consequences">
                     [%|loc%]I understand that I will be unsubscribed from all my lists and that my account will be permanently deleted.[%END%]

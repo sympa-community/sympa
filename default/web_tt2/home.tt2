@@ -27,11 +27,13 @@
     </main>
 
 [% IF top_menu %]
-    <section class="home-submenu">
+    <section class="home-submenu"
+     role="navigation" aria-label="[%|loc%]Home Submenu[%END%]" >
 [%~ ELSE ~%]
-    <section class="medium-9 columns">
+    <section class="medium-9 columns"
+     role="navigation" aria-label="[%|loc%]Home Submenu[%END%]" >
 [%~ END %]
-        <h1 class="hide">Submenu</h1>
+        <h1 class="hide">[%|loc%]Home Submenu[%END%]</h1>
         [% IF user.email %]
             [% IF top_menu %]
                 <ul class="row">

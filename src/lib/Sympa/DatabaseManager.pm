@@ -8,6 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2021, 2023 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,11 +32,9 @@ use warnings;
 
 use Sympa;
 use Conf;
-use Sympa::Constants;
 use Sympa::Database;
 use Sympa::DatabaseDescription;
 use Sympa::Log;
-use Sympa::Tools::Data;
 
 my $log = Sympa::Log->instance;
 
@@ -53,6 +54,21 @@ sub instance {
     return undef
         unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
         and $self->connect;
+
+    # Compatibility concern.
+    # - Create a temporary view "dual" for portable SQL statements.
+    if (ref $self eq 'Sympa::DatabaseDriver::PostgreSQL') {
+        # Note: PostgreSQL <= 8.0.x didn't support temporary view but >= 7.3.x
+        #   supported CREATE OR REPLACE statement.
+        defined $self->__dbh->do(
+            q{CREATE TEMPORARY VIEW dual AS SELECT 'X'::varchar(1) AS dummy;})
+            or $self->__dbh->do(
+            q{CREATE OR REPLACE VIEW dual AS SELECT 'X'::varchar(1) AS dummy;}
+            );
+    } elsif (ref $self eq 'Sympa::DatabaseDriver::SQLite') {
+        $self->__dbh->do(
+            q{CREATE TEMPORARY VIEW dual AS SELECT 'X' AS dummy;});
+    }
 
     # At once connection succeeded, we keep trying to connect.
     # Unless in a web context, because we can't afford long response time on
@@ -121,7 +137,7 @@ sub probe_db {
     } else {
         $may_update = 1;
         foreach my $method (
-            qw(set_autoinc add_table update_field add_field delete_field
+            qw(set_autoinc add_table update_field add_field drop_field
             unset_primary_key set_primary_key unset_index set_index)
         ) {
             unless ($sdm->can($method)) {
@@ -361,9 +377,9 @@ sub _check_fields {
         ## Change DB types if different and if update_db_types enabled
         if ($may_update) {
             unless (
-                _check_db_field_type(
-                    effective_format => $real_struct{$t}{$f},
-                    required_format  => $db_struct->{$t}->{$f}
+                $sdm->is_sufficient_field_type(
+                    $db_struct->{$t}->{$f},
+                    $real_struct{$t}{$f}
                 )
             ) {
                 push @{$report_ref},
@@ -693,30 +709,8 @@ sub _check_key {
     return $result;
 }
 
-## Compare required DB field type
-## Input : required_format, effective_format
-## Output : return 1 if field type is appropriate AND size >= required size
-sub _check_db_field_type {
-    my %param = @_;
-
-    my ($required_type, $required_size, $effective_type, $effective_size);
-
-    if ($param{'required_format'} =~ /^(\w+)(\((\d+)\))?$/) {
-        ($required_type, $required_size) = ($1, $3);
-    }
-
-    if ($param{'effective_format'} =~ /^(\w+)(\((\d+)\))?$/) {
-        ($effective_type, $effective_size) = ($1, $3);
-    }
-
-    if (Sympa::Tools::Data::smart_eq($effective_type, $required_type)
-        and (not defined $required_size or $effective_size >= $required_size))
-    {
-        return 1;
-    }
-
-    return 0;
-}
+# Moved: Use Sympa::Database::is_sufficient_field_type().
+#sub _check_db_field_type;
 
 1;
 __END__

@@ -219,10 +219,6 @@ If it is not given, 'C<nobody>' will be set.
 Default method.
 No actual authentication, and if any, sender of the message is used.
 
-=item C<dkim>
-
-Authenticated by DKIM signature.
-
 =item C<md5>
 
 Authenticated by web authentication (password),
@@ -234,6 +230,10 @@ Authenticated by S/MIME signature,
 or TLS client certificate.
 
 =back
+
+Note:
+The C<dkim> authentication method for scenarios was obsoleted
+on Sympa 6.2.71b.1.  Now it is a synonym of C<smtp> method.
 
 =head3 Actions
 
