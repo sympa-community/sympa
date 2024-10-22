@@ -317,6 +317,15 @@
 	<part name="return" type="xsd:boolean"/>
 </message>
 
+<message name="moveUserRequest">
+	<part name="current_email" type="xsd:string"/>
+	<part name="email" type="xsd:string"/>
+</message>
+
+<message name="moveUserResponse">
+	<part name="return" type="xsd:boolean"/>
+</message>
+
 <!-- portType part -->
 
 <portType name="SympaPort">
@@ -411,6 +420,9 @@
 	<operation name="setCustom">
 		<input message="tns:setCustomRequest" />
 		<output message="tns:setCustomResponse" />
+	<operation name="moveUser">
+		<input message="tns:moveUserRequest" />
+		<output message="tns:moveUserResponse" />
 	</operation>
 </portType>
 
@@ -714,6 +726,19 @@
 			<output>
 				<soap:body use="encoded"
 					namespace="urn:sympasoap"
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+	</operation>
+	<operation name="moveUser">
+		<soap:operation soapAction="urn:sympasoap#moveUser"/>
+			<input>
+				<soap:body use="encoded" 
+					namespace="urn:sympasoap" 
+					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded"
+					namespace="urn:sympasoap" 
 					encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
 			</output>
 	</operation>

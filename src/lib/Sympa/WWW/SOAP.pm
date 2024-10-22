@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023 The Sympa Community.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 The Sympa Community.
 # See the AUTHORS.md file at the top-level directory of this distribution
 # and at <https://github.com/sympa-community/sympa.git>.
 #
@@ -1567,6 +1567,99 @@ sub _get_reason_string {
 
     return $string;
 }
+
+sub moveUser {
+    $log->syslog(
+        'info',
+        '(%s, current_email=%s, email=%s)',
+        @_
+    );
+    my $class         = shift;
+    my $current_email = shift;
+    my $email         = shift;
+
+
+    my $sender                  = $ENV{'USER_EMAIL'};
+    my $robot                   = $ENV{'SYMPA_ROBOT'};
+    my $remote_application_name = $ENV{'remote_application_name'};
+
+    unless ($sender) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('User not specified')
+            ->faultdetail('Use a trusted proxy or login first ');
+    }
+
+    unless ($email) {
+        die SOAP::Fault->faultcode('Client')
+            ->faultstring('Incorrect number of parameters')
+            ->faultdetail('Use : <current_email> <email>');
+    }
+
+    my $reject;
+    unless (Sympa::is_listmaster($robot, $sender)) {
+        $reject .= ', sender must be listmaster';
+    }
+
+    $current_email = Sympa::Tools::Text::canonic_email($current_email);
+    $email         = Sympa::Tools::Text::canonic_email($email);
+    
+    unless (Sympa::Tools::Text::valid_email($current_email)) {
+        $reject .= ', invalid current_email';
+    }
+    unless (Sympa::Tools::Text::valid_email($email)) {
+        $reject .= ', invalid email';
+    }
+            
+    if ($reject) {
+        $log->syslog('info',
+            'change_email %s -> %s from %s refused%s',
+            $current_email, $email, $sender, $reject);
+        die SOAP::Fault->faultcode('Server')
+            ->faultstring('Incorrect parameter')
+            ->faultdetail("Incorrect parameter(s)$reject");
+    }
+
+    # Do the move_user
+    my $spindle = Sympa::Spindle::ProcessRequest->new(
+        context          => $robot,
+        action           => 'move_user',
+        current_email    => $current_email,
+        email            => $email,
+        sender           => $sender,
+        md5_check        => 1,
+        scenario_context => {
+            sender        => $sender,
+            remote_host             => $ENV{'REMOTE_HOST'},
+            remote_addr             => $ENV{'REMOTE_ADDR'},
+            remote_application_name => $ENV{'remote_application_name'},
+            current_email => $current_email,
+            email         => $email,
+        }
+    );
+    
+    unless ($spindle and $spindle->spin) {
+        die SOAP::Fault->faultcode('Server')->faultstring('Internal error');
+    }
+
+    foreach my $report (@{$spindle->{stash} || []}) {
+        my $reason_string = get_reason_string($report, $robot);
+        if ($report->[1] eq 'auth') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
+                ->faultdetail($reason_string);
+        } elsif ($report->[1] eq 'intern') {
+            die SOAP::Fault->faultcode('Server')
+                ->faultstring('Internal error');
+        } elsif ($report->[1] eq 'notice') {
+            return SOAP::Data->name('result')->type('boolean')->value(1);
+        } elsif ($report->[1] eq 'user') {
+            die SOAP::Fault->faultcode('Server')->faultstring('Undef')
+                ->faultdetail($reason_string);
+        }
+    }
+    
+    return SOAP::Data->name('result')->type('boolean')->value(1);
+}
+
 
 1;
 __END__
