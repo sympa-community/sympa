@@ -1580,8 +1580,7 @@ sub moveUser {
 
 
     my $sender                  = $ENV{'USER_EMAIL'};
-    my $robot                   = $ENV{'SYMPA_ROBOT'};
-    my $remote_application_name = $ENV{'remote_application_name'};
+    my $robot                   = $ENV{SYMPA_DOMAIN};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -1628,12 +1627,12 @@ sub moveUser {
         sender           => $sender,
         md5_check        => 1,
         scenario_context => {
-            sender        => $sender,
+            sender                  => $sender,
             remote_host             => $ENV{'REMOTE_HOST'},
             remote_addr             => $ENV{'REMOTE_ADDR'},
             remote_application_name => $ENV{'remote_application_name'},
-            current_email => $current_email,
-            email         => $email,
+            current_email           => $current_email,
+            email                   => $email,
         }
     );
     
