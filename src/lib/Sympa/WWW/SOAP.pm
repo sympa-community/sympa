@@ -1612,7 +1612,7 @@ sub moveUser {
             
     if ($reject) {
         $log->syslog('info',
-            'change_email %s -> %s from %s refused%s',
+            'move_user %s -> %s from %s refused%s',
             $current_email, $email, $sender, $reject);
         die SOAP::Fault->faultcode('Server')
             ->faultstring('Incorrect parameter')
