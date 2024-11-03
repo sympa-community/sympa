@@ -8,9 +8,6 @@
 
 - Notes for packagers:
 
-  - On recent releases, some external Perl modules including Unicode-UTF8
-    [\#1884](https://github.com/sympa-community/sympa/issues/1884) have been
-    made mandatory.  Check updates on `cpanfile`.
   - Some distributions including Debian and the descendants separate `perldoc`
     from the package for Perl.  On this case activating `perldoc` is
     encouraged for better user experiences.
