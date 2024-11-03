@@ -3,7 +3,7 @@
 
 # Minimum version of Perl required.
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
-requires 'perl', '5.16.0';
+requires 'perl', '5.26.0';
 
 # Used to zip/unzip for archive and shared document download/upload.
 # Note: Some environments not providing 'Archive::Zip::Simple*' modules may
