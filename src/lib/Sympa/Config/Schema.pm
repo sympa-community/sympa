@@ -4888,6 +4888,19 @@ our %pinfo = (
         not_after => '6.2.56',
     },
 
+    remove_dkim_headers => {
+        context    => [qw(list domain site)],
+        order      => 70.08,
+        group      => 'dkim',
+        gettext_id => 'Remove DKIM signatures in incoming messages',
+        gettext_comment =>
+            'Normally this should be turned off. It can be turned on when DKIM signatures that cannot be verified at the recipient site cause problems.',
+        format     => ['on', 'off'],
+        occurrence => '1',
+        default    => 'off',
+        not_before => '6.2.74',
+    },
+
     ### Optional features
 
     ### List address verification
