@@ -39,7 +39,6 @@ use IO::File qw();
 use MIME::EncWords;
 use MIME::Lite::HTML;
 use POSIX qw();
-use Unicode::UTF8;
 use URI;
 use Data::Dumper;    # tentative
 
@@ -51,6 +50,10 @@ BEGIN {
     require Archive::Zip
         unless $Archive::Zip::SimpleUnzip::VERSION
         and $Archive::Zip::SimpleZip::VERSION;
+}
+
+BEGIN {
+    eval 'use Unicode::UTF8 qw()';
 }
 
 use Sympa;
@@ -1060,7 +1063,18 @@ while ($query = Sympa::WWW::FastCGI->new) {
     while (my ($k, $v) = each %in) {
         next if ref $v;
         next if Encode::is_utf8($v);
-        unless (Unicode::UTF8::valid_utf8($v)) {
+
+        my $valid_utf8;
+        if ($Unicode::UTF8::VERSION) {
+            $valid_utf8 = Unicode::UTF8::valid_utf8($v);
+        } else {
+            eval {
+                my $u = $v;
+                Encode::decode('UTF-8', $u, Encode::FB_CROAK());
+                $valid_utf8 = 1;
+            };
+        }
+        unless ($valid_utf8) {
             $log->syslog('err', 'Parameter in invalid UTF-8 %s="%s": Ignored',
                 $k, sprintf("\\x%*v02X", "\\x", $v));
             delete $in{$k};

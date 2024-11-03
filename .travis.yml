@@ -25,7 +25,7 @@ before_install:
 
 install:
   - cpan-install --coverage
-  - cpanm --installdeps --notest --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=smime --with-feature=soap --with-feature=sqlite .
+  - cpanm --installdeps --notest --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
 
 before_script:
   - coverage-setup
