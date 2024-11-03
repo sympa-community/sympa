@@ -150,6 +150,14 @@ requires 'Time::HiRes', '>= 1.29';
 # Used to get Unix time from local time
 requires 'Time::Local', '>= 1.23';
 
+# Normalizes file names represented by Unicode.
+# Note: Perl 5.8.1 bundles version 0.23.
+# Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
+requires 'Unicode::Normalize', '>= 1.03';
+
+# Sanitizes inputs with Unicode text.
+requires 'Unicode::UTF8', '>= 0.58';
+
 # Used to create URI containing non URI-canonical characters.
 # Note: '3.28' is the version included in URI-1.35.
 requires 'URI::Escape', '>= 3.28';
@@ -189,13 +197,6 @@ recommends 'Net::DNS', '>= 0.65';
 
 # This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.
 recommends 'Net::SMTP';
-
-# Normalizes file names represented by Unicode
-# Note: Perl 5.8.1 bundles version 0.23.
-# Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
-recommends 'Unicode::Normalize', '>= 1.03';
-
-recommends 'Unicode::UTF8', '>= 0.60';
 
 ### Features
 ##
@@ -324,10 +325,9 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
 };
 
 feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
-    # Note: Perl 5.8.1 bundles version 0.23.
-    # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
-    requires 'Unicode::Normalize', '>= 1.03';
-    requires 'Unicode::UTF8', '>= 0.60';
+    # Note: These became required (>=6.2.77b).
+    #requires 'Unicode::Normalize', '>= 1.03';
+    #requires 'Unicode::UTF8', '>= 0.58';
 };
 
 on 'test' => sub {
