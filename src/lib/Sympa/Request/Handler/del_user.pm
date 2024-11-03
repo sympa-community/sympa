@@ -46,8 +46,8 @@ sub _twist {
     my $self    = shift;
     my $request = shift;
 
-    my $robot_id = $request->{context};
-    my $email = $request->{email};
+    my $robot_id   = $request->{context};
+    my $email      = $request->{email};
     my $last_robot = $request->{last_robot};
     my @stash;
 
@@ -60,7 +60,7 @@ sub _twist {
         $log->syslog('info', 'List %s', $list->{name});
         $list->delete_list_member([$email], exclude => 1);
         $self->add_stash($request, 'notice', 'now_unsubscribed',
-                         {email => $email, listname => $list->{'name'}});
+            {email => $email, listname => $list->{'name'}});
     }
 
     # Remove from the editors/owners
@@ -68,16 +68,13 @@ sub _twist {
         for my $list (Sympa::List::get_which($email, $robot_id, $role)) {
             $list->delete_list_admin($role, [$email]);
             $self->add_stash($request, 'notice', 'removed',
-                             {'email' => $email, 'listname' => $list->get_id});
+                {'email' => $email, 'listname' => $list->get_id});
         }
     }
 
     # Update netidmap_table.
-    unless (
-        Sympa::Robot::update_email_netidmap_db(
-            $robot_id, $email, $email
-        )
-    ) {
+    unless (Sympa::Robot::update_email_netidmap_db($robot_id, $email, $email))
+    {
         $self->add_stash($request, 'intern');
         $log->syslog('err', 'Update failed');
         return undef;
@@ -90,7 +87,7 @@ sub _twist {
 
             $user_object->expire;
             $self->add_stash($request, 'notice', 'user_removed',
-                             {'email' => $email, });
+                {'email' => $email,});
         }
     }
 

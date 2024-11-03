@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2021, 2023 The Sympa Community. See the
+# Copyright 2017, 2021, 2023, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -507,7 +507,8 @@ sub get_first_db_log {
     if (($select->{'date_from'} // '') =~ /\A$html_date_re\z/) {
         my ($yyyy, $mm, $dd) = split /[^\da-z]/i, $select->{'date_from'};
 
-        my $date_from = POSIX::mktime(0, 0, -1, $dd + 0, $mm - 1, $yyyy - 1900);
+        my $date_from =
+            POSIX::mktime(0, 0, -1, $dd + 0, $mm - 1, $yyyy - 1900);
         unless (($select->{'date_to'} // '') =~ /\A$html_date_re\z/) {
             my $date_from2 =
                 POSIX::mktime(0, 0, 25, $dd + 0, $mm - 1, $yyyy - 1900);
@@ -516,7 +517,8 @@ sub get_first_db_log {
         } else {
             my ($yyyy, $mm, $dd) = split /[^\da-z]/i, $select->{'date_to'};
 
-            my $date_to = POSIX::mktime(0, 0, 25, $dd + 0, $mm - 1, $yyyy - 1900);
+            my $date_to =
+                POSIX::mktime(0, 0, 25, $dd + 0, $mm - 1, $yyyy - 1900);
             $statement .= sprintf "AND date_logs >= %s AND date_logs <= %s ",
                 $date_from, $date_to;
         }

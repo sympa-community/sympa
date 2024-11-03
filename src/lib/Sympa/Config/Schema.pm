@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2020, 2021, 2022, 2023 The Sympa Community. See the
+# Copyright 2020, 2021, 2022, 2023, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -500,9 +500,9 @@ our %pinfo = (
         not_before => '6.2.73b.1',
     },
     log_socket_type => {
-        context    => [qw(site)],
-        obsolete   => 'syslog_socket.type',
-        not_after  => '6.2.72',
+        context   => [qw(site)],
+        obsolete  => 'syslog_socket.type',
+        not_after => '6.2.72',
     },
     log_level => {
         context    => [qw(domain site)],    #FIXME "domain" possible?

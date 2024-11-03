@@ -9,7 +9,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023 The Sympa Community.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 The Sympa Community.
 # See the AUTHORS.md file at the top-level directory of this distribution
 # and at <https://github.com/sympa-community/sympa.git>.
 #
@@ -7626,7 +7626,7 @@ sub do_distribute {
     # Don't need to do anything if all messages were filtered out
     # by the "already_moderated" clause above.
     return 'modindex' if (@mail_command == 0);
-    
+
     # Commands are injected into incoming spool directly with "md5"
     # authentication level.
     my $cmd_message = Sympa::Message->new(
@@ -15523,7 +15523,8 @@ sub do_arc_download {
             my $string = $message->as_string =~ s/\r?\n/\r\n/gr;
             if ($Archive::Zip::SimpleZip::VERSION) {
                 $rv = $zip->addString($string,
-                    Name => sprintf('%s/%s.eml', $arc_dirname, $handle->basename)
+                    Name =>
+                        sprintf('%s/%s.eml', $arc_dirname, $handle->basename)
                 );
                 $az = $Archive::Zip::SimpleZip::SimpleZipError;
             } else {
@@ -16680,13 +16681,13 @@ sub do_invite {
     if ($in{'email'}) {
         @emails =
             grep {$_} map { Sympa::Tools::Text::canonic_email($_) }
-        split /\0/, $in{'email'};
-        $log->syslog('info', 'single invite "%s"', join(' ',@emails));
+            split /\0/, $in{'email'};
+        $log->syslog('info', 'single invite "%s"', join(' ', @emails));
         unless (@emails) {
             add_stash('user', 'no_email');
             return 'review';
         }
-    } else { # addresses for multiple users (from import.tt2) are $in{dump}
+    } else {    # addresses for multiple users (from import.tt2) are $in{dump}
         foreach (split /\r\n|\r|\n/, $in{'dump'}) {
             next unless /\S/;
             next if /\A\s*#/;    #FIXME: email address can contain '#'
@@ -16694,7 +16695,7 @@ sub do_invite {
             my ($email) = m{\A\s*(\S+)(?:\s+(.*))?\s*\z};
             push @emails, $email;
         }
-        $log->syslog('info', 'multiple invite "%s"', join(' ',@emails));
+        $log->syslog('info', 'multiple invite "%s"', join(' ', @emails));
         unless (@emails) {
             add_stash('user', 'no_email');
             return 'import';
