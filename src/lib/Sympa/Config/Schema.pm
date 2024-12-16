@@ -4677,10 +4677,11 @@ our %pinfo = (
     },
 
     arc_srvid => {
-        context    => [qw(domain site)],
-        order      => 70.05,
-        group      => 'dkim',
-        gettext_id => 'Authentication service identifier (authserv-id) for Authentication-Results used in ARC seal',
+        context => [qw(domain site)],
+        order   => 70.05,
+        group   => 'dkim',
+        gettext_id =>
+            'Authentication service identifier (authserv-id) for Authentication-Results used in ARC seal',
         gettext_comment => 'Typically the domain of the mail server',
         format_s        => '$rfc2045_parameter_value',
         not_before      => '6.2.37b.1',
