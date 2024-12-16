@@ -3242,7 +3242,13 @@ sub do_sso_login {
 
         # If contacted via POST, then redirect the user to the URL for the
         # access control to apply.
-        if ($ENV{'REQUEST_METHOD'} eq 'POST') {
+        unless (
+            'GET' eq $ENV{REQUEST_METHOD}
+            and 0 == index(
+                $ENV{PATH_INFO} . '/',
+                "/sso_login/$in{'auth_service_name'}/"
+            )
+        ) {
             my @paths;
             my $service;
 
@@ -3321,7 +3327,8 @@ sub do_sso_login {
                 return 1;
             }
 
-            if (defined($in{'email'}) and !($in{'subaction'} eq 'init')) {
+            if (Sympa::Tools::Text::valid_email($in{'email'})
+                and $in{'subaction'} eq 'validateemail') {
                 $email = $in{'email'};
             }
 
@@ -3333,7 +3340,7 @@ sub do_sso_login {
 
                 ## Replace sendpassword with one time ticket
                 $param->{'one_time_ticket'} = Sympa::Ticket::create(
-                    $in{'email'},
+                    $email,
                     $robot,
                     'sso_login/confirmemail?auth_service_name='
                         . $in{'auth_service_name'},
@@ -3360,7 +3367,7 @@ sub do_sso_login {
                 # Check input parameters and verify ticket for email, stolen
                 # from do_login()
                 #
-                unless ($in{'email'}) {
+                unless (Sympa::Tools::Text::valid_email($in{'email'})) {
                     add_stash('user', 'no_email');
                     wwslog('info', 'No email');
                     web_db_log(
