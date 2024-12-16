@@ -1,8 +1,14 @@
 # Change Log
 
-## [6.2.74](https://github.com/sympa-community/sympa/tree/6.2.74) (2024-XX-XX)
+## [6.2.74](https://github.com/sympa-community/sympa/tree/6.2.74) (2024-12-16)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.72...6.2.74)
+
+**Notice:**
+
+This release includes a fix for [CVE-2024-55919] Improper input validation on generic SSO login [\#1917](https://github.com/sympa-community/sympa/issues/1917).
+
+Administorators setting `generic_sso` paragraph with `force_email_verify` parameter enabled in `auth.conf` should upgrade Sympa to this version or take measure. For more details see the Security Advisory [Sympa SA 2024-001](https://www.sympa.community/security/2024-001.html).
 
 **Incompatible changes:**
 
@@ -49,6 +55,7 @@
 
 **Fixed bugs:**
 
+- [CVE-2024-55919] Improper input validation on generic SSO login [\#1917](https://github.com/sympa-community/sympa/issues/1917)
 - DKIM signing and ARC sealing order is reversed [\#1851](https://github.com/sympa-community/sympa/issues/1851)
 - WWSynmpa: do_distribute: Confirmation was not always performed [\#1889](https://github.com/sympa-community/sympa/pull/1889)
 - WWSympa: Invalid UTF-8 sequences in input may trigger crashing [\#1884](https://github.com/sympa-community/sympa/issues/1884)
