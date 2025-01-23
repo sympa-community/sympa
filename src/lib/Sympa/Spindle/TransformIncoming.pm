@@ -166,6 +166,7 @@ sub _twist {
             my $subject_field;
             my $re_regexp = Sympa::Regexps::re();
 
+            '' =~ /()/;    # clear $1
             if ($message->{'subject_charset'}) {
                 # Note that Unicode case-ignore match is performed.
                 my $uStem =
