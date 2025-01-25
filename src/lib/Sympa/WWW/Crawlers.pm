@@ -97,7 +97,7 @@ use constant crawler => qr{
   | findthatfile
   | europarchive\.org
   | NerdByNature\.Bot
-  | sistrix[ ]crawler
+  | (sistrix|SISTRIX)[ ][cC]rawler
   | Ahrefs(Bot|SiteAudit)
   | fuelbot
   | CrunchBot
@@ -381,11 +381,15 @@ use constant crawler => qr{
   | Amazon[ ]CloudFront
   | Pulsepoint
   | CloudFlare-AlwaysOnline
+  | Cloudflare-Healthchecks
+  | Cloudflare-Traffic-Manager
+  | CloudFlare-Prefetch
+  | Cloudflare-SSLDetector
+  | https:\/\/developers\.cloudflare\.com\/security-center\/
   | Google-Structured-Data-Testing-Tool
   | WordupInfoSearch
   | WebDataStats
   | HttpUrlConnection
-  | Seekport[ ]Crawler
   | ZoomBot
   | VelenPublicWebCrawler
   | MoodleBot
@@ -511,7 +515,7 @@ use constant crawler => qr{
   | seostar\.co
   | IonCrawl
   | Uptime-Kuma
-  | SeekportBot
+  | Seekport
   | FreshpingBot
   | Feedbin
   | CriteoBot
@@ -523,6 +527,7 @@ use constant crawler => qr{
   | OdklBot\/
   | GPTBot
   | ChatGPT-User
+  | OAI-SearchBot
   | YandexRenderResourcesBot\/
   | LightspeedSystemsCrawler
   | ev-crawler\/
@@ -586,6 +591,14 @@ use constant crawler => qr{
   | [cC]laude[bB]ot
   | Monsidobot
   | GroupMeBot
+  | Vercelbot
+  | vercel-screenshot
+  | facebookcatalog\/
+  | meta-externalagent\/
+  | meta-externalfetcher\/
+  | AcademicBotRTU
+  | KeybaseBot
+  | CookieHubScan
   )
 }x;
 
