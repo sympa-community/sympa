@@ -473,16 +473,24 @@
         [% IF topic_required ~%]
             <h3>[%|loc%]This list is configured to require topic(s).[%END%]</h3>
         [%~ END %]
-        <p>[%|loc%]Please select one or more topic(s) that corresponds to the messages you wish to distribute:[%END%]</p>
-        <ul>
+        [% IF listconf.msg_topic && listconf.msg_topic.size ~%]
+            <p>[%|loc%]Please select one or more topic(s) that corresponds to the messages you wish to distribute:[%END%]</p>
+            <ul>
             [% FOREACH t = listconf.msg_topic ~%]
                 [% NEXT UNLESS t && t.name ~%]
-                    <li>
-                        <input type="checkbox" name="topic" id="topic_[%t.name%]" value="[% t.name %]" />
-                        <label for="topic_[%t.name%]">[% t.title %] </label>
-                    </li>
+                <li>
+                    <input type="checkbox" name="topic" id="topic_[%t.name%]"
+                     value="[% t.name %]"
+                     [%~ IF topic && topic.size ~%]
+                         [% FOREACH tp = topic ~%]
+                             [% IF t.name == tp %] checked[% END %]
+                         [%~ END %]
+                     [%~ END %] />
+                    <label for="topic_[%t.name%]">[% t.title %] </label>
+                </li>
             [%~ END %]
-        </ul>
+            </ul>
+        [% END %]
     [%~ ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
         <input type="hidden" name="d_admin" value="[% d_admin %]" />
     [%~ ELSIF confirm_action == 'd_delete' ~%]
