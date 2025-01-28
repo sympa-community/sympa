@@ -332,14 +332,9 @@ sub split_listname {
 
     my $return_path_suffix =
         Conf::get_robot_conf($robot_id, 'return_path_suffix');
-    my $regexp = join(
-        '|',
+    my $regexp = join '|',
         map { quotemeta $_ }
-            grep { $_ and length $_ }
-            split(
-            /[\s,]+/, Conf::get_robot_conf($robot_id, 'list_check_suffixes')
-            )
-    );
+        @{Conf::get_robot_conf($robot_id, 'list_check_suffixes') // []};
 
     if (    $mailbox eq 'sympa'
         and $robot_id eq $Conf::Conf{'domain'}) {    # compat.
