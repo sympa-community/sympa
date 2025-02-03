@@ -1,5 +1,16 @@
 # Change Log
 
+## [6.2.76](https://github.com/sympa-community/sympa/tree/6.2.76) (2025-02-04)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.74...6.2.76)
+
+**Fixed bugs:**
+
+* Bug in `custom_subject` rendering [\#1924](https://github.com/sympa-community/sympa/issues/1924).
+* `LISTNAME-request@DOMAIN` aliases are not supported [\#1922](https://github.com/sympa-community/sympa/issues/1922).
+* Bulk moderation of messages is broken [\#1926](https://github.com/sympa-community/sympa/issues/1926).
+* Broken "distribute" confirmation [\#1932](https://github.com/sympa-community/sympa/issues/1932).
+
 ## [6.2.74](https://github.com/sympa-community/sympa/tree/6.2.74) (2024-12-16)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.72...6.2.74)
