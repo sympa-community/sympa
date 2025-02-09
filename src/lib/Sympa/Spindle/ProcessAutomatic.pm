@@ -367,6 +367,22 @@ sub _twist {
         $log->syslog('info',
             'Successfully create list %s with %s subscribers',
             $list, $list->get_total());
+        unless (defined $list->sync_include('owner')) {
+            $log->syslog(
+                'err',
+                'Failed to synchronize list owners of dynamic list %s from %s family',
+                $list,
+                $dyn_list_family
+            );
+        }
+        unless (defined $list->sync_include('editor')) {
+            $log->syslog(
+                'err',
+                'Failed to synchronize list editors of dynamic list %s from %s family',
+                $list,
+                $dyn_list_family
+            );
+        }
     }
 
     # Do not process messages in list creation.  Move them to main spool.
