@@ -7,7 +7,7 @@
     - . ~/bashrc
     - coverage-install
     - coverage-setup
-    - cpanm --quiet --notest --installdeps --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
+    - cpanm --quiet --notest --installdeps --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=smime --with-feature=soap --with-feature=sqlite .
     - autoreconf -i
     - ./configure
     - cd src; make; cd ..
