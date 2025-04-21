@@ -410,6 +410,16 @@ sub _url_query_string {
     }
 }
 
+#FIXME: rand() is not cryptographically secure, despite CSP requesting.
+sub nonce {
+    my $md5 = Digest::MD5->new;
+    $md5->add(time);
+    foreach (0..7) {
+        $md5->add(pack 'S', int rand(2 << 16 - 1));
+    }
+    return MIME::Base64::encode_base64url($md5->digest);
+}
+
 sub permalink_id {
     my $message_id = shift;
 
