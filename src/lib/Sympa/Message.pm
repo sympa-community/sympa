@@ -3383,10 +3383,16 @@ sub dmarc_protect {
     if ($from) {
         # We should always have a From address in reality, unless the
         # message is from a badly-behaved automate.
-        my $origName =
-            MIME::EncWords::decode_mimewords($from->phrase,
-            Charset => 'UTF-8')
-            if defined $from->phrase;
+        my $origName;
+        if (defined $from->phrase) {
+            $origName =
+                MIME::EncWords::decode_mimewords($from->phrase,
+                Charset => 'UTF-8');
+            # If the phrase was encoded using RFC 2047, it is now unquoted. If it was
+            # not RFC 2047, it remains unchanged, so we manually strip the quotes away
+            # if there are any.
+            $origName =~ s/^"(.*)"$/$1/;
+        }
         unless (defined $origName and $origName =~ /\S/) {
             # If we dont have a Phrase, should we search the Sympa
             # database for the sender to obtain their name that way?
