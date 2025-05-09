@@ -48,10 +48,11 @@ jobs:
           brew install pkg-config
       - name: Workaround for macOS
         if: runner.os == 'macOS'
-        # For Crypt::SMIME
-        run: >
-          echo "PKG_CONFIG_PATH=$(brew --prefix openssl)/lib/pkgconfig"
-          >> $GITHUB_ENV
+        run: |
+          # For gettext 0.24.1
+          echo "ACLOCAL_PATH=$(brew --prefix gettext)/share/gettext/m4" >> $GITHUB_ENV
+          # For Crypt::SMIME
+          echo "PKG_CONFIG_PATH=$(brew --prefix openssl)/lib/pkgconfig" >> $GITHUB_ENV
       - name: Set up Perl
         uses: shogo82148/actions-setup-perl@v1
         with:
