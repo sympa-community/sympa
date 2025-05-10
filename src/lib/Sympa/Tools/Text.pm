@@ -45,7 +45,7 @@ BEGIN { eval 'use Unicode::UTF8 qw()'; }
 use Sympa::Language;
 use Sympa::Regexps;
 
-my $email_re = Sympa::Regexps::email();
+my $email_re = Sympa::Regexps::email(1);
 my $email_like_re = sprintf '(?:<%s>|%s)', Sympa::Regexps::email(),
     Sympa::Regexps::email();
 
@@ -103,14 +103,34 @@ sub canonic_email {
 
     return undef unless defined $email;
 
+    my $e =
+        ($email =~ /[^\x00-\x7F]/ and not Encode::is_utf8($email))
+        ? Encode::decode_utf8($email)
+        : $email;
+
     # Remove leading and trailing white spaces.
-    $email =~ s/\A\s+//;
-    $email =~ s/\s+\z//;
+    # Characters with White_Space property are removed.
+    $e =~ s/\A\s+//;
+    $e =~ s/\s+\z//;
 
-    # Lower-case.
-    $email =~ tr/A-Z/a-z/;
+    # Invalid sequences won't be canonicalized.
+    return undef unless length $e;
+    return undef unless valid_email($e);
 
-    return (length $email) ? $email : undef;
+    my ($l, $d) = split /\@/, $e, 2;
+
+    # Normalize domain part in NFKC and toLowerCase(), because "Unstable"
+    # characters (cf. RFC5892) are disallowed. OTOH in local part they can be
+    # allowed, so NFC is applied and only ASCII letters are folded.
+    $l = Unicode::Normalize::NFC($l) =~ tr/A-Z/a-z/r;
+    $d = Unicode::Normalize::NFKC(lc Unicode::Normalize::NFKC($d));
+
+    $e = sprintf '%s@%s', $l, $d;
+
+    return Encode::encode_utf8($e)
+        if Encode::is_utf8($e)
+        and not Encode::is_utf8($email);
+    return $e;
 }
 
 # Old name: tools::clean_msg_id().
@@ -539,12 +559,34 @@ sub _gc_length {
 # Moved to: Sympa::Upgrade::_unescape_chars().
 #sub unescape_chars;
 
+# See RFC5892, 2.6: They would otherwise have been DISALLOWED.
+use constant InIDNAExceptions =>
+    "00DF\n03C2\n06FD\n06FE\n0F0B\n3007\n00B7\n0375\n05F3\n05F4\n30FB\n";
+
 # Old name: tools::valid_email().
 sub valid_email {
     my $email = shift;
 
+    return undef unless defined $email;
+    # Eliminate non-UTF-8 sequences and/or non-characters.
+    my $b = Encode::is_utf8($email) ? Encode::encode_utf8($email) : $email;
+    return undef unless Unicode::UTF8::valid_utf8($b);
+
+    $email = Encode::decode_utf8($email) unless Encode::is_utf8($email);
     return undef
-        unless defined $email and $email =~ /\A$email_re\z/;
+        unless $email =~ /\A$email_re\z/;
+
+    my ($l, $d) = split /\@/, $email, 2;
+
+    # Normalize in NFKC to handle some compatibility characters properly.
+    $d = Unicode::Normalize::NFKC($d);
+    # The character class accepted by IDNA roughly matches \p{word} (\w).
+    # So use it to reject obviously disallowed characters.
+    return undef
+        if grep {/[^\p{InIDNAExceptions}||\p{word}||\p{Unassigned}]/}
+        split /[-.]+/, $d;
+    # Check illegal sequences in domain labels.
+    return undef if $d =~ /(?:\A|[-.])(?:[-.]|\z)/;
 
     return 1;
 }
@@ -614,7 +656,8 @@ Returns canonical form of e-mail address.
 Leading and trailing white spaces are removed.
 Latin letters without accents are lower-cased.
 
-For malformed inputs returns C<undef>.
+For malformed or illegal inputs returns C<undef>.
+Be sure to check the input with C<valid_email()> to guarantee correct results.
 
 =item canonic_message_id ( $message_id )
 
