@@ -15,6 +15,8 @@ my $unicode_email =
 
 is Sympa::Tools::Text::canonic_email($email),
     q{&'+-./09=_a@z.a-z}, 'canonic_email';
+is Sympa::Tools::Text::canonic_email($unicode_email),
+    $unicode_email, 'canonic_email, intl\'ed';
 is Sympa::Tools::Text::canonic_email("\t\r\n "), undef,
     'canonic_email, whitespaces';
 is Sympa::Tools::Text::canonic_email(undef), undef,
