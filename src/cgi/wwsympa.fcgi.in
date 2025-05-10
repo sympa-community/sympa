@@ -9,7 +9,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023 The Sympa Community.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 The Sympa Community.
 # See the AUTHORS.md file at the top-level directory of this distribution
 # and at <https://github.com/sympa-community/sympa.git>.
 #
@@ -3220,7 +3220,13 @@ sub do_sso_login {
 
         # If contacted via POST, then redirect the user to the URL for the
         # access control to apply.
-        if ($ENV{'REQUEST_METHOD'} eq 'POST') {
+        unless (
+            'GET' eq $ENV{REQUEST_METHOD}
+            and 0 == index(
+                $ENV{PATH_INFO} . '/',
+                "/sso_login/$in{'auth_service_name'}/"
+            )
+        ) {
             my @paths;
             my $service;
 
@@ -3299,7 +3305,8 @@ sub do_sso_login {
                 return 1;
             }
 
-            if (defined($in{'email'}) and !($in{'subaction'} eq 'init')) {
+            if (Sympa::Tools::Text::valid_email($in{'email'})
+                and $in{'subaction'} eq 'validateemail') {
                 $email = $in{'email'};
             }
 
@@ -3311,7 +3318,7 @@ sub do_sso_login {
 
                 ## Replace sendpassword with one time ticket
                 $param->{'one_time_ticket'} = Sympa::Ticket::create(
-                    $in{'email'},
+                    $email,
                     $robot,
                     'sso_login/confirmemail?auth_service_name='
                         . $in{'auth_service_name'},
@@ -3338,7 +3345,7 @@ sub do_sso_login {
                 # Check input parameters and verify ticket for email, stolen
                 # from do_login()
                 #
-                unless ($in{'email'}) {
+                unless (Sympa::Tools::Text::valid_email($in{'email'})) {
                     add_stash('user', 'no_email');
                     wwslog('info', 'No email');
                     web_db_log(
@@ -7604,7 +7611,7 @@ sub do_distribute {
     # Don't need to do anything if all messages were filtered out
     # by the "already_moderated" clause above.
     return 'modindex' if (@mail_command == 0);
-    
+
     # Commands are injected into incoming spool directly with "md5"
     # authentication level.
     my $cmd_message = Sympa::Message->new(
@@ -16614,13 +16621,13 @@ sub do_invite {
     if ($in{'email'}) {
         @emails =
             grep {$_} map { Sympa::Tools::Text::canonic_email($_) }
-        split /\0/, $in{'email'};
-        $log->syslog('info', 'single invite "%s"', join(' ',@emails));
+            split /\0/, $in{'email'};
+        $log->syslog('info', 'single invite "%s"', join(' ', @emails));
         unless (@emails) {
             add_stash('user', 'no_email');
             return 'review';
         }
-    } else { # addresses for multiple users (from import.tt2) are $in{dump}
+    } else {    # addresses for multiple users (from import.tt2) are $in{dump}
         foreach (split /\r\n|\r|\n/, $in{'dump'}) {
             next unless /\S/;
             next if /\A\s*#/;    #FIXME: email address can contain '#'
@@ -16628,7 +16635,7 @@ sub do_invite {
             my ($email) = m{\A\s*(\S+)(?:\s+(.*))?\s*\z};
             push @emails, $email;
         }
-        $log->syslog('info', 'multiple invite "%s"', join(' ',@emails));
+        $log->syslog('info', 'multiple invite "%s"', join(' ', @emails));
         unless (@emails) {
             add_stash('user', 'no_email');
             return 'import';

@@ -3,7 +3,7 @@
 
 # Minimum version of Perl required.
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
-requires 'perl', '5.16.0';
+requires 'perl', '5.26.0';
 
 # Used to zip/unzip for archive and shared document download/upload.
 requires 'Archive::Zip::SimpleUnzip', '>= 0.024';
@@ -322,7 +322,7 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
 };
 
 feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
-    # Note: These became required (>=6.2.73b).
+    # Note: These became required (>=6.2.77b).
     #requires 'Unicode::Normalize', '>= 1.03';
     #requires 'Unicode::UTF8', '>= 0.58';
 };

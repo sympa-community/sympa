@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2020, 2021, 2022, 2023 The Sympa Community. See the
+# Copyright 2020, 2021, 2022, 2023, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -500,9 +500,9 @@ our %pinfo = (
         not_before => '6.2.73b.1',
     },
     log_socket_type => {
-        context    => [qw(site)],
-        obsolete   => 'syslog_socket.type',
-        not_after  => '6.2.72',
+        context   => [qw(site)],
+        obsolete  => 'syslog_socket.type',
+        not_after => '6.2.72',
     },
     log_level => {
         context    => [qw(domain site)],    #FIXME "domain" possible?
@@ -4677,10 +4677,11 @@ our %pinfo = (
     },
 
     arc_srvid => {
-        context    => [qw(domain site)],
-        order      => 70.05,
-        group      => 'dkim',
-        gettext_id => 'SRV ID for Authentication-Results used in ARC seal',
+        context => [qw(domain site)],
+        order   => 70.05,
+        group   => 'dkim',
+        gettext_id =>
+            'Authentication service identifier (authserv-id) for Authentication-Results used in ARC seal',
         gettext_comment => 'Typically the domain of the mail server',
         format_s        => '$rfc2045_parameter_value',
         not_before      => '6.2.37b.1',
@@ -4886,6 +4887,19 @@ our %pinfo = (
         context   => [qw(domain site)],
         obsolete  => 'dmarc_protection.phrase',
         not_after => '6.2.56',
+    },
+
+    remove_dkim_headers => {
+        context    => [qw(list domain site)],
+        order      => 70.08,
+        group      => 'dkim',
+        gettext_id => 'Remove DKIM signatures in incoming messages',
+        gettext_comment =>
+            'Normally this should be turned off. It can be turned on when DKIM signatures that cannot be verified at the recipient site cause problems.',
+        format     => ['on', 'off'],
+        occurrence => '1',
+        default    => 'off',
+        not_before => '6.2.74',
     },
 
     ### Optional features

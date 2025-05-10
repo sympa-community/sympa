@@ -198,9 +198,8 @@ use constant _local_validations => {
         push @special, map {
             sprintf '%s-%s@%s',
                 $list->{'name'}, lc $_, $list->{'domain'}
-            }
-            split /[,\s]+/,
-            Conf::get_robot_conf($list->{'domain'}, 'list_check_suffixes');
+        } @{Conf::get_robot_conf($list->{'domain'}, 'list_check_suffixes')
+                // []};
         my $bounce_email_re = quotemeta($list->get_bounce_address('ANY'));
         $bounce_email_re =~ s/(?<=\\\+).*(?=\\\@)/.*/;
 

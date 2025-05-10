@@ -291,8 +291,7 @@ sub drop_field {
     my $field = shift;
 
     unless (
-        $self->do_query(q{ALTER TABLE %s DROP COLUMN `%s`}, $table, $field)
-    ) {
+        $self->do_query(q{ALTER TABLE %s DROP COLUMN `%s`}, $table, $field)) {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
             $field, $table, $self->{'db_name'});

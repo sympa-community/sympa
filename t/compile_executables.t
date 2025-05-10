@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 use strict;
 use warnings;
@@ -15,10 +14,8 @@ unless ($Test::Compile::Internal::VERSION) {
 } else {
     my $test  = Test::Compile::Internal->new;
     my @files = (
-        <src/sbin/*.pl>,
-        <src/libexec/*.pl>,
-        'src/cgi/wwsympa.fcgi',
-        'src/cgi/sympa_soap_server.fcgi',
+        <src/sbin/*.pl>,        <src/libexec/*.pl>,
+        'src/cgi/wwsympa.fcgi', 'src/cgi/sympa_soap_server.fcgi',
     );
     $test->plan(tests => scalar @files);
     foreach my $file (@files) {

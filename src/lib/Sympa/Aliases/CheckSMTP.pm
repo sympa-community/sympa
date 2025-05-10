@@ -48,11 +48,10 @@ sub check {
         || $smtp_relay;
     $smtp_helo =~ s/:[-\w]+$// if $smtp_helo;
 
-    my @suffixes = split /\s*,\s*/,
-        (Conf::get_robot_conf($robot_id, 'list_check_suffixes') || '');
     my @addresses = (
         sprintf('%s@%s', $name, $robot_id),
-        map { sprintf('%s-%s@%s', $name, $_, $robot_id) } @suffixes
+        map { sprintf('%s-%s@%s', $name, $_, $robot_id) }
+            @{Conf::get_robot_conf($robot_id, 'list_check_suffixes') // []}
     );
     my $return_address = sprintf '%s%s@%s', $name,
         (Conf::get_robot_conf($robot_id, 'return_path_suffix') || ''),

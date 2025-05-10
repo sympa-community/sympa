@@ -178,9 +178,9 @@ sub _report_user {
 
     if (exists $request->{reception}) {
         $reception = $request->{reception};
-    }
-    else {
-        $reception = $list->get_default_user_options(role => $role)->{reception};
+    } else {
+        $reception =
+            $list->get_default_user_options(role => $role)->{reception};
     }
 
     # Notify the new list owner/editor

@@ -245,8 +245,13 @@ sub __twist_one {
         }
     }
 
-    $message->remove_invalid_dkim_signature
-        if $rm_sig;
+    if ($rm_sig) {
+        # If it is set up, remove header fields related to DKIM signature
+        # given by upstream MTAs.
+        # AR should be removed after it is included into AAR: See below.
+        $message->delete_header('DKIM-Signature');
+        $message->delete_header('Domainkey-Signature');
+    }
 
     if ($message->{shelved}{dkim_sign} or %arc) {
         # apply DKIM signature AFTER any other message transformation.
@@ -255,6 +260,10 @@ sub __twist_one {
     }
     # DKIM signing must be done before ARC sealing. See RFC 8617, 5.1.
     $message->arc_seal(%arc) if %arc;
+
+    if ($rm_sig) {
+        $message->delete_header('Authentication-Results');
+    }
 
     # Determine envelope sender and envelope ID.
     my $envid = undef;
@@ -304,7 +313,7 @@ sub _twist {
     my $message = shift;
 
     # Get list/robot context.
-    my ($list, $robot, $arc_enabled, $dkim_enabled);
+    my ($list, $robot, $arc_enabled, $dkim_enabled, $rm_sig);
     if (ref($message->{context}) eq 'Sympa::List') {
         $list  = $message->{context};
         $robot = $message->{context}->{'domain'};
@@ -312,16 +321,19 @@ sub _twist {
         $arc_enabled = 'on' eq $list->{'admin'}{'arc_feature'};
         $dkim_enabled =
             'on' eq Conf::get_robot_conf($list->{'domain'}, 'dkim_feature');
+        $rm_sig = 'on' eq $list->{'admin'}{'remove_dkim_headers'};
     } elsif ($message->{context} and $message->{context} ne '*') {
         $robot = $message->{context};
 
         $arc_enabled  = 'on' eq Conf::get_robot_conf($robot, 'arc_feature');
         $dkim_enabled = 'on' eq Conf::get_robot_conf($robot, 'dkim_feature');
+        $rm_sig = 'on' eq Conf::get_robot_conf($robot, 'remove_dkim_headers');
     } else {
         $robot = '*';
 
         $arc_enabled  = 'on' eq $Conf::Conf{'arc_feature'};
         $dkim_enabled = 'on' eq $Conf::Conf{'dkim_feature'};
+        $rm_sig       = 'on' eq $Conf::Conf{'remove_dkim_headers'};
     }
 
     if ($message->{serial} eq '0' or $message->{serial} eq 's') {
