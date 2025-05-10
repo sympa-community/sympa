@@ -1474,12 +1474,13 @@ while ($query = Sympa::WWW::FastCGI->new) {
             my $old_subaction = $in{'subaction'};
 
             ## Check required action parameters
-            my $check_output = check_action_parameters($action);
+            my $check_action = $action eq 'move_list' && $in{'mode'} eq 'copy' ? 'copy_list' : $action;
+            my $check_output = check_action_parameters($check_action);
 
             unless (defined $check_output) {
                 delete $param->{'list'};
                 wwslog('err', 'Missing required parameters for action "%s"',
-                    $action);
+                    $check_action);
                 delete $param->{'action'};
                 last;
             } elsif ($check_output != 1) {
