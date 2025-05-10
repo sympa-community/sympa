@@ -57,7 +57,7 @@ jobs:
             --verbose --no-interactive
             --with-develop
             --with-feature=Data::Password --with-feature=ldap
-            --with-feature=safe-unicode --with-feature=smime
+            --with-feature=smime
             --with-feature=soap --with-feature=sqlite
             ${{ startsWith(matrix.os, 'macos') && '--with-feature=macos' || '' }}
       - name: Run tests
