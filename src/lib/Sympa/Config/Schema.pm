@@ -497,7 +497,7 @@ our %pinfo = (
                 format => '\d+',
             },
         },
-        not_before => '6.2.73b.1',
+        not_before => '6.2.74',
     },
     log_socket_type => {
         context   => [qw(site)],
