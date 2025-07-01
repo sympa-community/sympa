@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use Cwd qw();
 use English;    # FIXME: Avoid $MATCH usage
-use Getopt::Long;
+use Getopt::Long qw( :config no_ignore_case );
 use Pod::Usage;
 
 use constant NUL   => 0;
