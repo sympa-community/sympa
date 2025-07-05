@@ -199,11 +199,6 @@ a:visited {
     text-decoration: none;
 }
 
-a:focus {
-    outline: 0;
-    text-decoration: none;
-}
-
 a:hover, a:active {
     color: [% color_6 %];
     outline: 0;
@@ -1431,6 +1426,11 @@ span.divider{
 }
 
 /* Calendar in mhonarc_rc.tt2 */
+#ArcCalendar {
+    overflow-y: auto;
+    max-height: 9em;
+}
+
 ul.calendar {
     margin-left:0!important;
     padding-left:0!important;
@@ -1790,12 +1790,30 @@ main nav ~ h6{
     margin-top:1rem;
 }
 
-/*font-awesome specificity*/
-/* home page */
-span.fa-stack i.fa-plus-circle {
-  top: 0.65rem;
-  left: 0.8rem;
+/* Font Awesome specificity */
+/* compatibility to 4.x */
+.fa.pull-left {
+    float: left;
+    margin-right: 0.3em;
 }
+.home-submenu .fa.fa-circle.fa-stack-2x {
+    font-size: 1.715em;
+}
+.home-submenu .fa.fa-circle.fa-stack-2x:before {
+    vertical-align: -.071em;
+}
+/* override prefers-reduced-motion media feature */
+.fa-spin-pulse {
+  -webkit-animation-name: fa-spin;
+          animation-name: fa-spin;
+  -webkit-animation-direction: var(--fa-animation-direction, normal);
+          animation-direction: var(--fa-animation-direction, normal);
+  -webkit-animation-duration: var(--fa-animation-duration, 1s);
+          animation-duration: var(--fa-animation-duration, 1s);
+  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+          animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+  -webkit-animation-timing-function: var(--fa-animation-timing, steps(8));
+          animation-timing-function: var(--fa-animation-timing, steps(8)); }
 
 /* classes for defined colors */
 .color_0{
@@ -2094,5 +2112,12 @@ p.retraitita, span.retraitita {
 a, li {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
+
+[%# Accessibility %]
+[%# See https://github.com/sympa-community/sympa/issues/1752 %]
+select[multiple] option {
+    overflow-x: scroll;
+}
+[%# End Accessibility %]
 
 [%# end css.tt2 %]

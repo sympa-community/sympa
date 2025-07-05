@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2019, 2021 The Sympa Community. See the
+# Copyright 2018, 2019, 2021, 2022, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -35,7 +34,6 @@ use Sympa::List;
 use Sympa::Log;
 use Sympa::Scenario;
 use Sympa::Spool::Topic;
-use Sympa::Tools::Data;
 
 use base qw(Sympa::Spindle);
 
@@ -100,7 +98,6 @@ sub _twist {
     my $auth_method =
           $message->{'smime_signed'} ? 'smime'
         : $message->{'md5_check'}    ? 'md5'
-        : $message->{'dkim_pass'}    ? 'dkim'
         :                              'smtp';
 
     $result =
@@ -165,31 +162,21 @@ sub _twist {
     if ($action =~ /^do_it\b/) {
         $self->{quiet} ||= ($action =~ /,\s*quiet\b/);    # Overwrite.
 
+        my @apply_on =
+            @{$list->{'admin'}{'dkim_signature_apply_on'} || []};
         unless ($self->{confirmed_by}) {    # Not in ProcessHeld spindle.
             $message->{shelved}{dkim_sign} = 1
-                if Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-                or (
-                Sympa::Tools::Data::is_in_array(
-                    $list->{'admin'}{'dkim_signature_apply_on'},
-                    'smime_authenticated_messages')
-                and $message->{'smime_signed'}
-                )
-                or (
-                Sympa::Tools::Data::is_in_array(
-                    $list->{'admin'}{'dkim_signature_apply_on'},
-                    'dkim_authenticated_messages')
-                and $message->{'dkim_pass'}
-                );
+                if grep { 'any' eq $_ } @apply_on
+                or (grep { 'smime_authenticated_messages' eq $_ } @apply_on
+                and $message->{'smime_signed'})
+                or (grep { 'dkim_authenticated_messages' eq $_ } @apply_on
+                and $message->{'dkim_pass'});
         } else {
             $message->add_header('X-Validation-by', $self->{confirmed_by});
 
             $message->{shelved}{dkim_sign} = 1
-                if Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'}, 'any')
-                or Sympa::Tools::Data::is_in_array(
-                $list->{'admin'}{'dkim_signature_apply_on'},
-                'md5_authenticated_messages');
+                if grep { 'any' eq $_ } @apply_on
+                or grep { 'md5_authenticated_messages' eq $_ } @apply_on;
         }
 
         # Keep track of known message IDs...if any.

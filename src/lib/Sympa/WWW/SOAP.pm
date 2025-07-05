@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,9 +7,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -53,12 +52,21 @@ my %types = (
         'isOwner'      => 'boolean',
         'isEditor'     => 'boolean',
         'subject'      => 'string',
+        'info'         => 'string',
         'email'        => 'string',
         'gecos'        => 'string'
     }
 );
 
 my $log = Sympa::Log->instance;
+
+sub _map_encode_utf8 {
+    return map {
+              ref $_ eq 'ARRAY'   ? [_map_encode_utf8(@$_)]
+            : Encode::is_utf8($_) ? Encode::encode_utf8($_)
+            : $_
+    } @_;
+}
 
 sub checkCookie {
     my $class = shift;
@@ -73,19 +81,20 @@ sub checkCookie {
 
     $log->syslog('debug', 'SOAP checkCookie');
 
-    return SOAP::Data->name('result')->type('string')->value($sender);
+    return Sympa::WWW::SOAP::Data->name('result')->type('string')
+        ->value($sender);
 }
 
 sub lists {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('notice', '(%s, %s, %s, %s)', @_);
     my $self     = shift;         #$self is a service object
     my $topic    = shift;
     my $subtopic = shift;
     my $mode     = shift // '';
 
     my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
-
-    $log->syslog('notice', '(%s, %s, %s)', $topic, $subtopic, $sender);
+    my $robot  = $ENV{SYMPA_DOMAIN};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -121,9 +130,9 @@ sub lists {
 
         my $listInfo;
         if ($mode eq 'complex') {
-            $listInfo = struct_to_soap($result_item);
+            $listInfo = _struct_to_soap($result_item);
         } else {
-            $listInfo = struct_to_soap($result_item, 'as_string');
+            $listInfo = _struct_to_soap($result_item, 'as_string');
         }
 
         ## no topic ; List all lists
@@ -144,17 +153,18 @@ sub lists {
         }
     }
 
-    return SOAP::Data->name('listInfo')->value(\@result);
+    return Sympa::WWW::SOAP::Data->name('listInfo')->value(\@result);
 }
 
 sub login {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('notice', '(%s, %s, ?)', @_);
     my $class  = shift;
     my $email  = shift;
     my $passwd = shift;
 
     my $http_host = $ENV{'SERVER_NAME'};
-    my $robot     = $ENV{'SYMPA_ROBOT'};
-    $log->syslog('notice', '(%s)', $email);
+    my $robot     = $ENV{SYMPA_DOMAIN};
 
     #foreach my  $k (keys %ENV) {
     #$log->syslog('notice', 'ENV %s = %s', $k, $ENV{$k});
@@ -192,26 +202,27 @@ sub login {
     ## Create Sympa::WWW::Session object
     my $session =
         Sympa::WWW::Session->new($robot, {cookie => $ENV{SESSION_ID}});
-    $ENV{'USER_EMAIL'} = $email;
-    $session->{'email'} = $email;
-    $session->store();
+    $session->{'email'} = $ENV{USER_EMAIL} =
+        Sympa::Tools::Text::canonic_email($email);
+    $session->store;
 
     ## Note that id_session changes each time it is saved in the DB
     $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     ## Also return the cookie value
-    return SOAP::Data->name('result')->type('string')
+    return Sympa::WWW::SOAP::Data->name('result')->type('string')
         ->value($ENV{SESSION_ID});
 }
 
 sub casLogin {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('notice', '(%s, %s)', @_);
     my $class       = shift;
     my $proxyTicket = shift;
 
     my $http_host = $ENV{'SERVER_NAME'};
     my $sender    = $ENV{'USER_EMAIL'};
-    my $robot     = $ENV{'SYMPA_ROBOT'};
-    $log->syslog('notice', '(%s)', $proxyTicket);
+    my $robot     = $ENV{SYMPA_DOMAIN};
 
     unless ($http_host and $proxyTicket) {
         $log->syslog('err', 'Incorrect number of parameters');
@@ -278,30 +289,30 @@ sub casLogin {
     ## Create Sympa::WWW::Session object
     my $session =
         Sympa::WWW::Session->new($robot, {cookie => $ENV{SESSION_ID}});
-    $ENV{'USER_EMAIL'} = $email;
-    $session->{'email'} = $email;
-    $session->store();
+    $session->{'email'} = $ENV{USER_EMAIL} =
+        Sympa::Tools::Text::canonic_email($email);
+    $session->store;
 
     ## Note that id_session changes each time it is saved in the DB
     $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     ## Also return the cookie value
-    return SOAP::Data->name('result')->type('string')
+    return Sympa::WWW::SOAP::Data->name('result')->type('string')
         ->value($ENV{SESSION_ID});
 }
 
 ## Used to call a service as an authenticated user without using HTTP cookies
 ## First parameter is the secret contained in the cookie
 sub authenticateAndRun {
-    my ($self, $email, $cookie, $service, $parameters) = @_;
-    my $session_id;
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('notice', '(%s, %s, %.0s, %s, %s)', @_);
+    my $self       = shift;
+    my $email      = shift;
+    my $cookie     = shift;
+    my $service    = shift;
+    my $parameters = shift;
 
-    if ($parameters) {
-        $log->syslog('notice', '(%s, %s, %s, %s)',
-            $email, $cookie, $service, join(',', @$parameters));
-    } else {
-        $log->syslog('notice', '(%s, %s, %s)', $email, $cookie, $service);
-    }
+    my $session_id;
 
     unless ($cookie and $service) {
         $log->syslog('err', "Missing parameter");
@@ -313,7 +324,7 @@ sub authenticateAndRun {
     ## Provided email is not trusted, we fetch the user email from the
     ## session_table instead
     my $session =
-        Sympa::WWW::Session->new($ENV{'SYMPA_ROBOT'}, {cookie => $cookie});
+        Sympa::WWW::Session->new($ENV{SYMPA_DOMAIN}, {cookie => $cookie});
 
     unless (defined $session
         && !$session->{'new_session'}
@@ -325,7 +336,7 @@ sub authenticateAndRun {
             ->faultstring('Could not get email from cookie')->faultdetail('');
     }
 
-    $ENV{'USER_EMAIL'} = $email;
+    $ENV{'USER_EMAIL'} = Sympa::Tools::Text::canonic_email($email);
     $ENV{'SESSION_ID'} = $session->{'id_session'};
 
     no strict 'refs';
@@ -334,9 +345,10 @@ sub authenticateAndRun {
 ## request user email from http cookie
 ##
 sub getUserEmailByCookie {
-    my ($self, $cookie) = @_;
-
-    $log->syslog('debug3', '(%s)', $cookie);
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('debug3', '(%s,%s)', @_);
+    my $self   = shift;
+    my $cookie = shift;
 
     unless ($cookie) {
         $log->syslog('err', "Missing parameter cookie");
@@ -345,7 +357,7 @@ sub getUserEmailByCookie {
     }
 
     my $session =
-        Sympa::WWW::Session->new($ENV{'SYMPA_ROBOT'}, {'cookie' => $cookie});
+        Sympa::WWW::Session->new($ENV{SYMPA_DOMAIN}, {'cookie' => $cookie});
 
     unless (defined $session && ($session->{'email'} ne 'unkown')) {
         $log->syslog('err', 'Failed to load session for %s', $cookie);
@@ -353,7 +365,7 @@ sub getUserEmailByCookie {
             ->faultstring('Could not get email from cookie')->faultdetail('');
     }
 
-    return SOAP::Data->name('result')->type('string')
+    return Sympa::WWW::SOAP::Data->name('result')->type('string')
         ->value($session->{'email'});
 
 }
@@ -366,15 +378,16 @@ sub getUserEmailByCookie {
 ##   4nd is service name requested
 ##   5nd service parameters
 sub authenticateRemoteAppAndRun {
-    my ($self, $appname, $apppassword, $vars, $service, $parameters) = @_;
-    my $robot = $ENV{'SYMPA_ROBOT'};
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('notice', '(%s, %s, %.0s, %s, %s, %s)', @_);
+    my $self        = shift;
+    my $appname     = shift;
+    my $apppassword = shift;
+    my $vars        = shift;
+    my $service     = shift;
+    my $parameters  = shift;
 
-    if ($parameters) {
-        $log->syslog('notice', '(%s, %s, %s, %s)',
-            $appname, $vars, $service, join(',', @$parameters));
-    } else {
-        $log->syslog('notice', '(%s, %s, %s)', $appname, $vars, $service);
-    }
+    my $robot = $ENV{SYMPA_DOMAIN};
 
     unless ($appname and $apppassword and $service) {
         die SOAP::Fault->faultcode('Client')
@@ -423,11 +436,14 @@ sub authenticateRemoteAppAndRun {
 }
 
 sub amI {
-    my ($class, $listname, $function, $user) = @_;
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('notice', '(%s, %s, %s, %s)', @_);
+    my $class    = shift;
+    my $listname = shift;
+    my $function = shift;
+    my $user     = shift;
 
-    my $robot = $ENV{'SYMPA_ROBOT'};
-
-    $log->syslog('notice', '(%s, %s, %s)', $listname, $function, $user);
+    my $robot = $ENV{SYMPA_DOMAIN};
 
     unless ($listname and $user and $function) {
         die SOAP::Fault->faultcode('Client')
@@ -435,20 +451,16 @@ sub amI {
             ->faultdetail('Use : <list> <function> <user email>');
     }
 
-    $listname = lc($listname);
     my $list = Sympa::List->new($listname, $robot);
-
-    $log->syslog('debug', '(%s)', $listname);
-
     if ($list) {
         if ($function eq 'subscriber') {
-            return SOAP::Data->name('result')->type('boolean')
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
                 ->value($list->is_list_member($user));
         } elsif ($function eq 'editor') {
-            return SOAP::Data->name('result')->type('boolean')
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
                 ->value($list->is_admin('actual_editor', $user));
         } elsif ($function eq 'owner') {
-            return SOAP::Data->name('result')->type('boolean')
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
                 ->value($list->is_admin('owner', $user)
                     || Sympa::is_listmaster($list, $user));
         } else {
@@ -464,11 +476,13 @@ sub amI {
 }
 
 sub info {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('notice', '(%s, %s)', @_);
     my $class    = shift;
     my $listname = shift;
 
     my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
+    my $robot  = $ENV{SYMPA_DOMAIN};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -481,8 +495,6 @@ sub info {
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <list>');
     }
-
-    $log->syslog('notice', '(%s)', $listname);
 
     my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
@@ -505,7 +517,7 @@ sub info {
         unless (defined $action);
 
     if ($action =~ /reject/i) {
-        my $reason_string = get_reason_string(
+        my $reason_string = _get_reason_string(
             [{action => 'info'}, 'auth', $result->{'reason'}], $robot);
         $log->syslog('info', 'Info %s from %s refused (not allowed)',
             $listname, $sender);
@@ -516,32 +528,38 @@ sub info {
         my $result_item;
 
         $result_item->{'listAddress'} =
-            SOAP::Data->name('listAddress')->type('string')
+            Sympa::WWW::SOAP::Data->name('listAddress')->type('string')
             ->value(Sympa::get_address($list));
         $result_item->{'subject'} =
-            SOAP::Data->name('subject')->type('string')
+            Sympa::WWW::SOAP::Data->name('subject')->type('string')
             ->value($list->{'admin'}{'subject'});
+        $result_item->{'info'} =
+            Sympa::WWW::SOAP::Data->name('info')->type('string')
+            ->value($list->get_info);
         $result_item->{'homepage'} =
-            SOAP::Data->name('homepage')->type('string')
+            Sympa::WWW::SOAP::Data->name('homepage')->type('string')
             ->value(Sympa::get_url($list, 'info'));
 
         ## determine status of user
         if ($list->is_admin('owner', $sender)
             or Sympa::is_listmaster($list, $sender)) {
             $result_item->{'isOwner'} =
-                SOAP::Data->name('isOwner')->type('boolean')->value(1);
+                Sympa::WWW::SOAP::Data->name('isOwner')->type('boolean')
+                ->value(1);
         }
         if ($list->is_admin('actual_editor', $sender)) {
             $result_item->{'isEditor'} =
-                SOAP::Data->name('isEditor')->type('boolean')->value(1);
+                Sympa::WWW::SOAP::Data->name('isEditor')->type('boolean')
+                ->value(1);
         }
         if ($list->is_list_member($sender)) {
             $result_item->{'isSubscriber'} =
-                SOAP::Data->name('isSubscriber')->type('boolean')->value(1);
+                Sympa::WWW::SOAP::Data->name('isSubscriber')->type('boolean')
+                ->value(1);
         }
 
-        #push @result, SOAP::Data->type('listType')->value($result_item);
-        return SOAP::Data->value([$result_item]);
+        #push @result, Sympa::WWW::SOAP::Data->type('listType')->value($result_item);
+        return Sympa::WWW::SOAP::Data->value([$result_item]);
     }
     $log->syslog('info',
         'Info %s from %s aborted, unknown requested action in scenario',
@@ -554,11 +572,8 @@ sub info {
 }
 
 sub createList {
-    $log->syslog(
-        'info',
-        '(%s, listname=%s, subject=%s, template=%s, description=%s, topics=%s)',
-        @_
-    );
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('info', '(%s, %s, %s, %s, %s, %s)', @_);
     my $class       = shift;
     my $listname    = shift;
     my $subject     = shift;
@@ -567,7 +582,7 @@ sub createList {
     my $topics      = shift;
 
     my $sender                  = $ENV{'USER_EMAIL'};
-    my $robot                   = $ENV{'SYMPA_ROBOT'};
+    my $robot                   = $ENV{SYMPA_DOMAIN};
     my $remote_application_name = $ENV{'remote_application_name'};
 
     unless ($sender) {
@@ -643,7 +658,7 @@ sub createList {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
-        my $reason_string = get_reason_string($report, $robot);
+        my $reason_string = _get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
@@ -651,25 +666,25 @@ sub createList {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub closeList {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('info', '(%s, %s)', @_);
     my $class    = shift;
     my $listname = shift;
 
     my $sender                  = $ENV{'USER_EMAIL'};
-    my $robot                   = $ENV{'SYMPA_ROBOT'};
+    my $robot                   = $ENV{SYMPA_DOMAIN};
     my $remote_application_name = $ENV{'remote_application_name'};
-
-    $log->syslog('info', '(list = %s\@%s) From %s via proxy application %s',
-        $listname, $robot, $sender, $remote_application_name);
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -722,7 +737,7 @@ sub closeList {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
-        my $reason_string = get_reason_string($report, $robot);
+        my $reason_string = _get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
@@ -730,16 +745,19 @@ sub closeList {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub add {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('info', '(%s, %s, %s, %s, %s)', @_);
     my $class    = shift;
     my $listname = shift;
     my $email    = shift;
@@ -747,19 +765,8 @@ sub add {
     my $quiet    = shift;
 
     my $sender                  = $ENV{'USER_EMAIL'};
-    my $robot                   = $ENV{'SYMPA_ROBOT'};
+    my $robot                   = $ENV{SYMPA_DOMAIN};
     my $remote_application_name = $ENV{'remote_application_name'};
-
-    $log->syslog(
-        'info',
-        '(list = %s@%s, email = %s, quiet = %s) From %s via proxy application %s',
-        $listname,
-        $robot,
-        $email,
-        $quiet,
-        $sender,
-        $remote_application_name
-    );
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -811,7 +818,7 @@ sub add {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
-        my $reason_string = get_reason_string($report, $robot);
+        my $reason_string = _get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
@@ -819,35 +826,27 @@ sub add {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub del {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('info', '(%s, %s, %s, %s)', @_);
     my $class    = shift;
     my $listname = shift;
     my $email    = shift;
     my $quiet    = shift;
 
     my $sender                  = $ENV{'USER_EMAIL'};
-    my $robot                   = $ENV{'SYMPA_ROBOT'};
+    my $robot                   = $ENV{SYMPA_DOMAIN};
     my $remote_application_name = $ENV{'remote_application_name'};
-
-    $log->syslog(
-        'info',
-        '(list = %s@%s, email = %s, quiet = %s) From %s via proxy application %s',
-        $listname,
-        $robot,
-        $email,
-        $quiet,
-        $sender,
-        $remote_application_name
-    );
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -893,7 +892,7 @@ sub del {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
-        my $reason_string = get_reason_string($report, $robot);
+        my $reason_string = _get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
@@ -901,21 +900,24 @@ sub del {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub review {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('debug', '(%s, %s)', @_);
     my $class    = shift;
     my $listname = shift;
 
     my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
+    my $robot  = $ENV{SYMPA_DOMAIN};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -930,8 +932,6 @@ sub review {
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <list>');
     }
-
-    $log->syslog('debug', '(%s, %s)', $listname, $robot);
 
     my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
@@ -960,7 +960,7 @@ sub review {
         unless (defined $action);
 
     if ($action =~ /reject/i) {
-        my $reason_string = get_reason_string(
+        my $reason_string = _get_reason_string(
             [{action => 'review'}, 'auth', $result->{'reason'}], $robot);
         $log->syslog('info', 'Review %s from %s refused (not allowed)',
             $listname, $sender);
@@ -975,9 +975,10 @@ sub review {
             $log->syslog('err', 'No subscribers in list "%s"',
                 $list->{'name'});
             push @resultSoap,
-                SOAP::Data->name('result')->type('string')
+                Sympa::WWW::SOAP::Data->name('result')->type('string')
                 ->value('no_subscribers');
-            return SOAP::Data->name('return')->value(\@resultSoap);
+            return Sympa::WWW::SOAP::Data->name('return')
+                ->value(\@resultSoap);
         }
         do {
             ## Owners bypass the visibility option
@@ -987,13 +988,13 @@ sub review {
                 ## Lower case email address
                 $user->{'email'} =~ y/A-Z/a-z/;
                 push @resultSoap,
-                    SOAP::Data->name('item')->type('string')
+                    Sympa::WWW::SOAP::Data->name('item')->type('string')
                     ->value($user->{'email'});
             }
         } while ($user = $list->get_next_list_member());
         $log->syslog('info', 'Review %s from %s accepted', $listname,
             $sender);
-        return SOAP::Data->name('return')->value(\@resultSoap);
+        return Sympa::WWW::SOAP::Data->name('return')->value(\@resultSoap);
     }
     $log->syslog('info',
         'Review %s from %s aborted, unknown requested action in scenario',
@@ -1006,11 +1007,13 @@ sub review {
 }
 
 sub fullReview {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('debug', '(%s, %s)', @_);
     my $class    = shift;
     my $listname = shift;
 
     my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
+    my $robot  = $ENV{SYMPA_DOMAIN};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -1023,8 +1026,6 @@ sub fullReview {
             ->faultstring('Incorrect number of parameters')
             ->faultdetail('Use : <list>');
     }
-
-    $log->syslog('debug', '(%s, %s)', $listname, $robot);
 
     my $list = Sympa::List->new($listname, $robot);
     unless ($list) {
@@ -1082,20 +1083,21 @@ sub fullReview {
 
     my @result;
     foreach my $email (keys %$members) {
-        push @result, struct_to_soap($members->{$email});
+        push @result, _struct_to_soap($members->{$email});
     }
 
     $log->syslog('info', 'FullReview %s from %s accepted', $listname,
         $sender);
-    return SOAP::Data->name('return')->value(\@result);
+    return Sympa::WWW::SOAP::Data->name('return')->value(\@result);
 }
 
 sub signoff {
+    @_ = _map_encode_utf8(@_);
     $log->syslog('notice', '(%s, %s)', @_);
     my ($class, $listname) = @_;
 
     my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
+    my $robot  = $ENV{SYMPA_DOMAIN};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -1131,7 +1133,7 @@ sub signoff {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
-        my $reason_string = get_reason_string($report, $robot);
+        my $reason_string = _get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
@@ -1139,21 +1141,25 @@ sub signoff {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub subscribe {
+    @_ = _map_encode_utf8(@_);
     $log->syslog('notice', '(%s, %s, %s)', @_);
-    my ($class, $listname, $gecos) = @_;
+    my $class    = shift;
+    my $listname = shift;
+    my $gecos    = shift;
 
     my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
+    my $robot  = $ENV{SYMPA_DOMAIN};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -1191,7 +1197,7 @@ sub subscribe {
     }
 
     foreach my $report (@{$spindle->{stash} || []}) {
-        my $reason_string = get_reason_string($report, $robot);
+        my $reason_string = _get_reason_string($report, $robot);
         if ($report->[1] eq 'auth') {
             die SOAP::Fault->faultcode('Server')->faultstring('Not allowed.')
                 ->faultdetail($reason_string);
@@ -1199,31 +1205,33 @@ sub subscribe {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 ## Which list the user is subscribed to
 ## TODO (pour listmaster, toutes les listes)
 sub complexWhich {
+    $log->syslog('notice', '(%s)', @_);
     my $self   = shift;
     my $sender = $ENV{'USER_EMAIL'};
-    $log->syslog('notice', 'Xx complexWhich(%s)', $sender);
 
     $self->which('complex');
 }
 
 sub complexLists {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('notice', '(%s, %s, %s)', @_);
     my $self     = shift;
     my $topic    = shift || '';
     my $subtopic = shift || '';
     my $sender   = $ENV{'USER_EMAIL'};
-    $log->syslog('notice', '(%s)', $sender);
 
     $self->lists($topic, $subtopic, 'complex');
 }
@@ -1232,14 +1240,14 @@ sub complexLists {
 ## TODO (pour listmaster, toutes les listes)
 ## Simplified return structure
 sub which {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('notice', '(%s, %s)', @_);
     my $self = shift;
     my $mode = shift // '';
     my @result;
 
     my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
-
-    $log->syslog('notice', '(%s, %s)', $sender, $mode);
+    my $robot  = $ENV{SYMPA_DOMAIN};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -1310,27 +1318,30 @@ sub which {
 
         my $listInfo;
         if ($mode eq 'complex') {
-            $listInfo = struct_to_soap($result_item);
+            $listInfo = _struct_to_soap($result_item);
         } else {
-            $listInfo = struct_to_soap($result_item, 'as_string');
+            $listInfo = _struct_to_soap($result_item, 'as_string');
         }
         push @result, $listInfo;
     }
 
-#    return SOAP::Data->name('return')->type->('ArrayOfString')
+#    return Sympa::WWW::SOAP::Data->name('return')->type->('ArrayOfString')
 #    ->value(\@result);
-    return SOAP::Data->name('return')->value(\@result);
+    return Sympa::WWW::SOAP::Data->name('return')->value(\@result);
 }
 
 sub getDetails {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('debug', '(%s, %s)', @_);
     my $class    = shift;
     my $listname = shift;
+
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot  = $ENV{SYMPA_DOMAIN};
+
     my $subscriber;
     my $list;
     my %result = ();
-
-    my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -1344,9 +1355,6 @@ sub getDetails {
             ->faultdetail('Use : <list>');
     }
 
-    $log->syslog('debug', 'SOAP getDetails(%s,%s,%s)',
-        $listname, $robot, $sender);
-
     $list = Sympa::List->new($listname, $robot);
     if (!$list) {
         die SOAP::Fault->faultcode('Client')
@@ -1358,12 +1366,12 @@ sub getDetails {
         $result{'subscribeDate'} = $subscriber->{'date'};
         $result{'updateDate'}    = $subscriber->{'update_date'};
         $result{'custom'}        = [];
-        if ($subscriber->{'custom_attribute'}) {
-            foreach my $k (keys %{$subscriber->{'custom_attribute'}}) {
+        if ($subscriber->{attrib}) {
+            foreach my $k (keys %{$subscriber->{attrib}}) {
                 push @{$result{'custom'}},
                     {
                     key   => $k,
-                    value => $subscriber->{'custom_attribute'}{$k}{value}
+                    value => $subscriber->{attrib}{$k}
                     }
                     if $k;
             }
@@ -1374,17 +1382,19 @@ sub getDetails {
             ->faultdetail('Use : <list>');
     }
 
-    return SOAP::Data->name('return')->value(\%result);
+    return Sympa::WWW::SOAP::Data->name('return')->value(\%result);
 }
 
 sub setDetails {
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('debug', '(%s, %s, %s, %s)', @_);
     my $class     = shift;
     my $listname  = shift;
     my $gecos     = shift;
     my $reception = shift;
 
     my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
+    my $robot  = $ENV{SYMPA_DOMAIN};
 
     my $subscriber;
     my $list;
@@ -1404,8 +1414,6 @@ sub setDetails {
             'Use : <list> <gecos> <reception> [ <key> <value> ] ...');
     }
 
-    $log->syslog('debug', 'SOAP setDetails(%s,%s,%s)',
-        $listname, $robot, $sender);
     $list = Sympa::List->new($listname, $robot);
     if (!$list) {
         die SOAP::Fault->faultcode('Client')
@@ -1429,39 +1437,43 @@ sub setDetails {
         if $reception
         and $reception =~
         /^(mail|nomail|digest|digestplain|summary|notice|txt|html|urlize|not_me)$/;
-    if (@_) {    # do we have any custom attributes passed?
-        %newcustom = %{$subscriber->{'custom_attribute'}};
-        while (@_) {
-            my $key = shift;
+    my %attrs = @_;
+    if (%attrs) {
+        # We have any custom attributes passed.
+        %newcustom = %{$subscriber->{attrib} // {}};
+        while (my ($key, $value) = each %attrs) {
             next unless $key;
-            my $value = shift;
-            if (!defined $value or $value eq '') {
-                undef $newcustom{$key};
+            unless (length($value // '')) {
+                delete $newcustom{$key};
             } else {
-                # $newcustom{$key} = $list->{'admin'}{'custom_attribute'}{$key}
-                #     if !defined $newcustom{$key};
-                $newcustom{$key}{value} = $value;
+                $newcustom{$key} = $value;
             }
         }
-        $user{'custom_attribute'} = \%newcustom;
+        $user{attrib} = \%newcustom;
     }
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user details')
         ->faultdetail("SOAP setDetails : update user failed")
         unless $list->update_list_member($sender, %user);
 
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 sub setCustom {
-    my ($class, $listname, $key, $value) = @_;
+    @_ = _map_encode_utf8(@_);
+    $log->syslog('debug', '(%s, %s, %s, %s)', @_);
+    my $class    = shift;
+    my $listname = shift;
+    my $key      = shift;
+    my $value    = shift;
+
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot  = $ENV{SYMPA_DOMAIN};
+
     my $subscriber;
     my $list;
     my $rv;
     my %newcustom;
-
-    my $sender = $ENV{'USER_EMAIL'};
-    my $robot  = $ENV{'SYMPA_ROBOT'};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -1475,9 +1487,6 @@ sub setCustom {
             ->faultdetail('Use : <list> <key> <value>');
     }
 
-    $log->syslog('debug', 'SOAP setCustom(%s,%s,%s,%s)',
-        $listname, $robot, $sender, $key);
-
     $list = Sympa::List->new($listname, $robot);
     if (!$list) {
         die SOAP::Fault->faultcode('Client')
@@ -1490,30 +1499,24 @@ sub setCustom {
             ->faultstring('Not a subscriber to this list')
             ->faultdetail('Use : <list> <key> <value> ');
     }
-    %newcustom = %{$subscriber->{'custom_attribute'}};
-    #if(! defined $list->{'admin'}{'custom_attribute'}{$key} ) {
-    #	return SOAP::Data->name('result')->type('boolean')->value(0);
-    #}
-    if ($value eq '') {
-        undef $newcustom{$key};
+    %newcustom = %{$subscriber->{attrib} // {}};
+
+    unless (length($value // '')) {
+        delete $newcustom{$key};
     } else {
-        # $newcustom{$key} = $list->{'admin'}{'custom_attribute'}{$key}
-        #     if !defined $newcustom{$key}
-        #         and defined $list->{'admin'}{'custom_attribute'};
-        $newcustom{$key}{value} = $value;
+        $newcustom{$key} = $value;
     }
     die SOAP::Fault->faultcode('Server')
         ->faultstring('Unable to set user attributes')
         ->faultdetail("SOAP setCustom : update user failed")
-        unless $list->update_list_member($sender,
-        custom_attribute => \%newcustom);
+        unless $list->update_list_member($sender, attrib => \%newcustom);
 
-    return SOAP::Data->name('result')->type('boolean')->value(1);
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
 }
 
 ## Return a structure in SOAP data format
 ## either flat (string) or structured (complexType)
-sub struct_to_soap {
+sub _struct_to_soap {
     my $data   = shift;
     my $format = shift // '';
 
@@ -1524,29 +1527,21 @@ sub struct_to_soap {
     }
 
     if ($format eq 'as_string') {
-        my @all;
-        my $formated_data;
-        foreach my $k (keys %$data) {
-            push @all, Encode::decode_utf8($k . '=' . $data->{$k});
-        }
-
-        $formated_data = join ';', @all;
-        $soap_data = SOAP::Data->type('string')->value($formated_data);
+        return Sympa::WWW::SOAP::Data->type('string')
+            ->value(join ';',
+            map { sprintf '%s=%s', $_, $data->{$_} } sort keys %$data);
     } else {
-        my $formated_data;
-        foreach my $k (keys %$data) {
-            $formated_data->{$k} =
-                SOAP::Data->name($k)->type($types{'listType'}{$k})
-                ->value($data->{$k});
-        }
-
-        $soap_data = SOAP::Data->value($formated_data);
+        return Sympa::WWW::SOAP::Data->value(
+            {   map {
+                    ($_ => Sympa::WWW::SOAP::Data->name($_)
+                            ->type($types{listType}{$_})->value($data->{$_}))
+                } keys %$data
+            }
+        );
     }
-
-    return $soap_data;
 }
 
-sub get_reason_string {
+sub _get_reason_string {
     my $report = shift;
     my $robot  = shift;
 
@@ -1574,3 +1569,5 @@ sub get_reason_string {
 }
 
 1;
+__END__
+

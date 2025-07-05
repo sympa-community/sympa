@@ -1,12 +1,10 @@
-# $Id$
-
 # Sympa - SYsteme de Multi-Postage Automatique
 #
 # Copyright (c) 1997, 1998, 1999 Institut Pasteur & Christophe Wolfhugel
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2021, 2022, 2023 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -30,9 +28,14 @@ nobase_dist_modules_DATA = \
 	Sympa/Internals/Workflow.pod
 CLI_modules = \
 	Sympa/CLI/add.pm \
+	Sympa/CLI/bouncers.pm \
+	Sympa/CLI/bouncers/del.pm \
+	Sympa/CLI/bouncers/reset.pm \
 	Sympa/CLI/check.pm \
 	Sympa/CLI/close.pm \
-	Sympa/CLI/conf_2_db.pm \
+	Sympa/CLI/config.pm \
+	Sympa/CLI/config/create.pm \
+	Sympa/CLI/config/show.pm \
 	Sympa/CLI/copy.pm \
 	Sympa/CLI/create.pm \
 	Sympa/CLI/del.pm \
@@ -49,13 +52,25 @@ CLI_modules = \
 	Sympa/CLI/rebuildarc.pm \
 	Sympa/CLI/reload_list_config.pm \
 	Sympa/CLI/restore.pm \
+	Sympa/CLI/review.pm \
 	Sympa/CLI/send_digest.pm \
+	Sympa/CLI/set.pm \
 	Sympa/CLI/show_pending_lists.pm \
 	Sympa/CLI/sync_list_db.pm \
+	Sympa/CLI/test.pm \
+	Sympa/CLI/test/ldap.pm \
+	Sympa/CLI/test/soap.pm \
+	Sympa/CLI/test/syslog.pm \
 	Sympa/CLI/update.pm \
 	Sympa/CLI/upgrade.pm \
+	Sympa/CLI/upgrade/incoming.pm \
+	Sympa/CLI/upgrade/outgoing.pm \
+	Sympa/CLI/upgrade/password.pm \
+	Sympa/CLI/upgrade/shared.pm \
+	Sympa/CLI/upgrade/webfont.pm \
 	Sympa/CLI/upgrade_config_location.pm \
 	Sympa/CLI/user.pm \
+	Sympa/CLI/user/del.pm \
 	Sympa/CLI/user/move.pm \
 	Sympa/CLI/version.pm
 nonCLI_modules = \
@@ -123,6 +138,7 @@ nonCLI_modules = \
 	Sympa/Request/Handler/create_list.pm \
 	Sympa/Request/Handler/decl.pm \
 	Sympa/Request/Handler/del.pm \
+	Sympa/Request/Handler/del_user.pm \
 	Sympa/Request/Handler/distribute.pm \
 	Sympa/Request/Handler/family_signoff.pm \
 	Sympa/Request/Handler/finished.pm \
@@ -220,13 +236,14 @@ nonCLI_modules = \
 	Sympa/Upgrade.pm \
 	Sympa/User.pm \
 	Sympa/WWW/Auth.pm \
+	Sympa/WWW/Crawlers.pm \
 	Sympa/WWW/FastCGI.pm \
 	Sympa/WWW/Marc.pm \
 	Sympa/WWW/Marc/Search.pm \
 	Sympa/WWW/SharedDocument.pm \
 	Sympa/WWW/Session.pm \
 	Sympa/WWW/SOAP.pm \
-	Sympa/WWW/SOAP/Transport.pm \
+	Sympa/WWW/SOAP/FastCGI.pm \
 	Sympa/WWW/Tools.pm
 nobase_modules_DATA = $(CLI_modules) $(nonCLI_modules)
 

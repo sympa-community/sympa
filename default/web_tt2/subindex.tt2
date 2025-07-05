@@ -10,7 +10,7 @@
                     <a href="#" data-tooltip aria-haspopup="true"
                        title="[%|loc%]Toggle Selection[%END%]"
                        class="toggleButton">
-                        <i class="fa fa-check-square-o"></i>
+                        <i class="far fa-check-square"></i>
                     </a>&nbsp;&nbsp;
                 </div>
                 <div class="small-10 medium-7 columns" role="columnheader">
@@ -52,8 +52,8 @@
                             [% FOREACH ca_k IN listconf.custom_attribute ~%]
                                 <p>
                                     <b>[% ca_k.name %][%|loc%]:[%END%] </b>
-                                    [% IF sub.value.custom_attribute.item(ca_k.id).value ~%]
-                                        [% sub.value.custom_attribute.item(ca_k.id).value %]
+                                    [% IF sub.value.attrib.item(ca_k.id) ~%]
+                                        [% sub.value.attrib.item(ca_k.id) %]
                                     [%~ ELSE ~%]
                                         -
                                     [%~ END %]

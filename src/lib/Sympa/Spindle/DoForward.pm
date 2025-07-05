@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,6 +7,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
+# Copyright 2020, 2022 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,6 +33,7 @@ use Sympa;
 use Conf;
 use Sympa::Log;
 use Sympa::Mailer;
+use Sympa::Tools::DKIM;
 
 use base qw(Sympa::Spindle::ProcessIncoming);
 
@@ -44,18 +47,18 @@ sub _twist {
     # Fail-safe: Skip messages with unwanted types.
     return 0 unless $self->_splicing_to($message) eq __PACKAGE__;
 
-    my ($name, $robot);
+    my ($list, $robot);
     if (ref $message->{context} eq 'Sympa::List') {
-        $name  = $message->{context}->{'name'};
+        $list  = $message->{context};
         $robot = $message->{context}->{'domain'};
     } elsif ($message->{context} and $message->{context} ne '*') {
-        $name  = 'sympa';
         $robot = $message->{context};
     } else {
-        $name  = 'sympa';
-        $robot = $Conf::Conf{'domain'};
+        $robot = '*';
     }
+
     my $function = $message->{listtype};
+    my $recipient = Sympa::get_address($message->{context}, $function);
 
     my $messageid = $message->{message_id};
     my $sender    = $message->{sender};
@@ -63,45 +66,29 @@ sub _twist {
     if ($message->{'spam_status'} eq 'spam') {
         $log->syslog(
             'notice',
-            'Message for %s-%s ignored, because tagued as spam (message ID: %s)',
-            $name,
-            $function,
+            'Message for %s ignored, because tagged as spam (message ID: %s)',
+            $recipient,
             $messageid
         );
         return undef;
     }
 
-    # Search for the list.
-    my ($list, $recipient, $priority);
-
-    if ($function eq 'listmaster') {
-        $recipient = Sympa::get_address($robot, 'listmaster');
-        $priority = 0;
-    } else {
-        $list = $message->{context};
+    unless ($function eq 'listmaster') {
         unless (ref $list eq 'Sympa::List') {
-            $log->syslog(
-                'notice',
-                'Message for %s function %s ignored, unknown list %s (message ID: %s)',
-                $name,
-                $function,
-                $name,
-                $messageid
-            );
+            #FIXME: Will this happen?
+            $log->syslog('notice',
+                'Message %s ignored, unknown list (message ID: %s)',
+                $message, $messageid);
             Sympa::send_dsn($message->{context} || '*', $message, {},
                 '5.1.1');
             return undef;
         }
-
-        $recipient = Sympa::get_address($list, $function);
-        $priority = $list->{'admin'}{'priority'};
     }
 
     my @rcpt;
 
-    $log->syslog('info',
-        'Processing %s; message_id=%s; priority=%s; recipient=%s',
-        $message, $messageid, $priority, $recipient);
+    $log->syslog('info', 'Processing %s; message_id=%s; recipient=%s',
+        $message, $messageid, $recipient);
 
     delete $message->{'rcpt'};
     delete $message->{'family'};
@@ -117,7 +104,7 @@ sub _twist {
         $log->syslog(
             'notice',
             'No owner defined at all in list %s; incoming message is rejected',
-            $name
+            $list
         ) unless @rcpt;
     } elsif ($function eq 'editor') {
         @rcpt = $list->get_admins_email('receptive_editor');
@@ -125,7 +112,7 @@ sub _twist {
         $log->syslog(
             'notice',
             'No owner and editor defined at all in list %s; incoming message is rejected',
-            $name
+            $list
         ) unless @rcpt;
     }
 
@@ -135,10 +122,10 @@ sub _twist {
         Sympa::send_notify_to_listmaster(
             $message->{context} || '*',
             'mail_intern_error',
-            {   error => sprintf(
-                    'Impossible to forward a message to %s function %s : undefined in this list',
-                    $name, $function
-                ),
+            {   error =>
+                    sprintf(
+                    'Impossible to forward a message to %s : undefined in this list',
+                    $recipient),
                 who      => $sender,
                 msg_id   => $messageid,
                 entry    => 'forward',
@@ -150,10 +137,11 @@ sub _twist {
             {function => $function}, '5.2.4'
         );
         $log->db_log(
-            'robot'        => $robot,
-            'list'         => $list->{'name'},
-            'action'       => 'DoForward',
-            'parameters'   => "$name,$function",
+            'robot' => $robot,
+            ($list ? ('list' => $list->{'name'}) : ()),
+            'action' => 'DoForward',
+            'parameters' =>
+                join(',', ($list ? $list->{'name'} : 'sympa'), $function),
             'target_email' => '',
             'msg_id'       => $messageid,
             'status'       => 'error',
@@ -163,36 +151,47 @@ sub _twist {
         return undef;
     }
 
+    my (@apply_on, @protection);
+    if (ref $list eq 'Sympa::List') {
+        @apply_on =
+            @{$list->{'admin'}{'dkim_signature_apply_on'} || []};
+        @protection = @{$list->{'admin'}{'dmarc_protection'}{'mode'} || []};
+    } else {
+        @apply_on =
+            @{Conf::get_robot_conf($robot, 'dkim_signature_apply_on') || []};
+        @protection =
+            @{Conf::get_robot_conf($robot, 'dmarc_protection.mode') || []};
+    }
+    $message->{shelved}{dkim_sign} = 1
+        if grep { 'any' eq $_ } @apply_on
+        or (grep { 'smime_authenticated_messages' eq $_ } @apply_on
+        and $message->{'smime_signed'})
+        or (grep { 'dkim_authenticated_messages' eq $_ } @apply_on
+        and $message->{'dkim_pass'});
+
+    $message->{shelved}{dmarc_protect} = 1
+        if grep { $_ and 'none' ne $_ } @protection;
+
     # Add or remove several headers to forward message safely.
     # - Add X-Loop: field to mitigate mail looping.
     # - The Sender: field should be added (overwritten) at least for Sender ID
     #   (a.k.a. SPF 2.0) compatibility.  Note that Resent-Sender: field will
     #   be removed.
-    # - Apply DMARC protection if needed.
-    #FIXME: Existing DKIM signature depends on these headers will be broken.
-    #FIXME: Currently messages via -request and -editor addresses will be
-    #       protected against DMARC if neccessary.  The listmaster address
-    #       would be protected, too.
+    # - Add ARC seal if enabled, or try applying DMARC protection.
     $message->add_header('X-Loop', $recipient);
     $message->replace_header('Sender', Sympa::get_address($robot, 'owner'));
     $message->delete_header('Resent-Sender');
-    if ($function eq 'owner' or $function eq 'editor') {
-        $message->dmarc_protect if $list;
-    }
 
     # Overwrite envelope sender.  It is REQUIRED for delivery.
     $message->{envelope_sender} = Sympa::get_address($robot, 'owner');
 
-    unless (defined Sympa::Mailer->instance->store($message, \@rcpt)) {
-        $log->syslog('err', 'Impossible to forward mail for %s function %s',
-            $name, $function);
+    unless (defined Sympa::Spool::Outgoing->new->store($message, [@rcpt])) {
+        $log->syslog('err', 'Impossible to forward mail for %s', $recipient);
         Sympa::send_notify_to_listmaster(
             $message->{context} || '*',
             'mail_intern_error',
-            {   error => sprintf(
-                    'Impossible to forward a message for %s function %s',
-                    $name, $function
-                ),
+            {   error => sprintf('Impossible to forward a message for %s',
+                    $recipient),
                 who      => $sender,
                 msg_id   => $messageid,
                 entry    => 'forward',
@@ -201,10 +200,11 @@ sub _twist {
         );
         Sympa::send_dsn($message->{context} || '*', $message, {}, '5.3.0');
         $log->db_log(
-            'robot'        => $robot,
-            'list'         => $list->{'name'},
-            'action'       => 'DoForward',
-            'parameters'   => "$name,$function",
+            'robot' => $robot,
+            ($list ? ('list' => $list->{'name'}) : ()),
+            'action' => 'DoForward',
+            'parameters' =>
+                join(',', ($list ? $list->{'name'} : 'sympa'), $function),
             'target_email' => '',
             'msg_id'       => $messageid,
             'status'       => 'error',
@@ -214,10 +214,11 @@ sub _twist {
         return undef;
     }
     $log->db_log(
-        'robot'        => $robot,
-        'list'         => $list->{'name'},
-        'action'       => 'DoForward',
-        'parameters'   => "$name,$function",
+        'robot' => $robot,
+        ($list ? ('list' => $list->{'name'}) : ()),
+        'action' => 'DoForward',
+        'parameters' =>
+            join(',', ($list ? $list->{'name'} : 'sympa'), $function),
         'target_email' => '',
         'msg_id'       => $messageid,
         'status'       => 'success',

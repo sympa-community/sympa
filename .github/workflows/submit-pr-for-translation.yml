@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - translation
+    paths:
+      - 'po/**'
+
+env:
+  GH_PR_TITLE: Update translation
+  GH_PR_BODY: This pull request was automatically submitted.
+  GH_PR_LABEL: translation,ready,ignore-for-release
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  submit-pr-for-translation:
+    if: github.repository_owner == 'sympa-community'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Submit PR to update translation
+        run: >
+          gh pr create -H $GITHUB_REPOSITORY_OWNER:$GITHUB_REF_NAME
+          -t "$GH_PR_TITLE" -b "$GH_PR_BODY" -l "$GH_PR_LABEL"
+          || true

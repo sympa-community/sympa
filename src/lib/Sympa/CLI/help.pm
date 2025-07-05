@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2021 The Sympa Community. See the
+# Copyright 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -24,10 +24,12 @@ package Sympa::CLI::help;
 
 use strict;
 use warnings;
+use Config;
 use English qw(-no_match_vars);
 use Pod::Usage qw();
 
 use Sympa::Constants;
+use Sympa::Language;
 
 use parent qw(Sympa::CLI);
 
@@ -35,12 +37,31 @@ use constant _options   => qw(format|o=s);
 use constant _args      => qw(command*);
 use constant _need_priv => 0;
 
+my $has_perldoc;
+
+BEGIN {
+    # Some distributions (Debian and its descendants) separate perldoc from
+    # the package for Perl and replace it with a stub.  Use perldoc only if
+    # such stub wouldn't be used.
+    my $path = join '/', ($Config{scriptdirexp} || $Config{scriptdir}),
+        'perldoc';
+    if (-e $path and open my $pipein, '-|', $path, '-V') {
+        1 while <$pipein>;
+        close $pipein;
+        $has_perldoc = not $CHILD_ERROR;
+    }
+}
+
+my $language = Sympa::Language->instance;
+
 sub _run {
     my $class   = shift;
     my $options = shift;
     my @command = @_;
 
-    my $noperldoc = 1 unless -t STDOUT or $options->{format};
+    my $noperldoc = 1
+        unless $has_perldoc and (Sympa::CLI->istty(1) or $options->{format});
+
     my $message;
 
     local $ENV{PERLDOC} = sprintf '-o%s', $options->{format}
@@ -68,9 +89,13 @@ sub _run {
         undef $path;
     }
     unless ($path) {
-        printf STDERR
-            "Unknown command '%s'. See '%s help commands' to know available commands.\n",
-            join(' ', @command), $PROGRAM_NAME;
+        warn $language->gettext_sprintf('Unknown command \'%s\'',
+            join(' ', @command))
+            . "\n";
+        warn $language->gettext_sprintf(
+            'See \'%s help\' to know available commands',
+            $PROGRAM_NAME)
+            . "\n";
         exit 1;
     } else {
         Pod::Usage::pod2usage(

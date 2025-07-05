@@ -38,6 +38,7 @@ use Sympa::Language;
 use Sympa::Log;
 use Sympa::Tools::Data;
 use Sympa::Tools::Password;
+use Sympa::WWW::Crawlers;
 
 # this structure is used to define which session attributes are stored in a
 # dedicated database col where others are compiled in col 'data_session'
@@ -78,12 +79,10 @@ sub new {
 
     # passive_session are session not stored in the database, they are used
     # for crawler bots and action such as css, wsdl, ajax and rss
-    if (_is_a_crawler($robot)) {
-        $self->{'is_a_crawler'}    = 1;
-        $self->{'passive_session'} = 1;
-    }
+    $self->{'is_a_crawler'}    = _is_a_crawler($robot);
     $self->{'passive_session'} = 1
-        if $rss
+        if $self->{'is_a_crawler'}
+        or $rss
         or $action and ($action eq 'wsdl' or $action eq 'css');
 
     # if a session cookie exist, try to restore an existing session, don't
@@ -640,16 +639,17 @@ sub _generic_get_cookie {
 # DEPRECATED: No longer used.
 #sub check_cookie_extern;
 
-# input user agent string and IP. return 1 if suspected to be a crawler.
-# initial version based on rawlers_dtection.conf file only
-# later : use Session table to identify those who create a lot of sessions
+# input user agent string. return 1 if suspected to be a crawler.
 #FIXME: Robot context is ignored.
+my $crawler_re = Sympa::WWW::Crawlers::crawler();
+
 sub _is_a_crawler {
     my $robot = shift;
 
     my $ua = $ENV{'HTTP_USER_AGENT'};
     return undef unless defined $ua;
-    return $Conf::Conf{'crawlers_detection'}{'user_agent_string'}{$ua};
+    return undef unless $ua =~ $crawler_re;
+    return $1 || '?';
 }
 
 sub confirm_action {

@@ -43,7 +43,7 @@
         [% IF is_priv %]
             <span>
                 <a href="[% 'review' | url_rel([list,'owner']) %]">
-                    <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
+                    <i class="fas fa-pen-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
                 </a>
             </span>
         [% END %]
@@ -81,7 +81,7 @@
         [% IF is_priv %]
             <span>
                 <a href="[% 'review' | url_rel([list,'editor']) %]">
-                    <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
+                    <i class="fas fa-pen-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
                 </a>
             </span>
         [% END %]

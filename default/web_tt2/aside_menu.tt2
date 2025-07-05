@@ -7,13 +7,14 @@
                     <i class="fa fa-envelope-square fa-lg"></i>
                 </span>
                 <div class="title-bar-right">
-                    <div class="title-bar-title">
+                    <div class="title-bar-title" id="sympa-sub-bar-title">
                         <span>[%|loc%]List Options Menu[%END%]</span>
                     </div>
                     <a class="menu-icon" href="#" data-toggle="sympa-sub-bar"></a>
                 </div>
             </div>
-            <nav class="top-bar" id="sympa-sub-bar" role="navigation">
+            <nav class="top-bar" id="sympa-sub-bar"
+             role="navigation" aria-labelledby="sympa-sub-bar-title">
                 <menu class="top-bar-left list">
                     <ul class="vertical menu" data-responsive-menu="drilldown medium-accordion">
                         [% PROCESS list_menu.tt2 %]
@@ -44,14 +45,15 @@
                 [%~ END %]
             </span>
             <div class="title-bar-right">
-                <div class="title-bar-title">
+                <div class="title-bar-title" id="sympa-sub-bar-title">
                     <span>[%|loc%]General Menu[%END%]</span>
                 </div>
                 <a class="menu-icon" href="#" data-toggle="sympa-sub-bar"></a>
             </div>
         </div>
 
-        <nav class="top-bar" id="sympa-sub-bar" role="navigation">
+        <nav class="top-bar" id="sympa-sub-bar"
+             role="navigation" aria-labelledby="sympa-sub-bar-title">
             [% IF user.email ~%]
                 <menu class="top-bar-left user">
                     <ul class="nested vertical menu">

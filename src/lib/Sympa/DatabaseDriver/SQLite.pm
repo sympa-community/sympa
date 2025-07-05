@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2021 The Sympa Community. See the
+# Copyright 2018, 2021, 2022, 2023, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -30,6 +29,7 @@ package Sympa::DatabaseDriver::SQLite;
 use strict;
 use warnings;
 use DBI qw();
+use Digest::MD5;
 use English qw(-no_match_vars);
 use POSIX qw();
 
@@ -63,8 +63,15 @@ sub connect {
     } else {
         $self->__dbh->func(5000, 'busy_timeout');
     }
-    # Create a temoprarhy view "dual" for portable SQL statements.
-    $self->__dbh->do(q{CREATE TEMPORARY VIEW dual AS SELECT 'X' AS dummy;});
+
+    # Create a function MD5().
+    $self->__dbh->func(
+        'md5', -1,
+        sub {
+            Digest::MD5::md5_hex(map { $_ // '' } @_);
+        },
+        'create_function'
+    );
 
     return 1;
 }
@@ -191,7 +198,7 @@ sub get_fields {
     }
     while (my $field = $sth->fetchrow_hashref('NAME_lc')) {
         # http://www.sqlite.org/datatype3.html
-        my $type = $field->{'type'};
+        my $type = lc $field->{'type'};
         if ($type =~ /int/) {
             $type = 'integer';
         } elsif ($type =~ /char|clob|text/) {
@@ -307,19 +314,31 @@ sub add_field {
     return $report;
 }
 
-sub delete_field {
+sub drop_field {
+    $log->syslog('debug', '(%s, %s, %s)', @_);
     my $self  = shift;
-    my $param = shift;
-    my $table = $param->{'table'};
-    my $field = $param->{'field'};
+    my $table = shift;
+    my $field = shift;
 
-    return '' if $field eq 'temporary';
+    # SQLite prior to 3.35 does not support removal of columns.
+    # (Additionally, the versions prior to 3.35.5 looks buggy.)
+    unless (3035005 <= $DBD::SQLite::sqlite_version_number) {
+        my $report =
+            "Could not remove field $field from table $table since SQLite does not support removal of columns";
+        $log->syslog('info', '%s', $report);
 
-    $log->syslog('debug', 'Deleting field %s from table %s', $field, $table);
+        return $report;
+    }
 
-    ## SQLite does not support removal of columns
-    my $report =
-        "Could not remove field $field from table $table since SQLite does not support removal of columns";
+    unless ($self->do_query("ALTER TABLE %s DROP COLUMN %s", $table, $field))
+    {
+        $log->syslog('err',
+            'Could not delete field %s from table %s in database %s',
+            $field, $table, $self->{'db_name'});
+        return undef;
+    }
+
+    my $report = sprintf 'Field %s removed from table %s', $field, $table;
     $log->syslog('info', '%s', $report);
 
     return $report;
@@ -521,11 +540,9 @@ sub translate_type {
 }
 
 # Note:
-# - To prevent "database is locked" error, acquire "immediate" lock
-#   by each query.  Most queries excluding "SELECT" need to lock in this
-#   manner.
-# - If a transaction has been begun, lock is not needed, because SQLite
-#   does not support nested transactions.
+# To prevent "database is locked" error, acquire "immediate" lock
+# by each query.  Most queries excluding "SELECT" need to lock in this
+# manner.
 sub do_query {
     my $self = shift;
     my $sth;
@@ -533,8 +550,8 @@ sub do_query {
 
     my $need_lock =
         ($_[0] =~
-            /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i)
-        unless $self->{_sdbTransactionLevel};
+            /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i
+        );
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {
@@ -573,8 +590,8 @@ sub do_prepared_query {
 
     my $need_lock =
         ($_[0] =~
-            /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i)
-        unless $self->{_sdbTransactionLevel};
+            /^\s*(ALTER|CREATE|DELETE|DROP|INSERT|REINDEX|REPLACE|UPDATE)\b/i
+        );
 
     ## acquire "immediate" lock
     unless (!$need_lock or $self->__dbh->begin_work) {
@@ -610,6 +627,12 @@ sub AS_BLOB {
     return ({TYPE => DBI::SQL_BLOB()} => $_[1])
         if scalar @_ > 1;
     return ();
+}
+
+sub md5_func {
+    shift;
+
+    return sprintf 'md5(%s)', join ', ', @_;
 }
 
 # Private methods

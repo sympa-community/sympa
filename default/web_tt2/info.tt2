@@ -9,7 +9,7 @@
         [% info_content %]
         [% IF is_owner %]
             <a href="[% 'editfile' | url_rel([list,'info']) %]">
-                <i class="fa fa-pencil-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
+                <i class="fas fa-pen-square fa-lg" title="[%|loc%](Edit)[%END%]"></i>
             </a>
         [% END %]
     </p>
@@ -17,7 +17,7 @@
     [% IF is_owner || is_editor %]
         <hr />
         <h3>[%|loc%]Administrative Options[%END%]</h3>
-        [% IF is_owner || is_editor %]
+        [% IF is_editor %]
             [% IF mod_message && (mod_message > 0) %]
                 <p class="small-8 small-centered columns alert-box info text-center">
                     [%|loc(mod_message)%]There are %1 message(s) awaiting moderation.[%END%]

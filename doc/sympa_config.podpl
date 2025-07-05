@@ -37,16 +37,7 @@ foreach my $key (_keys($pinfo)) {
     my $pii = $pinfo->{$key};
     my $ppi = [$key];
 
-    if ($key eq 'color_0') {
-        $parameters .= "=head3 C<color_0>, ..., C<color_15>\n\n";
-    } elsif ($key =~ /\Acolor_/) {
-        next;
-    } elsif ($key eq 'dark_color') {
-        $parameters .=
-            "=head3 C<dark_color>, C<light_color>, C<text_color>, C<bg_color>, C<error_color>, C<selected_color>, C<shaded_color>\n\n";
-    } elsif ($key =~ /_color\z/) {
-        next;
-    } elsif ($key eq 'main_menu_custom_button_1_title') {
+    if ($key eq 'main_menu_custom_button_1_title') {
         $parameters .=
             "=head3 C<main_menu_custom_button_1_title>, ... C<main_menu_custom_button_3_title>, C<main_menu_custom_button_1_url>, ... C<main_menu_custom_button_3_url>, C<main_menu_custom_button_1_target>, ... C<main_menu_custom_button_3_target>\n\n";
     } elsif ($key =~ /\Amain_menu_custom_button_/) {
@@ -97,7 +88,19 @@ foreach my $okey (
         my $pii = $pinfo->{$okey};
         my $ppi = [$okey];
 
-        $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
+        if ($okey eq 'color_0') {
+            $parameters .= "=head3 C<color_0>, ..., C<color_15>\n\n";
+            $parameters .= "See description on web interface.\n";
+        } elsif ($okey eq 'dark_color') {
+            $parameters .= "=head3 C<dark_color>, C<light_color>,\n";
+            $parameters .= "C<text_color>, C<bg_color>, C<error_color>,\n";
+            $parameters .= "C<selected_color>, C<shaded_color>\n\n";
+            $parameters .= "See description on web interface.\n";
+        } elsif ($okey =~ /\Acolor_/ or $okey =~ /_color\z/) {
+            next;
+        } else {
+            $parameters .= sprintf "=head3 C<%s>\n\n", _escape_pod($okey);
+        }
         _render($pii, $ppi);
     }
 }
@@ -151,7 +154,7 @@ sub _render_paragraph {
         #$parameters .= "=over\n\n" x (scalar @$pnames);
 
         if ($pii->{obsolete}) {
-            _render_obsolete($pii);
+            _render_obsolete($pii, $ppi);
         } elsif ($pii->{occurrence} =~ /n$/ and ref $pii->{format} eq 'ARRAY')
         {
             _render_set($pii, $ppi);
@@ -210,14 +213,17 @@ sub _render_scalar {
 
 sub _render_obsolete {
     my $pii = shift;
+    my $ppi = shift;
 
     return unless $pii->{obsolete};
 
     if ($pii->{obsolete} eq '1') {
         $parameters .= "Deprecated.\n\n";
     } else {
-        $parameters .= sprintf "See L<C<%s>|/%s>.\n\n",
-            $pii->{obsolete}, $pii->{obsolete};
+        my @parag = @$ppi;
+        pop @parag;
+        my $param = join '.', @parag, $pii->{obsolete};
+        $parameters .= sprintf "See L<C<%s>|/%s>.\n\n", $param, $param;
     }
     $parameters .= "=over\n\n";
     _context($pii);
@@ -249,7 +255,7 @@ sub _format {
             status     => 'Status of list.',
             listtopic  => 'List topic.',
             unixtime   => 'The time in second from Unix epoch.',
-            visibility => 'Visibility mode of list memeber.',
+            visibility => 'Visibility mode of list member.',
         }->{$pinfo->{field_type}}
             || $pinfo->{field_type};
         $parameters .= sprintf "%s\n\n", $desc;
@@ -270,7 +276,7 @@ sub _format {
             open $fh, '<', "$function.$name" or die $ERRNO;
             my $content = do { local $RS; <$fh> };
             close $fh;
-            if ($content =~ /(?:\A|\n)title(?:[.][-\w]+)\s+(.+)/) {
+            if ($content =~ /(?:\A|\n)title(?:[.][-\w]+)?\s+(.+)/) {
                 $parameters .= sprintf "=item C<%s> - %s\n\n", $name, $1;
             } else {
                 $parameters .= sprintf "=item C<%s>\n\n", $name;
@@ -314,9 +320,7 @@ sub _default {
     my $fullname = join '.', @$pnames;
 
     $parameters .= "=item Default:\n\n";
-    if ($fullname =~ /\Acolor_/ or $fullname =~ /_color\z/) {
-        $parameters .= "See description on web interface.\n\n";
-    } elsif (exists $pinfo->{default}) {
+    if (exists $pinfo->{default}) {
         if (exists $pinfo->{default_s}) {
             my $default = $pinfo->{default_s};
             $parameters .= sprintf "C<%s>\n\n", $default;
@@ -542,7 +546,7 @@ by each.
 
 "Default" is built-in default value if any.
 About symbols for paths, such as C<$SENDMAIL_ALIASES>,
-see "L<Directory layout|https://sympa-community.github.io/manual/layout.html>".
+see "L<Directory layout|https://www.sympa.community/manual/layout.html>".
 
 =back
 
@@ -570,11 +574,10 @@ List main configuration file.
 =head1 SEE ALSO
 
 I<Sympa Administration Manual>.
-L<https://sympa-community.github.io/manual/>.
+L<https://www.sympa.community/manual/>.
 
 L<auth.conf(5)>,
 L<charset.conf(5)>,
-L<crawlers_detection.conf(5)>,
 L<edit_list.conf(5)>,
 L<ldap_alias_manager.conf(5)>,
 L<nrcpt_by_domain.conf(5)>,

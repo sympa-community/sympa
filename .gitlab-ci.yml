@@ -7,7 +7,7 @@
     - . ~/bashrc
     - coverage-install
     - coverage-setup
-    - cpanm --quiet --notest --installdeps --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=safe-unicode --with-feature=smime --with-feature=soap --with-feature=sqlite .
+    - cpanm --quiet --notest --installdeps --with-develop --with-feature=Data::Password --with-feature=ldap --with-feature=smime --with-feature=soap --with-feature=sqlite .
     - autoreconf -i
     - ./configure
     - cd src; make; cd ..
@@ -16,21 +16,21 @@
     - coverage-report
     - make clean
 
-"5.16":
+"5.26":
   <<: *job
   variables:
     COVERAGE: 1
-"5.18":
-  <<: *job
-"5.20":
-  <<: *job
-"5.22":
-  <<: *job
-"5.24":
-  <<: *job
-"5.26":
-  <<: *job
 "5.28":
   <<: *job
 "5.30":
+  <<: *job
+"5.32":
+  <<: *job
+"5.34":
+  <<: *job
+"5.36":
+  <<: *job
+"5.38":
+  <<: *job
+"5.40":
   <<: *job

@@ -113,7 +113,7 @@ TBD.
 
 =head1 SEE ALSO
 
-L<list_config(5)>,
+L<sympa_config(5)>,
 L<Sympa::List::Config>,
 L<Sympa::ListOpt>.
 

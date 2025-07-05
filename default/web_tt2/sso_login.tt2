@@ -22,14 +22,17 @@
 
             <label for="email">
                 <strong>[%|loc%]Your e-mail address:[%END%]</strong>
-                <br />
-                [% IF init_email %]
-                    [% email %]
-                    <input id="email" type="text" name="email" value="[% init_email %]" />
-                [% ELSE %]
-                    <input id="email" type="text" name="email" value="" />
-                [% END %]
-            </label>&nbsp; &nbsp; &nbsp;
+            </label>
+            <br />
+            [% IF init_email %]
+                [% email %]
+                <input id="email" type="text" name="email"
+                 value="[% init_email %]" />
+            [% ELSE %]
+                <input id="email" type="text" name="email"
+                 value="" />
+            [% END %]
+            &nbsp; &nbsp; &nbsp;
             <input type="submit" name="action_sso_login" value="[%|loc%]Send me a confirmation password[%END%]"/>
         </fieldset>
     </form>

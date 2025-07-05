@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2021 The Sympa Community. See the
+# Copyright 2021, 2022, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -36,7 +36,7 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(close_unknown input_file=s quiet);
+use constant _options => qw(close-unknown input-file=s);
 use constant _args    => qw(family);
 
 my $log = Sympa::Log->instance;
@@ -61,7 +61,7 @@ sub _run {
             $family,
             $options->{input_file},
             close_unknown => $options->{close_unknown},
-            quiet         => $options->{quiet},
+            noout         => ($options->{noout} or not $class->istty(2)),
         )
     ) {
         print STDERR "\nImpossible family instantiation : action stopped \n";
@@ -71,7 +71,7 @@ sub _run {
     my %result;
     my $err = get_instantiation_results($family, \%result);
 
-    unless ($options->{quiet}) {
+    unless ($options->{noout}) {
         print STDOUT "@{$result{'info'}}";
         print STDOUT "@{$result{'warn'}}";
     }
@@ -128,9 +128,10 @@ sub instantiate {
     } else {
         $total    = scalar @$list_to_generate;
         $progress = Term::ProgressBar->new(
-            {   name  => 'Creating lists',
-                count => $total,
-                ETA   => 'linear'
+            {   name   => 'Creating lists',
+                count  => $total,
+                ETA    => 'linear',
+                silent => $options{noout},
             }
         );
         $progress->max_update_rate(1);
@@ -201,8 +202,8 @@ sub instantiate {
                 $list->{'name'}, $created, $total
             )
         );
-        $next_update = $progress->update($created)
-            if ($created > $next_update);
+        $next_update = $progress->update($created) // 0
+            if $created > $next_update;
     }
 
     $progress->update($total) if $progress;
@@ -606,13 +607,13 @@ sympa-instantiate - Instantiate the lists in a family
 
 =head1 SYNOPSIS
 
-C<sympa instantiate> C<--input_file=>I</path/to/file.xml> [ C<--close_unknown> ] [ C<--quiet> ] I<family>C<@@>I<domain>
+C<sympa instantiate> C<--input-file=>I</path/to/file.xml> [ C<--close-unknown> ] [ C<--noout> ] I<family>C<@@>I<domain>
 
 =head1 DESCRIPTION
 
 Instantiate the lists described in the file.xml in specified family.
 The family directory must exist; automatically close undefined lists in a
 new instantiation if C<--close_unknown> is specified; do not print report if
-C<--quiet> is specified.
+C<--noout> is specified.
 
 =cut

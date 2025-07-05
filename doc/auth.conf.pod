@@ -13,7 +13,7 @@ interface of Sympa.
 =head2 F<auth.conf> structure
 
 Each paragraph starts with one of the names C<user_table>, C<ldap>,
-C<generic_sso> or C<cas>.
+C<generic_sso>, C<cas> or C<cgi>.
 
 The F<auth.conf> file contains directives in the following format:
 
@@ -205,6 +205,36 @@ Search the whole tree below the base object. This is the default.
 
 =back
 
+=item C<deref>
+
+Default value: C<find>
+
+Specifies how to dereference aliases.
+
+Introduced on Sympa 6.2.74.
+
+=over
+
+=item C<never>
+
+Aliases are never dereferenced.
+
+=item C<search>
+
+Aliases are dereferenced in searching subordinates of the base object.
+
+=item C<find>
+
+Aliases are derefernced in locating the base object, but
+not in searching subordinates of the base object.
+This is the default.
+
+=item C<always>
+
+Aliases are always dereferenced.
+
+=back
+
 =item C<authentication_info_url>
 
 Defines the URL of a document describing LDAP password management. When 
@@ -385,31 +415,50 @@ not defined>:
 
 =over
 
-=item C<ldap_host>
+=item C<host>
 
-The LDAP host Sympa will connect to fetch user email. The C<ldap_host> 
+(formerly C<ldap_host>)
+
+The LDAP host Sympa will connect to fetch user email. The C<host> 
 include the port number and it may be a comma separated list of redundant
 hosts.
 
-=item C<ldap_bind_dn>
+=item C<bind_dn>
+
+(formerly C<ldap_bind_dn>)
 
 The DN used to bind to this server. Anonymous bind is used if this parameter 
 is not defined.
 
-=item C<ldap_bind_password>
+=item C<bind_password>
+
+(formerly C<ldap_bind_password>)
 
 The password used unless anonymous bind is used.
 
-=item C<ldap_suffix>
+=item C<suffix>
+
+(formerly C<ldap_suffix>)
 
 The LDAP suffix used when searching user email.
 
-=item C<ldap_scope>
+=item C<scope>
+
+(formerly C<ldap_scope>)
 
 The scope used when searching user email. Possible values are C<sub>, C<base> 
 and C<one>.
 
-=item C<ldap_get_email_by_uid_filter>
+=item C<deref>
+
+(introduced on 6.2.74)
+
+How to dereference the aliases on searching LDAP.
+Possible values are C<never>, C<search>, C<find> and C<always>.
+
+=item C<get_email_by_uid_filter>
+
+(formerly C<ldap_get_email_by_uid_filter>)
 
 The filter used to perform the email search. It can refer to any environment 
 variables inherited from the SSO module, as shown below.
@@ -418,12 +467,16 @@ Example:
 
   ldap_get_email_by_uid_filter (mail=[SSL_CLIENT_S_DN_Email])
 
-=item C<ldap_email_attribute>
+=item C<email_attribute>
+
+(formerly C<ldap_email_attribute>)
 
 The attribute name to be used as user canonical email. In the current version 
 of Sympa, only the first value returned by the LDAP server is used.
 
-=item C<ldap_timeout>
+=item C<timeout>
+
+(formerly C<ldap_timeout>)
 
 The time out for the search.
 
@@ -439,8 +492,8 @@ paragraph may also be used for C<generic_sso>.
 Note that Sympa will act as a CAS client to validate CAS tickets. During this 
 exchange, Sympa will check the CAS server X.509 certificate. Therefore you 
 should ensure that the certificate authority of the CAS server is known by
-Sympa ; this should be configured through the L<cafile|sympa.conf(5)/cafile> 
-or L<capath|sympa.conf(5)/capath> F<sympa.conf> configuration parameters.
+Sympa ; this should be configured through the L<cafile|sympa_config(5)/cafile>
+or L<C<capath>|sympa_config(5)/capath> F<sympa.conf> configuration parameter.
 
 =over
 
@@ -519,40 +572,62 @@ The proxy validate service path, only used by the Sympa SOAP server.
 
 =over
 
-=item C<ldap_host>
+=item C<host>
+
+(formerly C<ldap_host>)
 
 The LDAP host Sympa will connect to fetch user email when user uid is return 
 by CAS service. The C<ldap_host> includes the port number and it may be a 
 comma separated list of redundant hosts.
 
-=item C<ldap_bind_dn>
+=item C<bind_dn>
+
+(formerly C<ldap_bind_dn>)
 
 The DN used to bind to this server. Anonymous bind is used if this parameter 
 is not defined.
 
-=item C<ldap_bind_password>
+=item C<bind_password>
+
+(formerly C<ldap_bind_password>)
 
 The password used unless anonymous bind is used.
 
-=item C<ldap_suffix>
+=item C<suffix>
+
+(formerly C<ldap_suffix>)
 
 The LDAP suffix used when searching user email.
 
-=item C<ldap_scope>
+=item C<scope>
+
+(formerly C<ldap_scope>)
 
 The scope used when searching user email. Possible values are C<sub>, C<base> 
 and C<one>.
 
-=item C<ldap_get_email_by_uid_filter>
+=item C<deref>
+
+(introduced on 6.2.74)
+
+How to dereference the aliases on searching LDAP.
+
+=item C<get_email_by_uid_filter>
+
+(formerly C<ldap_get_email_by_uid_filter>)
 
 The filter used to perform the email search.
 
-=item C<ldap_email_attribute>
+=item C<email_attribute>
+
+(formerly C<ldap_email_attribute>)
 
 The attribute name to be used as user canonical email. In the current version 
 of Sympa, only the first value returned by the LDAP server is used.
 
-=item C<ldap_timeout>
+=item C<timeout>
+
+(formerly C<ldap_timeout>)
 
 The time out for the search.
 
@@ -562,6 +637,37 @@ The time out for the search.
 
 To support LDAPS (LDAP over SSL/TLS), corresponding parameters in ldap 
 paragraph may also be used for cas.
+
+=head2 C<cgi> paragraph
+
+This paragraph allows Sympa to receive authentication information from
+the external authentication mechanism through Common Gateway Interface (CGI).
+By this, Sympa may use authentication methods not supported by Sympa itself.
+
+=over
+
+=item C<regexp>
+
+=item C<negative_regexp>
+
+See L<C<user_table> paragraph|/user_table paragraph>.
+
+=item C<remote_user_variable>
+
+The name of the CGI environment variable that contains the e-mail address
+of the authenticated user.
+Note that the name of CGI variable is case-sensitive.
+
+=item C<auth_scheme>
+
+Optional.
+If set, authentication is considered successful only if it matches the
+name of authentication scheme, i.e. value of the C<AUTH_TYPE> CGI
+environment variable.
+
+The value of this parameter is case-insensitive.
+
+=back
 
 =head1 FILES
 
@@ -592,6 +698,8 @@ Descriptions of parameters were originally taken from the chapter
 "Authentication" in
 I<Sympa, Mailing List Management Software - Reference manual>, written by
 Serge Aumont, Soji Ikeda, Olivier SalaE<252>n and David Verdin.
+
+C<cgi> paragraph was introduced on Sympa 6.2.71b.
 
 =cut
 

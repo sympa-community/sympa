@@ -34,7 +34,7 @@
             [%|loc(email.0.email)%]Do you really want to add %1?[%END%]
         </strong>
     </p>
-[%~ ELSIF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
+[%~ ELSIF confirm_action == 'arc' || confirm_action == 'msg' || confirm_action == 'arcsearch_id' ~%]
     <h2>
         <i class="fa fa-check-circle"></i>
         [%|loc%]List archive[%END%]
@@ -289,6 +289,11 @@
             [%|loc%]Are you sure you wish to purge selected lists?[%END%]
         </strong>
     </p>
+[%~ ELSIF confirm_action == 'reject' ~%]
+    <h2>
+        <i class="fa fa-check-circle"></i>
+        [%|loc%]Reject[%END%]
+    </h2>
 [%~ ELSIF confirm_action == 'remind' ~%]
     <h2>
         <i class="fa fa-check-circle"></i>
@@ -397,7 +402,7 @@
     [%~ ELSIF confirm_action == 'arc' ~%]
         <input type="hidden" name="month" value="[% month %]" />
         <input type="hidden" name="arc_file" value="[% arc_file %]" />
-    [%~ ELSIF confirm_action == 'arcsearch_id' ~%]
+    [%~ ELSIF confirm_action == 'msg' || confirm_action == 'arcsearch_id' ~%]
         <input type="hidden" name="archive_name" value="[% archive_name %]" />
         <input type="hidden" name="msgid" value="[% msgid %]" />
     [%~ ELSIF confirm_action == 'arc_delete' ~%]
@@ -468,16 +473,24 @@
         [% IF topic_required ~%]
             <h3>[%|loc%]This list is configured to require topic(s).[%END%]</h3>
         [%~ END %]
-        <p>[%|loc%]Please select one or more topic(s) that corresponds to the messages you wish to distribute:[%END%]</p>
-        <ul>
+        [% IF listconf.msg_topic && listconf.msg_topic.size ~%]
+            <p>[%|loc%]Please select one or more topic(s) that corresponds to the messages you wish to distribute:[%END%]</p>
+            <ul>
             [% FOREACH t = listconf.msg_topic ~%]
                 [% NEXT UNLESS t && t.name ~%]
-                    <li>
-                        <input type="checkbox" name="topic" id="topic_[%t.name%]" value="[% t.name %]" />
-                        <label for="topic_[%t.name%]">[% t.title %] </label>
-                    </li>
+                <li>
+                    <input type="checkbox" name="topic" id="topic_[%t.name%]"
+                     value="[% t.name %]"
+                     [%~ IF topic && topic.size ~%]
+                         [% FOREACH tp = topic ~%]
+                             [% IF t.name == tp %] checked[% END %]
+                         [%~ END %]
+                     [%~ END %] />
+                    <label for="topic_[%t.name%]">[% t.title %] </label>
+                </li>
             [%~ END %]
-        </ul>
+            </ul>
+        [% END %]
     [%~ ELSIF confirm_action == 'd_admin' && d_admin == 'delete' ~%]
         <input type="hidden" name="d_admin" value="[% d_admin %]" />
     [%~ ELSIF confirm_action == 'd_delete' ~%]
@@ -508,6 +521,15 @@
                 <li>[% l %]</li>
             [%~ END %]
         </ul>
+    [%~ ELSIF confirm_action == 'reject' ~%]
+        [% FOREACH i = id ~%]
+            <input type="hidden" name="id" value="[% i %]" />
+        [%~ END %]
+        <input type="hidden" name="message_template"
+         value="[% message_template %]" />
+        <input type="hidden" name="signal_spam" value="[% signal_spam %]" />
+        <input type="hidden" name="blocklist" value="[% blocklist %]" />
+        <input type="hidden" name="quiet" value="[% quiet %]" />
     [%~ ELSIF confirm_action == 'remove_arc' ~%]
         <input type="hidden" name="yyyy" value="[% yyyy %]" />
         <input type="hidden" name="month" value="[% month %]" />
@@ -520,7 +542,7 @@
             [%~ END %]
         </ul>
         [% IF is_listmaster || is_owner %]
-            <input type="checkbox" name="signal_as_spam"
+            <input type="checkbox" name="signal_as_spam" id="signal_as_spam"
                    [% IF signal_as_spam %]checked[% END %] />
             <label for="signal_as_spam">
                 [%|loc%]Report messages as undetected spam[%END%]
@@ -543,7 +565,7 @@
         <input type="hidden" name="gecos" value="[% gecos %]" />
         [% FOREACH i = custom_attribute ~%]
             <input type="hidden" name="custom_attribute.[% i.key %]"
-             value="[% i.value.value.replace('\n', '&#10;') %]" />
+             value="[% i.value.replace('\n', '&#10;') %]" />
         [%~ END %]
     [%~ END %]
 
@@ -558,7 +580,7 @@
     [%#
     # Submit and cancel buttons
     #%]
-    [% IF confirm_action == 'arc' || confirm_action == 'arcsearch_id' ~%]
+    [% IF confirm_action == 'arc' || confirm_action == 'msg' || confirm_action == 'arcsearch_id' ~%]
         <div>
             <input class="MainMenuLinks" type="submit"
                    id="response_action_confirm" name="response_action_confirm"

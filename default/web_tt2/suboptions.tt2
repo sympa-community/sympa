@@ -14,7 +14,7 @@
     [%|locdt(subscriber.date)%]%d %b %Y[%END%]
     <label> [%|loc%]Last update:[%END%] </label>
     [%|locdt(subscriber.update_date)%]%d %b %Y[%END%]
-    <label for="reception"> [%|loc%]Receiving mode:[%END%] </label>
+    <label for="reception"> [%|loc%]Reception mode:[%END%] </label>
     <div>
         <select name="reception" id="reception">
             [% FOREACH r = reception ~%]
@@ -118,14 +118,14 @@
 
         <div>
             <label for="date_deb">[%|loc%]From:[%END%] </label>
-            <input type="text" id="date_deb" name="date_deb" maxlength="10" size="10" style="display: inline-block; max-width: 40%"
-                   value="[% d_day %]" placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
+            <input type="date" id="date_deb" name="date_deb"
+             style="display: inline-block; max-width: 40%"
+             value="[% d_day %]"
+             placeholder="[%|loc%]yyyy-mm-dd[%END%]" />
             <label for="date_fin">[%|loc%]To:[%END%] </label>
-            <input type="text" id="date_fin" name="date_fin" maxlength="10" size="10" style="display: inline-block; max-width: 40%"
-                   placeholder="[%|loc%]dd-mm-yyyy[%END%]" />
-            <noscript>
-                ([%|loc%]dd-mm-yyyy[%END%])
-            </noscript>
+            <input type="date" id="date_fin" name="date_fin"
+             style="display: inline-block; max-width: 40%"
+             placeholder="[%|loc%]yyyy-mm-dd[%END%]" />
             <input type="checkbox" name="indefinite" />
             [%|loc%]Suspend my membership indefinitely[%END%]
         </div>

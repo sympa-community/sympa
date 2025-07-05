@@ -1,7 +1,6 @@
 #!--PERL--
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -9,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -96,7 +95,8 @@ if ($options{'add'}) {
 } elsif ($options{'close_list'}) {
     Sympa::CLI->run({}, 'close', $options{close_list});
 } elsif ($options{'conf_2_db'}) {
-    Sympa::CLI->run({}, 'conf_2_db');
+    printf STDERR "The --conf_2_db was deprecated.\n";
+    exit 1;
 } elsif ($options{'copy_list'}) {
     Sympa::CLI->run(
         {mode => 'copy'},
@@ -124,7 +124,8 @@ if ($options{'add'}) {
     exit 1;
 } elsif ($options{'instantiate_family'}) {
     Sympa::CLI->run(
-        \%options, 'instantiate',
+        {%options, ($options{quiet} ? (noout => 1) : ())},
+        'instantiate',
         sprintf '%s@@%s',
         $options{instantiate_family},
         $options{robot} || $Conf::Conf{'domain'}
@@ -137,7 +138,7 @@ if ($options{'add'}) {
 } elsif ($options{'md5_digest'}) {
     Sympa::CLI->run({}, 'md5_digest', $options{md5_digest});
 } elsif ($options{'md5_encode_password'}) {
-    print STDERR "Obsoleted.  Use upgrade_sympa_password.pl.\n";
+    print STDERR "Obsoleted.  Use 'sympa upgrade password' command line.\n";
     exit 0;
 } elsif ($options{'modify_list'}) {
     Sympa::CLI->run(\%options, 'update', sprintf '%s@@%s',
@@ -175,7 +176,7 @@ if ($options{'add'}) {
 } elsif ($options{'upgrade_config_location'}) {
     Sympa::CLI->run({}, 'upgrade_config_location');
 } elsif ($options{'upgrade_shared'}) {
-    print STDERR "Obsoleted.  Use upgrade_shared_repository.pl.\n";
+    print STDERR "Obsoleted.  Use 'sympa upgrade shared'.\n";
     exit 0;
 } elsif ($options{'version'}) {
     Sympa::CLI->run({}, 'version');
@@ -281,6 +282,10 @@ Sets Sympa log level.
 
 Enable SMTP logging.
 
+=item C<--noout>
+
+Skip output to the console except for fatal error messages.
+
 =back
 
 =head1 COMMANDS
@@ -294,6 +299,10 @@ To see detail of each command, run 'C<sympa help> I<command>'.
 
 Add users to the list
 
+=item L<"sympa bouncers"|sympa-bouncers(1)>
+
+Manipulate list bounced users
+
 =item L<"sympa check"|sympa-check(1)>
 
 Check environment
@@ -302,9 +311,9 @@ Check environment
 
 Close a list or the lists belonging to a family
 
-=item L<"sympa conf_2_db"|sympa-conf_2_db(1)>
+=item L<"sympa config"|sympa-config(1)>
 
-Load config into the database
+Manipulate configuration of Sympa
 
 =item L<"sympa copy"|sympa-move(1)>
 
@@ -370,9 +379,17 @@ Recreate config cache of the lists
 
 Restore users of the lists
 
+=item L<"sympa review"|sympa-review(1)>
+
+Show subscribers of the list
+
 =item L<"sympa send_digest"|sympa-send_digest(1)>
 
 Send digest
+
+=item L<"sympa set"|sympa-set)>
+
+Set properties of the users of the list
 
 =item L<"sympa show_pending_lists"|sympa-show_pending_lists(1)>
 
@@ -381,6 +398,10 @@ Show pending lists
 =item L<"sympa sync_list_db"|sympa-sync_list_db(1)>
 
 Synchronize database cache of the lists
+
+=item L<"sympa test"|sympa-test(1)>
+
+Test the functions of Sympa
 
 =item L<"sympa update"|sympa-update(1)>
 
@@ -538,11 +559,12 @@ New command line format:
 
 =item C<--conf_2_db>
 
+B<Deprecated>.
 Load sympa.conf and each robot.conf into database.
 
 New command line format:
 
-TBD.
+None.
 
 =item C<--copy_list=>I<listname>C<@>I<robot>
 C<--new_listname=>I<newlistname> C<--new_listrobot=>I<newrobot>
@@ -694,7 +716,7 @@ Rewrite password in C<user_table> of database using MD5 fingerprint.
 YOU CAN'T UNDO unless you save this table first.
 
 B<Note> that this option was obsoleted.
-Use L<upgrade_sympa_password(1)>.
+Use L<sympa upgrade password|symp-upgrade-password(1)>.
 
 =item C<--modify_list=>I<family_name> C<--robot=>I<robot_name>
 C<--input_file=>I</path/to/file.xml>
@@ -740,7 +762,7 @@ New command line format:
 
 =item C<--show_pending_lists>=I<robot>
 
-Print all pending lists for the robot, with informations.
+Print all pending lists for the robot, with information.
 
 New command line format:
 
@@ -847,13 +869,17 @@ New command line format:
 
 B<Note>:
 This option was deprecated.
-See upgrade_shared_repository(1).
+See L<sympa upgrade shared|sympa-upgrade-shared(1)> command line.
 
 Rename files in shared.
 
 New command line format:
 
-TBD.
+=over
+
+=item C<sympa upgrade shared> [ C<--fix_qencode> ] listname@robot | "*"
+
+=back
 
 =back
 
@@ -908,5 +934,7 @@ F<sympa_msg.pl> daemon.
 
 As of Sympa 6.2.68, F<sympa.pl> was renamed to F<sympa>
 and the new form of command line arguments was introduced.
+
+The C<--noout> option was introduced on Sympa 6.2.71b.
 
 =cut

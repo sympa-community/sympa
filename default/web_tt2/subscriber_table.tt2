@@ -2,36 +2,36 @@
 [% IF total != 0 %]
     <table  class="listOfItems responsive">
         <caption>[%|loc%]List members[%END%]</caption>
-        <tbody>
+        <thead>
             <tr>
                 [% SET colspan = 0 %]
                 [% IF is_owner %]
                     [% SET colspan = colspan + 1 %]
-                    <th>
+                    <th id="h_selection">
                         <a href="#" data-tooltip aria-haspopup="true" title="[%|loc%]Toggle Selection[%END%]" class="toggleButton">
-                            <i class="fa fa-check-square-o"></i>
+                            <i class="far fa-check-square"></i>
                         </a>
                     </th>
                 [% END %]
 
                 [% SET colspan = colspan + 3 %]
                 [% IF sortby == 'email' %]
-                    <th colspan="2" class="sortby">
+                    <th id="h_email" colspan="2" class="sortby">
                         [%|loc%]Email[%END%]
                     </th>
                 [% ELSE %]
-                    <th colspan="2">
+                    <th id="h_email" colspan="2">
                         <a href="[% 'review' | url_rel([list,1,size,'email']) %]">
                             [%|loc%]Email[%END%]
                         </a>
                     </th>
                 [% END %]
                 [% IF sortby == 'domain' %]
-                    <th class="sortby">
+                    <th id="h_domain" class="sortby">
                         [%|loc%]Domain[%END%]
                     </th>
                 [% ELSE %]
-                    <th>
+                    <th id="h_domain">
                         <a href="[% 'review' | url_rel([list,1,size,'domain']) %]">
                             [%|loc%]Domain[%END%]
                         </a>
@@ -39,18 +39,18 @@
                 [% END %]
                 [% IF pictures_display %]
                     [% SET colspan = colspan + 1 %]
-                    <th>
+                    <th id="h_picture">
                         [%|loc%]Picture[%END%]
                     </th>
                 [% END %]
 
                 [% SET colspan = colspan + 1 %]
                 [% IF sortby == 'name' %]
-                    <th class="sortby">
+                    <th id="h_name" class="sortby">
                         [%|loc%]Name[%END%]
                     </th>
                 [% ELSE %]
-                    <th>
+                    <th id="h_name">
                         <a href="[% 'review' | url_rel([list,1,size,'name']) %]">
                             [%|loc%]Name[%END%]
                         </a>
@@ -59,42 +59,44 @@
 
                 [% IF is_owner %]
                     [% SET colspan = colspan + 4 %]
-                    <th>
+                    <th id="h_reception">
                         [%|loc%]Reception[%END%]
                     </th>
                     [% IF sortby == 'sources' %]
-                        <th class="sortby">
+                        <th id="h_sources" class="sortby">
                             [%|loc%]Sources[%END%]
-                    </th>
+                        </th>
                     [% ELSE %]
-                        <th>
+                        <th id="h_sources">
                             <a href="[% 'review' | url_rel([list,1,size,'sources']) %]" >
                                 [%|loc%]Sources[%END%]
                             </a>
                         </th>
                     [% END %]
                     [% IF sortby == 'date' %]
-                        <th class="sortby">
+                        <th id="h_date" class="sortby">
                             [%|loc%]Sub date[%END%]
                         </th>
                     [% ELSE %]
-                        <th>
+                        <th id="h_date">
                             <a href="[% 'review' | url_rel([list,1,size,'date']) %]" >
                                 [%|loc%]Sub date[%END%]
                             </a>
                         </th>
                     [% END %]
-                        <th>[%|loc%]Last update[%END%]</th>
+                        <th id="h_update">[%|loc%]Last update[%END%]</th>
                     [% IF additional_fields %]
                         [% SET colspan = colspan + 1 %]
-                        <th>[% additional_fields %]</th>
+                        <th id="h_addition">[% additional_fields %]</th>
                     [% END %]
                     [% FOREACH ca_k IN listconf.custom_attribute %]
                         [% SET colspan = colspan + 1 %]
-                        <th>[% ca_k.name %]</th>
+                        <th id="h_custom_[%ca_k.id%]">[% ca_k.name %]</th>
                     [% END %]
                 [% END %]
             </tr>
+        </thead>
+        <tbody>
             [% FOREACH u = thosesubscribers %]
                 [% IF dark == '1' %]
                     <tr>
@@ -102,12 +104,12 @@
                     <tr class="color0">
                 [% END %]
                 [% IF is_owner %]
-                        <td>
+                        <td headers="h_selection">
                             <input type="checkbox" name="email" value="[% u.email %]" />
                         </td>
                 [% END %]
                 [% IF u.bounce %]
-                        <td colspan="2" class="text-left">
+                        <td headers="h_email h_domain" colspan="2" class="text-left">
                             [% IF is_owner %]
                                 <a href="[% 'editsubscriber' | url_rel([list],{email=>u.email,previous_action=>action}) %]">
                                     [% u.email %]
@@ -122,7 +124,7 @@
                         </td>
                     [% END %]
                 [% ELSE %]
-                        <td colspan="3" class="text-left">
+                        <td headers="h_email h_domain" colspan="3" class="text-left">
                             [% IF is_owner %]
                                 <a href="[% 'editsubscriber' | url_rel([list],{email=>u.email,previous_action=>action}) %]">
                                     [% u.email %]
@@ -135,7 +137,7 @@
 
                 [% IF pictures_display %]
                     [% IF u.pictures_url %]
-                        <td>
+                        <td headers="h_picture">
                             <a href="[%u.pictures_url%]" title="[%|loc%]Open in a new window[%END%]" target="pictures">
                                 <img class="Pictures" src="[%u.pictures_url%]" alt="[%|loc(u.email)%]%1's picture[%END%]" />
                             </a>
@@ -145,16 +147,16 @@
                         </td>
                     [% END %]
                 [% END %]
-                        <td>
+                        <td headers="h_name">
                             <span>
-                                [% u.gecos %]&nbsp;
+                                [% u.gecos %]
                             </span>
                         </td>
                 [% IF is_owner %]
-                        <td>
+                        <td headers="h_reception">
                             [%|optdesc('reception')%][% u.reception %][%END%]
                         </td>
-                        <td>
+                        <td headers="h_sources">
                             [% IF u.subscribed %][%|loc%]subscribed[%END%][% END ~%]
                             [% IF u.subscribed && u.inclusion.defined() %]<br />[% END ~%]
                             [% IF u.inclusion.defined() ~%]
@@ -165,21 +167,21 @@
                                 [%~ END %]
                             [% END %]
                         </td>
-                        <td>
+                        <td headers="h_date">
                             [% u.date %]
                         </td>
-                        <td>
+                        <td headers="h_update">
                             [% u.update_date %]
                         </td>
                     [% IF additional_fields %]
-                        <td>
+                        <td headers="h_addition">
                             [% u.additional %]
                         </td>
                     [% END %]
                     [% FOREACH ca_k IN listconf.custom_attribute %]
-                        <td>
+                        <td headers="h_custom_[%ca_k.id%]">
                             [% SET id = ca_k.id %]
-                            [% u.custom_attribute.$id.value %]
+                            [% u.attrib.$id %]
                         </td>
                     [% END %]
                 [% END %]

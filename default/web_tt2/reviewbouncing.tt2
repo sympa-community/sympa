@@ -6,7 +6,7 @@
     </a>
 </h2>
 
-[% IF bounce_rate %]
+[% IF bounce_total %]
     <a class="actionMenuLinks" href="[% 'export_member' | url_rel([list,'bounce']) %]">
         [%|loc%]Dump[%END%]
     </a>
@@ -33,7 +33,7 @@
         </div>
     </form>
 
-    <form action="[% path_cgi %]">
+    <form action="[% path_cgi %]" method="post">
         <fieldset>
             <input type="hidden" name="sortby" value="[% sortby %]" />
             <input type="hidden" name="action" value="reviewbouncing" />
@@ -89,24 +89,25 @@
             <input type="hidden" name="previous_action" value="reviewbouncing" />
             <table class="listOfItems">
                 <caption>[%|loc%]Table to display list bounces[%END%]</caption>
+                <thead>
                 <tr>
-                    <th rowspan="2">
+                    <th id="h_selection" rowspan="2">
                         <a href="#" data-tooltip aria-haspopup="true" class="toggleButton"
                            title="[%|loc%]Toggle Selection[%END%]">
-                            <i class="fa fa-check-square-o"></i>
+                            <i class="far fa-check-square"></i>
                         </a>
                     </th>
-                    <th rowspan="2">[%|loc%]Email[%END%]</th>
-                    <th rowspan="2">[%|loc%]Bounce score[%END%]</th>
-                    <th colspan="3">[%|loc%]Details[%END%]</th>
+                    <th id="h_email" rowspan="2">[%|loc%]Email[%END%]</th>
+                    <th id="h_value" rowspan="2">[%|loc%]Bounce score[%END%]</th>
+                    <th id="h_detail" colspan="3">[%|loc%]Details[%END%]</th>
                 </tr>
                 <tr>
-                    <th>[%|loc%]Number of bounces[%END%]</th>
-                    <th>[%|loc%]First bounce[%END%]</th>
-                    <th>[%|loc%]Last bounce[%END%]</th>
+                    <th id="h_number">[%|loc%]Number of bounces[%END%]</th>
+                    <th id="h_first">[%|loc%]First bounce[%END%]</th>
+                    <th id="h_last">[%|loc%]Last bounce[%END%]</th>
                 </tr>
-
-
+                </thead>
+                <tbody>
                 [% FOREACH u = members %]
                     [% IF dark == '1' %]
                         [% SET dark = 0 %]
@@ -116,15 +117,15 @@
                         <tr class="color0">
                     [% END %]
 
-                            <td>
+                            <td headers="h_selection">
                                 <input type="checkbox" name="email" value="[% u.email %]" />
                             </td>
-                            <td>
+                            <td headers="h_email">
                                 <a href="[% 'editsubscriber' | url_rel([list],{email=>u.email,previous_action=>action}) %]">
                                     [% u.email %]
                                 </a>
                             </td>
-                            <td class="text_center
+                            <td headers="h_value" class="text_center
                                 [% IF u.bounce_level == '2' %]
                                     bounce_level2
                                 [% ELSIF u.bounce_level == '1' %]
@@ -136,11 +137,12 @@
                                     [% u.bounce_score %]
                                 [% END %]
                             </td>
-                            <td>[% u.bounce_count %]</td>
-                            <td>[% u.first_bounce %]</td>
-                            <td>[% u.last_bounce %]</td>
+                            <td headers="h_detail h_number">[% u.bounce_count %]</td>
+                            <td headers="h_detail h_first">[% u.first_bounce %]</td>
+                            <td headers="h_detail h_last">[% u.last_bounce %]</td>
                         </tr>
                     [% END %]
+                </tbody>
             </table>
             <div class="text-center">
                 [% IF prev_page ~%]

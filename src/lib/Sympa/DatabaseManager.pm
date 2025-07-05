@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2021 The Sympa Community. See the
+# Copyright 2021, 2023 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -54,6 +54,21 @@ sub instance {
     return undef
         unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
         and $self->connect;
+
+    # Compatibility concern.
+    # - Create a temporary view "dual" for portable SQL statements.
+    if (ref $self eq 'Sympa::DatabaseDriver::PostgreSQL') {
+        # Note: PostgreSQL <= 8.0.x didn't support temporary view but >= 7.3.x
+        #   supported CREATE OR REPLACE statement.
+        defined $self->__dbh->do(
+            q{CREATE TEMPORARY VIEW dual AS SELECT 'X'::varchar(1) AS dummy;})
+            or $self->__dbh->do(
+            q{CREATE OR REPLACE VIEW dual AS SELECT 'X'::varchar(1) AS dummy;}
+            );
+    } elsif (ref $self eq 'Sympa::DatabaseDriver::SQLite') {
+        $self->__dbh->do(
+            q{CREATE TEMPORARY VIEW dual AS SELECT 'X' AS dummy;});
+    }
 
     # At once connection succeeded, we keep trying to connect.
     # Unless in a web context, because we can't afford long response time on
@@ -122,7 +137,7 @@ sub probe_db {
     } else {
         $may_update = 1;
         foreach my $method (
-            qw(set_autoinc add_table update_field add_field delete_field
+            qw(set_autoinc add_table update_field add_field drop_field
             unset_primary_key set_primary_key unset_index set_index)
         ) {
             unless ($sdm->can($method)) {
