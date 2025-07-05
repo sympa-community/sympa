@@ -119,7 +119,8 @@ sub run {
                 # If option name contains hyphen-minus, underscore is also
                 # allowed and the latter will be used for keys in the hash.
                 my ($keys, $val) = m/\A([-\w|]+)(.*)\z/;
-                $keys = join '|', map { (s/-/_/gr, $_) } split /[|]/, $keys;
+                $keys = join '|',
+                    map { /_/ ? ($_, s/_/-/gr) : ($_) } split /[|]/, $keys;
                 $keys . $val
             } (__PACKAGE__->_options, $class->_options)
         )
@@ -487,6 +488,9 @@ TBD.
 I<Class method>, I<overridable>.
 Returns an array to define command line options.
 About the format see L<Getopt::Long/Summary of Option Specifications>.
+
+Additionally, underscores C<_> in the long options are also recognized
+as hyphen-minus C<->.
 
 By default general options are defined and they always take precedence over
 the definition in subclass.

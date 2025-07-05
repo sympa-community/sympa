@@ -29,7 +29,7 @@ use Sympa::Spindle::ProcessDigest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(keep-digest);
+use constant _options => qw(keep_digest);
 use constant _args    => qw();
 
 sub _run {
