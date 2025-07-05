@@ -119,7 +119,8 @@ sub run {
                 # If option name contains hyphen-minus, underscore is also
                 # allowed and the latter will be used for keys in the hash.
                 my ($keys, $val) = m/\A([-\w|]+)(.*)\z/;
-                $keys = join '|', map { (s/-/_/gr, $_) } split /[|]/, $keys;
+                $keys = join '|',
+                    map { /-/ ? (s/-/_/gr, $_) : ($_) } split /[|]/, $keys;
                 $keys . $val
             } (__PACKAGE__->_options, $class->_options)
         )
