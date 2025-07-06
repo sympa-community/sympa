@@ -1536,6 +1536,8 @@ sub _personalize_attrs {
         $value =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;    # unfold
         $data->{headers}{$key} = $value;
     }
+    $data->{sender}  = $self->{sender};
+    $data->{gecos}   = $self->{gecos};
     $data->{subject} = $self->{decoded_subject};
 
     return $data;
