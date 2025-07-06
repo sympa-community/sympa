@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: sympa 6.2\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
 "POT-Creation-Date: 2024-11-04 00:48:19+0000\n"
-"PO-Revision-Date: 2024-01-08 16:20+0000\n"
+"PO-Revision-Date: 2025-06-28 18:30+0000\n"
 "Last-Translator: iequa9Du <23la6k8dv@mozmail.com>\n"
 "Language-Team: Nederlands\n"
 "Language: nl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
 "plural-forms: nplurals=2; plural=n != 1\n"
-"X-POOTLE-MTIME: 1704730828.000000\n"
+"X-POOTLE-MTIME: 1751135402.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -295,22 +295,20 @@ msgid "subtree"
 msgstr "deelboom"
 
 #: src/lib/Sympa/ListOpt.pm:111
-#, fuzzy
 msgid "never"
-msgstr "0% - nooit"
+msgstr "nooit"
 
 #: src/lib/Sympa/ListOpt.pm:113
 msgid "in searching subordinates of the base object"
-msgstr ""
+msgstr "in het zoeken naar ondergeschikten van het basisobject"
 
 #: src/lib/Sympa/ListOpt.pm:114
 msgid "in locating the base object"
-msgstr ""
+msgstr "in het lokaliseren van het basisobject"
 
 #: src/lib/Sympa/ListOpt.pm:115
-#, fuzzy
 msgid "always"
-msgstr "100% - altijd"
+msgstr "altijd"
 
 #: src/lib/Sympa/ListOpt.pm:119
 msgid "use STARTTLS"
@@ -508,7 +506,7 @@ msgstr "authenticatie door S/MIME-handtekening"
 
 #: src/lib/Sympa/ListOpt.pm:207
 msgid "with successfully verified DKIM signature"
-msgstr ""
+msgstr "met met succesvol geverifieerde DKIM handtekening"
 
 #: src/lib/Sympa/ListOpt.pm:208
 msgid "approved by moderator"
@@ -1203,20 +1201,26 @@ msgid ""
 "exists on the SMTP server. This feature requires an external module: Net-"
 "SMTP."
 msgstr ""
+"Controleert of er al een alias met dezelfde naam als de lijst is gemaakt op "
+"de SMTP-server. Voor deze functie is een externe module vereist: Net-SMTP."
 
 #: src/lib/Sympa/Config/Schema.pm:180
 msgid "Antivirus plug-in"
-msgstr ""
+msgstr "Antivirus plug-in"
 
 #: src/lib/Sympa/Config/Schema.pm:186 src/lib/Sympa/Config/Schema.pm:6067
 msgid "Password validation"
 msgstr "Controle wachtwoord"
 
+# Data::Password - do not translate
 #: src/lib/Sympa/Config/Schema.pm:188
 msgid ""
 "Checks if the password the user submitted has sufficient strength. This "
 "feature requires an external module: Data-Password."
 msgstr ""
+"Controleert of het wachtwoord dat de gebruiker heeft ingediend voldoende "
+"sterkte heeft. Voor deze functie is een externe module vereist: Data::"
+"Password."
 
 #: src/lib/Sympa/Config/Schema.pm:192
 msgid "Authentication with LDAP"
@@ -1228,16 +1232,21 @@ msgid ""
 "requires an external module: Net-LDAP. And also, if secure connection "
 "(LDAPS) is required: IO-Socket-SSL."
 msgstr ""
+"Authenticeert gebruikers op basis van de gegevens van de LDAP-server. Voor "
+"deze functie is een externe module vereist: Net-LDAP. En als een beveiligde "
+"verbinding (LDAPS) nodig is: IO-Socket-SSL."
 
 #: src/lib/Sympa/Config/Schema.pm:198
 msgid "SOAP HTTP interface"
-msgstr ""
+msgstr "SOAP HTTP interface"
 
 #: src/lib/Sympa/Config/Schema.pm:200
 msgid ""
 "Provides some functions of Sympa through the SOAP HTTP interface. This "
 "feature requires an external module: SOAP-Lite."
 msgstr ""
+"Biedt een aantal functies van Sympa via de SOAP HTTP interface. Voor deze "
+"functie is een externe module vereist: SOAP-Lite."
 
 #: src/lib/Sympa/Config/Schema.pm:205
 msgid "Obsoleted parameters"
@@ -1424,7 +1433,7 @@ msgstr "Deze parameter kan momenteel alleen voor SQLite gebruikt worden."
 
 #: src/lib/Sympa/Config/Schema.pm:415
 msgid "Database private extension to subscriber table"
-msgstr ""
+msgstr "Extra veld in de database voor abonnees"
 
 #: src/lib/Sympa/Config/Schema.pm:418
 msgid ""
@@ -1449,7 +1458,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:427
 msgid "Database private extension to user table"
-msgstr ""
+msgstr "Extra veld in de database voor gebruikers"
 
 #: src/lib/Sympa/Config/Schema.pm:430
 msgid ""
@@ -1475,13 +1484,16 @@ msgstr "Vergeet niet de syslog-server in te stellen."
 
 #: src/lib/Sympa/Config/Schema.pm:451
 msgid "System log socket options"
-msgstr ""
+msgstr "Systeemlogboek socket opties"
 
 #: src/lib/Sympa/Config/Schema.pm:453
 msgid ""
 "The options to be used for system log socket. Options come from Sys::Syslog "
 "https://metacpan.org/pod/Sys::Syslog#setlogsock%28%29"
 msgstr ""
+"De opties die moeten worden gebruikt voor de systeemlogboek socket. Opties "
+"zijn afkomstig van Sys::Syslog, https://metacpan.org/pod/Sys::"
+"Syslog#setlogsock%28%29"
 
 #: src/lib/Sympa/Config/Schema.pm:459
 msgid "Communication mode with syslog server"
@@ -1491,6 +1503,8 @@ msgstr "Manier om met de syslog-server te communiceren"
 msgid ""
 "In most cases, an appropriate default value should be automatically chosen."
 msgstr ""
+"In de meeste gevallen moet automatisch een passende standaardwaarde worden "
+"gekozen."
 
 #: src/lib/Sympa/Config/Schema.pm:472
 #, fuzzy
@@ -1532,7 +1546,7 @@ msgstr "Standaardprivileges voor de lijsten"
 
 #: src/lib/Sympa/Config/Schema.pm:494
 msgid "TCP or UDP port to connect to"
-msgstr ""
+msgstr "TCP- of UDP-poort om verbinding mee te maken"
 
 #: src/lib/Sympa/Config/Schema.pm:496
 #, fuzzy
@@ -1612,7 +1626,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:574
 msgid "Whether to use the alias wrapper"
-msgstr ""
+msgstr "Al dan niet gebruik van de alias-wrapper"
 
 #: src/lib/Sympa/Config/Schema.pm:576
 msgid ""
@@ -1620,6 +1634,9 @@ msgid ""
 "set this parameter to \"off\" and remove the wrapper file sympa_newaliases-"
 "wrapper."
 msgstr ""
+"Als het programma om de aliasdatabase bij te werken geen root-privileges "
+"vereist, stelt u deze parameter in op \"off\" en verwijdert u het "
+"wrapperbestand sympa-newaliases-wrapper."
 
 #: src/lib/Sympa/Config/Schema.pm:586
 msgid "Type of alias database"
@@ -1651,6 +1668,9 @@ msgid ""
 "to the LISTS mail command. The subject is a free form text limited to one "
 "line."
 msgstr ""
+"Deze parameter geeft het onderwerp van de lijst aan, die wordt verzonden als "
+"reactie op de mail opdracht LISTS. Er is geen opgelegd formaat voor de "
+"onderwerptekst, maar het onderwerp beperkt tot één regel."
 
 #: src/lib/Sympa/Config/Schema.pm:621
 msgid "Visibility of the list"
@@ -1937,9 +1957,8 @@ msgid "Owner profile"
 msgstr "profiel"
 
 #: src/lib/Sympa/Config/Schema.pm:1034
-#, fuzzy
 msgid "Default profile for the owners of the list."
-msgstr "Standaardprofiel voor de abonnees op deze lijst."
+msgstr "Standaardprofiel voor de eigenaars van deze lijst."
 
 #: default/web_tt2/review.tt2:412 src/lib/Sympa/Config/Schema.pm:1039
 #: src/lib/Sympa/Config/Schema.pm:2968 src/lib/Sympa/Config/Schema.pm:6297
@@ -1947,24 +1966,20 @@ msgid "profile"
 msgstr "profiel"
 
 #: src/lib/Sympa/Config/Schema.pm:1057
-#, fuzzy
 msgid "Visibility of the owner."
-msgstr "Zichtbaarheid van de abonnee."
+msgstr "Zichtbaarheid van de eigenaar."
 
 #: src/lib/Sympa/Config/Schema.pm:1069
-#, fuzzy
 msgid "Moderator profile"
-msgstr "Moderator"
+msgstr "Moderator profiel"
 
 #: src/lib/Sympa/Config/Schema.pm:1070
-#, fuzzy
 msgid "Default profile for the moderators of the list."
-msgstr "Standaardprofiel voor de abonnees op deze lijst."
+msgstr "Standaardprofiel voor de moderators van deze lijst."
 
 #: src/lib/Sympa/Config/Schema.pm:1085
-#, fuzzy
 msgid "Visibility of the moderator."
-msgstr "Zichtbaarheid van de lijst"
+msgstr "Zichtbaarheid van de moderator"
 
 #: src/lib/Sympa/Config/Schema.pm:1098
 msgid "Topics for message categorization"
@@ -2152,9 +2167,8 @@ msgid "Allow message personalization"
 msgstr "Personalisering berichten toestaan"
 
 #: src/lib/Sympa/Config/Schema.pm:1321
-#, fuzzy
 msgid "Message personalization"
-msgstr "Personalisering berichten toestaan"
+msgstr "Berichtenpersonalisering"
 
 #: src/lib/Sympa/Config/Schema.pm:1328
 msgid "Scope for messages from the web interface"
@@ -2432,16 +2446,16 @@ msgstr "Wie kan het e-mailadres van de gebruiker veranderen"
 
 #: src/lib/Sympa/Config/Schema.pm:1604
 msgid "Use blocklist"
-msgstr "Zwarte lijst gebruiken"
+msgstr "Blokkeerlijst gebruiken"
 
 #: src/lib/Sympa/Config/Schema.pm:1608
 msgid ""
 "List of operations separated by comma for which blocklist filter is "
 "applied.  Setting this parameter to \"none\" will hide the blocklist feature."
 msgstr ""
-"Lijst met door komma's gescheiden bewerkingen waarvoor het zwarte-"
-"lijstfilter wordt toegepast. Als u deze parameter instelt op \"none\", wordt "
-"de zwarte-lijstfunctie verborgen."
+"Lijst met door komma's gescheiden bewerkingen waarvoor het "
+"blokkerlijstfilter wordt toegepast. Als u deze parameter instelt op "
+"\"none\", wordt de blokkeerlijstfunctie verborgen."
 
 #: src/lib/Sympa/Config/Schema.pm:1625
 msgid "Who can view list information"
@@ -2720,17 +2734,19 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2022 src/lib/Sympa/Config/Schema.pm:2068
 msgid "points"
-msgstr ""
+msgstr "punten"
 
 #: src/lib/Sympa/Config/Schema.pm:2030 src/lib/Sympa/Config/Schema.pm:2076
 msgid "action for this population"
-msgstr ""
+msgstr "actie voor deze groep"
 
 #: src/lib/Sympa/Config/Schema.pm:2032
 msgid ""
 "This parameter defines which task is automatically applied on level 1 "
 "bouncers."
 msgstr ""
+"Deze parameter bepaalt welke bewerking wordt uitgevoerd op abonnees met "
+"fouten van niveau 1."
 
 #: src/lib/Sympa/Config/Schema.pm:2040 src/lib/Sympa/Config/Schema.pm:2086
 msgid "notification"
@@ -2768,6 +2784,8 @@ msgid ""
 "This parameter defines which task is automatically applied on level 2 "
 "bouncers."
 msgstr ""
+"Deze parameter bepaalt welke bewerking wordt uitgevoerd op abonnees met "
+"fouten van niveau 2."
 
 #: src/lib/Sympa/Config/Schema.pm:2088
 msgid ""
@@ -2780,7 +2798,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2105
 msgid "percentage of list members in VERP mode"
-msgstr ""
+msgstr "percentage van de abonnees in VERP modus"
 
 #: src/lib/Sympa/Config/Schema.pm:2107
 msgid ""
@@ -2805,11 +2823,11 @@ msgstr "Functie voor het volgen van berichten"
 
 #: src/lib/Sympa/Config/Schema.pm:2125
 msgid "tracking message by delivery status notification"
-msgstr ""
+msgstr "Berichten volgen met Delivery Status Notifications (DSN, RFC 3461)"
 
 #: src/lib/Sympa/Config/Schema.pm:2136
 msgid "tracking message by message disposition notification"
-msgstr ""
+msgstr "Berichten volgen met Message Disposition Notification (MDN, RFC 8098)"
 
 #: src/lib/Sympa/Config/Schema.pm:2153
 msgid "who can view message tracking"
@@ -2818,6 +2836,7 @@ msgstr "wie heeft inzage in het volgen van berichten"
 #: src/lib/Sympa/Config/Schema.pm:2162
 msgid "Tracking datas are removed after this number of days"
 msgstr ""
+"Gegevens over het volgen van berichten worden na dit aantal dagen verwijderd"
 
 #: src/lib/Sympa/Config/Schema.pm:2163
 msgid "Max age of tracking information"
@@ -2828,14 +2847,13 @@ msgid "Remove bouncing new subscribers"
 msgstr "Nieuwe abonnees met onbestelbare adressen verwijderen"
 
 #: src/lib/Sympa/Config/Schema.pm:2205
-#, fuzzy
 msgid ""
 "If enabled, the welcome message is sent using VERP in order to remove the "
 "subscriber immediately in the case of a bounce."
 msgstr ""
-"Is dit op \"unique\" ingesteld, dan wordt het welkomstbericht met een uniek "
-"afzenderadres verstuurd zodat de abonnee onmiddellijk verwijderd kan worden "
-"in het geval dat het bericht onbestelbaar blijkt."
+"Is deze optie ingesteld, dan wordt het welkomstbericht met een uniek "
+"afzenderadres verstuurd (VERP methode) zodat de abonnee onmiddellijk "
+"verwijderd kan worden in het geval dat het bericht onbestelbaar blijkt."
 
 #: src/lib/Sympa/Config/Schema.pm:2222
 msgid "Remove subscribers bouncing remind message"
@@ -2944,10 +2962,14 @@ msgid ""
 "sent to a list. Usually bounces are sent back on the same day as the "
 "original message."
 msgstr ""
+"Gemiddelde tijd voor een foutmelding naar de server moet worden "
+"teruggestuurd na het verzenden van een bericht naar een lijst. Meestal "
+"worden foutmeldingen op dezelfde dag verzonden als het oorspronkelijke "
+"bericht."
 
 #: src/lib/Sympa/Config/Schema.pm:2323
 msgid "Prefix of VERP return address"
-msgstr ""
+msgstr "voorvoegsel van het VERP antwoordadres"
 
 #: src/lib/Sympa/Config/Schema.pm:2325
 msgid ""
@@ -2963,7 +2985,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2333
 msgid "Suffix of list return address"
-msgstr ""
+msgstr "Achtervoegsel van het antwoordadres van de lijst"
 
 #: src/lib/Sympa/Config/Schema.pm:2335
 msgid ""
@@ -2971,6 +2993,9 @@ msgid ""
 "distributed through the list. This address will receive all non-delivery "
 "reports (also called bounces)."
 msgstr ""
+"Dit achtervoegsel wordt toegevoegd aan de naam van de lijst om het "
+"retouradres te vormen. Dit adres ontvangt alle berichten van niet-aflevering "
+"(ook wel bouncing genoemd)."
 
 #: src/lib/Sympa/Config/Schema.pm:2346
 msgid "Maximum number of responses to command message"
@@ -2982,6 +3007,9 @@ msgid ""
 "stored in \"bad\" subdirectory of incoming message spool, and reports are "
 "not longer sent."
 msgstr ""
+"Maximaal aantal rapporten over een bericht dat naar een adres is verzonden. "
+"Wordt dat aantal overschreden, dan worden de berichten opgeslagen in de "
+"\"bad\" map van de \"incoming message spool\"."
 
 #: src/lib/Sympa/Config/Schema.pm:2356
 msgid "Delay before counting responses to command message"
@@ -3613,9 +3641,8 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:3535 src/lib/Sympa/Config/Schema.pm:3788
-#, fuzzy
 msgid "LDAP page size"
-msgstr "Paginaformaat"
+msgstr "LDAP paginagrootte"
 
 #: src/lib/Sympa/Config/Schema.pm:3548
 msgid "LDAP 2-level query inclusion"
@@ -3722,9 +3749,8 @@ msgid "Directory where the database is stored (used for DBD::CSV only)"
 msgstr "De map waar de database is opgeslagen (enkel gebruikt bij DBD:CSV)"
 
 #: src/lib/Sympa/Config/Schema.pm:3922
-#, fuzzy
 msgid "TTL of user data"
-msgstr "Type databae"
+msgstr "Geldigheidsduur (TTL) van de gebruikersgegevens"
 
 #: src/lib/Sympa/Config/Schema.pm:3924
 msgid ""
@@ -3734,9 +3760,10 @@ msgid ""
 msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:3941
-#, fuzzy
 msgid "TTL of user data for message distribution"
-msgstr "Timeout importering voor distributie van berichten"
+msgstr ""
+"Geldigheidsduur (TTL) van de gebruikersgegevens voor distributie van "
+"berichten"
 
 #: src/lib/Sympa/Config/Schema.pm:3943
 msgid ""
@@ -4416,7 +4443,7 @@ msgstr "Pad naar MHonArc (conversieprogramma mail naar HTML)"
 
 #: src/lib/Sympa/Config/Schema.pm:5479
 msgid "This is required for HTML mail archiving."
-msgstr "Dit is nodig om de webarchieven aan te kunnen maken."
+msgstr "Dit is nodig om de mailarchieven in HTML vorm aan te kunnen maken."
 
 #: src/lib/Sympa/Config/Schema.pm:5487
 msgid "System log facility for web interface"
@@ -5167,7 +5194,7 @@ msgstr " Actieve lijsten "
 #: default/web_tt2/latest_lists.tt2:11
 #, smalltalk-format
 msgid " for %1 days "
-msgstr " gedurende %1 dag(en)"
+msgstr " sinds %1 dagen "
 
 #: default/web_tt2/active_lists.tt2:21 default/web_tt2/get_biggest_lists.tt2:7
 #: default/web_tt2/get_inactive_lists.tt2:9
@@ -5230,11 +5257,11 @@ msgstr ""
 
 #: default/web_tt2/admin.tt2:17
 msgid "Blocklist:"
-msgstr "Zwarte lijst:"
+msgstr "Blokkeerlijst:"
 
 #: default/web_tt2/admin.tt2:18
 msgid "Handles the set of black-listed mail addresses for this list."
-msgstr "Behandelt de set van zwarte lijst mailadressen voor deze lijst."
+msgstr "Behandelt de set van mailadressen op de blokkeerlijst voor deze lijst."
 
 #: default/web_tt2/admin.tt2:25
 msgid "Manage archives:"
@@ -5250,7 +5277,7 @@ msgstr "Weigeringen:"
 
 #: default/web_tt2/admin.tt2:32
 msgid "Manage non-delivery reports (also called bounces)."
-msgstr "Beheert breichten over mislukte bezorging (zogenaamde bounces)."
+msgstr "Beheert berichten over mislukte bezorging (zogenaamde bounces)."
 
 #: default/web_tt2/admin.tt2:37
 msgid "Logs:"
@@ -5384,7 +5411,7 @@ msgstr "Keuze van archieven:"
 
 #: default/web_tt2/arc_manage.tt2:26
 msgid "Download .zip archive"
-msgstr "Download ZipFile"
+msgstr "Download zip archief"
 
 #: default/web_tt2/arc_manage.tt2:27 default/web_tt2/confirm_action.tt2:45
 msgid "Delete Selected Month(s)"
@@ -5597,17 +5624,17 @@ msgstr "Informatie gebruiker"
 
 #: default/web_tt2/blocklist.tt2:3
 msgid "Blocklist management"
-msgstr "Zwarte lijst beheren"
+msgstr "Blokkeerlijst beheren"
 
 #: default/web_tt2/blocklist.tt2:7
 msgid "The current blocklist is empty"
-msgstr "De zwarte lijst is leeg"
+msgstr "De blokkeerlijst is leeg"
 
 #. (rows)
 #: default/web_tt2/blocklist.tt2:9
 #, smalltalk-format
 msgid "The current blocklist contains %1 line(s)"
-msgstr "De zwarte lijst bevat momenteel %1 regel(s)"
+msgstr "De blokkeerlijst bevat momenteel %1 regel(s)"
 
 #. (conf.use_blocklist)
 #: default/web_tt2/blocklist.tt2:12
@@ -5616,8 +5643,8 @@ msgid ""
 "Operation requested by users which email is listed in the blocklist file are "
 "rejected. The blocklist is in use for the following operation: %1."
 msgstr ""
-"Opdrachten van gebruikers wier e-mailadres op de zwarte lijst staat worden "
-"geweigerd. De zwarte lijst wordt voor de volgende bewerking gebruikt: %1."
+"Opdrachten van gebruikers wier e-mailadres op de blokkeerlijst staat worden "
+"geweigerd. De blokkeerlijst wordt voor de volgende bewerking gebruikt: %1."
 
 #: default/web_tt2/blocklist.tt2:15
 msgid "Syntax:"
@@ -7036,7 +7063,7 @@ msgstr "Status:"
 
 #: default/web_tt2/editsubscriber.tt2:116
 msgid "Bounce count:"
-msgstr "Aantal bounces:"
+msgstr "Aantal onbestelbare berichten:"
 
 #: default/web_tt2/editsubscriber.tt2:119
 msgid "Period:"
@@ -7874,7 +7901,7 @@ msgstr "Standaardafwijzingsbericht van de server"
 
 #: default/web_tt2/modindex.tt2:135 default/web_tt2/viewmod.tt2:46
 msgid "Add to blocklist"
-msgstr "Aan zwarte lijst toevoegen"
+msgstr "Aan de blokkeerlijst toevoegen"
 
 #: default/web_tt2/modindex.tt2:144
 msgid "No messages to moderate"
@@ -7886,7 +7913,7 @@ msgstr "Moderatiebeheer"
 
 #: default/web_tt2/modindex.tt2:160
 msgid "edit blocklist"
-msgstr "zwarte lijst wijzigen"
+msgstr "de blokkeerlijst wijzigen"
 
 #: default/web_tt2/modindex.tt2:162
 msgid "Manage rejection messages"
@@ -8012,7 +8039,7 @@ msgstr "Berichtsjablonen"
 
 #: default/web_tt2/nav.tt2:394 default/web_tt2/review.tt2:35
 msgid "Blocklist"
-msgstr "Zwarte lijst"
+msgstr "Blokkeerlijst"
 
 #: default/web_tt2/nav.tt2:406
 msgid "Manage Archives"
@@ -8588,7 +8615,7 @@ msgstr "sinds %1 dagen"
 #: default/web_tt2/rss.tt2:32
 #, smalltalk-format
 msgid "The %1 most active lists"
-msgstr "De %1 actiefste lijsten"
+msgstr "De %1 meest actieve lijsten"
 
 #: default/web_tt2/rss.tt2:34
 msgid "The most active lists"
@@ -8614,11 +8641,11 @@ msgstr "sinds %1 dagen "
 #: default/web_tt2/rss.tt2:51
 #, smalltalk-format
 msgid "The %1 most recent shared documents"
-msgstr "De %1 nieuwste gedeelde documenten"
+msgstr "De %1 meest recent gedeelde documenten"
 
 #: default/web_tt2/rss.tt2:53
 msgid "Most recent shared documents"
-msgstr "Nieuwste gedeelde documenten"
+msgstr "Meest recent gedeelde documenten"
 
 #. (l.name,domain,l.subject,l.msg_count)
 #: default/web_tt2/rss.tt2:76
@@ -9109,8 +9136,8 @@ msgid ""
 "You might have subscribed with another address. Please contact the list "
 "owner to help you unsubscribe:"
 msgstr ""
-"Je kan hebben ingeschreven met een ander e-mailadres. Contacteer de "
-"lijsteigenaar om je te helpen uitschrijven:"
+"Het is mogelijk dat u zich heeft ingeschreven met een ander e-mailadres. "
+"Contacteer de lijsteigenaar om u te helpen bij het uitschrijven:"
 
 #. (list)
 #: default/web_tt2/signoff.tt2:14
@@ -9927,7 +9954,7 @@ msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been notified that they might be removed from list %2:"
 msgstr ""
-"Omdat we vele berichten niet konden afleveren, hebben we de onderstaande %1 "
+"Omdat we VEEL berichten niet konden afleveren, hebben we de onderstaande %1 "
 "abonnees gewaarschuwd dat ze van de lijst %2 verwijderd kunnen worden:"
 
 #. (total,list.name)
@@ -9937,7 +9964,7 @@ msgid ""
 "Because we received MANY non-delivery reports, the %1 subscribers listed "
 "below have been removed from list %2:"
 msgstr ""
-"Omdat we vele berichten niet konden afleveren, hebben we de onderstaande %1 "
+"Omdat we VEEL berichten niet konden afleveren, hebben we de onderstaande %1 "
 "abonnees verwijderd van de lijst %2:"
 
 #. (total,list.name)
@@ -10403,7 +10430,7 @@ msgstr "Uitschrijven:"
 #: default/mail_tt2/expire_warning1.tt2:15
 #: default/mail_tt2/expire_warning2.tt2:16
 msgid "Information about this list: "
-msgstr "Informatie over deze lijst:"
+msgstr "Informatie over deze lijst: "
 
 #. (list.name,date)
 #: default/mail_tt2/get_archive.tt2:32
@@ -10505,11 +10532,12 @@ msgid "SET <list>|* DIGEST         * Message reception in compilation mode"
 msgstr "SET <list>|* DIGEST         * De berichten ontvangen in bundels"
 
 #: default/mail_tt2/helpfile.tt2:29
-#, fuzzy
 msgid ""
 "SET <list>|* DIGESTPLAIN    * Message reception in compilation mode, sent as "
 "a plain text email with all attachments"
-msgstr "SET <list>|* DIGEST         * De berichten ontvangen in bundels"
+msgstr ""
+"SET <list>|* DIGESTPLAIN    * Ontvang de berichten in de samenvattende "
+"modus, als een platte tekstbestand met alle bijlagen"
 
 #: default/mail_tt2/helpfile.tt2:30
 msgid "SET <list>|* SUMMARY        * Receiving the message index only"
@@ -10706,9 +10734,9 @@ msgstr "Uitnodiging om in te schrijven op lijst %1"
 
 #. (list.name,requested_by)
 #: default/mail_tt2/invite.tt2:5
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "You are invited to %1 list by <%2>."
-msgstr "U bent uitgenodigd om u in te schrijven op lijst %s"
+msgstr "U bent uitgenodigd tot lijst %1 door <%2>."
 
 #. (list.subject)
 #: default/mail_tt2/invite.tt2:7
@@ -11193,9 +11221,11 @@ msgstr ""
 
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:258
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "List %1 configuration does not respect family %2 rules."
-msgstr "                        "
+msgstr ""
+"De configuratie van de lijst %1 is in tegenspraak met de regels van familie "
+"%2."
 
 #. (param0,param1)
 #: default/mail_tt2/listmaster_notification.tt2:265
@@ -11822,13 +11852,13 @@ msgstr ""
 #: default/mail_tt2/listowner_notification.tt2:90
 #, smalltalk-format
 msgid "FYI: %1 list %2 from %3 %4"
-msgstr "Ter info: %1 lijst %2 vanwege %3 %4"
+msgstr "Ter info: opdracht %1 lijst %2 vanwege %3 %4"
 
 #. (command,list.name,who,gecos)
 #: default/mail_tt2/listowner_notification.tt2:92
 #, smalltalk-format
 msgid "FYI command %1 list %2 from %3 %4"
-msgstr "Ter info: commando %1 lijst %2 vanwege %3 %4"
+msgstr "Ter info: opdracht %1 lijst %2 vanwege %3 %4"
 
 #. (by)
 #: default/mail_tt2/listowner_notification.tt2:92
@@ -12623,9 +12653,9 @@ msgstr "Gebruiker %1 is uitgeschreven van lijst %2."
 
 #. (report_param.email)
 #: default/mail_tt2/report.tt2:368
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "The user %1 has been removed."
-msgstr "Gebruiker %1 is uitgeschreven van lijst %2."
+msgstr "Gebruiker %1 is uitgeschreven van de lijst."
 
 #. (report_param.listname)
 #: default/mail_tt2/report.tt2:371
@@ -12763,7 +12793,7 @@ msgstr "%1 succesvol geupload!"
 #: default/mail_tt2/report.tt2:446
 #, smalltalk-format
 msgid "File %1 unzipped!"
-msgstr "Bestand %1 uitgepakt!"
+msgstr "Bestand %1 is uitgepakt!"
 
 #. (report_param.path)
 #: default/mail_tt2/report.tt2:449
@@ -14162,7 +14192,7 @@ msgstr ""
 
 #: default/mail_tt2/x509-user-cert-missing.tt2:12
 msgid "Information about this list:"
-msgstr "Alles over deze lijst:"
+msgstr "Informatie over deze lijst:"
 
 #: default/mail_tt2/your_infected_msg.tt2:1
 msgid "A virus in your email"
@@ -14459,7 +14489,7 @@ msgstr "publieke lijst multipart berichten worden geweigerd"
 
 #: default/scenari/spam_status.x-spam-status:1
 msgid "test X-Spam-Status header"
-msgstr ""
+msgstr "test de X-Spam-Status header"
 
 #: default/scenari/subscribe.auth:2
 msgid "subscription request confirmed"
