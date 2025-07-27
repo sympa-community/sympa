@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: Sympa 6.0b\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
 "POT-Creation-Date: 2024-11-04 00:48:19+0000\n"
-"PO-Revision-Date: 2024-11-22 14:39+0000\n"
-"Last-Translator: racke <racke@linuxia.de>\n"
+"PO-Revision-Date: 2025-03-31 10:19+0000\n"
+"Last-Translator: Ralph Ballier <ballier@schule.de>\n"
 "Language-Team: Deutsch\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.8\n"
-"X-POOTLE-MTIME: 1732286379.000000\n"
+"X-POOTLE-MTIME: 1743416368.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -296,11 +296,11 @@ msgstr "nie"
 
 #: src/lib/Sympa/ListOpt.pm:113
 msgid "in searching subordinates of the base object"
-msgstr ""
+msgstr "bei der Suche nach Unterobjekten des Basisobjekts"
 
 #: src/lib/Sympa/ListOpt.pm:114
 msgid "in locating the base object"
-msgstr ""
+msgstr "bei der Lokalisierung des Basisobjekts"
 
 #: src/lib/Sympa/ListOpt.pm:115
 msgid "always"
@@ -502,7 +502,7 @@ msgstr "authentifiziert mit S/MIME-Signatur"
 
 #: src/lib/Sympa/ListOpt.pm:207
 msgid "with successfully verified DKIM signature"
-msgstr ""
+msgstr "mit erfolgreich verifizierter DKIM Signatur"
 
 #: src/lib/Sympa/ListOpt.pm:208
 msgid "approved by moderator"
@@ -598,7 +598,7 @@ msgstr "\"Name\" (E-Mail via Liste)"
 
 #: src/lib/Sympa/ListOpt.pm:246
 msgid "\"List\" (on behalf of e-mail)"
-msgstr "\"Liste\" (im Auftrag von E-Mail)"
+msgstr "„Liste“ (im Zusammenhang mit E-Mails"
 
 #: src/lib/Sympa/ListOpt.pm:247
 msgid "\"List\" (on behalf of Name)"
@@ -886,7 +886,7 @@ msgstr "%s Mailingliste"
 #: src/lib/Sympa/Message.pm:3447 src/lib/Sympa/Message.pm:3463
 #, c-format
 msgid "on behalf of %s"
-msgstr "im Auftrag von %s"
+msgstr "im Namen von %s"
 
 #: src/lib/Sympa/Message.pm:3480
 msgid "Anonymous"
@@ -1346,7 +1346,8 @@ msgstr "Typ der Datenbank"
 msgid ""
 "Possible types are \"MySQL\", \"PostgreSQL\", \"Oracle\" and \"SQLite\"."
 msgstr ""
-"Mögliche Typen sind \"MySQL\", \"PostgreSQL\", \"Oracle\" und \"SQLite\"."
+"Mögliche Datenbanktypen sind \"MySQL\", \"PostgreSQL\", \"Oracle\" und "
+"\"SQLite\"."
 
 #: src/lib/Sympa/Config/Schema.pm:329
 msgid "Hostname of the database server"
@@ -1485,13 +1486,16 @@ msgstr "Vergessen Sie nicht, den Syslog-Server zu konfigurieren."
 
 #: src/lib/Sympa/Config/Schema.pm:451
 msgid "System log socket options"
-msgstr ""
+msgstr "Systemprotokoll-Socket-Optionen"
 
 #: src/lib/Sympa/Config/Schema.pm:453
 msgid ""
 "The options to be used for system log socket. Options come from Sys::Syslog "
 "https://metacpan.org/pod/Sys::Syslog#setlogsock%28%29"
 msgstr ""
+"Die Optionen, die für den Systemprotokoll-Socket verwendet werden sollen. "
+"Die Optionen stammen aus Sys::Syslog: https://metacpan.org/pod/Sys::"
+"Syslog#setlogsock%28%29"
 
 #: src/lib/Sympa/Config/Schema.pm:459
 msgid "Communication mode with syslog server"
@@ -1501,21 +1505,20 @@ msgstr "Kommunikationsmodus mit Syslog-Server"
 msgid ""
 "In most cases, an appropriate default value should be automatically chosen."
 msgstr ""
+"In den meisten Fällen sollte ein geeigneter Standardwert automatisch gewählt "
+"werden."
 
 #: src/lib/Sympa/Config/Schema.pm:472
-#, fuzzy
 msgid "Stream location"
-msgstr "URL der Daten"
+msgstr "Stream-Standort"
 
 #: src/lib/Sympa/Config/Schema.pm:474
-#, fuzzy
 msgid "Defaults to the standard location on the system."
-msgstr "Standard-Profil für die Moderatoren der Liste."
+msgstr "Standardmäßig wird der systemeigene Speicherort verwendet."
 
 #: src/lib/Sympa/Config/Schema.pm:480
-#, fuzzy
 msgid "Socket timeout"
-msgstr "Zeitlimit für Inaktivität"
+msgstr "Socket timeout"
 
 #: src/lib/Sympa/Config/Schema.pm:1494 src/lib/Sympa/Config/Schema.pm:1505
 #: src/lib/Sympa/Config/Schema.pm:1516 src/lib/Sympa/Config/Schema.pm:2360
@@ -1531,23 +1534,20 @@ msgid "seconds"
 msgstr "Sekunden"
 
 #: src/lib/Sympa/Config/Schema.pm:487
-#, fuzzy
 msgid "Host name to send the messages to"
-msgstr "Die zu löschende Nachricht kann nicht gefunden werden"
+msgstr "Hostname, an den die Nachrichten gesendet werden sollen."
 
 #: src/lib/Sympa/Config/Schema.pm:488
-#, fuzzy
 msgid "Defaults to the local host."
-msgstr "Achten Sie auf die Groß-/Kleinschreibung"
+msgstr "Standardmäßig der lokale Host."
 
 #: src/lib/Sympa/Config/Schema.pm:494
 msgid "TCP or UDP port to connect to"
-msgstr ""
+msgstr "TCP- oder UDP-Port für die Verbindung"
 
 #: src/lib/Sympa/Config/Schema.pm:496
-#, fuzzy
 msgid "Defaults to the standard port on the system."
-msgstr "Standard-Profil für die Moderatoren der Liste."
+msgstr "Standardmäßig wird der auf dem System festgelegte Port verwendet."
 
 #: src/lib/Sympa/Config/Schema.pm:513
 msgid "Log verbosity"
@@ -3758,7 +3758,7 @@ msgstr "Suchbereich"
 #: src/lib/Sympa/Config/Schema.pm:3728 src/lib/Sympa/Config/Schema.pm:4071
 #: src/lib/Sympa/Config/Schema.pm:4257 src/lib/Sympa/Config/Schema.pm:4320
 msgid "dereferencing aliases"
-msgstr ""
+msgstr "Auflösen von Aliasnamen"
 
 #: src/lib/Sympa/Config/Schema.pm:3484 src/lib/Sympa/Config/Schema.pm:4080
 msgid "connection timeout"
@@ -3786,6 +3786,10 @@ msgid ""
 "supports paging. If not set or set to zero, do not use paging. Typically "
 "1000 for an Active Directory server, to avoid \"SizeLimit\" errors"
 msgstr ""
+"Anzahl der Datensätze pro Abruf (Paging) für einen LDAP-Server mit Paging-"
+"Unterstützung. Wenn nicht gesetzt oder auf null gesetzt, wird kein Paging "
+"verwendet. Typischerweise 1000 für einen Active-Directory-Server, um "
+"„SizeLimit“-Fehler zu vermeiden."
 
 #: src/lib/Sympa/Config/Schema.pm:3535 src/lib/Sympa/Config/Schema.pm:3788
 msgid "LDAP page size"
@@ -3902,9 +3906,8 @@ msgstr ""
 "Verzeichnis, in dem die Datenbank gespeichert ist (nur benutzt von DBD::CSV)"
 
 #: src/lib/Sympa/Config/Schema.pm:3922
-#, fuzzy
 msgid "TTL of user data"
-msgstr "Typ der Datenbank"
+msgstr "Gültigkeitsdauer (TTL) der Benutzerdaten"
 
 #: src/lib/Sympa/Config/Schema.pm:3924
 msgid ""
@@ -3917,21 +3920,17 @@ msgstr ""
 "diesen Parameter kontrolliert werden. Der Standardwert ist 3600"
 
 #: src/lib/Sympa/Config/Schema.pm:3941
-#, fuzzy
 msgid "TTL of user data for message distribution"
-msgstr "Zeitlimit für Einbindevorgänge bei Nachrichtenverteilung"
+msgstr "Gültigkeitsdauer (TTL) der Benutzerdaten für die Nachrichtenverteilung"
 
 #: src/lib/Sympa/Config/Schema.pm:3943
-#, fuzzy
 msgid ""
 "This parameter defines the delay since the last synchronization after which "
 "the user data will be updated before performing message distribution"
 msgstr ""
-"Dieser Parameter definiert die Verzögerung seit der letzten Synchronisation, "
-"nach der die Liste der Benutzer aktualisiert wird, bevor eine der folgenden "
-"Aktionen ausgeführt wird:\n"
-"* Überprüfung von Listenmitgliedern\n"
-"* Nachrichtenverteilung"
+"Dieser Parameter definiert die Verzögerung seit der letzten "
+"Synchronisierung, nach der die Benutzerdaten aktualisiert werden, bevor die "
+"Nachrichtenverteilung erfolgt."
 
 #: src/lib/Sympa/Config/Schema.pm:3953
 msgid "LDAP query custom attribute"
@@ -4241,15 +4240,17 @@ msgstr ""
 "übermäßigen DMARC-Schutz einiger Domänen zu vermeiden."
 
 #: src/lib/Sympa/Config/Schema.pm:4895
-#, fuzzy
 msgid "Remove DKIM signatures in incoming messages"
-msgstr "Entferne Abonnenten mit Zustellfehlern bei Erinnerungsnachrichten"
+msgstr "DKIM-Signaturen aus eingehenden Nachrichten entfernen"
 
 #: src/lib/Sympa/Config/Schema.pm:4897
 msgid ""
 "Normally this should be turned off. It can be turned on when DKIM signatures "
 "that cannot be verified at the recipient site cause problems."
 msgstr ""
+"Normalerweise sollte dies deaktiviert bleiben. Es kann aktiviert werden, "
+"wenn nicht verifizierbare DKIM-Signaturen am Empfängerstandort Probleme "
+"verursachen."
 
 #: src/lib/Sympa/Config/Schema.pm:4913
 msgid "SMTP HELO (EHLO) parameter used for address verification"
@@ -5884,9 +5885,8 @@ msgstr "Erweiterte Suche"
 
 #: default/web_tt2/arcsearch_form.tt2:20
 #: default/web_tt2/search_list_request.tt2:5
-#, fuzzy
 msgid "Search keywords:"
-msgstr "Suchzeitraum: "
+msgstr "Suchbegriffe:"
 
 #: default/mhonarc_rc.tt2:68 default/web_tt2/arcsearch_form.tt2:23
 #: default/web_tt2/review.tt2:138 default/web_tt2/reviewbouncing.tt2:22
@@ -7689,7 +7689,7 @@ msgstr "Was möchten Sie tun?"
 #: default/web_tt2/home.tt2:31 default/web_tt2/home.tt2:34
 #: default/web_tt2/home.tt2:36
 msgid "Home Submenu"
-msgstr ""
+msgstr "Untermenü „Start“"
 
 #: default/web_tt2/home.tt2:45 default/web_tt2/home.tt2:50
 #: default/web_tt2/home.tt2:73 default/web_tt2/home.tt2:78
@@ -7726,7 +7726,7 @@ msgstr "leise"
 
 #: default/web_tt2/import.tt2:23 default/web_tt2/review.tt2:107
 msgid "Invite"
-msgstr ""
+msgstr "Einladen"
 
 #. (list)
 #: default/web_tt2/including_lists.tt2:2
@@ -8286,9 +8286,9 @@ msgstr "Derzeit sind keine Ablehnungsnachrichten verfügbar"
 
 #. (message_template)
 #: default/web_tt2/manage_template.tt2:60
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "Edit rejection message %1"
-msgstr "\"Abgelehnt durch den Moderator\" - Nachricht"
+msgstr "Überarbeite die zurückgewiesene Nachricht %1"
 
 #: default/web_tt2/manage_template.tt2:68
 msgid "Save Message"
@@ -9239,9 +9239,8 @@ msgid "bounce"
 msgstr "Zustellfehler"
 
 #: default/web_tt2/search_user.tt2:20
-#, fuzzy
 msgid "operations"
-msgstr "Aktion"
+msgstr "Operationen"
 
 #: default/web_tt2/search_user.tt2:41
 msgid "member"
@@ -9451,16 +9450,17 @@ msgstr "inhaltlich"
 
 #. (domain)
 #: default/web_tt2/serveradmin.tt2:263
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "Virtual domain %1 statistics"
-msgstr "Liste %1 Statistiken"
+msgstr "Statistiken der virtuellen Domäne %1"
 
 #: default/web_tt2/serveradmin.tt2:264
-#, fuzzy
 msgid ""
 "This page displays overall information regarding the activity on this "
 "virtual domain."
-msgstr "Diese Seite zeigt allgemeine Informationen zur Listen-Aktivität an"
+msgstr ""
+"Diese Seite zeigt allgemeine Informationen zur Aktivität in dieser "
+"virtuellen Domäne an."
 
 #: default/web_tt2/serveradmin.tt2:272
 msgid ""
@@ -10026,7 +10026,7 @@ msgstr ""
 #: default/web_tt2/suspend_request.tt2:98 default/web_tt2/viewlogs.tt2:31
 #: default/web_tt2/viewlogs.tt2:36
 msgid "yyyy-mm-dd"
-msgstr ""
+msgstr "yyyy-mm-dd"
 
 #: default/web_tt2/suboptions.tt2:130 default/web_tt2/suspend_request.tt2:99
 msgid "Suspend my membership indefinitely"
@@ -11337,9 +11337,9 @@ msgstr "Einladung zum Abonnement der Liste %1"
 
 #. (list.name,requested_by)
 #: default/mail_tt2/invite.tt2:5
-#, fuzzy, smalltalk-format
+#, smalltalk-format
 msgid "You are invited to %1 list by <%2>."
-msgstr "Sie sind kein Abonnent der Liste %1"
+msgstr "Sie wurden zu der Liste %1 von <%2> eingeladen."
 
 #. (list.subject)
 #: default/mail_tt2/invite.tt2:7
@@ -13073,9 +13073,10 @@ msgstr ""
 "Listeneigentümer beschränkt."
 
 #: default/mail_tt2/report.tt2:204
-#, fuzzy
 msgid "This action is restricted to listmasters, list owners or moderators."
-msgstr "Dieser Vorgang ist auf Listeneigentümer oder Moderatoren beschränkt."
+msgstr ""
+"Diese Aktion ist auf Listenmaster, Listenbesitzer oder Moderatoren "
+"beschränkt."
 
 #: default/mail_tt2/report.tt2:207
 msgid ""
