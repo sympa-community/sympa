@@ -862,13 +862,13 @@ our %in_regexp = (
     'family'      => Sympa::Regexps::family_name(),
 
     # Email addresses
-    'current_email' => Sympa::Regexps::email(),
-    'email'         => Sympa::Regexps::email() . '|' . Sympa::Regexps::uid(),
-    'init_email'    => Sympa::Regexps::email(),
-    'old_email'     => Sympa::Regexps::email(),
-    'new_email'     => Sympa::Regexps::email(),
-    'sender'        => Sympa::Regexps::email(),
-    'fromaddr'      => Sympa::Regexps::email(),
+    'current_email' => Sympa::Regexps::email(1),
+    'email'         => Sympa::Regexps::email(1) . '|' . Sympa::Regexps::uid(),
+    'init_email'    => Sympa::Regexps::email(1),
+    'old_email'     => Sympa::Regexps::email(1),
+    'new_email'     => Sympa::Regexps::email(1),
+    'sender'        => Sympa::Regexps::email(1),
+    'fromaddr'      => Sympa::Regexps::email(1),
     'del_emails'    => '.*',
     'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
     'automatic_list_part_*' => '[\w\-\.\+]*',
@@ -890,7 +890,7 @@ our %in_regexp = (
 
     ##Logs
     'target_type' => '[\w\-\.\:]*',
-    'target'      => Sympa::Regexps::email(),
+    'target'      => Sympa::Regexps::email(1),
     'date_from'   => '[\d\/\-]+',
     'date_to'     => '[\d\/\-]+',
     'ip'          => Sympa::Regexps::host(),

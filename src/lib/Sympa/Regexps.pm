@@ -34,8 +34,35 @@ use constant domain => qr'[-\w]+(?:[.][-\w]+)+';
 
 # These are relaxed variants of the syntax for mailbox described in RFC 5322.
 # See also RFC 5322, 3.2.3 & 3.4.1 for details on format.
-use constant email =>
-    qr{(?:[A-Za-z0-9!\#\$%\&'*+\-/=?^_`{|}~.]+|"(?:\\.|[^\\"])*")\@[-\w]+(?:[.][-\w]+)+};
+
+sub email {
+    # Email address either extended by RFC 6531, 3.3 or not.
+    (shift)
+        ? qr{
+          (?:
+            (?: [A-Za-z0-9!\#\$%\&'*+\-/=?^_`{|}~.] | [^\x00-\x7F] )+
+          |
+            " (?: \\[\x21-\x7E] | [^\0\t\n\r\\"] )* "
+          )
+          \@
+          (?: [-\w] | [^\x00-\x7F] )+
+          (?:
+            [.] (?: [-\w] | [^\x00-\x7F] )+
+          )+
+        }x
+        : qr{
+          (?:
+            [A-Za-z0-9!\#\$%\&'*+\-/=?^_`{|}~.]+
+          |
+            " (?: \\[\x21-\x7E] | [^\0\t\n\r\\"] )* "
+          )
+          \@
+          [-\w]+
+          (?:
+            [.] [-\w]+
+          )+
+        }x;
+}
 
 # This is older definition used by 6.2.65b and earlier.
 #use constant addrspec => qr{(?:[-&+'./\w=]+|".*")\@[-\w]+(?:[.][-\w]+)+};
