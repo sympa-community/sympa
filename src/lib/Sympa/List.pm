@@ -3961,7 +3961,7 @@ sub _load_include_admin_user_file {
         if defined $entry->{'source_parameters'};
     my $template = Sympa::Template->new($self, subdir => 'data_sources');
     unless ($template->parse({param => [@data]}, $filename, \$output)) {
-        $log->syslog('err', 'Failed to parse %s', $filename);
+        $log->syslog('err', 'Failed to parse %s : %s', $filename, $template->{last_error});
         return undef;
     }
     1 while $output =~ s/(\A|\n)\s+\n/$1\n/g;    # Clean empty lines
