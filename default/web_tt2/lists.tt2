@@ -76,7 +76,7 @@
 [% END %]
 
 [% IF all_letters.size %]
-    <script>
+    <script nonce="[% csp_nonce %]">
     <!--
     $(
         '[% 'a[href="#' _ all_letters.join( '"], a[href="#' ) _ '"]' %]'

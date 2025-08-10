@@ -623,7 +623,7 @@
 
 [% IF confirm_action == 'arc_delete' ~%]
     [%# FIXME. ~%]
-    <script>
+    <script nonce="[% csp_nonce %]">
     <!--
     $('#response_action_confirm').click(function(){
         if ($('#zip').prop('checked'))
