@@ -63,6 +63,8 @@ sub connect {
     } else {
         $self->__dbh->func(5000, 'busy_timeout');
     }
+    # Create a temoprarhy view "dual" for portable SQL statements.
+    $self->__dbh->do(q{CREATE TEMPORARY VIEW dual AS SELECT 'X' AS dummy;});
 
     # Create a function MD5().
     $self->__dbh->func(
