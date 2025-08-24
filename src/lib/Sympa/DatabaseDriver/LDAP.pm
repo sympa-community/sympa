@@ -45,7 +45,7 @@ use constant optional_parameters => [
         ssl_cert ssl_key ca_verify ca_path ca_file
         timeout)
 ];
-use constant required_modules => [qw(Net::LDAP)];
+use constant required_modules => [qw(Net::LDAP Net::LDAP::Util)];
 use constant optional_modules => [qw(IO::Socket::SSL)];
 
 sub _new {
@@ -196,15 +196,25 @@ sub disconnect {
 }
 
 sub do_operation {
+    $log->syslog('debug3', '(%s, %s, ...)', @_);
     my $self      = shift;
     my $operation = shift;
     my %params    = @_;
 
-    my $mesg;
+    my %args =
+        map {
+        my $v = $params{$_} // $self->{$_};
+        if (defined $v) {
+            my $k = {suffix => 'base'}->{$_} // $_;
+            $v = [split /\s*,\s*/, $v]
+                if 'attrs' eq $_ and not ref $v;
+            ($k => $v);
+        } else {
+            ();
+        }
+        } qw(suffix scope deref filter attrs control);
 
-    $log->syslog('debug3', 'Will perform operation "%s"', $operation);
-
-    $mesg = $self->__dbh->search(%params);
+    my $mesg = $self->__dbh->search(%args);
     if ($mesg->code) {
         # Check connection to database in case it would be the cause of the
         # problem.  As LDAP doesn't support ping(), once disconnect and then
@@ -214,7 +224,7 @@ sub do_operation {
             $log->syslog('err', 'Unable to get a handle to %s', $self);
             return undef;
         } else {
-            $mesg = $self->__dbh->search(%params);
+            $mesg = $self->__dbh->search(%args);
             if ($mesg->code) {
                 $self->{_error_code}   = $mesg->code;
                 $self->{_error_string} = $mesg->error;
@@ -242,6 +252,14 @@ sub error {
 #sub canonical_dn;
 #sub escape_dn_value;
 #sub escape_filter_value;
+
+sub quote {
+    my $self   = shift;
+    my $string = shift;
+
+    return undef unless defined $string;
+    return Net::LDAP::Util::escape_filter_value($string);
+}
 
 1;
 
@@ -281,6 +299,8 @@ B<Obsoleted>.
 
 I<Instance method>.
 See L<Net::LDAP::Util/escape_filter_value>.
+
+As of 6.2.74, use quote() instead.
 
 =back
 
