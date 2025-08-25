@@ -77,9 +77,10 @@ if (3035005 <= $DBD::SQLite::sqlite_version_number) {
         qr/not support/, 'delete_field(unsupported)';
 }
 
+is_deeply $sdm->get_views, [qw(dual)], 'view "dual" exists';
 my $sth = $sdm->do_prepared_query(q{SELECT '', 0, NULL FROM dual});
 my $rows = $sth->fetchall_arrayref if $sth;
-is_deeply $rows, [['', 0, undef]], 'temporary view "dual" exists';
+is_deeply $rows, [['', 0, undef]], 'view "dual" works';
 $sth->finish;
 
 done_testing();

@@ -273,6 +273,11 @@ sub probe_db {
                 }
             }
         }
+
+        unless (_check_views($sdm, {report => \@report})) {
+            $log->syslog('err', 'Could not add the views');
+            return undef;
+        }
     } else {
         $log->syslog('err',
             "Could not check the database structure. consider verify it manually before launching Sympa."
@@ -696,6 +701,25 @@ sub _check_key {
 
 # Moved: Use Sympa::Database::is_sufficient_field_type().
 #sub _check_db_field_type;
+
+sub _check_views {
+    my $sdm        = shift;
+    my $param      = shift;
+    my $report_ref = $param->{'report'};
+
+    return 1 unless $sdm->can('get_views') and $sdm->can('add_view');
+
+    # Create a view "dual" for portable SQL statements.
+    my @views = @{$sdm->get_views // []};
+    foreach my $view (qw(dual)) {
+        next if grep { $view eq $_ } @views;
+
+        my $report = $sdm->add_view({view => $view});
+        return undef unless $report;
+        push @$report_ref, $report;
+    }
+    return 1;
+}
 
 1;
 __END__

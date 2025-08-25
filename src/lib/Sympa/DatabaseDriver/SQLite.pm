@@ -63,8 +63,6 @@ sub connect {
     } else {
         $self->__dbh->func(5000, 'busy_timeout');
     }
-    # Create a temoprarhy view "dual" for portable SQL statements.
-    $self->__dbh->do(q{CREATE TEMPORARY VIEW dual AS SELECT 'X' AS dummy;});
 
     # Create a function MD5().
     $self->__dbh->func(
@@ -518,6 +516,40 @@ sub set_index {
     $log->syslog('info', 'Table %s, index %s set using fields %s',
         $param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
+}
+
+sub get_views {
+    my $self = shift;
+
+    if (my $sth = $self->do_query(q{SELECT '' FROM dual})) {
+        $sth->finish;
+        return [qw(dual)];
+    }
+    return [];
+}
+
+use constant _views => {dual => q{SELECT 'X' AS dummy}};
+
+sub add_view {
+    my $self = shift;
+    my $param = shift || {};
+
+    my $view = $param->{view};
+    return undef unless $view;
+
+    unless (
+        $self->__dbh->do(
+            sprintf q{CREATE VIEW %s AS %s;}, $view,
+            $self->_views->{$view}
+        )
+    ) {
+        $log->syslog(
+            'err', 'Unable to add view "%s": %s',
+            $view, $self->__dbh->errstr
+        );
+        return undef;
+    }
+    return sprintf 'View %s', $view;
 }
 
 sub translate_type {

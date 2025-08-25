@@ -61,18 +61,11 @@ sub connect {
 
     # - Configure Postgres to use ISO format dates.
     # - Set client encoding to UTF8.
-    # - Create a temporary view "dual" for portable SQL statements.
     # Note: utf8 flagging must be disabled so that we will consistently use
     #   UTF-8 bytestring as internal format.
-    # Note: PostgreSQL <= 8.0.x didn't support temporary view but >= 7.3.x
-    #   supported CREATE OR REPLACE statement.
     $self->__dbh->{pg_enable_utf8} = 0;    # For DBD::Pg 3.x
     $self->__dbh->do("SET DATESTYLE TO 'ISO';");
     $self->__dbh->do("SET NAMES 'utf8'");
-    defined $self->__dbh->do(
-        q{CREATE TEMPORARY VIEW dual AS SELECT 'X'::varchar(1) AS dummy;})
-        or $self->__dbh->do(
-        q{CREATE OR REPLACE VIEW dual AS SELECT 'X'::varchar(1) AS dummy;});
 
     return 1;
 }
@@ -629,6 +622,40 @@ sub set_index {
     $log->syslog('info', 'Table %s, index %s set using fields %s',
         $param->{'table'}, $param->{'index_name'}, $fields);
     return $report;
+}
+
+sub get_views {
+    my $self = shift;
+
+    if (my $sth = $self->do_query(q{SELECT '' FROM dual})) {
+        $sth->finish;
+        return [qw(dual)];
+    }
+    return [];
+}
+
+use constant _views => {dual => q{SELECT 'X'::varchar(1) AS dummy}};
+
+sub add_view {
+    my $self = shift;
+    my $param = shift || {};
+
+    my $view = $param->{view};
+    return undef unless $view;
+
+    unless (
+        $self->__dbh->do(
+            sprintf q{CREATE VIEW %s AS %s;}, $view,
+            $self->_views->{$view}
+        )
+    ) {
+        $log->syslog(
+            'err', 'Unable to add view "%s": %s',
+            $view, $self->__dbh->errstr
+        );
+        return undef;
+    }
+    return sprintf 'View %s', $view;
 }
 
 sub translate_type {
