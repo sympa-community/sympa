@@ -764,7 +764,7 @@ sub _compile_condition {
             my $key = $1;
             $value =
                 sprintf
-                '($context->{subscriber} || $that->get_list_memner($context->{sender}) || {})->{\'%s\'}',
+                '($context->{subscriber} || $that->get_list_member($context->{sender}) || {})->{\'%s\'}',
                 $key;
         } elsif ($value =~
             /\[(msg_header|header)\-\>([\w\-]+)\](?:\[([-+]?\d+)\])?/i) {
