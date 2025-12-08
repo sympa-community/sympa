@@ -25,22 +25,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2023-10-04 00:47:59+0000\n"
-"PO-Revision-Date: 2012-05-25 14:36+0000\n"
-"Last-Translator: ivoverdonck <ivoverdonck@gmail.com>\n"
+"POT-Creation-Date: 2025-07-27 02:10:44+0000\n"
+"PO-Revision-Date: 2025-06-27 09:38+0000\n"
+"Last-Translator: iequa9Du <23la6k8dv@mozmail.com>\n"
 "Language-Team: Nederlands\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.1\n"
+"X-Generator: Pootle 2.8\n"
 "plural-forms: nplurals=2; plural=n != 1\n"
-"X-POOTLE-MTIME: 1337956590.000000\n"
+"X-POOTLE-MTIME: 1751017102.000000\n"
 
 #: default/web_tt2/help_admin-archives.tt2:2 default/web_tt2/help_admin.tt2:55
 msgid "Managing the message archive"
-msgstr ""
+msgstr "Beheer van het berichtenarchief"
 
 #: default/web_tt2/help_admin-archives.tt2:4
 msgid ""
@@ -50,6 +50,11 @@ msgid ""
 "you in the list and click on the '<strong>Download .zip archive</strong>' "
 "button."
 msgstr ""
+"De beheerssoftware voor mailinglijsten, Sympa, kan <strong>downloadbare "
+"gecomprimeerde archieven (in het zip formaat) aanmaken van de berichten die "
+"gestuurd werden naar de lijst</strong>. Om die archieven te downloaden, "
+"<strong>selecteer de maanden</strong> die u interesseren en klik op "
+"'<strong>Download zip archief</strong>'."
 
 #: default/web_tt2/help_admin-archives.tt2:7
 msgid ""
@@ -57,6 +62,9 @@ msgid ""
 "messages have been sent, click on the first month, hold down the SHIFT key "
 "and click on the last month of the list."
 msgstr ""
+"Tip: om alle maanden te selecteren in de 'archief selectie' lijst, klik op "
+"de eerste maand en hou dan de SHIFT toets ingedrukt en selecteer dan de "
+"laatste maand."
 
 #: default/web_tt2/help_admin-archives.tt2:10
 msgid ""
@@ -70,6 +78,16 @@ msgid ""
 "your choice (Notepad, WordPad, Vim, etc.) to open them. <strong>Each file "
 "represents an entire message (full header)</strong>."
 msgstr ""
+"Je zult een bestand van het type '<strong>lijstnaam_archief.zip</strong>' "
+"ontvangen. Daarin zitten <strong>mappen met als naam 'lijstnaam_jaar-maand'</"
+"strong> (voorbeeld: <em class=\"example\">voorbeeldlijst_2005-06</em>). Er "
+"is voor elke maand één map. In elke map zitten bestanden <strong>waarvan de "
+"bestandsnaam een getal is</strong> dat de volgorde in de tijd weergeeft "
+"(voorbeeld: het bestand met de naam '1' bevat het eerste bericht verstuurd "
+"in de maand). De berichtbestanden hebben <strong>géén extensie</strong>. "
+"Gebruik een tekstverwerker voor platte tekst naar keuze (voorbeelden: Kate, "
+"Kladblok, Notepad, WordPad, Vim, etc.) om ze te openen. <strong>Elke bestand "
+"bevat een volledig bericht (inclusief de volledige berichtkop)</strong>."
 
 #: default/web_tt2/help_admin-archives.tt2:13
 msgid ""
@@ -78,6 +96,10 @@ msgid ""
 "<strong>select the months</strong> that interest you in the list and click "
 "on the '<strong>Delete Selected Month(s)</strong>' button."
 msgstr ""
+"Op de 'archiefbeheerpagina' kun je ook <strong>berichten wissen</strong> "
+"(wissen per maand, niet per bericht). Om dat te doen <strong>selecteer de "
+"maanden</strong> die je wil wissen en klik op '<strong>Verwijder de "
+"geslecteerde maanden</strong>'."
 
 #: default/web_tt2/help_admin-archives.tt2:16
 msgid ""
@@ -86,10 +108,13 @@ msgid ""
 "archive file, but also the entire message archive of the selected month!!!</"
 "strong>"
 msgstr ""
+"<strong>Let op: deze actie is niet omkeerbaar! Als je klikt op 'Verwijder de "
+"geselecteerde maanden', bedenk dan dat je alle berichten van die maand gaat "
+"verwijderen!</strong>"
 
 #: default/web_tt2/help_admin-bounces.tt2:2 default/web_tt2/help_admin.tt2:49
 msgid "Managing bounces"
-msgstr ""
+msgstr "Beheer van onbestelbare berichten"
 
 #: default/web_tt2/help_admin-bounces.tt2:4
 msgid ""
@@ -100,6 +125,11 @@ msgid ""
 "check the bouncing addresses, go to the '<strong>Bounces</strong>' page of "
 "the list administration module."
 msgstr ""
+"Als er een <strong>probleem is met e-mail adressen van abonnees</strong> dan "
+"kun je het percentage van adressen met een probleem zien in het menu links, "
+"naast de tekst '<strong>Fout ratio</strong>'. Om de adressen met een "
+"probleem te zien, ga naar de '<strong>Onbestelbare berichten</strong>' "
+"pagina van beheersmodule van de lijst."
 
 #: default/web_tt2/help_admin-bounces.tt2:7
 msgid ""
@@ -108,6 +138,10 @@ msgid ""
 "are either notified, unsubscribed, or their score is reset to zero when "
 "their address stops bouncing."
 msgstr ""
+"De Sympa-software beheert automatisch stuiterende abonnees: volgens het "
+"aantal fouten en het verkeer op de lijst worden stuiterende abonnees op de "
+"hoogte gebracht, afgemeld of wordt hun score gereset naar nul wanneer hun "
+"adres niet meer stuitert."
 
 #: default/web_tt2/help_admin-bounces.tt2:10
 msgid ""
@@ -116,6 +150,11 @@ msgid ""
 "selected users</strong>' button. If the error remains, the addresses will be "
 "reported as bouncing again as soon as a message is posted on the list."
 msgstr ""
+"Om <strong>adressen niet meer als stuiterend te rapporteren</strong>, "
+"selecteer ze door hun vakjes aan te vinken en klik op de knop '<strong> "
+"Annuleer fouten voor geselecteerde gebruikers</strong>'. Als de fout blijft, "
+"worden de adressen opnieuw gerapporteerd als stuiterend zodra een bericht in "
+"de lijst is geplaatst."
 
 #: default/web_tt2/help_admin-bounces.tt2:13
 msgid ""
@@ -125,6 +164,11 @@ msgid ""
 "the boxes in front of their names and click on the '<strong>Delete selected "
 "email addresses</strong>' button."
 msgstr ""
+"U kunt ook <strong>abonnees afmelden van wie de adressen nog steeds "
+"stuiteren</strong>: te veel stuiterende adressen veroorzaken een "
+"aanzienlijke belasting op de mailinglijstserver. Om abonnees af te "
+"schrijven, selecteert u ze door de vakken voor hun namen aan te vinken en op "
+"de knop '<strong>Wis geselecteerde e -mailadressen</strong>' te klikken."
 
 #: default/web_tt2/help_admin-bounces.tt2:16
 #: default/web_tt2/help_admin-members.tt2:93
@@ -133,16 +177,21 @@ msgid ""
 "displayed on the page, and then click on the 'Toggle selection' button: all "
 "subscribers will be selected in a single click!"
 msgstr ""
+"Tip: om alle abonnees tegelijk te selecteren, zorg er eerst voor dat ze "
+"allemaal op de pagina worden weergegeven en klik vervolgens op de knop "
+"'Wissel selectie': alle abonnees worden in één klik geselecteerd!"
 
 #: default/web_tt2/help_admin-closelist.tt2:2 default/web_tt2/help_admin.tt2:61
 msgid "Deleting the list"
-msgstr ""
+msgstr "De lijst wissen"
 
 #: default/web_tt2/help_admin-closelist.tt2:4
 msgid ""
 "In the <strong>list administration module</strong>, click on '<strong>Remove "
 "list</strong>'. A confirmation message displays; click on 'OK'."
 msgstr ""
+"In de <strong>lijstbeheermodule</strong>, klik op '<strong>Verwijder lijst</"
+"strong>'. Klik op 'OK' op het bevestigingsscherm."
 
 #: default/web_tt2/help_admin-closelist.tt2:7
 msgid ""
@@ -157,24 +206,31 @@ msgstr ""
 msgid ""
 "In real terms, what are the <strong>consequences</strong> of a list deletion?"
 msgstr ""
+"Wat zijn de concrete <strong>gevolgen</strong> van een lijstverwijdering?"
 
 #: default/web_tt2/help_admin-closelist.tt2:15
 msgid ""
 "<strong>All subscribers are immediately unsubscribed</strong> automatically "
 "(including owners and moderators)."
 msgstr ""
+"<strong>Alle abonnees worden onmiddellijk automatisch uitgeschreven</strong> "
+"(inclusief eigenaren en moderators)."
 
 #: default/web_tt2/help_admin-closelist.tt2:18
 msgid ""
 "<strong>The message archive is preserved</strong> but no one can access it "
 "anymore."
 msgstr ""
+"<strong>Het berichtenarchief wordt bewaard</strong> maar niemand heeft er "
+"nog toegang toe."
 
 #: default/web_tt2/help_admin-closelist.tt2:21
 msgid ""
 "<strong>The documents published in the shared document web space are "
 "preserved</strong> but no one can access them anymore."
 msgstr ""
+"<strong>De documenten die zijn gepubliceerd in de gedeelde documentwebruimte "
+"zijn bewaard gebleven</strong>, maar niemand heeft er nog toegang toe."
 
 #: default/web_tt2/help_admin-closelist.tt2:24
 msgid ""
@@ -190,6 +246,9 @@ msgid ""
 "Be careful: due to a slight latency, the list pages remain accessible for a "
 "while if you know their addresses. Then they will become fully unavailable."
 msgstr ""
+"Wees voorzichtig: vanwege een lichte vertraging blijven de lijstpagina's een "
+"tijdje toegankelijk als je hun adressen kent. Uiteindelijk zullen ze "
+"volledig onbeschikbaar zijn."
 
 #: default/web_tt2/help_admin-closelist.tt2:32
 msgid ""
@@ -202,7 +261,7 @@ msgstr ""
 #: default/web_tt2/help_admin-createlist.tt2:2
 #: default/web_tt2/help_admin.tt2:31
 msgid "Requesting the creation of a mailing list"
-msgstr ""
+msgstr "Verzoeken om het maken van een mailinglijst"
 
 #: default/web_tt2/help_admin-createlist.tt2:4
 msgid ""
@@ -219,22 +278,27 @@ msgstr ""
 #: default/web_tt2/help_admin-createlist.tt2:7
 msgid "To request the creation of a mailing list, do as follows:"
 msgstr ""
+"Ga als volgt te werk om het aanmaken van een mailinglijst aan te vragen:"
 
 #: default/web_tt2/help_admin-createlist.tt2:11
 msgid ""
 "Go to the <strong><a href=\"../home\">list environment homepage</a></strong> "
 "and <a href=\"user-authweb.html\"><strong>log on</strong></a>."
 msgstr ""
+"Ga naar de <strong><a href=\"../home\">startpagina</a></strong> en <a "
+"href=\"user-authweb.html\"><strong>log in</strong></a>."
 
 #: default/web_tt2/help_admin-createlist.tt2:14
 msgid "In the top menu, <strong>click on the 'Create list' link</strong>."
-msgstr ""
+msgstr "In het bovenste menu, <strong>klik op de link 'Lijst maken'</strong>."
 
 #: default/web_tt2/help_admin-createlist.tt2:17
 msgid ""
 "If this link does not display, it means that you do not have the privileges "
 "required to create a list."
 msgstr ""
+"Als deze link niet wordt weergegeven, betekent dit dat u niet de rechten "
+"hebt die nodig zijn om een ​​lijst te maken."
 
 #. ('',domain)
 #: default/web_tt2/help_admin-createlist.tt2:21
@@ -243,12 +307,17 @@ msgid ""
 "and the domain name; example: <em class=\"example\">languages_spanish</em> "
 "and not <em class=\"example\">languages_spanish@%2</em>)."
 msgstr ""
+"Geef uw lijst een <strong>naam</strong> (voer alleen de naam in zonder de "
+"'@' en de domeinnaam. Voorbeeld: <em class=\"example\">talen_grieks</em> en "
+"niet <em class=\"example\">talen_grieks@%2</em>)."
 
 #: default/web_tt2/help_admin-createlist.tt2:24
 msgid ""
 "Do not use any spaces, accents or specials characters in list names: those "
 "characters might cause problems."
 msgstr ""
+"Gebruik geen spaties, accenten, speciale tekens of emoji in lijstnamen: die "
+"tekens kunnen problemen veroorzaken."
 
 #. ('',domain)
 #: default/web_tt2/help_admin-createlist.tt2:27
@@ -259,6 +328,12 @@ msgid ""
 "prefix; thus they will be sorted together and will be easily recognizable "
 "(example: <em class=\"example\">xx-users@%2, xx-hotline@%2</em>, etc.)."
 msgstr ""
+"Kies een expliciete maar korte naam: denk aan de abonnees die deze naam "
+"moeten typen telkens wanneer ze een bericht naar de lijst sturen. Als u een "
+"set lijsten beheert, kunt u de namen van uw lijsten voorafgaan met een "
+"gemeenschappelijk voorvoegsel. Ze zullen dus samen worden gesorteerd en "
+"zullen ze gemakkelijk herkenbaar zijn (voorbeeld: <em class=\"example\">xx-"
+"users@%2, xx-hotline@%2</em>, enz.)."
 
 #: default/web_tt2/help_admin-createlist.tt2:31
 msgid ""
@@ -281,10 +356,14 @@ msgid ""
 "pages (list of lists, list of your subscriptions, etc.) and in the browser "
 "title bar."
 msgstr ""
+"Voer een <strong>onderwerp</strong> in voor uw lijst. Dit onderwerp wordt "
+"weergegeven als koptekst voor alle lijstpagina's en is ook zichtbaar op de "
+"lijst-indexpagina's (lijst met lijsten, lijst van uw abonnementen, enz.). "
+"Het onderwerp is ook te zien in de titelbalk van de browser."
 
 #: default/web_tt2/help_admin-createlist.tt2:37
 msgid "Choose a <strong>topic</strong> in the 'Topics' drop-menu."
-msgstr ""
+msgstr "Kies een <strong>categorie</strong> uit de lijst van 'Categoriën'."
 
 #: default/web_tt2/help_admin-createlist.tt2:39
 msgid ""
@@ -301,28 +380,35 @@ msgid ""
 "by email to each new subscriber, under the 'List subject' heading. This "
 "description may involve explanations about the following issues:"
 msgstr ""
+"Voer een <strong>beschrijving</strong> van uw lijst in. Deze beschrijving "
+"verschijnt op de informatiepagina van de lijst en in het abonneehandvest dat "
+"per e-mail naar elke nieuwe abonnee wordt verzonden onder de kop "
+"'Lijstonderwerp'. De beschrijving kan bijvoorbeeld het volgende omvatten:"
 
 #: default/web_tt2/help_admin-createlist.tt2:45
 msgid "object of the list and targets;"
-msgstr ""
+msgstr "het onderwerp en het doel van de lijst;"
 
 #: default/web_tt2/help_admin-createlist.tt2:46
 msgid "topics discussed;"
-msgstr ""
+msgstr "onderwerpen die worden besproken;"
 
 #: default/web_tt2/help_admin-createlist.tt2:47
 msgid "operation of the list (liabilities, status of the list, etc.);"
 msgstr ""
+"werking van de lijst (verantwoordelijkheden, status van de lijst, enz.);"
 
 #: default/web_tt2/help_admin-createlist.tt2:48
 msgid "rules applying;"
-msgstr ""
+msgstr "regels van toepassing;"
 
 #: default/web_tt2/help_admin-createlist.tt2:49
 msgid ""
 "description of the typical subscribers (their occupations, the projects they "
 "manage, their nationalities, etc.)."
 msgstr ""
+"beschrijving van typische abonnees (hun beroepen, de projecten waarmee ze te "
+"maken hebben, hun nationaliteit, enz.)."
 
 #: default/web_tt2/help_admin-createlist.tt2:52
 msgid ""
@@ -332,10 +418,15 @@ msgid ""
 "keyboard); otherwise, it might not be entirely visible in your browser "
 "window."
 msgstr ""
+"U kunt uw lijstbeschrijving opmaken met <abbr lang=\"en\" xml:lang=\"en\" "
+"title=\"HyperText Markup Language\">HTML</abbr>-tags. Let op: als uw "
+"beschrijving lang is, kunt u deze afbreken met handmatige regeleinden (de "
+"ENTER-toets op uw toetsenbord); anders is de beschrijving mogelijk niet "
+"volledig zichtbaar in uw browservenster."
 
 #: default/web_tt2/help_admin-createlist.tt2:56
 msgid "Click on the '<strong>Submit your creation request</strong>' button."
-msgstr ""
+msgstr "Klik op de knop '<strong>Aanvraag nieuwe lijst insturen</strong>."
 
 #: default/web_tt2/help_admin-createlist.tt2:61
 msgid ""
@@ -347,7 +438,7 @@ msgid ""
 msgstr ""
 "Dan verschijnt een bericht waarin wordt uitgelegd dat uw lijstaanvraag naar "
 "de lijstserverbeheerders is gestuurd en dat u van nu af aan de lijst kunt "
-"aanpassen via de knop 'Beheer'. Het bericht waarschuwt echter dat de lijst "
+"aanpassen via de knop 'Beheer'. Het bericht waarschuwt u echter dat de lijst "
 "pas na goedkeuring door een lijstserverbeheerder echt geïnstalleerd is en op "
 "de server zichtbaar wordt."
 
@@ -369,114 +460,141 @@ msgid ""
 "its owner or moderator does not mean that you are automatically subscribed "
 "to it!"
 msgstr ""
+"<strong>Ten slotte: abonneer u op uw lijst</strong>: als u een lijst "
+"aanmaakt of er eigenaar of moderator van wordt, betekent dit niet dat u er "
+"automatisch op geabonneerd bent!"
 
 #: default/web_tt2/help_admin-createlist.tt2:70
 msgid "Managing a list"
-msgstr ""
+msgstr "Een lijst beheren"
 
 #: default/web_tt2/help_admin-createlist.tt2:73
 msgid "To manage a list you own, do as follows:"
-msgstr ""
+msgstr "Als u een lijst wilt beheren die u bezit, doet u dit als volgt:"
 
 #: default/web_tt2/help_admin-createlist.tt2:77
 msgid ""
 "Go to the <strong>list environment homepage</strong> and <strong><a "
 "href=\"user-authweb.html\">log on</a></strong>."
 msgstr ""
+"Ga naar de <strong>startpagina van de WWW-lijstinterface</strong> en "
+"<strong><a href=\"user-authweb.html\">meld u aan.</a></strong>"
 
 #: default/web_tt2/help_admin-createlist.tt2:80
 msgid ""
 "If you are subscribed to the list with several addresses, use the address "
 "with which you requested the list creation."
 msgstr ""
+"Als u zich met meerdere adressen op de lijst hebt geabonneerd, gebruikt u "
+"het adres waarmee u de lijst hebt aangevraagd."
 
 #: default/web_tt2/help_admin-createlist.tt2:84
 msgid ""
 "<strong>Go to the information page of the list</strong> you want to manage."
 msgstr ""
+"<strong>Ga naar de informatiepagina van de lijst</strong> die u wilt beheren."
 
 #: default/web_tt2/help_admin-createlist.tt2:87
 msgid "In the left menu, <strong>click on the 'Admin' link</strong>."
-msgstr ""
+msgstr "Klik in het linkermenu op de link <strong>'Beheer'</strong>."
 
 #: default/web_tt2/help_admin-createlist.tt2:92
 msgid ""
 "To browse the sections of the administration module, click on the links "
 "below the 'Admin' link, in the left menu."
 msgstr ""
+"Om door de secties van de beheermodule te bladeren, klik in het linkermenu "
+"op de links onder de link 'Beheer'."
 
 #: default/web_tt2/help_admin-createlist.tt2:95
 msgid "Those different sections allow you to:"
-msgstr ""
+msgstr "Met deze verschillende secties kunt u:"
 
 #: default/web_tt2/help_admin-createlist.tt2:98
 msgid "<a href=\"admin-editlist.html\">configure the list</a>;"
-msgstr ""
+msgstr "<a href=\"admin-editlist.html\">de lijst instellen</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:99
 msgid ""
 "<a href=\"admin-editfile.html\">customize files related to the list</a>;"
 msgstr ""
+"<a href=\"admin-editfile.html\">aanpassen van bestanden die behoren tot de "
+"lijst</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:100
 msgid "<a href=\"admin-members.html\">manage subscribers</a>;"
-msgstr ""
+msgstr "<a href=\"admin-members.html\">abonnees beheren</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:101
 msgid ""
 "<a href=\"admin-archives.html\">manage the message archive of the list</a>;"
 msgstr ""
+"<a href=\"admin-archives.html\">het berichtenarchief van de lijst beheren</"
+"a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:102
 msgid "<a href=\"admin-bounces.html\">manage bounces</a>;"
-msgstr ""
+msgstr "<a href=\"admin-bounces.html\">Onbestelbare berichten</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:103
 msgid ""
 "<a href=\"admin-shared.html\">create, delete or restore the shared document "
 "web space</a>;"
 msgstr ""
+"<a href=\"admin-shared.html\">de webruimte voor gedeelde documenten "
+"aanmaken, verwijderen of herstellen</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:104
 msgid "<a href=\"admin-renamelist.html\">rename the list</a>;"
-msgstr ""
+msgstr "<a href=\"admin-renamelist.html\">hernoem de lijst</a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:105
 msgid "<a href=\"admin-closelist.html\">delete the list</a>."
-msgstr ""
+msgstr "<a href=\"admin-closelist.html\">wis de lijst</a>."
 
 #: default/web_tt2/help_admin-createlist.tt2:109
 msgid "The options available in the 'Moderate' submenu allow you to:"
-msgstr ""
+msgstr "Met de beschikbare opties in het submenu 'Modereren' kunt u:"
 
 #: default/web_tt2/help_admin-createlist.tt2:112
 msgid "<a href=\"admin-moderate.html\">moderate messages</a> sent to the list;"
 msgstr ""
+"naar de lijst gestuurde <a href=\"admin-moderate.html\">berichten modereren</"
+"a>;"
 
 #: default/web_tt2/help_admin-createlist.tt2:113
 msgid ""
 "<a href=\"shared.html\">moderate documents</a> available in the shared "
 "document web space;"
 msgstr ""
+"<a href=\"shared.html\">modereer documenten</a> beschikbaar in de gedeelde "
+"webruimte;"
 
 #: default/web_tt2/help_admin-createlist.tt2:114
 msgid "<a href=\"admin-members.html\">moderate pending subscriptions</a>."
 msgstr ""
+"<a href=\"admin-members.html\">modereer abonnementen in afwachting van "
+"goekeuring.</a>."
 
 #: default/web_tt2/help_admin-editfile.tt2:2 default/web_tt2/help_admin.tt2:37
 msgid "Customizing the list"
-msgstr ""
+msgstr "Pas de lijst aan"
 
 #: default/web_tt2/help_admin-editfile.tt2:4
 msgid ""
 "From this page, you can <strong>edit a number of files relating to your "
 "list</strong>, among which:"
 msgstr ""
+"Op deze pagina kunt u <strong>bestanden bewerken die horen bij uw lijst</"
+"strong>, waaronder:"
 
 #: default/web_tt2/help_admin-editfile.tt2:8
 msgid "typical messages sent to subscribers in particular occasions:"
 msgstr ""
+"typische berichten die bij bepaalde gelegenheden aan gebruikers zijn "
+"verzonden:"
 
+# MIME seems not really needed to make the welcome message. Knowledge on Template Toolkit (tt2) could be helpful. Maybe just drop the mime related info?
 #: default/web_tt2/help_admin-editfile.tt2:11
 msgid ""
 "<strong>welcome message</strong>: this message is the notice sent to people "
@@ -486,12 +604,22 @@ msgid ""
 "message (reserved to the <abbr lang=\"en\" xml:lang=\"en\" "
 "title=\"Multipurpose Internet Mail Extensions\">MIME</abbr> format experts);"
 msgstr ""
+"<strong>Welkomstbericht</strong>: dit bericht is de melding die is verzonden "
+"naar mensen die zich net hebben aangemeld. Het is ten zeerste aan te raden "
+"een gebruikerscharter voor uw lijst te schrijven en deze in dit "
+"welkomstbericht op te nemen. U kunt een gestructureerd <abbr lang=\"en\" xml:"
+"lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</abbr>-"
+"bericht maken (gereserveerd voor experts in het <abbr lang=\"en\" xml:"
+"lang=\"en\" title=\"Multipurpose Internet Mail Extensions\">MIME</abbr>-"
+"formaat)."
 
 #: default/web_tt2/help_admin-editfile.tt2:14
 msgid ""
 "<strong>unsubscribe message</strong>: this message is sent to people "
 "unsubscribing from the list;"
 msgstr ""
+"<strong>bericht bij uitschrijven</strong>: dit bericht wordt verzonden naar "
+"abonnees die zich afmelden van de lijst;"
 
 #: default/web_tt2/help_admin-editfile.tt2:17
 msgid ""
@@ -499,6 +627,9 @@ msgid ""
 "unsubscribe from the list (DEL command), especially because their address "
 "caused bounces;"
 msgstr ""
+"<strong>bericht bij verwijdering</strong>: Dit bericht wordt verzonden naar "
+"abonnees die u uit de lijst hebt gehaald (DEL-opdracht), vooral als hun "
+"adres leveringsfouten heeft veroorzaakt;"
 
 #: default/web_tt2/help_admin-editfile.tt2:20
 msgid ""
@@ -508,28 +639,42 @@ msgid ""
 "people whose current address is not their subscription address anymore, or "
 "even who forgot that they were subscribed to the list;"
 msgstr ""
+"<strong>herinneringsbericht</strong>: dit bericht wordt naar abonnees "
+"gestuurd als een gepersonaliseerde herinnering wanneer u het commando REMIND "
+"gebruikt. Dit commando is essentieel voor het goede beheer van uw lijst, "
+"omdat veel onbestelbare berichten te wijten zijn aan mensen van wie het "
+"huidige adres niet langer hun abonnement is, of zelfs die vergeten zijn dat "
+"ze zijn geabonneerd op de lijst;"
 
 #: default/web_tt2/help_admin-editfile.tt2:23
 msgid ""
 "<strong>subscribing invitation message</strong>: this message is sent to "
 "people you invite to subscribe to the list using the INVITE command;"
 msgstr ""
+"<strong>uitnodigingsbericht om te abonneren</strong>: dit bericht wordt "
+"verzonden naar mensen die u uitnodigt om zich te abonneren op de lijst met "
+"behulp van de opdracht INVITE;"
 
 #: default/web_tt2/help_admin-editfile.tt2:26
 msgid ""
 "<strong>notice of message rejected by the moderator</strong>: this message "
 "is sent to the sender of a message rejected by the moderator;"
 msgstr ""
+"<strong>melding van bericht afgewezen door de moderator</strong>: dit "
+"bericht wordt verzonden naar de afzender van een bericht dat door de "
+"moderator is afgewezen;"
 
 #: default/web_tt2/help_admin-editfile.tt2:29
 msgid ""
 "<strong>notice of message rejected because of a virus</strong>: this message "
 "is sent to the sender of a message in which a virus was found."
 msgstr ""
+"<strong>bericht geweigerd vanwege een virus</strong>: dit bericht wordt "
+"verzonden naar de afzender van een bericht waarin een virus is aangetroffen."
 
 #: default/web_tt2/help_admin-editfile.tt2:34
 msgid "miscellaneous files:"
-msgstr ""
+msgstr "verschillende bestanden:"
 
 #: default/web_tt2/help_admin-editfile.tt2:37
 msgid ""
@@ -538,6 +683,11 @@ msgid ""
 "message (subscription notice). It is not the same as the list presentation "
 "page displayed on the mailing list web interface;"
 msgstr ""
+"<strong>lijstbeschrijving</strong>: de lijstbeschrijving wordt per e-mail "
+"verzonden als antwoord op de opdracht INFO. Standaard wordt deze ook "
+"opgenomen in het welkomstbericht (aanmeldingsbericht). Deze beschrijving is "
+"niet hetzelfde als de lijstpresentatiepagina die wordt weergegeven op de "
+"webinterface van de mailinglijst."
 
 #: default/web_tt2/help_admin-editfile.tt2:40
 msgid ""
@@ -547,6 +697,11 @@ msgid ""
 "not use this format, use <code>&lt;br /&gt;</code> tags to indicate line "
 "breaks;"
 msgstr ""
+"<strong>Lijst homepage</strong>: deze beschrijving is beschikbaar op de "
+"informatiepagina van de lijst. Deze kan in <abbr lang=\"en\" xml:lang=\"en\" "
+"title=\"HyperText Markup Language\">HTML</abbr>-formaat zijn. Ook al "
+"gebruikt u dit formaat niet, gebruik dan <code>&lt;br /&gt;</code>-tags om "
+"regeleinden aan te geven."
 
 #: default/web_tt2/help_admin-editfile.tt2:43
 msgid ""
@@ -555,6 +710,10 @@ msgid ""
 "Extensions\">MIME</abbr> attachment at the beginning of each message "
 "distributed to the list;"
 msgstr ""
+"<strong>bijlage bij het begin van het bericht</strong>: indien beschikbaar, "
+"wordt deze toegevoegd als een <abbr lang=\"en\" xml:lang=\"en\" "
+"title=\"Multipurpose Internet Mail Extensions\">MIME</abbr>-bijlage aan het "
+"begin van elk bericht dat naar de lijst wordt gedistribueerd;"
 
 #: default/web_tt2/help_admin-editfile.tt2:46
 msgid ""
@@ -563,6 +722,10 @@ msgid ""
 "Extensions\">MIME</abbr> attachment at the end of each message distributed "
 "to the list."
 msgstr ""
+"<strong>Berichtvoettekst</strong>: indien beschikbaar, wordt deze toegevoegd "
+"als een <abbr lang=\"nl\" xml:lang=\"nl\" title=\"Multipurpose Internet Mail "
+"Extensions\">MIME</abbr>-bijlage aan het einde van elk bericht dat naar de "
+"lijst wordt gedistribueerd."
 
 #: default/web_tt2/help_admin-editfile.tt2:52
 msgid ""
@@ -573,17 +736,24 @@ msgid ""
 "<strong>'Subject' field</strong> (subject line) and the <strong>message "
 "body</strong>."
 msgstr ""
+"Sympa gebruikt standaardbestanden; in dit geval zijn de specifieke bestanden "
+"die bij uw lijst horen leeg. <strong>Om een ​​bestand te bewerken, selecteert "
+"u het uit de keuzelijst en klikt u op de knop 'Bewerken'</strong>. U kunt "
+"het <strong>veld 'Van'</strong> (afzender), het <strong>veld 'Onderwerp'</"
+"strong> (onderwerpregel) en de <strong>berichttekst</strong> wijzigen."
 
 #: default/web_tt2/help_admin-editfile.tt2:55
 msgid ""
 "Be careful: the values between square brackets are variables. Do not change "
 "them, unless you really know what you are doing..."
 msgstr ""
+"Let op: de waarden tussen de vierkante haken zijn variabelen. Verander ze "
+"niet, tenzij je echt weet wat je doet..."
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:2
 #: default/web_tt2/help_admin-editlist.tt2:46
 msgid "Archive"
-msgstr ""
+msgstr "Archief"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:4
 msgid ""
@@ -591,11 +761,14 @@ msgid ""
 "archive</strong> (messages readable on the mailing list web interface). The "
 "following options are available:"
 msgstr ""
+"Op deze pagina kunt u <strong>bepalen wie toegang heeft tot het online "
+"lijstarchief</strong> (berichten die leesbaar zijn op de webinterface van de "
+"mailinglijst). De volgende opties zijn beschikbaar:"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:7
 #: default/web_tt2/help_admin-editlist-command.tt2:86
 msgid "closed (closed);"
-msgstr ""
+msgstr "gesloten (closed);"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:8
 msgid "listmaster (listmaster);"
@@ -603,20 +776,20 @@ msgstr "lijstserverbeheerder (listmaster);"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:9
 msgid "owner (owner);"
-msgstr ""
+msgstr "eigenaar (owner);"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:10
 msgid "moderator (moderator);"
-msgstr ""
+msgstr "moderator (moderator);"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:11
 msgid "subscribers only (private);"
-msgstr ""
+msgstr "enkel abonnees (private);"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:12
 #: default/web_tt2/help_admin-editlist-command.tt2:95
 msgid "public (public)."
-msgstr ""
+msgstr "publiek (public)."
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:15
 msgid ""
@@ -639,12 +812,20 @@ msgid ""
 "archive size reaches 95% of the allowed size. When the maximum size is "
 "reached, later messages are not archived."
 msgstr ""
+"Met het invoerveld '<strong>Quota</strong>' kunt u een <strong>maximale "
+"grootte voor het berichtenarchief</strong> definiëren die niet mag worden "
+"overschreden. Deze grootte wordt uitgedrukt in kilobytes. Lijsteigenaren "
+"worden op de hoogte gesteld wanneer de archiefgrootte 95% van de toegestane "
+"grootte bereikt. Wanneer de maximale grootte is bereikt, worden latere "
+"berichten niet gearchiveerd."
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:21
 msgid ""
 "Even though messages stop being archived, it is naturally still possible to "
 "send messages to the list."
 msgstr ""
+"Hoewel berichten niet langer worden gearchiveerd, is het natuurlijk nog "
+"steeds mogelijk om berichten naar de lijst te sturen."
 
 #. (conf.email,domain)
 #: default/web_tt2/help_admin-editlist-archives.tt2:24
@@ -659,11 +840,23 @@ msgid ""
 "the original formatting; it also involves full headers for each message. The "
 "'<strong>Text archives</strong>' parameter allows you to define:"
 msgstr ""
+"U kunt het lijstarchief ook <strong>via e-mail openen</strong> door "
+"<strong>%1@%2</strong> de volgende opdracht te sturen: <span "
+"class=\"commande\"><strong>GET lijstnaam jaar-maand</strong></span> "
+"(bijvoorbeeld: <em class=\"example\">GET list_example 2016-07</em>). "
+"Vervolgens ontvangt u een compilatie van alle berichten die in de gekozen "
+"maand zijn verzonden. Deze compilatie wordt verzonden als platte tekst en "
+"bevat <abbr lang=\"en\" xml:lang=\"en\" title=\"HyperText Markup "
+"Language\">HTML</abbr>-tags in plaats van de originele opmaak; het bevat ook "
+"volledige headers voor elk bericht. Met de parameter "
+"'<strong>Tekstarchieven</strong>' kunt u het volgende definiëren:"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:28
 msgid ""
 "<strong>who is allowed</strong> to receive the list message archive by email;"
 msgstr ""
+"<strong>wie heeft toelating</strong> het berichtenarchief van de lijst per e-"
+"mail te ontvangen;"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:31
 msgid ""
@@ -671,6 +864,9 @@ msgid ""
 "example, if the frequency is set to 'month', all messages distributed to the "
 "list in a month will be gathered in a single archive file."
 msgstr ""
+"<strong>hoe vaak deze archiefbestanden worden aangemaakt</strong>. Als de "
+"frequentie bijvoorbeeld is ingesteld op 'maand', worden alle berichten die "
+"in een maand naar de lijst worden verzonden, verzameld in één archiefbestand."
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:35
 msgid ""
@@ -690,24 +886,36 @@ msgid ""
 "cleartext</strong>' option allows you to define how those messages will be "
 "archived:"
 msgstr ""
+"Het is mogelijk om <strong>berichten versleuteld in <abbr lang=\"en\" xml:"
+"lang=\"en\" title=\"Secure/Multipurpose Internet Mail Extensions\">S/MIME</"
+"abbr></strong> naar de lijst te sturen. Met de optie '<strong>Versleutelde e-"
+"mails gedecodeerd archiveren</strong>' kunt u definiëren hoe deze berichten "
+"worden gearchiveerd:"
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:42
 msgid ""
 "The '<strong>Decrypted</strong>' option archives the message after removing "
 "the encryption."
 msgstr ""
+"Met de optie '<strong>Gedecodeerd</strong>' wordt het bericht gearchiveerd "
+"nadat de encryptie is verwijderd."
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:45
 msgid ""
 "The '<strong>Original</strong>' option archives the message under its "
 "original encrypted form."
 msgstr ""
+"Met de optie '<strong>Origineel</strong>' wordt het versleutelde bericht "
+"gearchiveerd in de originele, versleutelde vorm."
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:49
 msgid ""
 "This option applies to both the text archive and the online archive, as well "
 "as to the compilations sent to those who chose the 'Digest' delivery mode."
 msgstr ""
+"Deze optie is van toepassing op zowel het tekstarchief als het online "
+"archief, als op de compilaties die zijn verzonden naar degenen die de "
+"'bundel' leveringsmodus hebben gekozen."
 
 #: default/web_tt2/help_admin-editlist-archives.tt2:52
 #: default/web_tt2/help_admin-editlist-bounces.tt2:40
@@ -1662,7 +1870,7 @@ msgid ""
 "If you manage a set of lists, you can <strong>prefix your lists' names with "
 "a common prefix</strong>; thus they will be sorted together and will be "
 "easily recognizable (example: <em class=\"example\">xx-users@%1, xx-"
-"hotline@%1.fr</em>, etc.)."
+"hotline@%1</em>, etc.)."
 msgstr ""
 
 #: default/web_tt2/help_admin-rules.tt2:2 default/web_tt2/help_admin.tt2:64
@@ -1866,6 +2074,7 @@ msgstr ""
 #: default/web_tt2/help_admin.tt2:5
 msgid "Introduction: who is in charge of managing mailing lists?"
 msgstr ""
+"Inleiding: wie is verantwoordelijk voor het beheer van de mailinglijsten?"
 
 #: default/web_tt2/help_admin.tt2:8
 msgid "Reminder: a mailing list service involves four types of roles:"
@@ -2460,6 +2669,8 @@ msgstr ""
 #: default/web_tt2/help_commands.tt2:109
 msgid "<code>DEL <em>list email</em></code>: remove a subscriber from the list"
 msgstr ""
+"<code>DEL <em>lijstnaam e-mailadres</em></code>: verwijder een abonnee van "
+"de lijst"
 
 #: default/web_tt2/help_commands.tt2:112
 msgid "<code>STATS <em>list</em></code>: check the statistics for the list"
@@ -3007,8 +3218,8 @@ msgid ""
 "Listmasters are in charge of the <strong>management of the mailing list "
 "service</strong>. Their duties:"
 msgstr ""
-"De lijstserverbeheerders zijn verantwoordelijk voor het <strong>beheer van "
-"de hele lijstserver</strong>, waaronder:"
+"De lijstserverbeheerders (listmasters) zijn verantwoordelijk voor het "
+"<strong>beheer van de hele lijstserver</strong>. Hun rollen:"
 
 #: default/web_tt2/help_introduction-roles.tt2:31
 msgid ""
@@ -3138,6 +3349,14 @@ msgid ""
 "is possibly followed by a notice to the sender in order to explain the "
 "reason for that rejection."
 msgstr ""
+"<strong>Moderators worden aangesteld door de eigenaar van de lijst</strong>. "
+"Zij zijn <strong>verantwoordelijk voor <a href=\"admin-moderate.html\">het "
+"controleren van de relevantie van de berichten</a></strong> die naar de "
+"lijst worden gestuurd: na het lezen van de berichten <strong>kiezen ze of ze "
+"deze accepteren of verwerpen</strong>. Moderatie vindt plaats voordat het "
+"bericht daadwerkelijk naar de abonnees wordt gestuurd. Het afwijzen van een "
+"bericht wordt mogelijk gevolgd door een bericht aan de afzender om de reden "
+"voor de afwijzing uit te leggen."
 
 #: default/web_tt2/help_introduction-roles.tt2:101
 msgid ""
@@ -4492,7 +4711,7 @@ msgstr ""
 
 #: default/web_tt2/help_user-suboptions.tt2:19
 msgid ""
-"strong>Choose a message delivery mode</strong> (those options are mutually "
+"<strong>Choose a message delivery mode</strong> (those options are mutually "
 "exclusive, thus you can not select several of them):"
 msgstr ""
 

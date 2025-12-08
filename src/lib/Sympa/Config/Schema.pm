@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2020, 2021, 2022, 2023 The Sympa Community. See the
+# Copyright 2020, 2021, 2022, 2023, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -348,7 +348,7 @@ our %pinfo = (
         gettext_id => 'Name of the database',
         gettext_comment =>
             "With SQLite, this must be the full path to database file.\nWith Oracle Database, this must be SID, net service name or easy connection identifier (to use net service name, db_host should be set to \"none\" and HOST, PORT and SERVICE_NAME should be defined in tnsnames.ora file).",
-        format => '.+',
+        format     => '.+',
         occurrence => '1',
     },
     db_user => {
@@ -444,14 +444,65 @@ our %pinfo = (
         gettext_comment => 'Do not forget to configure syslog server.',
         format          => '\S+',
     },
-    log_socket_type => {
+    syslog_socket => {
         context    => [qw(site)],
         order      => 3.02,
         group      => 'logging',
-        importance => 100,
-        default    => 'unix',
-        gettext_id => 'Communication mode with syslog server',
-        format     => '\w+',
+        gettext_id => 'System log socket options',
+        gettext_comment =>
+            'The options to be used for system log socket. Options come from Sys::Syslog https://metacpan.org/pod/Sys::Syslog#setlogsock%28%29',
+        format => {
+            type => {
+                context    => [qw(site)],
+                order      => 1,
+                importance => 100,
+                gettext_id => 'Communication mode with syslog server',
+                gettext_comment =>
+                    'In most cases, an appropriate default value should be automatically chosen.',
+                format => [
+                    'native', 'tcp',    'udp',  'inet',
+                    'unix',   'stream', 'pipe', 'console',
+                ],
+                occurrence => '0-n',
+                split_char => ',',
+            },
+            path => {
+                context    => [qw(site)],
+                order      => 2,
+                gettext_id => 'Stream location',
+                gettext_comment =>
+                    'Defaults to the standard location on the system.',
+                format => '.+',
+            },
+            timeout => {
+                context      => [qw(site)],
+                order        => 3,
+                gettext_id   => 'Socket timeout',
+                gettext_unit => 'seconds',
+                format       => '\d+([.]\d+)?',
+            },
+            host => {
+                context         => [qw(site)],
+                order           => 4,
+                gettext_id      => 'Host name to send the messages to',
+                gettext_comment => 'Defaults to the local host.',
+                format_s        => '$host',
+            },
+            port => {
+                context    => [qw(site)],
+                order      => 5,
+                gettext_id => 'TCP or UDP port to connect to',
+                gettext_comment =>
+                    'Defaults to the standard port on the system.',
+                format => '\d+',
+            },
+        },
+        not_before => '6.2.74',
+    },
+    log_socket_type => {
+        context   => [qw(site)],
+        obsolete  => 'syslog_socket.type',
+        not_after => '6.2.72',
     },
     log_level => {
         context    => [qw(domain site)],    #FIXME "domain" possible?
@@ -1201,7 +1252,7 @@ our %pinfo = (
         gettext_id => "Custom header field",
         gettext_comment =>
             'This parameter is optional. The headers specified will be added to the headers of messages distributed via the list. As of release 1.2.2 of Sympa, it is possible to put several custom header lines in the configuration file at the same time.',
-        format     => '\S+:\s+.*',
+        format_s   => '$header_field_name:.+',
         occurrence => '0-n',
         length     => 30
     },
@@ -1353,7 +1404,7 @@ our %pinfo = (
             'Header fields to be removed before message distribution',
         gettext_comment =>
             "The removal happens after Sympa's own header fields are added; therefore, it is a convenient way to remove Sympa's own header fields (like \"X-Loop:\" or \"X-no-archive:\") if you wish.",
-        format     => '\S+',
+        format_s   => '$header_field_name(:.+)?',
         default    => 'none',
         sample     => 'X-no-archive',
         occurrence => '0-n',
@@ -1717,8 +1768,8 @@ our %pinfo = (
                 default    => 'owner',
             },
             quota => {
-                context => [qw(list domain site)],
-                order   => 3,
+                context      => [qw(list domain site)],
+                order        => 3,
                 gettext_id   => "quota",
                 gettext_unit => 'Kbytes',
                 format       => '\d+',
@@ -3418,6 +3469,15 @@ our %pinfo = (
                 occurrence => '1',
                 default    => 'sub'
             },
+            deref => {
+                context    => [qw(list)],
+                order      => 5.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
+            },
             timeout => {
                 context      => [qw(list)],
                 order        => 6,
@@ -3599,6 +3659,15 @@ our %pinfo = (
                 format     => ['base', 'one', 'sub'],
                 default    => 'sub'
             },
+            deref1 => {
+                context    => [qw(list)],
+                order      => 5.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
+            },
             timeout1 => {
                 context      => [qw(list)],
                 order        => 6,
@@ -3652,6 +3721,15 @@ our %pinfo = (
                 format     => ['base', 'one', 'sub'],
                 occurrence => '1',
                 default    => 'sub'
+            },
+            deref2 => {
+                context    => [qw(list)],
+                order      => 12.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
             },
             timeout2 => {
                 context      => [qw(list)],
@@ -3821,8 +3899,8 @@ our %pinfo = (
                 order   => 9,
                 gettext_id =>
                     "Directory where the database is stored (used for DBD::CSV only)",
-                format => '.+',
-                obsolete => 'db_name',
+                format    => '.+',
+                obsolete  => 'db_name',
                 not_after => '6.2.70',
             },
             nosync_time_ranges => {
@@ -3986,6 +4064,15 @@ our %pinfo = (
                 format     => ['base', 'one', 'sub'],
                 occurrence => '1',
                 default    => 'sub'
+            },
+            deref => {
+                context    => [qw(list)],
+                order      => 5.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
             },
             timeout => {
                 context      => [qw(list)],
@@ -4164,6 +4251,15 @@ our %pinfo = (
                 occurrence => '1',
                 default    => 'sub'
             },
+            deref1 => {
+                context    => [qw(list)],
+                order      => 5.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
+            },
             timeout1 => {
                 context      => [qw(list)],
                 order        => 6,
@@ -4217,6 +4313,15 @@ our %pinfo = (
                 format     => ['base', 'one', 'sub'],
                 occurrence => '1',
                 default    => 'sub'
+            },
+            deref2 => {
+                context    => [qw(list)],
+                order      => 12.5,
+                gettext_id => "dereferencing aliases",
+                format     => ['never', 'search', 'find', 'always'],
+                occurrence => '1',
+                default    => 'find',
+                not_before => '6.2.74',
             },
             timeout2 => {
                 context      => [qw(list)],
@@ -4381,8 +4486,8 @@ our %pinfo = (
                 order   => 9,
                 gettext_id =>
                     "Directory where the database is stored (used for DBD::CSV only)",
-                format => '.+',
-                obsolete => 'db_name',
+                format    => '.+',
+                obsolete  => 'db_name',
                 not_after => '6.2.70',
             },
             email_entry => {
@@ -4572,10 +4677,11 @@ our %pinfo = (
     },
 
     arc_srvid => {
-        context    => [qw(domain site)],
-        order      => 70.05,
-        group      => 'dkim',
-        gettext_id => 'SRV ID for Authentication-Results used in ARC seal',
+        context => [qw(domain site)],
+        order   => 70.05,
+        group   => 'dkim',
+        gettext_id =>
+            'Authentication service identifier (authserv-id) for Authentication-Results used in ARC seal',
         gettext_comment => 'Typically the domain of the mail server',
         format_s        => '$rfc2045_parameter_value',
         not_before      => '6.2.37b.1',
@@ -4781,6 +4887,19 @@ our %pinfo = (
         context   => [qw(domain site)],
         obsolete  => 'dmarc_protection.phrase',
         not_after => '6.2.56',
+    },
+
+    remove_dkim_headers => {
+        context    => [qw(list domain site)],
+        order      => 70.08,
+        group      => 'dkim',
+        gettext_id => 'Remove DKIM signatures in incoming messages',
+        gettext_comment =>
+            'Normally this should be turned off. It can be turned on when DKIM signatures that cannot be verified at the recipient site cause problems.',
+        format     => ['on', 'off'],
+        occurrence => '1',
+        default    => 'off',
+        not_before => '6.2.74',
     },
 
     ### Optional features

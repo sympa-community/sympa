@@ -67,11 +67,16 @@
                         [%~ END %]
                     </div>
                     <div class="small-6 medium-3 columns" role="cell">
+                        <a href="[% 'ajax/viewmod' | url_rel([list,msg.key]) %]"
+                           data-reveal-id="mainviewmod" data-reveal-ajax="true"
+                           data-tooltip aria-haspopup="true"
+                           title="[%|loc%]view[%END%]">
                         [% UNLESS msg.value.subject.length ~%]
                             <i>[%|loc%]No subject[%END%]</i>
                         [%~ ELSE ~%]
                             [% msg.value.subject %]
                         [%~ END %]
+                        </a>
                     </div>
                     <div class="small-11 medium-2 columns" role="cell">
                         [% UNLESS msg.value.date ~%]

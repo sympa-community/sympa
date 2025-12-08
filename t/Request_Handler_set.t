@@ -33,15 +33,14 @@ my $list = bless {
 } => 'Sympa::List';
 
 %Conf::Conf = (
-    domain          => 'mail.example.org',    # mandatory
-    listmaster      => $test_listmaster,      # mandatory
-    db_type         => 'SQLite',
-    db_name         => ':memory:',
-    queuebulk       => $tempdir . '/bulk',
-    queuesubscribe  => $tempdir . '/auth',
-    home            => $tempdir,
-    log_socket_type => 'stream',
-    db_list_cache   => 'off',
+    domain         => 'mail.example.org',    # mandatory
+    listmaster     => $test_listmaster,      # mandatory
+    db_type        => 'SQLite',
+    db_name        => ':memory:',
+    queuebulk      => $tempdir . '/bulk',
+    queuesubscribe => $tempdir . '/auth',
+    home           => $tempdir,
+    db_list_cache  => 'off',
 );
 # Apply defaults.
 foreach my $pinfo (grep { $_->{name} and exists $_->{default} }

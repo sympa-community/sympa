@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2021, 2023 The Sympa Community. See the
+# Copyright 2018, 2021, 2023, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -61,18 +61,11 @@ sub connect {
 
     # - Configure Postgres to use ISO format dates.
     # - Set client encoding to UTF8.
-    # - Create a temporary view "dual" for portable SQL statements.
     # Note: utf8 flagging must be disabled so that we will consistently use
     #   UTF-8 bytestring as internal format.
-    # Note: PostgreSQL <= 8.0.x didn't support temporary view but >= 7.3.x
-    #   supported CREATE OR REPLACE statement.
     $self->__dbh->{pg_enable_utf8} = 0;    # For DBD::Pg 3.x
     $self->__dbh->do("SET DATESTYLE TO 'ISO';");
     $self->__dbh->do("SET NAMES 'utf8'");
-    defined $self->__dbh->do(
-        q{CREATE TEMPORARY VIEW dual AS SELECT 'X'::varchar(1) AS dummy;})
-        or $self->__dbh->do(
-        q{CREATE OR REPLACE VIEW dual AS SELECT 'X'::varchar(1) AS dummy;});
 
     return 1;
 }
@@ -392,9 +385,8 @@ sub drop_field {
     my $table = shift;
     my $field = shift;
 
-    unless (
-        $self->do_query(q{ALTER TABLE %s DROP COLUMN %s}, $table, $field)
-    ) {
+    unless ($self->do_query(q{ALTER TABLE %s DROP COLUMN %s}, $table, $field))
+    {
         $log->syslog('err',
             'Could not delete field %s from table %s in database %s',
             $field, $table, $self->{'db_name'});

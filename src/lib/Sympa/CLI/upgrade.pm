@@ -25,7 +25,6 @@ package Sympa::CLI::upgrade;
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use Getopt::Long qw(:config no_ignore_case);
 
 use Sympa::Constants;
 use Sympa::Log;

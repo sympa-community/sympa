@@ -7,9 +7,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2024 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1029,7 +1029,9 @@ sub do_verify_netmask {
     return 0 unless defined $ENV{'REMOTE_ADDR'};
 
     my @cidr;
-    if ($args[0] eq 'default' or $args[0] eq 'any') {
+    unless (length($args[0] // '')) {
+        ;
+    } elsif ($args[0] eq 'default' or $args[0] eq 'any') {
         # Compatibility with Net::Netmask, adding IPv6 feature.
         @cidr = ('0.0.0.0/0', '::/0');
     } else {
@@ -1047,8 +1049,11 @@ sub do_verify_netmask {
         }
     }
     unless (@cidr) {
-        $log->syslog('err', 'Error rule syntax: failed to parse netmask "%s"',
-            $args[0]);
+        $log->syslog(
+            'err',
+            'Error rule syntax: failed to parse netmask "%s"',
+            $args[0] // ''
+        );
         die {};
     }
 
@@ -1084,6 +1089,7 @@ sub do_is_owner {
     my $condition_key = shift;
     my @args          = @_;
 
+    return 0 unless defined $args[0] and defined $args[1];
     return 0 if $args[1] eq 'nobody';
 
     # The list is local or in another local robot
@@ -1156,14 +1162,14 @@ sub do_match {
     my @args          = @_;
 
     # Nothing can match an empty regexp.
-    return 0 unless length $args[1];
+    return 0 unless length($args[1] // '');
 
     # wrap matches with eval{} to avoid crash by malformed regexp.
     my $r = 0;
     if (ref $args[0] eq 'ARRAY') {
         eval {
             foreach my $arg (@{$args[0]}) {
-                if ($arg =~ /$args[1]/i) {
+                if (($arg // '') =~ /$args[1]/i) {
                     $r = 1;
                     last;
                 }
@@ -1171,7 +1177,7 @@ sub do_match {
         };
     } else {
         eval {
-            if ($args[0] =~ /$args[1]/i) {
+            if (($args[0] // '') =~ /$args[1]/i) {
                 $r = 1;
             }
         };
@@ -1401,6 +1407,7 @@ sub do_search {
             base   => "$ldap_conf{'suffix'}",
             filter => "$filter",
             scope  => "$ldap_conf{'scope'}",
+            deref  => "$ldap_conf{'deref'}",
             attrs  => ['1.1']
         );
         unless ($mesg) {
@@ -1580,7 +1587,8 @@ sub _load_ldap_configuration {
         return;
     }
 
-    my @valid_options = qw(host suffix filter scope bind_dn bind_password
+    my @valid_options =
+        qw(host suffix filter scope deref bind_dn bind_password
         use_tls ssl_version ssl_ciphers ssl_cert ssl_key
         ca_verify ca_path ca_file);
     my @required_options = qw(host suffix filter);
@@ -1593,6 +1601,7 @@ sub _load_ldap_configuration {
         'suffix'        => undef,
         'filter'        => undef,
         'scope'         => 'sub',
+        'deref'         => 'find',
         'bind_dn'       => undef,
         'bind_password' => undef
     );

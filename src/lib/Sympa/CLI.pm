@@ -195,7 +195,7 @@ sub run {
                         $val = $arg;
                     }
                 } elsif ($def eq 'keyvalue') {
-                    if ($arg =~ /\A(\w+)=(.*)\z/) {
+                    if ($arg =~ /\A(\w+(?:[.]\w+)*)=(.*)\z/) {
                         $val = [$1 => $2];
                     }
                 } else {
@@ -252,7 +252,7 @@ sub arrange {
     }
 
     ## Open the syslog and say we're read out stuff.
-    $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+    $log->openlog;
 
     # Enable SMTP logging if required
     $mailer->{log_smtp} = $options{'mail'}
@@ -298,7 +298,7 @@ sub arrange {
 
     # end _load()
 
-    $log->openlog($Conf::Conf{'syslog'}, $Conf::Conf{'log_socket_type'});
+    $log->openlog;
 
     # Set the User ID & Group ID for the process
     $GID = $EGID = (getgrnam(Sympa::Constants::GROUP))[2];

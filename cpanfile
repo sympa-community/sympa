@@ -3,14 +3,11 @@
 
 # Minimum version of Perl required.
 # Notation suggested on https://metacpan.org/pod/Carton#PERL-VERSIONS
-requires 'perl', '5.16.0';
+requires 'perl', '5.26.0';
 
 # Used to zip/unzip for archive and shared document download/upload.
-# Note: Some environments not providing 'Archive::Zip::Simple*' modules may
-#   use a memory-consuming module 'Archive::Zip' for the alternative.
 requires 'Archive::Zip::SimpleUnzip', '>= 0.024';
 requires 'Archive::Zip::SimpleZip', '>= 0.021';
-#requires 'Archive::Zip', '>= 1.05';
 
 # Required to run Sympa web interface
 requires 'CGI', '>= 3.51';
@@ -112,7 +109,7 @@ requires 'MIME::Base64', '>= 3.11';
 requires 'MIME::Charset', '>= 1.011.3';
 
 # Required to decode/encode SMTP header fields without breaking character encoding
-requires 'MIME::EncWords', '>= 1.014';
+requires 'MIME::EncWords', '>= 1.015';
 
 # Used to compose HTML mail from the web interface
 requires 'MIME::Lite::HTML', '>= 1.23';
@@ -149,6 +146,14 @@ requires 'Time::HiRes', '>= 1.29';
 
 # Used to get Unix time from local time
 requires 'Time::Local', '>= 1.23';
+
+# Normalizes file names represented by Unicode.
+# Note: Perl 5.8.1 bundles version 0.23.
+# Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
+requires 'Unicode::Normalize', '>= 1.03';
+
+# Sanitizes inputs with Unicode text.
+requires 'Unicode::UTF8', '>= 0.58';
 
 # Used to create URI containing non URI-canonical characters.
 # Note: '3.28' is the version included in URI-1.35.
@@ -189,13 +194,6 @@ recommends 'Net::DNS', '>= 0.65';
 
 # This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.
 recommends 'Net::SMTP';
-
-# Normalizes file names represented by Unicode
-# Note: Perl 5.8.1 bundles version 0.23.
-# Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
-recommends 'Unicode::Normalize', '>= 1.03';
-
-recommends 'Unicode::UTF8', '>= 0.58';
 
 ### Features
 ##
@@ -324,10 +322,9 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
 };
 
 feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
-    # Note: Perl 5.8.1 bundles version 0.23.
-    # Note: Perl 5.10.1 bundles 1.03 (per Unicode 5.1.0).
-    requires 'Unicode::Normalize', '>= 1.03';
-    requires 'Unicode::UTF8', '>= 0.58';
+    # Note: These became required (>=6.2.77b).
+    #requires 'Unicode::Normalize', '>= 1.03';
+    #requires 'Unicode::UTF8', '>= 0.58';
 };
 
 on 'test' => sub {

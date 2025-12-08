@@ -30,7 +30,7 @@ use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use Getopt::Long;
+use Getopt::Long qw(:config no_ignore_case);
 use Pod::Usage;
 use POSIX qw();
 
@@ -79,7 +79,7 @@ unless (Conf::load()) {
         Conf::get_sympa_conf();
 }
 
-$log->openlog($Conf::Conf{'log_facility'}, $Conf::Conf{'log_socket_type'});
+$log->openlog;
 
 # setting log_level using conf unless it is set by calling option
 if ($main::options{'log_level'}) {

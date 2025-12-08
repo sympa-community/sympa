@@ -24,15 +24,14 @@ my $test_listmaster = 'dude@example.com';
 my $tempdir = File::Temp->newdir(CLEANUP => ($ENV{TEST_DEBUG} ? 0 : 1));
 
 %Conf::Conf = (
-    domain          => 'mail.example.org',    # mandatory
-    listmaster      => $test_listmaster,      # mandatory
-    db_type         => 'SQLite',
-    db_name         => ':memory:',
-    queuebulk       => $tempdir . '/bulk',
-    queuesubscribe  => $tempdir . '/auth',
-    home            => $tempdir,
-    log_socket_type => 'stream',
-    db_list_cache   => 'off',
+    domain         => 'mail.example.org',    # mandatory
+    listmaster     => $test_listmaster,      # mandatory
+    db_type        => 'SQLite',
+    db_name        => ':memory:',
+    queuebulk      => $tempdir . '/bulk',
+    queuesubscribe => $tempdir . '/auth',
+    home           => $tempdir,
+    db_list_cache  => 'off',
 );
 # Apply defaults.
 foreach my $pinfo (grep { $_->{name} and exists $_->{default} }
@@ -77,6 +76,11 @@ if (3035005 <= $DBD::SQLite::sqlite_version_number) {
     like $sdm->delete_field({table => 'subscriber_table', field => 'field1'}),
         qr/not support/, 'delete_field(unsupported)';
 }
+
+my $sth = $sdm->do_prepared_query(q{SELECT '', 0, NULL FROM dual});
+my $rows = $sth->fetchall_arrayref if $sth;
+is_deeply $rows, [['', 0, undef]], 'temporary view "dual" exists';
+$sth->finish;
 
 done_testing();
 

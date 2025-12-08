@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019, 2020 The Sympa Community. See the AUTHORS.md
+# Copyright 2019, 2020, 2024 The Sympa Community. See the AUTHORS.md
 # file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -46,10 +46,12 @@ sub _open {
     $self->{_db} = $db;
 
     my $pagesize = $options{pagesize} || $self->{pagesize};
-    if ($pagesize and $db->__dbh->root_dse->supported_control(
+    if ($pagesize
+        and $db->__dbh->root_dse->supported_control(
             Net::LDAP::Constant::LDAP_CONTROL_PAGED()
-        )) {
-        $self->{_page} = Net::LDAP::Control::Paged->new( size => $pagesize );
+        )
+    ) {
+        $self->{_page} = Net::LDAP::Control::Paged->new(size => $pagesize);
     }
 
     my $mesg = $self->_open_operation(%options);
@@ -69,13 +71,15 @@ sub _open_operation {
     my $ldap_filter = $options{filter} || $self->{filter};
     my $ldap_attrs  = $options{attrs}  || $self->{attrs};
     my $ldap_scope  = $options{scope}  || $self->{scope};
+    my $ldap_deref  = $options{deref}  || $self->{deref};
 
     my @args = (
-        base   => $ldap_suffix,
-        filter => $ldap_filter,
-        attrs  => [split /\s*,\s*/, $ldap_attrs],
-        scope  => $ldap_scope,
-        control=> $self->{_page} ? [$self->{_page}] : []
+        base    => $ldap_suffix,
+        filter  => $ldap_filter,
+        attrs   => [split /\s*,\s*/, $ldap_attrs],
+        scope   => $ldap_scope,
+        deref   => $ldap_deref,
+        control => $self->{_page} ? [$self->{_page}] : []
     );
 
     my $mesg = $self->{_db}->do_operation('search', @args);
@@ -133,8 +137,7 @@ sub _load_next {
         # second page, or later one (but not post-last) of a paged search:
         # load next page
         $mesg = $self->_open_operation(%options);
-    }
-    else {
+    } else {
         $mesg = $self->__dsh;
     }
     while (my $entry = $mesg->shift_entry) {
@@ -180,10 +183,9 @@ sub _load_next {
     }
 
     if ($self->{_page} and $mesg) {
-        my $cookie = $mesg->control(
-            Net::LDAP::Constant::LDAP_CONTROL_PAGED
-        )->cookie;
-        $self->{_page}->cookie( $cookie );
+        my $cookie =
+            $mesg->control(Net::LDAP::Constant::LDAP_CONTROL_PAGED)->cookie;
+        $self->{_page}->cookie($cookie);
     }
 
     return [@retrieved];

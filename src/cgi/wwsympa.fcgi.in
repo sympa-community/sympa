@@ -9,7 +9,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023 The Sympa Community.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 The Sympa Community.
 # See the AUTHORS.md file at the top-level directory of this distribution
 # and at <https://github.com/sympa-community/sympa.git>.
 #
@@ -30,6 +30,8 @@ use strict;
 ##use warnings;
 use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 
+use Archive::Zip::SimpleUnzip qw();
+use Archive::Zip::SimpleZip qw();
 use DateTime;
 use DateTime::Format::Mail;
 use Digest::MD5;
@@ -39,18 +41,9 @@ use IO::File qw();
 use MIME::EncWords;
 use MIME::Lite::HTML;
 use POSIX qw();
+use Unicode::UTF8;
 use URI;
 use Data::Dumper;    # tentative
-
-BEGIN {
-    # For some environments not providing Archive::Zip::Simple*, Archive::Zip
-    # may be used.  The latter is discouraged because it is memory-consuming.
-    eval 'use Archive::Zip::SimpleUnzip qw()';
-    eval 'use Archive::Zip::SimpleZip qw()';
-    require Archive::Zip
-        unless $Archive::Zip::SimpleUnzip::VERSION
-        and $Archive::Zip::SimpleZip::VERSION;
-}
 
 use Sympa;
 use Sympa::Archive;
@@ -131,8 +124,7 @@ unless (Conf::load()) {
 # Open log
 my $log = Sympa::Log->instance;
 $log->{level} = $Conf::Conf{'log_level'};
-$log->openlog($Conf::Conf{'log_facility'} || $Conf::Conf{'syslog'},
-    $Conf::Conf{'log_socket_type'});
+$log->openlog;
 
 Sympa::Spool::Listmaster->instance->{use_bulk} = 1;
 
@@ -297,6 +289,7 @@ our %comm = (
     'sso_login'                => 'do_sso_login',
     'sso_login_succeeded'      => 'do_sso_login_succeeded',
     'stats'                    => 'do_stats',
+    'invite'                   => 'do_invite',
     'subindex'                 => 'do_subindex',
     'suboptions'               => 'do_suboptions',
     'subscribe'                => 'do_subscribe',
@@ -1056,6 +1049,15 @@ while ($query = Sympa::WWW::FastCGI->new) {
 
     ## Get params in a hash
     %in = $query->Vars;
+    while (my ($k, $v) = each %in) {
+        next if ref $v;
+        next if Encode::is_utf8($v);
+        unless (Unicode::UTF8::valid_utf8($v)) {
+            $log->syslog('err', 'Parameter in invalid UTF-8 %s="%s": Ignored',
+                $k, sprintf("\\x%*v02X", "\\x", $v));
+            delete $in{$k};
+        }
+    }
 
     # Determin robot.
     $robot = $ENV{SYMPA_DOMAIN};
@@ -1746,27 +1748,21 @@ Sympa::Spool::Listmaster->instance->flush(purge => 1);
 ## Write to log
 sub wwslog {
     my $facility = shift;
+    my $msg      = shift;
 
-    my $msg    = shift;
     my $remote = $ENV{'REMOTE_HOST'} || $ENV{'REMOTE_ADDR'};
-    my $wwsmsg = '';
+    my $bot = $session->{'is_a_crawler'} || undef if $session;
 
-    $wwsmsg = "[list $param->{'list'}] " . $wwsmsg
-        if $param->{'list'};
-
-    $wwsmsg = "[user $param->{'user'}{'email'}] " . $wwsmsg
-        if $param->{'user'}{'email'};
-
-    $wwsmsg = "[rss] " . $wwsmsg
-        if $rss;
-
-    $wwsmsg = "[client $remote] " . $wwsmsg
-        if $remote;
-
-    $wwsmsg = "[session $session->{'id_session'}] " . $wwsmsg
-        if $session;
-
-    $wwsmsg = "[robot $robot] " . $wwsmsg;
+    my $wwsmsg = join ' ',
+        grep {defined} (
+        "[robot $robot]",
+        ($session                  and "[session $session->{'id_session'}]"),
+        ($remote                   and "[client $remote]"),
+        ($bot                      and "[bot <$bot>]"),
+        ($rss                      and "[rss]"),
+        ($param->{'user'}{'email'} and "[user $param->{'user'}{'email'}]"),
+        ($param->{'list'}          and "[list $param->{'list'}]")
+        );
 
     push @_, $wwsmsg;
     if ($msg =~ /^([(][^)]*[)])\s*(.*)/s) {
@@ -1873,24 +1869,28 @@ sub _split_params {
     }
 
     if (@params) {
-        $in{'action'} = $params[0];
+        $in{'action'} = shift @params;
         my @args = @{$action_args{$in{'action'}} // $action_args{'default'}};
 
-        my $i = 1;
         foreach my $p (@args) {
-            my $pname;
-            ## More than 1 param
+            my ($k, $v);
             if ($p =~ /^\@(\w+)$/) {
-                $pname = $1;
-                $in{$pname} = join '/', @params[$i .. $#params];
-                $in{$pname} .= '/' if $ending_slash;
-                last;
+                $k = $1;
+                $v = join '/', @params;
+                $v .= '/' if $ending_slash;
             } else {
-                $pname = $p;
-                $in{$pname} = $params[$i];
+                $k = $p;
+                $v = shift @params;
             }
-            wwslog('debug', 'Incoming parameter: %s=%s', $pname, $in{$pname});
-            $i++;
+            $in{$k} = $v;
+
+            unless (Encode::is_utf8($v) or Unicode::UTF8::valid_utf8($v)) {
+                $log->syslog('err',
+                    'Parameter in invalid UTF-8 %s="%s": Ignored',
+                    $k, sprintf("\\x%*v02X", "\\x", $v));
+                delete $in{$k};
+            }
+            last if 0 == index $p, '@';
         }
     }
 }
@@ -3039,11 +3039,11 @@ sub do_login {
             and $u->{'wrong_login_count'}
             and $u->{'wrong_login_count'} >
             Conf::get_robot_conf($robot, 'max_wrong_password')) {
-            $param->{'login_error'} = 'password_reset';
+            $param->{'reason'}      = 'resetpasswd';
+            $param->{'login_error'} = 'password_reset';    # Compat.<=6.2.72
             return _do_login_exit($failure_referer || $ldap_auth_info,
                 'renewpasswd');
         } else {
-            #$param->{'login_error'} = 'wrong_password';
             return _do_login_exit($failure_referer, 1);
         }
 
@@ -3220,7 +3220,13 @@ sub do_sso_login {
 
         # If contacted via POST, then redirect the user to the URL for the
         # access control to apply.
-        if ($ENV{'REQUEST_METHOD'} eq 'POST') {
+        unless (
+            'GET' eq $ENV{REQUEST_METHOD}
+            and 0 == index(
+                $ENV{PATH_INFO} . '/',
+                "/sso_login/$in{'auth_service_name'}/"
+            )
+        ) {
             my @paths;
             my $service;
 
@@ -3299,7 +3305,8 @@ sub do_sso_login {
                 return 1;
             }
 
-            if (defined($in{'email'}) and !($in{'subaction'} eq 'init')) {
+            if (Sympa::Tools::Text::valid_email($in{'email'})
+                and $in{'subaction'} eq 'validateemail') {
                 $email = $in{'email'};
             }
 
@@ -3311,7 +3318,7 @@ sub do_sso_login {
 
                 ## Replace sendpassword with one time ticket
                 $param->{'one_time_ticket'} = Sympa::Ticket::create(
-                    $in{'email'},
+                    $email,
                     $robot,
                     'sso_login/confirmemail?auth_service_name='
                         . $in{'auth_service_name'},
@@ -3338,7 +3345,7 @@ sub do_sso_login {
                 # Check input parameters and verify ticket for email, stolen
                 # from do_login()
                 #
-                unless ($in{'email'}) {
+                unless (Sympa::Tools::Text::valid_email($in{'email'})) {
                     add_stash('user', 'no_email');
                     wwslog('info', 'No email');
                     web_db_log(
@@ -3662,6 +3669,7 @@ sub is_ldap_user {
             base    => $ldap->{'suffix'},
             filter  => "$filter",
             scope   => $ldap->{'scope'},
+            deref   => $ldap->{'deref'},
             timeout => $ldap->{'timeout'}
         );
 
@@ -3886,7 +3894,7 @@ sub do_requestpasswd {
         arg             => join(',', $email, $reason),
         previous_action => (
             $in{'previous_action'}
-                || ($reason ? 'firstpasswd' : 'renewpasswd')
+                || ($reason eq 'firstpasswd' ? 'firstpasswd' : 'renewpasswd')
         )
     );
     return $next_action unless $next_action eq '1';
@@ -3942,8 +3950,7 @@ sub do_requestpasswd {
         $param->{'login_error'} = 'unable_to_create_ticket';
     }
 
-    return 1 unless ($param->{'previous_action'});
-    return $param->{'previous_action'};
+    return 1;
 }
 
 sub do_my {
@@ -7542,27 +7549,24 @@ sub do_distribute {
 
     my @ids = split /\0/, $in{'id'};
     $param->{'id'} = [@ids];
-    my @topics = grep { defined $_ and length $_ } split /\0/, $in{'topic'};
+    my @topics =
+        grep { $list->is_available_msg_topic($_) } split /\0/, $in{'topic'};
     $param->{'topic'} = [@topics];
     $param->{'topic_required'} =
         ($list->is_there_msg_topic and $list->is_msg_topic_tagging_required);
 
     # Action confirmed?
-    if ($param->{'topic_required'}) {
-        my $response_action = (
-            @topics    # Topics are required.
-                or ($in{'response_action'}
-                and $in{'response_action'} eq 'cancel')
-            )
-            ? $in{'response_action'}
-            : undef;
-        my $next_action = $session->confirm_action(
-            $in{'action'}, $response_action,
-            arg             => join(',', sort @ids),
-            previous_action => ($in{'previous_action'} || 'modindex')
-        );
-        return $next_action unless $next_action eq '1';
+    unless ('cancel' eq ($in{'response_action'} // '')) {
+        # Redo confirmation if topics are required.
+        undef $in{'response_action'}
+            if not @topics and $param->{'topic_required'};
     }
+    my $next_action = $session->confirm_action(
+        $in{'action'}, $in{'response_action'},
+        arg             => join(',', sort @ids),
+        previous_action => ($in{'previous_action'} || 'modindex')
+    );
+    return $next_action unless $next_action eq '1';
 
     # Load message list.
     my @mail_command = ();
@@ -7603,6 +7607,10 @@ sub do_distribute {
 
         $spool_mod->remove($handle, action => 'distribute');
     }
+
+    # Don't need to do anything if all messages were filtered out
+    # by the "already_moderated" clause above.
+    return 'modindex' if (@mail_command == 0);
 
     # Commands are injected into incoming spool directly with "md5"
     # authentication level.
@@ -8391,13 +8399,12 @@ sub do_arc {
         $param->{'file'} = $archive->{arc_directory} . '/' . $in{'arc_file'};
     }
 
-    $param->{'date'} = Sympa::Tools::File::get_mtime(
-        $archive->{arc_directory} . '/' . $in{'arc_file'});
-    # send page as static if client is a bot. That's prevent crawling all
-    # archices every weeks by google, yahoo and others bots
-    if ($session->{'is_a_crawler'}) {
-        $param->{'header_date'} = $param->{'date'};
-    }
+    # Send page as static if client is a bot.  That prevent crawling all
+    # archives every week by Google, Yahoo and other bots.
+    $param->{'header_date'} =
+        Sympa::Tools::File::get_mtime(
+        $archive->{arc_directory} . '/' . $in{'arc_file'})
+        if $session->{'is_a_crawler'};
     $param->{'archive_name'} = $in{'month'};
 
     #test pour différentier les action d'un robot et d'un simple abonné
@@ -9106,6 +9113,8 @@ sub do_get_closed_lists {
             $list->{'admin'}{'subject'};
         $param->{'closed'}{$list->{'name'}}{'by'} =
             $list->{'admin'}{'creation'}{'email'};
+        $param->{'closed'}{$list->{'name'}}{'update_epoch'} =
+            $list->{'admin'}{'update'}{'date_epoch'};
     }
 
     return 1;
@@ -11963,7 +11972,7 @@ sub do_d_unzip {
     }
 
     # Uploaded of the file.zip
-    my ($zip, $rv, $az);
+    my $zip;
     my $fh = $query->upload('uploaded_file');
     if (defined $fh) {
         my $ioh = $fh->handle;
@@ -11972,19 +11981,15 @@ sub do_d_unzip {
         # some of methods.  That's why destructive bless-ing is here.
         bless $ioh => 'IO::File';
 
-        if ($Archive::Zip::SimpleUnzip::VERSION) {
-            $zip = Archive::Zip::SimpleUnzip->new($ioh);
-            $rv  = defined $zip;
-            $az  = $Archive::Zip::SimpleUnzip::SimpleUnzipError;
-        } else {
-            $zip = Archive::Zip->new();
-            $az  = $zip->readFromFileHandle($ioh);
-            $rv  = (defined $az and $az == Archive::Zip::AZ_OK());
-        }
+        $zip = Archive::Zip::SimpleUnzip->new($ioh);
     }
-    unless ($rv) {
+    unless (defined $zip) {
         add_stash('user', 'cannot_unzip', {name => $zip_name});
-        wwslog('err', 'Unable to read the zip file: %s', $az);
+        wwslog(
+            'err',
+            'Unable to read the zip file: %s',
+            $Archive::Zip::SimpleUnzip::SimpleUnzipError
+        );
         web_db_log(
             {   'robot'        => $robot,
                 'list'         => $list->{'name'},
@@ -12003,19 +12008,9 @@ sub do_d_unzip {
     my $status = 1;
     my %subpaths;
     my @langs = Sympa::Language::implicated_langs($language->get_lang);
-    my @members;
-    if ($Archive::Zip::SimpleUnzip::VERSION) {
-        @members = map { $zip->member($_) } $zip->names;
-    } else {
-        @members = grep { !$_->isEncrypted } $zip->members;
-    }
+    my @members = map { $zip->member($_) } $zip->names;
     foreach my $member (@members) {
-        my $path;
-        if ($Archive::Zip::SimpleUnzip::VERSION) {
-            $path = $member->name;
-        } else {
-            $path = $member->fileName;
-        }
+        my $path     = $member->name;
         my @subpaths = split m{/+},
             Sympa::Tools::Text::guessed_to_utf8($path, @langs);
         next unless @subpaths;
@@ -12063,29 +12058,17 @@ sub do_d_unzip {
         $subpaths{$path} = [@subpaths];
     }
     foreach my $member (@members) {
-        my $path;
-        if ($Archive::Zip::SimpleUnzip::VERSION) {
-            $path = $member->name;
-        } else {
-            $path = $member->fileName;
-        }
+        my $path     = $member->name;
         my $subpaths = $subpaths{$path};
         next unless $subpaths and @$subpaths;
 
-        my ($content, $rv, $az);
+        my $content;
         unless ($member->isDirectory) {
-            if ($Archive::Zip::SimpleUnzip::VERSION) {
-                $content = $member->content;
-                $rv      = defined $content;
-                $az      = $Archive::Zip::SimpleUnzip::SimpleUnzipError;
-            } else {
-                ($content, $az) = $member->contents;
-                $rv = (defined $az and $az == Archive::Zip::AZ_OK());
-            }
-            unless ($rv) {
+            $content = $member->content;
+            unless (defined $content) {
                 wwslog('err',
                     'Unable to extract member %s of the zip file: %s',
-                    $path, $az);
+                    $path, $Archive::Zip::SimpleUnzip::SimpleUnzipError);
                 web_db_log(
                     {   'robot'        => $robot,
                         'list'         => $list->{'name'},
@@ -15430,14 +15413,9 @@ sub do_arc_download {
     return undef unless defined check_authz('do_arc', 'archive_web_access');
 
     ##zip file name:listname_archives.zip
-    my $zip_file_name = sprintf '%s_archives.zip', $list->{'name'};
-    my $zip_abs_file = $Conf::Conf{'tmpdir'} . '/' . $zip_file_name;
-    my $zip;
-    if ($Archive::Zip::SimpleZip::VERSION) {
-        $zip = Archive::Zip::SimpleZip->new($zip_abs_file);
-    } else {
-        $zip = Archive::Zip->new;
-    }
+    my $zip_file_name     = sprintf '%s_archives.zip', $list->{'name'};
+    my $zip_abs_file      = $Conf::Conf{'tmpdir'} . '/' . $zip_file_name;
+    my $zip               = Archive::Zip::SimpleZip->new($zip_abs_file);
     my $number_of_members = 0;
 
     #Search for months to put in zip
@@ -15484,32 +15462,25 @@ sub do_arc_download {
             next;
         }
 
-        if ($Archive::Zip::SimpleZip::VERSION) {
-            $zip->add($archive->{directory}, Name => $arc_dirname);
-        } else {
-            $zip->addDirectory($archive->{directory}, $arc_dirname);
-        }
+        $zip->add($archive->{directory}, Name => $arc_dirname);
 
         while (1) {
             my ($message, $handle) = $archive->next;
             last unless $handle;
             next unless $message;
 
-            my ($rv, $az);
             my $string = $message->as_string =~ s/\r?\n/\r\n/gr;
-            if ($Archive::Zip::SimpleZip::VERSION) {
-                $rv = $zip->addString($string,
-                    Name => sprintf('%s/%s.eml', $arc_dirname, $handle->basename)
-                );
-                $az = $Archive::Zip::SimpleZip::SimpleZipError;
-            } else {
-                $rv = $zip->addString($string,
-                    sprintf('%s/%s.eml', $arc_dirname, $handle->basename));
-                $az = 'unknown error';
-            }
+            my $rv = $zip->addString($string,
+                Name => sprintf('%s/%s.eml', $arc_dirname, $handle->basename)
+            );
             unless ($rv) {
-                wwslog('info', 'Failed to add %s file in %s to archive: %s',
-                    $handle->basename, $archive, $az);
+                wwslog(
+                    'info',
+                    'Failed to add %s file in %s to archive: %s',
+                    $handle->basename,
+                    $archive,
+                    $Archive::Zip::SimpleZip::SimpleZipError
+                );
                 add_stash('intern', 'add_file_zip',
                     {file => $arc . '/' . $handle->basename});
                 web_db_log(
@@ -15551,17 +15522,11 @@ sub do_arc_download {
     }
 
     # Writing zip file.
-    my ($rv, $az);
-    if ($Archive::Zip::SimpleZip::VERSION) {
-        $rv = $zip->close;
-        $az = $Archive::Zip::SimpleZip::SimpleZipError;
-    } else {
-        $az = $zip->writeToFileNamed($zip_abs_file);
-        $rv = (defined $az and $az == Archive::Zip::AZ_OK());
-    }
-    unless ($rv) {
-        wwslog('info', 'Error while writing ZIP File %s: %s',
-            $zip_abs_file, $az);
+    unless ($zip->close) {
+        wwslog(
+            'info',        'Error while writing ZIP File %s: %s',
+            $zip_abs_file, $Archive::Zip::SimpleZip::SimpleZipError
+        );
         add_stash('intern', 'write_file_zip', {zipfile => $zip_abs_file});
         web_db_log(
             {   'robot'        => $robot,
@@ -16639,6 +16604,82 @@ sub _add_in_blocklist {
     print $fh "$entry\n";
     close $fh;
 
+}
+
+# web invite function (code adapted from do_add() and do_import()):
+sub do_invite {
+
+    # Access control.
+    unless (defined check_authz('do_invite', 'invite')) {
+        add_stash('user', 'Invite not allowed');
+        return 'review';
+    }
+
+    my @emails;
+
+    # address for single user (from review.tt2) is in $in{email}:
+    if ($in{'email'}) {
+        @emails =
+            grep {$_} map { Sympa::Tools::Text::canonic_email($_) }
+            split /\0/, $in{'email'};
+        $log->syslog('info', 'single invite "%s"', join(' ', @emails));
+        unless (@emails) {
+            add_stash('user', 'no_email');
+            return 'review';
+        }
+    } else {    # addresses for multiple users (from import.tt2) are $in{dump}
+        foreach (split /\r\n|\r|\n/, $in{'dump'}) {
+            next unless /\S/;
+            next if /\A\s*#/;    #FIXME: email address can contain '#'
+
+            my ($email) = m{\A\s*(\S+)(?:\s+(.*))?\s*\z};
+            push @emails, $email;
+        }
+        $log->syslog('info', 'multiple invite "%s"', join(' ', @emails));
+        unless (@emails) {
+            add_stash('user', 'no_email');
+            return 'import';
+        }
+    }
+
+    $param->{'email'} = [@emails];
+
+    my $stash     = [];
+    my $processed = 0;
+    foreach my $email (@emails) {
+        $log->syslog('info', 'do_invite working on %s', $emails[0]);
+        my $spindle = Sympa::Spindle::ProcessRequest->new(
+            context          => $list,
+            action           => 'invite',
+            email            => $email,
+            sender           => $param->{'user'}{'email'},
+            md5_check        => 1,
+            scenario_context => {
+                email       => $email,
+                sender      => $param->{'user'}{'email'},
+                remote_host => $param->{'remote_host'},
+                remote_addr => $param->{'remote_addr'}
+            },
+            stash => $stash,
+        );
+        $spindle and $processed += $spindle->spin;
+    }
+    unless ($processed) {
+        return $in{'previous_action'} || 'review';
+    }
+
+    foreach my $report (@$stash) {
+        if ($report->[1] eq 'notice') {
+            add_stash('notice', @{$report}[2, 3]);
+        } else {
+            add_stash(@{$report}[1 .. 3]);
+        }
+    }
+    unless (@$stash) {
+        add_stash('notice', 'performed');
+    }
+
+    return $in{'previous_action'} || 'review';
 }
 
 __END__

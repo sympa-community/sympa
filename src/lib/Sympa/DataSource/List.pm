@@ -3,7 +3,7 @@
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
-# Copyright 2019 The Sympa Community. See the AUTHORS.md file at
+# Copyright 2019, 2024 The Sympa Community. See the AUTHORS.md file at
 # the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -45,8 +45,11 @@ sub _new {
 
     my $list = $self->{context};
     if (ref $list eq 'Sympa::List') {
-        my $inlist = Sympa::List->new($self->{listname}, $list->{'domain'},
-            {just_try => 1});
+        my $inlist = Sympa::List->new(
+            $self->{listname},
+            ($self->{listname} =~ /\@/ ? undef : $list->{'domain'}),
+            {just_try => 1}
+        );
         $self->{listname} = $inlist->get_id if $inlist;
     }
 

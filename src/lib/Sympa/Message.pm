@@ -169,8 +169,34 @@ sub new {
     $self->{_entity_cache} = $entity;
     $self->{'size'}        = length $serialized;
 
+    # Get sender of the message according to header fields specified by
+    # 'sender_headers' parameter.
+    # Note: On "Resent-*:" headers, the first occurrence must be used (see
+    # RFC 5322 3.6.6).
+    # FIXME: Though "From:" can occur multiple times, only the first
+    # one is detected.
+    # FIXME: S/MIME signer may not be the same as the sender given by this
+    # code.
     unless (exists $self->{'sender'} and defined $self->{'sender'}) {
-        ($self->{'sender'}, $self->{'gecos'}) = $self->_get_sender_email;
+        foreach my $field (split /[\s,]+/, $Conf::Conf{'sender_headers'}) {
+            if (lc $field eq 'return-path') {
+                # Try to get envelope sender.
+                if (    $self->{'envelope_sender'}
+                    and $self->{'envelope_sender'} ne '<>') {
+                    $self->{'sender'} = Sympa::Tools::Text::canonic_email(
+                        $self->{'envelope_sender'});
+                    last;
+                }
+            } else {
+                my ($gecos, $sender) =
+                    _parse_nameaddr($self->get_header($field));
+                if (defined $sender) {
+                    ($self->{'gecos'}, $self->{'sender'}) = ($gecos, $sender);
+                    last;
+                }
+            }
+
+        }
     }
 
     ## Store decoded subject and its original charset
@@ -248,68 +274,37 @@ sub new_from_file {
     return $self;
 }
 
-## Get sender of the message according to header fields specified by
-## 'sender_headers' parameter.
-## FIXME: S/MIME signer may not be same as the sender given by this function.
-sub _get_sender_email {
-    my $self = shift;
+sub _parse_nameaddr {
+    my $addr = shift;
 
-    my $hdr = $self->{_head};
-
-    my $sender = undef;
-    my $gecos  = undef;
-    foreach my $field (split /[\s,]+/, $Conf::Conf{'sender_headers'}) {
-        if (lc $field eq 'return-path') {
-            ## Try to get envelope sender
-            if (    $self->{'envelope_sender'}
-                and $self->{'envelope_sender'} ne '<>') {
-                $sender = Sympa::Tools::Text::canonic_email(
-                    $self->{'envelope_sender'});
-            }
-        } elsif ($hdr->get($field)) {
-            ## Try to get message header.
-            ## On "Resent-*:" headers, the first occurrence must be used (see
-            ## RFC 5322 3.6.6).
-            ## FIXME: Though "From:" can occur multiple times, only the first
-            ## one is detected.
-            my $addr = $hdr->get($field, 0);               # get the first one
-            my @sender_hdr = Mail::Address->parse($addr);
-            if (@sender_hdr and $sender_hdr[0]->address) {
-                $sender = Sympa::Tools::Text::canonic_email(
-                    $sender_hdr[0]->address);
-                my $phrase = $sender_hdr[0]->phrase;
-                if (length($phrase // '')) {
-                    # Unquote quoted strings in the phrase.
-                    # cf. RFC 5322, 3.2.4 and 3.2.5.
-                    $phrase =~ s{(?<!\S) " ((?:\\. | [^\\"])*) " (?!\S)}{
+    my ($gecos, $sender);
+    if (($addr // '') =~ /\S/) {
+        chomp $addr;
+        my @sender_hdr = Mail::Address->parse($addr);
+        if (@sender_hdr and $sender_hdr[0]->address) {
+            $sender =
+                Sympa::Tools::Text::canonic_email($sender_hdr[0]->address);
+            my $phrase = $sender_hdr[0]->phrase;
+            if (($phrase // '') =~ /\S/) {
+                # Unquote quoted strings in the phrase.
+                # cf. RFC 5322, 3.2.4 and 3.2.5.
+                $phrase =~ s{(?<!\S) " ((?:\\. | [^\\"])*) " (?!\S)}{
                         my $qcontent = $1;
                         $qcontent =~ s/\\(.)/$1/grs;
                     }egsx;
 
-                    # Decode B- or Q-encoded words. Note that some (mistaken)
-                    # implementations may quote encoded words.
-                    $gecos = MIME::EncWords::decode_mimewords($phrase,
-                        Charset => 'UTF-8');
-                    # Eliminate hostile characters.
-                    $gecos =~ s/(\r\n|\r|\n)(?=[ \t])//g;
-                    $gecos =~ s/[\0\r\n]+//g;
-                }
-                last;
+                # Decode B- or Q-encoded words. Note that some (mistaken)
+                # implementations may quote encoded words.
+                $gecos = MIME::EncWords::decode_mimewords($phrase,
+                    Charset => 'UTF-8');
+                # Eliminate hostile characters.
+                $gecos =~ s/(\r\n|\r|\n)(?=[ \t])//g;
+                $gecos =~ s/[\0\r\n]+//g;
             }
         }
-
-        last if defined $sender;
     }
-    unless (defined $sender) {
-        #$log->syslog('debug3', 'No valid sender address');
-        return;
-    }
-    unless (Sympa::Tools::Text::valid_email($sender)) {
-        $log->syslog('err', 'Invalid sender address "%s"', $sender);
-        return;
-    }
-
-    return ($sender, $gecos);
+    return unless Sympa::Tools::Text::valid_email($sender);
+    return ($gecos, $sender);
 }
 
 # Note that this must be called after decrypting message
@@ -546,8 +541,14 @@ sub arc_seal {
         $log->syslog('err', 'Can\'t create Mail::DKIM::ARC::Signer');
         return undef;
     }
-    # For One-Click Unsubscribe.
-    $arc->extended_headers({'List-Unsubscribe-Post' => '*'});
+    $arc->extended_headers(
+        {
+            # For any DKIM signature(s).  See RFC 8617, 4.1.2.
+            'DKIM-Signature' => '*',
+            # For One-Click Unsubscribe.
+            'List-Unsubscribe-Post' => '*',
+        }
+    );
 
     # $new_body will store the body as fed to Mail::DKIM to reuse it
     # when returning the message as string.  Line terminators must be
@@ -848,20 +849,8 @@ sub check_arc_seals {
 
 # Old name: tools::remove_invalid_dkim_signature() which takes a message as
 # string and outputs idem without signature if invalid.
-sub remove_invalid_dkim_signature {
-    $log->syslog('debug2', '(%s)', @_);
-    my $self = shift;
-
-    return unless $self->get_header('DKIM-Signature');
-
-    my ($dkim_pass, @dummy) = $self->check_dkim_sigs;
-    unless ($dkim_pass) {
-        $log->syslog('info',
-            'DKIM signature of message %s is invalid, removing', $self);
-        $self->delete_header('DKIM-Signature');
-        delete $self->{dkim_pass};
-    }
-}
+# Deprecated.
+#sub remove_invalid_dkim_signature;
 
 sub as_entity {
     my $self = shift;
@@ -3118,8 +3107,6 @@ sub _do_message {
         chomp $_;
         MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
     } ($msgent->head->get('From', 0));
-    $from = $language->gettext("[Unknown]")
-        unless defined $from and length $from;
     my ($subject) = map {
         chomp $_;
         MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
@@ -3136,17 +3123,9 @@ sub _do_message {
         chomp $_;
         MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
     } ($msgent->head->get('Cc'));
-
-    my @fromline = Mail::Address->parse($msgent->head->get('From'));
-    my $name;
-    if ($fromline[0]) {
-        $name = MIME::EncWords::decode_mimewords($fromline[0]->name(),
-            Charset => 'utf8');
-        $name = $fromline[0]->address()
-            unless defined $name and $name =~ /\S/;
-        chomp $name;
-    }
-    $name = $from unless defined $name and length $name;
+    my ($name) =
+        grep { defined and /\S/ } _parse_nameaddr($msgent->head->get('From'));
+    $name ||= $language->gettext("[Unknown]");
 
     $string .= $language->gettext(
         "\n[Attached message follows]\n-----Original message-----\n");
@@ -3330,8 +3309,7 @@ sub dmarc_protect {
     my $domain_regex   = $list->{'admin'}{'dmarc_protection'}{'domain_regex'};
 
     my $original_from = $self->get_header('From');
-    my ($from)        = Mail::Address->parse($original_from);
-    my $from_address  = $from->address if $from;
+    my ($origName, $from_address) = _parse_nameaddr($original_from);
     $log->syslog('debug', 'From address: <%s>', $from_address);
 
     # Will this message be processed?
@@ -3394,14 +3372,10 @@ sub dmarc_protect {
     }
     $log->syslog('debug', 'Anonymous From: %s', $anonaddr);
 
-    if ($from) {
+    if ($from_address) {
         # We should always have a From address in reality, unless the
         # message is from a badly-behaved automate.
-        my $origName =
-            MIME::EncWords::decode_mimewords($from->phrase,
-            Charset => 'UTF-8')
-            if defined $from->phrase;
-        unless (defined $origName and $origName =~ /\S/) {
+        unless (($origName // '') =~ /\S/) {
             # If we dont have a Phrase, should we search the Sympa
             # database for the sender to obtain their name that way?
             # Might be difficult.
@@ -3869,6 +3843,8 @@ Returns:
 An array of the overall result of checking and authentication result(s).
 
 =item remove_invalid_dkim_signature ( )
+
+B<Deprecated> on Sympa 6.2.74.
 
 I<Instance method>.
 Verifies DKIM signatures included in the message,

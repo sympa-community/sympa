@@ -7,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2019, 2021, 2022 The Sympa Community. See the
+# Copyright 2017, 2019, 2021, 2022, 2024 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -139,8 +139,7 @@ sub _fork_children {
                         close STDERR;
                         $process->direct_stderr_to_file;
                         $self->{_last_activity} = time;
-                        $log->openlog($Conf::Conf{'syslog'},
-                            $Conf::Conf{'log_socket_type'});
+                        $log->openlog;
                         $log->syslog('info',
                             'Bulk slave daemon started with PID %s', $PID);
                         last;
@@ -170,30 +169,171 @@ sub _finish_child {
     }
 }
 
+sub __twist_one {
+    my $message = shift->dup;
+    my $rcpt    = shift;
+    my %arc     = %{shift || {}};
+    my %dkim    = %{shift || {}};
+    my $rm_sig  = shift;
+
+    my $that = $message->{context};
+
+    my $personalize   = $message->{shelved}{merge};
+    my $smime_encrypt = $message->{shelved}{smime_encrypt};
+    my $tracking      = $message->{shelved}{tracking};
+    die 'bug in logic. Ask developer'
+        unless ($personalize or $smime_encrypt or $tracking)
+        xor ref $rcpt eq 'ARRAY';
+    my $decorate   = $message->{shelved}{decorate};
+    my $smime_sign = $message->{shelved}{smime_sign};
+    die 'bug in logic. Ask developer'
+        if ($personalize
+        or $smime_encrypt
+        or $tracking
+        or $decorate
+        or $smime_sign)
+        and not ref $that eq 'Sympa::List';
+
+    # If message is personalized and DKIM signature is available,
+    # Add One-Click Unsubscribe header field.
+    if (    $personalize
+        and (%arc or $message->{shelved}{dkim_sign} and %dkim)
+        and grep { 'unsubscribe' eq $_ }
+        @{$that->{'admin'}{'rfc2369_header_fields'}}) {
+        $that->add_list_header($message, 'unsubscribe', oneclick => $rcpt);
+    }
+    if ($personalize and $personalize ne 'footer') {
+        unless ($message->personalize($that, $rcpt)) {
+            $log->syslog('err', 'Erreur d appel personalize()');
+            Sympa::send_notify_to_listmaster($that, 'bulk_failed',
+                {'message_id' => $message->get_id});
+            # Quarantine packet into bad spool.
+            return undef;
+        }
+        $personalize = 'footer';
+    }
+    if ($decorate) {
+        $message->decorate(
+            $that,
+            (ref $rcpt ? undef : $rcpt),
+            mode => $personalize
+        );
+    }
+
+    if ($smime_sign) {
+        $message->smime_sign;
+    }
+    if ($smime_encrypt) {
+        unless ($message->smime_encrypt($rcpt)) {
+            $log->syslog('err',
+                'Unable to encrypt message %s from %s for recipient %s',
+                $message, $that, $rcpt);
+            # If encryption failed, send a generic error message:
+            # X509 cert missing.
+            my $entity = Sympa::Message::Template->new(
+                context  => $that,
+                template => 'x509-user-cert-missing',
+                rcpt     => $rcpt,
+                data     => {
+                    'mail' => {
+                        'sender'  => $message->{sender},
+                        'subject' => $message->{decoded_subject},
+                    },
+                }
+            )->as_entity;
+            $message->set_entity($entity);
+        }
+    }
+
+    if ($rm_sig) {
+        # If it is set up, remove header fields related to DKIM signature
+        # given by upstream MTAs.
+        # AR should be removed after it is included into AAR: See below.
+        $message->delete_header('DKIM-Signature');
+        $message->delete_header('Domainkey-Signature');
+    }
+
+    if ($message->{shelved}{dkim_sign} or %arc) {
+        # apply DKIM signature AFTER any other message transformation.
+        # Note that when ARC seal was added, DKIM signature is forced.
+        $message->dkim_sign(%dkim) if %dkim;
+    }
+    # DKIM signing must be done before ARC sealing. See RFC 8617, 5.1.
+    $message->arc_seal(%arc) if %arc;
+
+    if ($rm_sig) {
+        $message->delete_header('Authentication-Results');
+    }
+
+    # Determine envelope sender and envelope ID.
+    my $envid = undef;
+    if ($tracking) {
+        # If tracking (including VERP) is enabled, override envelope sender.
+        if ($tracking =~ /dsn|mdn/) {
+            # Note: Tracking by MDN requires tracking by DSN too.
+            my $msgid = $message->{'message_id'};
+            $envid =
+                Sympa::Tracking::find_notification_id_by_message($rcpt,
+                $msgid, $that);
+            my $return_path = $that->get_bounce_address($rcpt, $envid);
+            $message->replace_header('Disposition-Notification-To',
+                $return_path)
+                if $tracking =~ /mdn/;
+            $message->{envelope_sender} = $return_path;
+        } else {
+            $message->{envelope_sender} =
+                  $tracking eq 'w' ? $that->get_bounce_address($rcpt, 'w')
+                : $tracking eq 'r' ? $that->get_bounce_address($rcpt, 'r')
+                :                    $that->get_bounce_address($rcpt);
+        }
+    } else {
+        # Otherwise, unless specified explicitly, the default is applied.
+        $message->{envelope_sender} ||=
+            ref $that eq 'Sympa::List'
+            ? Sympa::get_address($that, 'return_path')
+            : Sympa::get_address($that, 'owner');
+    }
+
+    unless (
+        defined $mailer->store(
+            $message, $rcpt,
+            envid => $envid,
+            tag   => $message->{serial}
+        )
+    ) {
+        $log->syslog('err', 'Failed to store message %s into mailer',
+            $message);
+        # Quarantine packet into bad spool.
+        return undef;
+    }
+}
+
 sub _twist {
     my $self    = shift;
     my $message = shift;
 
     # Get list/robot context.
-    my ($list, $robot, $listname, $arc_enabled, $dkim_enabled);
+    my ($list, $robot, $arc_enabled, $dkim_enabled, $rm_sig);
     if (ref($message->{context}) eq 'Sympa::List') {
-        $list     = $message->{context};
-        $robot    = $message->{context}->{'domain'};
-        $listname = $list->{'name'};
+        $list  = $message->{context};
+        $robot = $message->{context}->{'domain'};
 
         $arc_enabled = 'on' eq $list->{'admin'}{'arc_feature'};
         $dkim_enabled =
             'on' eq Conf::get_robot_conf($list->{'domain'}, 'dkim_feature');
+        $rm_sig = 'on' eq $list->{'admin'}{'remove_dkim_headers'};
     } elsif ($message->{context} and $message->{context} ne '*') {
         $robot = $message->{context};
 
         $arc_enabled  = 'on' eq Conf::get_robot_conf($robot, 'arc_feature');
         $dkim_enabled = 'on' eq Conf::get_robot_conf($robot, 'dkim_feature');
+        $rm_sig = 'on' eq Conf::get_robot_conf($robot, 'remove_dkim_headers');
     } else {
         $robot = '*';
 
         $arc_enabled  = 'on' eq $Conf::Conf{'arc_feature'};
         $dkim_enabled = 'on' eq $Conf::Conf{'dkim_feature'};
+        $rm_sig       = 'on' eq $Conf::Conf{'remove_dkim_headers'};
     }
 
     if ($message->{serial} eq '0' or $message->{serial} eq 's') {
@@ -205,7 +345,6 @@ sub _twist {
             $message->{'priority'},
             time() - $message->{'date'}
         );
-        # trace_smime($message, 'init');
     }
 
     # Enable SMTP logging if required.
@@ -222,12 +361,12 @@ sub _twist {
     my @rcpts = @{$message->{rcpt}};
 
     # Message transformation should be done in the folowing order:
-    #  -1 headers modifications (done in sympa_msg.pl)
+    #  -1 headers modifications (done in preceding Spindle modules)
     #  -2 DMARC protection
     #  -3 personalization ("merge") and decoration (adding footer/header)
     #  -4 S/MIME signing
     #  -5 S/MIME encryption
-    #  -6 remove existing signature if altered
+    #  -6 remove existing signature if altered (optional)
     #  -7 DKIM signing and ARC sealing
 
     if ($message->{shelved}{dmarc_protect}) {
@@ -246,187 +385,14 @@ sub _twist {
         or $message->{shelved}{smime_encrypt}
         or $message->{shelved}{tracking}) {
         # message needs personalization
-        my $key;
-
         foreach my $rcpt (@rcpts) {
-            my $new_message = $message->dup;
-
-            my $envid;
-            my $return_path;
-
-            if (Sympa::Tools::Data::smart_eq(
-                    $new_message->{shelved}{tracking}, qr/dsn|mdn/
-                )
-            ) {
-                # tracking by MDN required tracking by DSN to
-                my $msgid = $new_message->{'message_id'};
-                $envid =
-                    Sympa::Tracking::find_notification_id_by_message($rcpt,
-                    $msgid, $listname, $robot);
-                $return_path = $list->get_bounce_address($rcpt, $envid);
-                $new_message->replace_header('Disposition-Notification-To',
-                    $return_path)
-                    if $new_message->{shelved}{tracking} =~ /mdn/;
-                # trace_smime($new_message, 'tracking');
-            } elsif (
-                Sympa::Tools::Data::smart_eq(
-                    $new_message->{shelved}{tracking}, 'w'
-                )
-            ) {
-                $return_path = $list->get_bounce_address($rcpt, 'w');
-            } elsif (
-                Sympa::Tools::Data::smart_eq(
-                    $new_message->{shelved}{tracking}, 'r'
-                )
-            ) {
-                $return_path = $list->get_bounce_address($rcpt, 'r');
-            } elsif ($new_message->{shelved}{tracking}) {    # simple VERP
-                $return_path = $list->get_bounce_address($rcpt);
-            } elsif ($new_message->{envelope_sender}) {
-                $return_path = $new_message->{envelope_sender};
-            } elsif ($list) {
-                $return_path = Sympa::get_address($list, 'return_path');
-            } else {
-                $return_path = Sympa::get_address($robot, 'owner');
-            }
-
-            # If message is personalized and DKIM signature is available,
-            # Add One-Click Unsubscribe header field.
-            if (    $new_message->{shelved}{merge}
-                and (%arc or $new_message->{shelved}{dkim_sign} and %dkim)
-                and grep { 'unsubscribe' eq $_ }
-                @{$list->{'admin'}{'rfc2369_header_fields'}}) {
-                $list->add_list_header($new_message, 'unsubscribe',
-                    oneclick => $rcpt);
-            }
-            if (    $new_message->{shelved}{merge}
-                and $new_message->{shelved}{merge} ne 'footer') {
-                unless ($new_message->personalize($list, $rcpt)) {
-                    $log->syslog('err', 'Erreur d appel personalize()');
-                    Sympa::send_notify_to_listmaster($list, 'bulk_failed',
-                        {'message_id' => $message->get_id});
-                    # Quarantine packet into bad spool.
-                    return undef;
-                }
-                $new_message->{shelved}{merge} = 'footer';
-            }
-            if ($new_message->{shelved}{decorate}) {
-                $new_message->decorate($list, $rcpt,
-                    mode => $new_message->{shelved}{merge});
-                delete $new_message->{shelved}{decorate};
-            }
-
-            if ($new_message->{shelved}{smime_sign}) {
-                $new_message->smime_sign;
-                delete $new_message->{shelved}{smime_sign};
-            }
-
-            if ($new_message->{shelved}{smime_encrypt}) {
-                unless ($new_message->smime_encrypt($rcpt)) {
-                    $log->syslog(
-                        'err',
-                        'Unable to encrypt message %s from %s for recipient %s',
-                        $new_message,
-                        $list,
-                        $rcpt
-                    );
-                    # If encryption failed, send a generic error message:
-                    # X509 cert missing.
-                    my $entity = Sympa::Message::Template->new(
-                        context  => $list,
-                        template => 'x509-user-cert-missing',
-                        rcpt     => $rcpt,
-                        data     => {
-                            'mail' => {
-                                'sender'  => $new_message->{sender},
-                                'subject' => $new_message->{decoded_subject},
-                            },
-                        }
-                    )->as_entity;
-                    $new_message->set_entity($entity);
-                }
-                delete $new_message->{shelved}{smime_encrypt};
-            }
-
-            $new_message->remove_invalid_dkim_signature
-                if $arc_enabled or $dkim_enabled;
-
-            my $arc_sealed = $new_message->arc_seal(%arc) if %arc;
-
-            if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
-                # apply DKIM signature AFTER any other message
-                # transformation.
-                # Note that when ARC seal was added, DKIM signature is forced.
-                $new_message->dkim_sign(%dkim) if %dkim;
-
-                delete $new_message->{shelved}{dkim_sign};
-            }
-
-            # trace_smime($new_message, 'dkim');
-
-            $new_message->{envelope_sender} = $return_path;
-            unless (
-                defined $mailer->store(
-                    $new_message, $rcpt,
-                    envid => $envid,
-                    tag   => $new_message->{serial}
-                )
-            ) {
-                $log->syslog('err', 'Failed to store message %s into mailer',
-                    $new_message);
-                # Quarantine packet into bad spool.
-                return undef;
-            }
+            __twist_one($message, $rcpt, {%arc}, {%dkim},
+                $arc_enabled || $dkim_enabled);
         }
     } else {
         # message doesn't need personalization, so can be sent by packet.
-        my $new_message = $message->dup;
-
-        my $return_path;
-
-        if ($new_message->{envelope_sender}) {
-            $return_path = $new_message->{envelope_sender};
-        } elsif ($list) {
-            $return_path = Sympa::get_address($list, 'return_path');
-        } else {
-            $return_path = Sympa::get_address($robot, 'owner');
-        }
-
-        if ($new_message->{shelved}{decorate}) {
-            $new_message->decorate($list, undef);
-            delete $new_message->{shelved}{decorate};
-        }
-
-        if ($new_message->{shelved}{smime_sign}) {
-            $new_message->smime_sign;
-            delete $new_message->{shelved}{smime_sign};
-        }
-
-        $new_message->remove_invalid_dkim_signature
-            if $arc_enabled or $dkim_enabled;
-
-        my $arc_sealed = $new_message->arc_seal(%arc) if %arc;
-
-        # Initial message
-        if ($new_message->{shelved}{dkim_sign} or $arc_sealed) {
-            $new_message->dkim_sign(%dkim) if %dkim;
-
-            delete $new_message->{shelved}{dkim_sign};
-        }
-
-        # trace_smime($new_message,'dkim 2');
-
-        $new_message->{envelope_sender} = $return_path;
-        unless (
-            defined $mailer->store(
-                $new_message, [@rcpts], tag => $new_message->{serial}
-            )
-        ) {
-            $log->syslog('err', 'Failed to store message %s into mailer',
-                $new_message);
-            # Quarantine packet into bad spool.
-            return undef;
-        }
+        __twist_one($message, [@rcpts], {%arc}, {%dkim},
+            $arc_enabled || $dkim_enabled);
     }
 
     1;

@@ -95,108 +95,116 @@ sub _twist {
     }
 
     # Add Custom Subject
-
-    my $parsed_tag;
-    if ($list->{'admin'}{'custom_subject'}) {
+    if (($list->{'admin'}{'custom_subject'} // '') =~ /\S/) {
         my $custom_subject = $list->{'admin'}{'custom_subject'};
+        my $tag;
 
-        # Check if custom_subject parameter is parsable.
-        my $data = {
-            list => {
-                name     => $list->{'name'},
-                sequence => $message->{xsequence},
-            },
-        };
+        # Check if custom_subject parameter is parsable and parsed tag contains
+        # non-space character.
         my $template = Sympa::Template->new(undef);
-        unless ($template->parse($data, [$custom_subject], \$parsed_tag)) {
+        unless (
+            $template->parse(
+                {   list => {
+                        name     => $list->{'name'},
+                        sequence => $message->{xsequence},
+                    },
+                },
+                [$custom_subject],
+                \$tag
+            )
+        ) {
             $log->syslog('err', 'Can\'t parse custom_subject of list %s: %s',
                 $list, $template->{last_error});
+        } elsif (($tag // '') =~ /\S/) {
+            my $decoded_subject = $message->{'decoded_subject'} // '';
 
-            undef $parsed_tag;
+            # Remove the custom subject if it is already present in the
+            # subject field. The new tag will be added in below.
+            # Remember that the value of custom_subject can be
+            # "dude number [%list.sequence%]" whereas the actual subject will
+            # contain "dude number 42".
+            # Regexp is derived from the custom_subject parameter:
+            #   - Replaces "[%list.sequence%]" by /\d+/ and remember it.
+            #   - Replaces "[%list.name%]" by escaped list name.
+            #   - Replaces variable interpolation "[% ... %]" by /[^]]+/. FIXME
+            #   - Cleanup, just in case dangerous chars were left.
+            #   - Takes spaces into account.
+            my $has_sequence;
+            my $custom_subject_regexp = $custom_subject =~ s{
+                ( \[ % \s* list\.sequence \s* % \] )
+              | ( \[ % \s* list\.name \s* % \] )
+              | ( \[ % \s* [^]]+ \s* % \] )
+              | ( [^\w\s\x80-\xFF] )
+              | \s+
+            }{
+              if ($1) {
+                  $has_sequence = 1;
+                  "\\d+";
+              } elsif ($2) {
+                  $list->{'name'} =~ s/(\W)/\\$1/gr;
+              } elsif ($3) {
+                  '[^]]+';
+              } elsif ($4) {
+                  "\\" . $4;
+              } else {
+                  "\\s+";
+              }
+            }egrx;
+            $decoded_subject =~ s/\s*\[$custom_subject_regexp\]\s*/ /;
+
+            $decoded_subject =~ s/\A\s+//;
+            $decoded_subject =~ s/\s+\z//;
+
+            # Add subject tag.
+            # Splitting the subject in two parts :
+            #   - what will be prepended to the subject (probably some "Re:").
+            #   - what will be after it : the original subject.
+            # Multiple "Re:" and equivalents will be truncated.
+            # Then, they are rejoined as:
+            #   - if the tag has seq number, "[tag] Re: Stem" (6.2.74 and later)
+            #   - otherwise, "Re: [tag] Stem".
+            my $subject_field;
+            my $re_regexp = Sympa::Regexps::re();
+
+            '' =~ /()/;    # clear $1
+            if ($message->{'subject_charset'}) {
+                # Note that Unicode case-ignore match is performed.
+                my $uStem =
+                    Encode::decode_utf8($decoded_subject) =~
+                    s/\A\s*($re_regexp\s*)($re_regexp\s*)*//ir;
+                my $uRe = $1 // '';
+
+                # Encode subject using initial charset.
+                my $uTag = Encode::decode_utf8(sprintf '[%s]', $tag);
+                $subject_field = MIME::EncWords::encode_mimewords(
+                    $has_sequence
+                    ? join(' ', $uTag,        $uRe . $uStem)
+                    : join(' ', $uRe . $uTag, $uStem),
+                    Charset     => $message->{'subject_charset'},
+                    Field       => 'Subject',
+                    Replacement => 'FALLBACK'
+                );
+            } else {
+                my $stem = $decoded_subject =~
+                    s/\A\s*($re_regexp\s*)($re_regexp\s*)*//ir;
+                my $re = ($1 // '') =~ s/\s+\z//r;
+
+                # Don't try to encode the original subject if it was not
+                # originally encoded.
+                my $eTag = MIME::EncWords::encode_mimewords(
+                    Encode::decode_utf8(sprintf '[%s]', $tag),
+                    Charset => Conf::lang2charset($language->get_lang),
+                    Field   => 'Subject'
+                );
+                $subject_field =
+                    $has_sequence
+                    ? join(' ', grep {length} $eTag, $re,   $stem)
+                    : join(' ', grep {length} $re,   $eTag, $stem);
+            }
+
+            $message->delete_header('Subject');
+            $message->add_header('Subject', $subject_field);
         }
-    }
-    if ($list->{'admin'}{'custom_subject'} and defined $parsed_tag) {
-        my $subject_field = $message->{'decoded_subject'};
-        $subject_field = '' unless defined $subject_field;
-        ## Remove leading and trailing blanks
-        $subject_field =~ s/^\s*(.*)\s*$/$1/;
-
-        ## Search previous subject tagging in Subject
-        my $custom_subject = $list->{'admin'}{'custom_subject'};
-
-        ## tag_regexp will be used to remove the custom subject if it is
-        ## already present in the message subject.
-        ## Remember that the value of custom_subject can be
-        ## "dude number [%list.sequence"%]" whereas the actual subject will
-        ## contain "dude number 42".
-        my $list_name_escaped = $list->{'name'};
-        $list_name_escaped =~ s/(\W)/\\$1/g;
-        my $tag_regexp = $custom_subject;
-        ## cleanup, just in case dangerous chars were left
-        $tag_regexp =~ s/([^\w\s\x80-\xFF])/\\$1/g;
-        ## Replaces "[%list.sequence%]" by "\d+"
-        $tag_regexp =~ s/\\\[\\\%\s*list\\\.sequence\s*\\\%\\\]/\\d+/g;
-        ## Replace "[%list.name%]" by escaped list name
-        $tag_regexp =~
-            s/\\\[\\\%\s*list\\\.name\s*\\\%\\\]/$list_name_escaped/g;
-        ## Replaces variables declarations by "[^\]]+"
-        $tag_regexp =~ s/\\\[\\\%\s*[^]]+\s*\\\%\\\]/[^]]+/g;
-        ## Takes spaces into account
-        $tag_regexp =~ s/\s+/\\s+/g;
-
-        # Add subject tag
-
-        ## If subject is tagged, replace it with new tag
-        ## Splitting the subject in two parts :
-        ##   - what will be before the custom subject (probably some "Re:")
-        ##   - what will be after it : the original subject sent to the list.
-        ## The custom subject is not kept.
-        my $before_tag;
-        my $after_tag;
-        if ($custom_subject =~ /\S/) {
-            $subject_field =~ s/\s*\[$tag_regexp\]\s*/ /;
-        }
-        $subject_field =~ s/\s+$//;
-
-        # Truncate multiple "Re:" and equivalents.
-        # Note that Unicode case-ignore match is performed.
-        my $re_regexp = Sympa::Regexps::re();
-        $subject_field = Encode::decode_utf8($subject_field);
-        if ($subject_field =~ s/\A\s*($re_regexp\s*)($re_regexp\s*)*//i) {
-            $before_tag = Encode::encode_utf8($1);
-        } else {
-            $before_tag = '';
-        }
-        $after_tag = Encode::encode_utf8($subject_field);
-
-        ## Encode subject using initial charset
-
-        ## Don't try to encode the subject if it was not originally encoded.
-        if ($message->{'subject_charset'}) {
-            $subject_field = MIME::EncWords::encode_mimewords(
-                Encode::decode_utf8(
-                    $before_tag . '[' . $parsed_tag . '] ' . $after_tag
-                ),
-                Charset     => $message->{'subject_charset'},
-                Encoding    => 'A',
-                Field       => 'Subject',
-                Replacement => 'FALLBACK'
-            );
-        } else {
-            $subject_field =
-                $before_tag . ' '
-                . MIME::EncWords::encode_mimewords(
-                Encode::decode_utf8('[' . $parsed_tag . ']'),
-                Charset  => Conf::lang2charset($language->get_lang),
-                Encoding => 'A',
-                Field    => 'Subject'
-                )
-                . ' '
-                . $after_tag;
-        }
-
-        $message->delete_header('Subject');
-        $message->add_header('Subject', $subject_field);
     }
 
     ## Prepare tracking if list config allow it

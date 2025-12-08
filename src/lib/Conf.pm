@@ -8,9 +8,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022 The Sympa Community. See the
-# AUTHORS.md file at the top-level directory of this distribution and at
-# <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2024 The Sympa Community.
+# See the AUTHORS.md file at the top-level directory of this distribution
+# and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -685,12 +685,13 @@ sub _load_auth {
             'get_dn_by_uid_filter'   => '.+',
             'get_dn_by_email_filter' => '.+',
             'email_attribute'        => Sympa::Regexps::ldap_attrdesc(),
-            'alternative_email_attribute' => '.*',                 # Obsoleted
+            'alternative_email_attribute' => '.*',             # Obsoleted
             'scope'                       => 'base|one|sub',
-            'authentication_info_url'     => 'http(s)?:/.*',
-            'use_tls'                     => 'starttls|ldaps|none',
-            'use_ssl'                     => '1',                  # Obsoleted
-            'use_start_tls'               => '1',                  # Obsoleted
+            'deref'                   => 'never|search|find|always',
+            'authentication_info_url' => 'http(s)?:/.*',
+            'use_tls'                 => 'starttls|ldaps|none',
+            'use_ssl'       => '1',                            # Obsoleted
+            'use_start_tls' => '1',                            # Obsoleted
             'ssl_version' => 'sslv2/3|sslv2|sslv3|tlsv1|tlsv1_[123]',
             'ssl_ciphers' => '[\w:]+',
             'ssl_cert'    => '.+',
@@ -722,6 +723,7 @@ sub _load_auth {
             'timeout'       => '\d+',
             'suffix'        => '.+',
             'scope'         => 'base|one|sub',
+            'deref'         => 'never|search|find|always',
             'get_email_by_uid_filter' => '.+',
             'email_attribute'         => Sympa::Regexps::ldap_attrdesc(),
             'use_tls'                 => 'starttls|ldaps|none',
@@ -749,6 +751,7 @@ sub _load_auth {
             'timeout'       => '\d+',
             'suffix'        => '.+',
             'scope'         => 'base|one|sub',
+            'deref'         => 'never|search|find|always',
             'get_email_by_uid_filter' => '.+',
             'email_attribute'         => Sympa::Regexps::ldap_attrdesc(),
             'use_tls'                 => 'starttls|ldaps|none',
@@ -883,10 +886,12 @@ sub _load_auth {
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
+                    $current_paragraph->{'deref'} ||= 'find';
                 } elsif ($current_paragraph->{'auth_type'} eq 'generic_sso') {
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
+                    $current_paragraph->{'deref'} ||= 'find';
                     ## default value for http_header_value_separator is ';'
                     $current_paragraph->{'http_header_value_separator'} ||=
                         ';';
@@ -903,6 +908,7 @@ sub _load_auth {
                     ## Force the default scope because '' is interpreted as
                     ## 'base'
                     $current_paragraph->{'scope'} ||= 'sub';
+                    $current_paragraph->{'deref'} ||= 'find';
                 } elsif ($current_paragraph->{'auth_type'} eq 'user_table') {
                     ;
                 } elsif ($current_paragraph->{'auth_type'} eq 'cgi') {
@@ -1151,35 +1157,9 @@ sub load_trusted_application {
     return load_generic_conf_file($config_file, \%trusted_applications);
 }
 
-## load trusted_application.conf configuration file
-sub load_crawlers_detection {
-    my $that = shift || '*';
-
-    my %crawlers_detection_conf = (
-        'user_agent_string' => {
-            'occurrence' => '0-n',
-            'format'     => '.+'
-        }
-    );
-
-    my $config_file =
-        Sympa::search_fullpath($that, 'crawlers_detection.conf');
-    return undef unless $config_file and -r $config_file;
-    my $hashtab =
-        load_generic_conf_file($config_file, \%crawlers_detection_conf);
-    my $hashhash;
-
-    foreach my $kword (keys %{$hashtab}) {
-        # ignore comments and default
-        next
-            unless ($crawlers_detection_conf{$kword});
-        foreach my $value (@{$hashtab->{$kword}}) {
-            $hashhash->{$kword}{$value} = 'true';
-        }
-    }
-
-    return $hashhash;
-}
+# load crawlers_detection.conf configuration file
+# Deprecated.
+#sub load_crawlers_detection;
 
 ############################################################
 #  load_generic_conf_file
@@ -1543,49 +1523,48 @@ sub _infer_server_specific_parameter_values {
 
     $param->{'config_hash'}{'robot_name'} = '';
 
-    unless ($param->{'config_hash'}{'dkim_signer_domain'}) {
-        $param->{'config_hash'}{'dkim_signer_domain'} =
-            $param->{'config_hash'}{'domain'};
-    }
+    $param->{'config_hash'}{'syslog_socket.type'} = [
+        grep {length} split /\*,\*/,
+        ($param->{'config_hash'}{'syslog_socket.type'} // '')
+    ];
 
-    my @dmarc = split /[,\s]+/,
+    $param->{'config_hash'}{'dkim_signer_domain'} ||=
+        $param->{'config_hash'}{'domain'};
+
+    my @dmarc = grep {length} split /[,\s]+/,
         ($param->{'config_hash'}{'dmarc_protection.mode'} || '');
     if (@dmarc) {
-        $param->{'config_hash'}{'dmarc_protection.mode'} = \@dmarc;
+        $param->{'config_hash'}{'dmarc_protection.mode'} = [@dmarc];
     } else {
         delete $param->{'config_hash'}{'dmarc_protection.mode'};
     }
 
-    ## Set Regexp for accepted list suffixes
-    if (defined($param->{'config_hash'}{'list_check_suffixes'})) {
-        $param->{'config_hash'}{'list_check_regexp'} =
-            $param->{'config_hash'}{'list_check_suffixes'};
-        $param->{'config_hash'}{'list_check_regexp'} =~ s/[,\s]+/\|/g;
-    }
+    # Accepted list suffixes.
+    $param->{'config_hash'}{'list_check_suffixes'} = [
+        grep {length} split /[,\s]+/,
+        ($param->{'config_hash'}{'list_check_suffixes'} // '')
+    ];
 
-#    my $p = 1;
-#    foreach (split(/,/, $param->{'config_hash'}{'sort'})) {
-#        $param->{'config_hash'}{'poids'}{$_} = $p++;
-#    }
-#    $param->{'config_hash'}{'poids'}{'*'} = $p
-#        if !$param->{'config_hash'}{'poids'}{'*'};
-
-    ## Parameters made of comma-separated list
+    # Parameters made of comma-separated list.
+    # Note that whitespace character(s) cannot be a separator, because the
+    # value of remove_outgoing_headers can contain them.
     foreach my $parameter (
         'rfc2369_header_fields', 'anonymous_header_fields',
         'remove_headers',        'remove_outgoing_headers'
     ) {
-        if ($param->{'config_hash'}{$parameter} eq 'none') {
+        if ('none' eq ($param->{'config_hash'}{$parameter} // '')
+            or not length($param->{'config_hash'}{$parameter} // '')) {
             delete $param->{'config_hash'}{$parameter};
         } else {
-            $param->{'config_hash'}{$parameter} =
-                [split(/,/, $param->{'config_hash'}{$parameter})];
+            $param->{'config_hash'}{$parameter} = [
+                grep {length} split /\s*,\s*/,
+                $param->{'config_hash'}{$parameter}
+            ];
         }
     }
 
-    foreach
-        my $action (split /\s*,\s*/, $param->{'config_hash'}{'use_blocklist'})
-    {
+    foreach my $action (split /\s*,\s*/,
+        ($param->{'config_hash'}{'use_blocklist'} // '')) {
         next unless $action =~ /\A[.\w]+\z/;
         # Compat. <= 6.2.38
         $action = {
@@ -1600,20 +1579,6 @@ sub _infer_server_specific_parameter_values {
             || $action;
 
         $param->{'config_hash'}{'blocklist'}{$action} = 1;
-    }
-
-    if ($param->{'config_hash'}{'ldap_export_name'}) {
-        $param->{'config_hash'}{'ldap_export'} = {
-            $param->{'config_hash'}{'ldap_export_name'} => {
-                'host'     => $param->{'config_hash'}{'ldap_export_host'},
-                'suffix'   => $param->{'config_hash'}{'ldap_export_suffix'},
-                'password' => $param->{'config_hash'}{'ldap_export_password'},
-                'DnManager' =>
-                    $param->{'config_hash'}{'ldap_export_dnmanager'},
-                'connection_timeout' =>
-                    $param->{'config_hash'}{'ldap_export_connection_timeout'}
-            }
-        };
     }
 
     return 1;
@@ -1637,7 +1602,8 @@ sub _load_server_specific_secondary_config_files {
         || 'en-US';
 
     ## Load charset.conf file if necessary.
-    if ($param->{'config_hash'}{'legacy_character_support_feature'} eq 'on') {
+    if ('on' eq
+        ($param->{'config_hash'}{'legacy_character_support_feature'} // '')) {
         $param->{'config_hash'}{'locale2charset'} = load_charset();
     } else {
         $param->{'config_hash'}{'locale2charset'} = {};
@@ -1645,8 +1611,6 @@ sub _load_server_specific_secondary_config_files {
 
     ## Load nrcpt_by_domain.conf
     $param->{'config_hash'}{'nrcpt_by_domain'} = load_nrcpt_by_domain();
-    $param->{'config_hash'}{'crawlers_detection'} =
-        load_crawlers_detection($param->{'config_hash'}{'robot_name'});
 }
 
 sub _infer_robot_parameter_values {
@@ -1722,8 +1686,10 @@ sub _infer_robot_parameter_values {
         Sympa::Language::canonic_lang($param->{'config_hash'}{'lang'})
         or delete $param->{'config_hash'}{'lang'};
 
-    $param->{'config_hash'}{'dkim_signature_apply_on'} =
-        [split /\s*,\s*/, $param->{'config_hash'}{'dkim_signature_apply_on'}];
+    $param->{'config_hash'}{'dkim_signature_apply_on'} = [
+        grep {length} split /[,\s]+/,
+        ($param->{'config_hash'}{'dkim_signature_apply_on'} // '')
+    ];
 
     _parse_custom_robot_parameters(
         {'config_hash' => $param->{'config_hash'}});
@@ -1792,7 +1758,7 @@ sub _check_cpan_modules_required_by_config {
     my $number_of_missing_modules = 0;
 
     ## Some parameters require CPAN modules
-    if ($param->{'config_hash'}{'dkim_feature'} eq 'on') {
+    if ('on' eq ($param->{'config_hash'}{'dkim_feature'} // '')) {
         eval "require Mail::DKIM";
         if ($EVAL_ERROR) {
             $log->syslog('notice',
@@ -2045,9 +2011,6 @@ sub _load_wwsconf {
             'MHonArc is not installed or %s is not executable',
             $conf->{'mhonarc'});
     }
-
-    ## set default
-    $conf->{'log_facility'} ||= $config_hash->{'syslog'};
 
     foreach my $k (keys %$conf) {
         $config_hash->{$k} = $conf->{$k};
