@@ -63,7 +63,6 @@ use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use Sympa::User;
-use CGI;
 use URI::Find::Schemeless;
 
 my $language = Sympa::Language->instance;
