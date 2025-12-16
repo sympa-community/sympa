@@ -2161,16 +2161,12 @@ sub _append_footer_header_to_part {
         #---acb: and for all three header/footer parts, wrap all URIs
         # in HTML tags, and keep newlines for readability and for
         # outlook.com parsing:
-        $header_msg = Sympa::Tools::Text::encode_html($header_msg);
         $header_msg = uri_finder($header_msg);
         $header_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
         $header_msg =~ s,(\r\n|\r|\n),<br/>$1,g; # keep newlines
-        $footer_msg = Sympa::Tools::Text::encode_html($footer_msg);
         $footer_msg = uri_finder($footer_msg);
         $footer_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
         $footer_msg =~ s,(\r\n|\r|\n),<br/>$1,g; # keep newlines
-        $global_footer_msg =
-            Sympa::Tools::Text::encode_html($global_footer_msg);
         $global_footer_msg = uri_finder($global_footer_msg);
         $global_footer_msg =~ s/(\r\n|\r|\n)$//;    # strip the last newline.
         $global_footer_msg =~ s,(\r\n|\r|\n),<br/>$1,g; # keep newlines
@@ -3694,7 +3690,7 @@ sub uri_finder {
         my($uri, $orig_uri) = @_;
         return qq|<a href="$uri">$orig_uri</a>|;
                                             });
-    $finder->find(\$text, \&CGI::escapeHTML);
+    $finder->find(\$text, \&Sympa::Tools::Text::encode_html);
 
     # and finally clean up the displayed link text on mailto links:
     $text =~ s/>mailto:/>/g;

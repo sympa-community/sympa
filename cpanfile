@@ -166,6 +166,9 @@ requires 'URI::Escape', '>= 3.28';
 # libxml2-devel is needed to build the Perl code
 requires 'XML::LibXML', '>= 1.70';
 
+# Used for adding HTML tags to URI in message footers/headers:
+requires 'URI::Find::Schemeless, '20160806';
+
 ### Recommendations
 ##
 
