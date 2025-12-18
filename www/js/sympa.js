@@ -195,6 +195,7 @@ $(function() {
 
 // fade effect for notification boxes
 $(function() {
+	document.getElementById("ephemeralMsg").style.visibility="visible";
 	$('#ephemeralMsg').delay(500).fadeOut(4000);
 });
 
