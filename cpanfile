@@ -167,7 +167,7 @@ requires 'URI::Escape', '>= 3.28';
 requires 'XML::LibXML', '>= 1.70';
 
 # Used for adding HTML tags to URI in message footers/headers:
-requires 'URI::Find::Schemeless, '20160806';
+requires 'URI::Find::Schemeless', '20160806';
 
 ### Recommendations
 ##

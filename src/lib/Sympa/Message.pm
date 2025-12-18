@@ -3682,7 +3682,8 @@ sub uri_finder {
     my $text = shift;
 
     # insert "mailto:" on all email addresses, so URI::Find will find them:
-    $text =~ s,(^|\s)(\S+)@(\S+)($|\s),$1mailto:$2\@$3$4,g;
+    my $email_re = Sympa::Regexps::email();
+    $text =~ s,($email_re),mailto:$1,g;
 
     # wrap all URIs in HTML tags
     my $finder = URI::Find::Schemeless->new(sub {
