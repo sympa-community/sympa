@@ -63,6 +63,7 @@ use Sympa::Tools::Password;
 use Sympa::Tools::SMIME;
 use Sympa::Tools::Text;
 use Sympa::User;
+use URI::Find::Schemeless;
 
 my $language = Sympa::Language->instance;
 my $log      = Sympa::Log->instance;
@@ -2156,16 +2157,18 @@ sub _append_footer_header_to_part {
         $log->syslog('debug3', "Treating text/html part");
 
         # Escape special characters.
-        $header_msg = Sympa::Tools::Text::encode_html($header_msg);
+        #---acb: and for all three header/footer parts, wrap all URIs
+        # in HTML tags, and keep newlines for readability and for
+        # outlook.com parsing:
+        $header_msg = uri_finder($header_msg);
         $header_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
-        $header_msg =~ s,(\r\n|\r|\n),<br/>,g;
-        $footer_msg = Sympa::Tools::Text::encode_html($footer_msg);
+        $header_msg =~ s,(\r\n|\r|\n),<br/>$1,g; # keep newlines
+        $footer_msg = uri_finder($footer_msg);
         $footer_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
-        $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
-        $global_footer_msg =
-            Sympa::Tools::Text::encode_html($global_footer_msg);
+        $footer_msg =~ s,(\r\n|\r|\n),<br/>$1,g; # keep newlines
+        $global_footer_msg = uri_finder($global_footer_msg);
         $global_footer_msg =~ s/(\r\n|\r|\n)$//;    # strip the last newline.
-        $global_footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
+        $global_footer_msg =~ s,(\r\n|\r|\n),<br/>$1,g; # keep newlines
 
         $new_body = $body;
         if (length $header_msg) {
@@ -3672,6 +3675,27 @@ sub get_id {
     }
 
     return join '/', grep {$_} ($id, $shelved);
+}
+
+# autodetect all URIs in block of text and wrap them in HTML tags
+sub uri_finder {
+    my $text = shift;
+
+    # insert "mailto:" on all email addresses, so URI::Find will find them:
+    my $email_re = Sympa::Regexps::email();
+    $text =~ s,($email_re),mailto:$1,g;
+
+    # wrap all URIs in HTML tags
+    my $finder = URI::Find::Schemeless->new(sub {
+        my($uri, $orig_uri) = @_;
+        return qq|<a href="$uri">$orig_uri</a>|;
+                                            });
+    $finder->find(\$text, \&Sympa::Tools::Text::encode_html);
+
+    # and finally clean up the displayed link text on mailto links:
+    $text =~ s/>mailto:/>/g;
+
+    return $text;
 }
 
 1;
