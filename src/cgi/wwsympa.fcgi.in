@@ -2468,14 +2468,20 @@ sub check_param_in {
                 $list->find_picture_url($param->{'user'}{'email'});
 
             # Checks if the user can post in this list.
-            my $authz_action = Sympa::Scenario->new($list, 'send')->authz(
-                $param->{'auth_method'},
-                {   'sender'      => $param->{'user'}{'email'},
-                    'remote_host' => $param->{'remote_host'},
-                    'remote_addr' => $param->{'remote_addr'}
-                }
-            )->{action};
-            $param->{'may_post'} = 1 unless $authz_action =~ /reject/;
+            my ($authz_action, $authz_reason) =
+                @{Sympa::Scenario->new($list, 'send')->authz(
+                    $param->{'auth_method'},
+                    {   'sender'      => $param->{'user'}{'email'},
+                        'remote_host' => $param->{'remote_host'},
+                        'remote_addr' => $param->{'remote_addr'}
+                    }
+                )
+                }{qw(action reason)};
+            unless ($authz_action =~ /reject/) {
+                $param->{'may_post'} = $authz_action;
+            } else {
+                $param->{'may_post_reason'} = $authz_reason;
+            }
         } else {
             # If no user logged in, the output can ask for authentication.
             $param->{'user'}{'email'} = undef;
@@ -2697,19 +2703,6 @@ sub check_param_out {
                 $list->is_admin('actual_editor', $param->{'user'}{'email'});
             $param->{'is_priv'} = $param->{'is_owner'}
                 || $param->{'is_editor'};
-
-            # May post.
-            my ($authz_action, $authz_reason) =
-                @{Sympa::Scenario->new($list, 'send')->authz(
-                    $param->{'auth_method'},
-                    {   'sender'      => $param->{'user'}{'email'},
-                        'remote_host' => $param->{'remote_host'},
-                        'remote_addr' => $param->{'remote_addr'}
-                    }
-                )
-                }{qw(action reason)};
-            $param->{'may_post'} = ($authz_action =~ /do_it/) ? 1 : undef
-                or $param->{'may_post_reason'} = $authz_reason;
 
             $param->{'may_include'} = {
                 member => (
