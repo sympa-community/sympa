@@ -7,9 +7,10 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2024 The Sympa Community.
-# See the AUTHORS.md file at the top-level directory of this distribution
-# and at <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2024,
+# 2026 The Sympa Community. See the AUTHORS.md file at the top-level
+# directory of this distribution and at
+# <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -2947,6 +2948,13 @@ sub update_list_member {
     my $values = $_[0];                                      # Compat.
     $values = {@_} unless ref $values eq 'HASH';
 
+    # Truncate display name.
+    if (length($values->{gecos} // '')) {
+        $values->{gecos} =
+            Sympa::Tools::Text::clip($values->{gecos},
+            Sympa::Constants::DISPNAME_LEN());
+    }
+
     my ($field, $value);
 
     # Mapping between var and field names.
@@ -3061,6 +3069,13 @@ sub update_list_admin {
     my $role   = shift;
     my $values = $_[0];                                      # Compat.
     $values = {@_} unless ref $values eq 'HASH';
+
+    # Truncate display name.
+    if (length($values->{gecos} // '')) {
+        $values->{gecos} =
+            Sympa::Tools::Text::clip($values->{gecos},
+            Sympa::Constants::DISPNAME_LEN());
+    }
 
     my ($field, $value);
 
@@ -3259,6 +3274,13 @@ sub add_list_member {
         # For backward compat., this column is required and cannot be NULL.
         $values->{number_messages} //= 0;
 
+        # Truncate display name.
+        if (length($values->{gecos} // '')) {
+            $values->{gecos} =
+                Sympa::Tools::Text::clip($values->{gecos},
+                Sympa::Constants::DISPNAME_LEN());
+        }
+
         #Log in stat_table to make statistics
         $log->add_stat(
             'robot'     => $self->{'domain'},
@@ -3452,6 +3474,13 @@ sub _add_list_admin {
                 ['intern', 'unable_to_add_to_database', {email => $who}];
             return undef;
         }
+    }
+
+    # Truncate display name.
+    if (length($values->{gecos} // '')) {
+        $values->{gecos} =
+            Sympa::Tools::Text::clip($values->{gecos},
+            Sympa::Constants::DISPNAME_LEN());
     }
 
     my $sdm = Sympa::DatabaseManager->instance;

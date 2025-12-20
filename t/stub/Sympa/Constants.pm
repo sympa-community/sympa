@@ -31,10 +31,11 @@ use constant STATICDIR   => 't/tmp/static_content';
 use constant CSSDIR      => 't/tmp/static_content/css';
 use constant PICTURESDIR => 't/tmp/static_content/pictures';
 
-use constant EMAIL_LEN  => 100;
-use constant FAMILY_LEN => 50;
-use constant LIST_LEN   => 50;
-use constant ROBOT_LEN  => 80;
+use constant DISPNAME_LEN => 150;
+use constant EMAIL_LEN    => 100;
+use constant FAMILY_LEN   => 50;
+use constant LIST_LEN     => 50;
+use constant ROBOT_LEN    => 80;
 
 1;
 

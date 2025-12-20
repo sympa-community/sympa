@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,8 +7,8 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019 The Sympa Community. See the AUTHORS.md file at
-# the top-level directory of this distribution and at
+# Copyright 2017, 2018, 2019, 2026 The Sympa Community. See the
+# AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -32,11 +31,12 @@ use warnings;
 
 use Sympa::Constants;
 
-my $email_struct  = sprintf 'varchar(%d)', Sympa::Constants::EMAIL_LEN();
-my $family_struct = sprintf 'varchar(%d)', Sympa::Constants::FAMILY_LEN();
-my $list_struct   = sprintf 'varchar(%d)', Sympa::Constants::LIST_LEN();
-my $robot_struct  = sprintf 'varchar(%d)', Sympa::Constants::ROBOT_LEN();
-my $list_id_struct = sprintf 'varchar(%d)',
+my $dispname_struct = sprintf 'varchar(%d)', Sympa::Constants::DISPNAME_LEN();
+my $email_struct    = sprintf 'varchar(%d)', Sympa::Constants::EMAIL_LEN();
+my $family_struct   = sprintf 'varchar(%d)', Sympa::Constants::FAMILY_LEN();
+my $list_struct     = sprintf 'varchar(%d)', Sympa::Constants::LIST_LEN();
+my $robot_struct    = sprintf 'varchar(%d)', Sympa::Constants::ROBOT_LEN();
+my $list_id_struct  = sprintf 'varchar(%d)',
     Sympa::Constants::LIST_LEN() + 1 + Sympa::Constants::ROBOT_LEN();
 
 my %full_db_struct = (
@@ -143,8 +143,8 @@ my %full_db_struct = (
                 'order'  => 12.8,
             },
             'comment_subscriber' => {
-                'struct' => 'varchar(150)',
-                'doc'    => 'free form name',
+                'struct' => $dispname_struct,
+                'doc'    => 'display name of subscriber',
                 'order'  => 13,
             },
             'number_messages_subscriber' => {
@@ -204,7 +204,7 @@ my %full_db_struct = (
                 'order'    => 1,
             },
             'gecos_user' => {
-                'struct' => 'varchar(150)',
+                'struct' => $dispname_struct,
                 'doc'    => 'display name of user',
                 'order'  => 3,
             },
@@ -885,7 +885,7 @@ my %full_db_struct = (
                 'struct'   => $email_struct,
                 'primary'  => 1,
                 'not_null' => 1,
-                'doc'      => 'list admin email',
+                'doc'      => 'email of admin',
                 'order'    => 1,
             },
             'list_admin' => {
@@ -968,8 +968,8 @@ my %full_db_struct = (
                 'order' => 9,
             },
             'comment_admin' => {
-                'struct' => 'varchar(150)',
-                'doc'    => 'FIXME',
+                'struct' => $dispname_struct,
+                'doc'    => 'display name of admin',
                 'order'  => 10,
             },
             'subscribed_admin' => {
