@@ -381,7 +381,7 @@ sub _resolve_gettext_locale {
 
     ## Check if catalog is loaded.
     local %ENV;
-    $ENV{'LANGUAGE'} = $locale;
+    $ENV{LANGUAGE} = $ENV{LC_ALL} = $locale;
     my $metadata = Locale::Messages::gettext('');    # get header
 
     unless ($metadata) {
@@ -461,7 +461,7 @@ sub native_name {
         $locale =~ s/^(nb|nn)\b/${1}_NO/;
 
         local %ENV;
-        $ENV{'LANGUAGE'} = $locale;
+        $ENV{LANGUAGE} = $ENV{LC_ALL} = $locale;
         my $metadata = Locale::Messages::gettext('');    # get header
 
         if ($metadata =~ /(?:\A|\n)Language-Team:\s*(.+)/i) {
@@ -591,7 +591,7 @@ sub dgettext {
     }
 
     local %ENV;
-    $ENV{'LANGUAGE'} = $gettext_locale;
+    $ENV{LANGUAGE} = $ENV{LC_ALL} = $gettext_locale;
     return Locale::Messages::dgettext($textdomain, $msgid);
 }
 
