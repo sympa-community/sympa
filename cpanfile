@@ -153,7 +153,8 @@ requires 'Time::Local', '>= 1.23';
 requires 'Unicode::Normalize', '>= 1.03';
 
 # Sanitizes inputs with Unicode text.
-requires 'Unicode::UTF8', '>= 0.58';
+# Note: 0.64 conforms to Unicode Corrigendum #9.
+requires 'Unicode::UTF8', '>= 0.64';
 
 # Used to create URI containing non URI-canonical characters.
 # Note: '3.28' is the version included in URI-1.35.
