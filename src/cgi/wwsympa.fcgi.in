@@ -1408,6 +1408,9 @@ while ($query = Sympa::WWW::FastCGI->new) {
     $action = $comm_aliases{$action}
         while $action
         and exists $comm_aliases{$action};
+    # A special synonym.
+    $action = 'copy_list'
+        if $action eq 'move_list' and ($in{'mode'} // '') eq 'copy';
 
     # Store current action in the session in order to redirect after a login
     # or other temporary actions.
