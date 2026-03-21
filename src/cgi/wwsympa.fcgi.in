@@ -1430,6 +1430,9 @@ while ($query = Sympa::WWW::FastCGI->new) {
     $action = $comm_aliases{$action}
         while $action
         and exists $comm_aliases{$action};
+    # A special synonym.
+    $action = 'copy_list'
+        if $action eq 'move_list' and ($in{'mode'} // '') eq 'copy';
 
     # Store current action in the session in order to redirect after a login
     # or other temporary actions.
@@ -1496,13 +1499,12 @@ while ($query = Sympa::WWW::FastCGI->new) {
             my $old_subaction = $in{'subaction'};
 
             ## Check required action parameters
-            my $check_action = $action eq 'move_list' && $in{'mode'} eq 'copy' ? 'copy_list' : $action;
-            my $check_output = check_action_parameters($check_action);
+            my $check_output = check_action_parameters($action);
 
             unless (defined $check_output) {
                 delete $param->{'list'};
                 wwslog('err', 'Missing required parameters for action "%s"',
-                    $check_action);
+                    $action);
                 delete $param->{'action'};
                 last;
             } elsif ($check_output != 1) {
