@@ -48,78 +48,101 @@ sub run {
     my $options = shift if @_ and ref $_[0] eq 'HASH';
     my @argv    = @_;
 
-    if ($class eq 'Sympa::CLI') {
-        $class->istty;
-
-        # Detect console encoding.
-        if ($Encode::Locale::VERSION) {
-            unless ('ascii' eq
-                Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_IN)) {
-                if ($class->istty(0)) {
-                    binmode(STDIN, ':encoding(console_in):bytes');
-                    foreach my $arg (@argv) {
-                        Encode::from_to($arg,
-                            $Encode::Locale::ENCODING_CONSOLE_IN, 'utf-8');
-                    }
+    # Detect console encoding.
+    $class->istty;
+    if ($Encode::Locale::VERSION) {
+        unless ('ascii' eq
+            Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_IN)) {
+            if ($class->istty(0)) {
+                binmode(STDIN, ':encoding(console_in):bytes');
+                foreach my $arg (@argv) {
+                    Encode::from_to($arg,
+                        $Encode::Locale::ENCODING_CONSOLE_IN, 'utf-8');
                 }
             }
-            unless ('ascii' eq
-                Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_OUT))
-            {
-                binmode(STDOUT, ':encoding(console_out):bytes')
-                    if $class->istty(1);
-                binmode(STDERR, ':encoding(console_out):bytes')
-                    if $class->istty(2);
-            }
         }
-
-        # Deal with some POSIX locales (LL_cc.encoding)
-        my @langs =
-            map {s/[.].*\z//r} grep {defined} @ENV{qw(LANGUAGE LC_ALL LANG)};
-        $language->set_lang(@langs, 'en-US', 'en');
-    }
-
-    if (@argv and ($argv[0] // '') =~ /\A\w+\z/) {
-        # Check if (sub-)command is implemented.
-        my $dir = $INC{($class =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
-        if (-e "$dir/$argv[0].pm") {
-            # Load module for the command.
-            my $command = shift @argv;
-            my $subclass = sprintf '%s::%s', $class, $command;
-            unless (eval(sprintf 'require %s', $subclass)
-                and $subclass->isa($class)) {
-                warn $language->gettext_sprintf('Invalid command \'%s\'',
-                    $command)
-                    . "\n";
-                return undef;
-            }
-            return $subclass->run(($options ? ($options) : ()), @argv);
+        unless ('ascii' eq
+            Encode::resolve_alias($Encode::Locale::ENCODING_CONSOLE_OUT)) {
+            binmode(STDOUT, ':encoding(console_out):bytes')
+                if $class->istty(1);
+            binmode(STDERR, ':encoding(console_out):bytes')
+                if $class->istty(2);
         }
     }
-    if ($class eq 'Sympa::CLI') {
-        # No valid main command.
-        warn $language->gettext_sprintf(
-            'Invalid argument \'%s\' (command is expected)',
-            ($argv[0] // ''))
-            . "\n";
-        return undef;
-    }
+
+    # Set up default language according to POSIX locale (LL_cc.encoding).
+    my @langs =
+        map {s/[.].*\z//r} grep {defined} @ENV{qw(LANGUAGE LC_ALL LANG)};
+    $language->set_lang(@langs, 'en-US', 'en');
 
     # Parse options if necessary.
     my %options;
     if ($options) {
         %options = %$options;
-    } elsif (grep /^-/, $class->_options) {
+    } else {
+        $class = $class->getoptions(\%options, \@argv);
+        return undef unless $class;
+    }
+
+    # Suppress console output if specified.
+    # Setup language if specified.
+    # Get privileges and load config if necessary.
+    $noout = $options{noout};
+    $language->set_lang($options{lang}) if $options{lang};
+    $class->arrange(%options) if $class->_need_priv;
+
+    # Parse arguments.
+    if (@argv) {
+        @argv = $class->parseargs(@argv);
+        return unless @argv;
+    }
+
+    $class->_run(\%options, @argv);
+}
+
+sub getoptions {
+    my $class     = shift;
+    my $options_r = shift;
+    my $argv_r    = shift;
+
+    while (@$argv_r and ($argv_r->[0] // '') =~ /\A\w+\z/) {
+        # Check if (sub-)command is implemented.
+        my $dir = $INC{($class =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
+        last unless -e "$dir/$argv_r->[0].pm";
+
+        # Load module for the command.
+        my $command = shift @$argv_r;
+        my $subclass = sprintf '%s::%s', $class, $command;
+        unless (eval(sprintf 'require %s', $subclass)
+            and $subclass->isa($class)) {
+            warn $language->gettext_sprintf('Invalid command \'%s\'',
+                $command)
+                . "\n";
+            return undef;
+        }
+        $class = $subclass;
+    }
+    if ($class eq 'Sympa::CLI') {
+        # No valid main command.
+        warn $language->gettext_sprintf(
+            'Invalid argument \'%s\' (command is expected)',
+            ($argv_r->[0] // ''))
+            . "\n";
+        return undef;
+    }
+
+    if (grep /^-/, $class->_options) {
         ;
     } elsif (
         not Getopt::Long::GetOptionsFromArray(
-            \@argv,
-            \%options,
+            $argv_r,
+            $options_r,
             map {
                 # If option name contains hyphen-minus, underscore is also
                 # allowed and the latter will be used for keys in the hash.
                 my ($keys, $val) = m/\A([-\w|]+)(.*)\z/;
-                $keys = join '|', map { (s/-/_/gr, $_) } split /[|]/, $keys;
+                $keys = join '|',
+                    map { /_/ ? ($_, s/_/-/gr) : ($_) } split /[|]/, $keys;
                 $keys . $val
             } (__PACKAGE__->_options, $class->_options)
         )
@@ -131,14 +154,14 @@ sub run {
         return undef;
     }
 
-    $noout = $options{noout};
+    return $class;
+}
 
-    # Get privileges and load config if necessary.
-    # Otherwise only setup language if specified.
-    $language->set_lang($options{lang}) if $options{lang};
-    $class->arrange(%options) if $class->_need_priv;
+# Parse arguments.
+sub parseargs {
+    my $class = shift;
+    my @argv  = @_;
 
-    # Parse arguments.
     my @parsed_argv = ();
     foreach my $argdefs ($class->_args) {
         my $defs = $argdefs;
@@ -153,7 +176,7 @@ sub run {
             warn $language->gettext_sprintf('Missing argument (%s)',
                 _arg_expected($defs))
                 . "\n";
-            return undef;
+            return;
         }
         foreach my $arg (@a) {
             my $val;
@@ -210,12 +233,12 @@ sub run {
                     'Invalid argument \'%s\' (%s)',
                     $arg, _arg_expected($defs))
                     . "\n";
-                return undef;
+                return;
             }
         }
     }
 
-    $class->_run(\%options, @parsed_argv, @argv);
+    return (@parsed_argv, @argv);
 }
 
 sub _options       {qw(config|f=s debug|d lang|l=s log_level=s mail|m noout)}
@@ -487,6 +510,9 @@ TBD.
 I<Class method>, I<overridable>.
 Returns an array to define command line options.
 About the format see L<Getopt::Long/Summary of Option Specifications>.
+
+Additionally, underscores C<_> in the long options are also recognized
+as hyphen-minus C<->.
 
 By default general options are defined and they always take precedence over
 the definition in subclass.

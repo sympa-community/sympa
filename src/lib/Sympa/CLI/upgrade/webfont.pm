@@ -33,7 +33,7 @@ use Sympa::Tools::File;
 
 use parent qw(Sympa::CLI::upgrade);
 
-use constant _options   => qw(dry-run|n);
+use constant _options   => qw(dry_run|n);
 use constant _args      => qw();
 use constant _need_priv => 1;
 

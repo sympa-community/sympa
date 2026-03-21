@@ -39,7 +39,7 @@ use Sympa::Spool::Outgoing;
 
 use parent qw(Sympa::CLI::upgrade);
 
-use constant _options   => qw(dry_run);
+use constant _options   => qw(dry_run|n);
 use constant _args      => qw();
 use constant _need_priv => 1;
 
@@ -231,7 +231,7 @@ sympa-upgrade-outgoing - Migrating messages in bulk tables
 
 =head1 SYNOPSIS
 
-  sympa upgrade outgoing [ --dry_run ]
+  sympa upgrade outgoing [ --dry_run | -n ]
 
 =head1 DESCRIPTION
 
@@ -245,7 +245,7 @@ This program migrates messages with old format in appropriate spool.
 
 =over
 
-=item --dry_run
+=item --dry_run, -n
 
 Shows what will be done but won't really perform upgrade process.
 
