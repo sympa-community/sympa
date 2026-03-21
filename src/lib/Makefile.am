@@ -110,6 +110,7 @@ nonCLI_modules = \
 	Sympa/DataSource/SQL.pm \
 	Sympa/Family.pm \
 	Sympa/HTML/FormatText.pm \
+	Sympa/HTML/URIFind.pm \
 	Sympa/HTMLDecorator.pm \
 	Sympa/HTMLSanitizer.pm \
 	Sympa/Language.pm \

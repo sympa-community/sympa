@@ -30,6 +30,7 @@ check_SCRIPTS = \
 	t/Database_LDAP.t \
 	t/Database_SQLite.t \
 	t/HTMLSanitizer.t \
+	t/HTML_URIFind.t \
 	t/Language.t \
 	t/LockedFile.t \
 	t/Message_smime.t \

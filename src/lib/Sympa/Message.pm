@@ -51,6 +51,7 @@ use Sympa;
 use Conf;
 use Sympa::Constants;
 use Sympa::HTML::FormatText;
+use Sympa::HTML::URIFind;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
 use Sympa::Log;
@@ -2156,16 +2157,19 @@ sub _append_footer_header_to_part {
         $log->syslog('debug3', "Treating text/html part");
 
         # Escape special characters.
-        $header_msg = Sympa::Tools::Text::encode_html($header_msg);
-        $header_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
-        $header_msg =~ s,(\r\n|\r|\n),<br/>,g;
-        $footer_msg = Sympa::Tools::Text::encode_html($footer_msg);
-        $footer_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
-        $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
-        $global_footer_msg =
-            Sympa::Tools::Text::encode_html($global_footer_msg);
+        #---acb: and for all three header/footer parts, wrap all URIs
+        # in HTML tags, and keep newlines for readability and for
+        # outlook.com parsing:
+        my $finder = Sympa::HTML::URIFind->new;
+        $finder->find(\$header_msg);
+        $header_msg =~ s/(\r\n|\r|\n)$//;           # strip the last newline.
+        $header_msg =~ s,(\r\n|\r|\n),<br/>$1,g;    # keep newlines
+        $finder->find(\$footer_msg);
+        $footer_msg =~ s/(\r\n|\r|\n)$//;           # strip the last newline.
+        $footer_msg =~ s,(\r\n|\r|\n),<br/>$1,g;    # keep newlines
+        $finder->find(\$global_footer_msg);
         $global_footer_msg =~ s/(\r\n|\r|\n)$//;    # strip the last newline.
-        $global_footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
+        $global_footer_msg =~ s,(\r\n|\r|\n),<br/>$1,g;    # keep newlines
 
         $new_body = $body;
         if (length $header_msg) {
