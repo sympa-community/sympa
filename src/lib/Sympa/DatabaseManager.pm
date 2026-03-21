@@ -55,21 +55,6 @@ sub instance {
         unless $self = Sympa::Database->new($db_conf->{'db_type'}, %$db_conf)
         and $self->connect;
 
-    # Compatibility concern.
-    # - Create a temporary view "dual" for portable SQL statements.
-    if (ref $self eq 'Sympa::DatabaseDriver::PostgreSQL') {
-        # Note: PostgreSQL <= 8.0.x didn't support temporary view but >= 7.3.x
-        #   supported CREATE OR REPLACE statement.
-        defined $self->__dbh->do(
-            q{CREATE TEMPORARY VIEW dual AS SELECT 'X'::varchar(1) AS dummy;})
-            or $self->__dbh->do(
-            q{CREATE OR REPLACE VIEW dual AS SELECT 'X'::varchar(1) AS dummy;}
-            );
-    } elsif (ref $self eq 'Sympa::DatabaseDriver::SQLite') {
-        $self->__dbh->do(
-            q{CREATE TEMPORARY VIEW dual AS SELECT 'X' AS dummy;});
-    }
-
     # At once connection succeeded, we keep trying to connect.
     # Unless in a web context, because we can't afford long response time on
     # the web interface.
@@ -287,6 +272,11 @@ sub probe_db {
                     return undef;
                 }
             }
+        }
+
+        unless (_check_views($sdm, {report => \@report})) {
+            $log->syslog('err', 'Could not add the views');
+            return undef;
         }
     } else {
         $log->syslog('err',
@@ -711,6 +701,25 @@ sub _check_key {
 
 # Moved: Use Sympa::Database::is_sufficient_field_type().
 #sub _check_db_field_type;
+
+sub _check_views {
+    my $sdm        = shift;
+    my $param      = shift;
+    my $report_ref = $param->{'report'};
+
+    return 1 unless $sdm->can('get_views') and $sdm->can('add_view');
+
+    # Create a view "dual" for portable SQL statements.
+    my @views = @{$sdm->get_views // []};
+    foreach my $view (qw(dual)) {
+        next if grep { $view eq $_ } @views;
+
+        my $report = $sdm->add_view({view => $view});
+        return undef unless $report;
+        push @$report_ref, $report;
+    }
+    return 1;
+}
 
 1;
 __END__
