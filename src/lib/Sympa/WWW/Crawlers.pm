@@ -455,6 +455,8 @@ use constant crawler => qr{
   | feedbot
   | UT-Dorkbot
   | Amazonbot
+  | AmazonProductDiscovery
+  | AmazonSellerInitiatedListing
   | SerendeputyBot
   | Eyeotabot
   | officestorebot
@@ -569,7 +571,7 @@ use constant crawler => qr{
   | Iframely
   | MetaInspector
   | node-fetch
-  | lkxscan
+  | l9explore
   | python-opengraph
   | OpenGraphCheck
   | developers\.google\.com\/\+\/web\/snippet
@@ -594,11 +596,29 @@ use constant crawler => qr{
   | Vercelbot
   | vercel-screenshot
   | facebookcatalog\/
+  | meta-externalads\/
   | meta-externalagent\/
   | meta-externalfetcher\/
   | AcademicBotRTU
   | KeybaseBot
+  | Lemmy
   | CookieHubScan
+  | Hydrozen\.io
+  | HTTP[ ]Banner[ ]Detection
+  | SummalyBot
+  | MicrosoftPreview\/
+  | GeedoProductSearch
+  | TikTokSpider
+  | OnCrawl\/
+  | sindresorhus\/got
+  | CensysInspect\/
+  | SBIntuitionsBot\/
+  | sitebulb
+  | YextBot\/
+  | DatadogSynthetics
+  | Google-Ads-Conversions
+  | ObservePoint
+  | Checkly
   )
 }x;
 
