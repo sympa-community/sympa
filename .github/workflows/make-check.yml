@@ -20,6 +20,7 @@ jobs:
           - 'ubuntu-latest'
         perl:
           - '5'
+          - '5.40'
           - '5.38'
           - '5.36'
           #- '5.34'
@@ -29,7 +30,7 @@ jobs:
           - '5.26'
     name: Perl ${{ matrix.perl }} on ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install dependencies for Linux
         if: runner.os == 'Linux'
         run: |
