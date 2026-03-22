@@ -7,9 +7,9 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 The Sympa Community.
-# See the AUTHORS.md file at the top-level directory of this distribution
-# and at <https://github.com/sympa-community/sympa.git>.
+# Copyright 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2026
+# The Sympa Community. See the AUTHORS.md file at the top-level directory
+# of this distribution and at <https://github.com/sympa-community/sympa.git>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -1569,18 +1569,13 @@ sub _get_reason_string {
 }
 
 sub moveUser {
-    $log->syslog(
-        'info',
-        '(%s, current_email=%s, email=%s)',
-        @_
-    );
+    $log->syslog('info', '(%s, current_email=%s, email=%s)', @_);
     my $class         = shift;
     my $current_email = shift;
     my $email         = shift;
 
-
-    my $sender                  = $ENV{'USER_EMAIL'};
-    my $robot                   = $ENV{SYMPA_DOMAIN};
+    my $sender = $ENV{'USER_EMAIL'};
+    my $robot  = $ENV{SYMPA_DOMAIN};
 
     unless ($sender) {
         die SOAP::Fault->faultcode('Client')
@@ -1601,17 +1596,16 @@ sub moveUser {
 
     $current_email = Sympa::Tools::Text::canonic_email($current_email);
     $email         = Sympa::Tools::Text::canonic_email($email);
-    
+
     unless (Sympa::Tools::Text::valid_email($current_email)) {
         $reject .= ', invalid current_email';
     }
     unless (Sympa::Tools::Text::valid_email($email)) {
         $reject .= ', invalid email';
     }
-            
+
     if ($reject) {
-        $log->syslog('info',
-            'move_user %s -> %s from %s refused%s',
+        $log->syslog('info', 'move_user %s -> %s from %s refused%s',
             $current_email, $email, $sender, $reject);
         die SOAP::Fault->faultcode('Server')
             ->faultstring('Incorrect parameter')
@@ -1635,7 +1629,7 @@ sub moveUser {
             email                   => $email,
         }
     );
-    
+
     unless ($spindle and $spindle->spin) {
         die SOAP::Fault->faultcode('Server')->faultstring('Internal error');
     }
@@ -1649,17 +1643,16 @@ sub moveUser {
             die SOAP::Fault->faultcode('Server')
                 ->faultstring('Internal error');
         } elsif ($report->[1] eq 'notice') {
-            return SOAP::Data->name('result')->type('boolean')->value(1);
+            return Sympa::WWW::SOAP::Data->name('result')->type('boolean')
+                ->value(1);
         } elsif ($report->[1] eq 'user') {
             die SOAP::Fault->faultcode('Server')->faultstring('Undef')
                 ->faultdetail($reason_string);
         }
     }
-    
-    return SOAP::Data->name('result')->type('boolean')->value(1);
-}
 
+    return Sympa::WWW::SOAP::Data->name('result')->type('boolean')->value(1);
+}
 
 1;
 __END__
-
