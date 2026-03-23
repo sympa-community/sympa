@@ -603,8 +603,8 @@ sub check_dkim_sigs {
         : $self->{context};
 
     return
-        unless Sympa::Tools::Data::smart_eq(
-        Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
+        unless 'on' eq
+        (Conf::get_robot_conf($robot_id || '*', 'dkim_feature') // '');
 
     my $dkim;
     unless ($dkim = Mail::DKIM::Verifier->new()) {
@@ -1096,10 +1096,8 @@ sub smime_decrypt {
         (      $content_type eq 'application/pkcs7-mime'
             or $content_type eq 'application/x-pkcs7-mime'
         )
-        and !Sympa::Tools::Data::smart_eq(
-            $self->{_head}->mime_attr('Content-Type.smime-type'),
-            qr/signed-data/i
-        )
+        and ($self->{_head}->mime_attr('Content-Type.smime-type') // '') !~
+        /signed-data/i
     ) {
         return 0;
     }
@@ -1175,11 +1173,7 @@ sub smime_decrypt {
     # multipart
     $head->delete('Content-Disposition')
         if $self->get_header('Content-Disposition');
-    if (Sympa::Tools::Data::smart_eq(
-            $head->mime_attr('Content-Type'),
-            qr/multipart/i
-        )
-    ) {
+    if (($head->mime_attr('Content-Type') // '') =~ /multipart/i) {
         $head->delete('Content-Transfer-Encoding')
             if $self->get_header('Content-Transfer-Encoding');
     }
@@ -2288,10 +2282,8 @@ sub _urlize_one_part {
 
     return undef unless ($parent_eff_type eq 'multipart/mixed');
 
-    my $expl     = $list->{'dir'} . '/urlized';
-    my $listname = $list->{'name'};
-    my $head     = $entity->head;
-    my $encoding = $head->mime_encoding;
+    my $expl = $list->{'dir'} . '/urlized';
+    my $head = $entity->head;
 
     # name of the linked file
     my $filename;
@@ -2334,10 +2326,8 @@ sub _urlize_one_part {
     if ($entity->bodyhandle) {
         my $ct = $entity->effective_type || 'text/plain';
         printf $fh "Content-Type: %s", $ct;
-        printf $fh "; Charset=%s",
-            $head->mime_attr('Content-Type.Charset')
-            if Sympa::Tools::Data::smart_eq(
-            $head->mime_attr('Content-Type.Charset'), qr/\S/);
+        printf $fh "; Charset=%s", $head->mime_attr('Content-Type.Charset')
+            if ($head->mime_attr('Content-Type.Charset') // '') =~ /\S/;
         print $fh "\n\n";
         print $fh $entity->bodyhandle->as_string;
     } else {
