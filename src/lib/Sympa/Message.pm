@@ -2351,7 +2351,7 @@ sub _urlize_one_part {
     my $size = -s $file;
 
     ## Only URLize files with a moderate size
-    if ($size < $Conf::Conf{'urlize_min_size'}) {
+    if ($size < Conf::get_robot_conf($list->{'domain'}, 'urlize_min_size')) {
         unlink $file;
         return undef;
     }
