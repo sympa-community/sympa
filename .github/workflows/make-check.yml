@@ -36,6 +36,7 @@ jobs:
         run: |
           sudo apt update -y
           sudo apt install -y gettext 
+          sudo apt install -y autopoint
       - name: Install dependencies for macOS
         if: runner.os == 'macOS'
         run: |

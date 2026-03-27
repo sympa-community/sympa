@@ -28,7 +28,8 @@ AC_INIT(sympa, 6.2.76, devel@sympa.community)
 AM_INIT_AUTOMAKE([foreign -Wall -Werror 1.9 tar-pax])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 AM_PO_SUBDIRS
-GETTEXT_MACRO_VERSION=0.19
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_REQUIRE_VERSION([0.19.1])
 
 AC_PREFIX_DEFAULT(/home/sympa)
 

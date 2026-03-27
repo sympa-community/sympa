@@ -4,17 +4,33 @@ Makefile.in
 /aclocal.m4
 /autom4te.cache
 /compile
+/config.rpath
 /configure
+/configure~
 /depcomp
 /install-sh
 /missing
+
+# autoreconf w/ gettext
+
+/ABOUT-NLS
+/m4
+/po/*/*.header
+/po/*/*.sed
+/po/*/*.sin
+/po/*/Makefile.in.in
+/po/*/Makevars.template
+/po/*/Rules-quot
+/po/*/fetch-po
 
 # ./configure
 
 Makefile
 .deps
+/config.guess
 /config.log
 /config.status
+/config.sub
 /po/sympa/POTFILES
 /po/web_help/POTFILES
 /sympa.conf
@@ -94,3 +110,6 @@ ctags
 # patch
 *.orig
 *.rej
+
+# macOS
+.DS_Store
