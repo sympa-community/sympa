@@ -152,7 +152,7 @@ sub is_autoinc {
         return undef;
     }
     my $field = $sth->fetchrow();
-    return ($field eq $seqname);
+    return ($field // '') eq $seqname;
 }
 
 sub set_autoinc {
