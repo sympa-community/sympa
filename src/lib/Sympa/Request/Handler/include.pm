@@ -86,7 +86,7 @@ sub _get_data_sources {
                 foreach my $i (@$inc) {
                     # Special case: include_file is not paragraph.
                     unless (ref $i) {
-                        my $name = substr [split m{/}, $i]->[-1], 0, 15;
+                        my $name = Sympa::Tools::Text::clip([split m{/}, $i]->[-1], 50);
                         $i = {name => $name, path => $i};
                     }
 
@@ -105,7 +105,7 @@ sub _get_data_sources {
                 if ($ptype eq 'include_file') {
                     # Special case: include_file is not paragraph.
                     unshift @config, map {
-                        my $name = substr [split m{/}, $_]->[-1], 0, 15;
+                        my $name = Sympa::Tools::Text::clip([split m{/}, $_]->[-1], 50);
                         {name => $name, path => $_};
                     } grep {
                         $_

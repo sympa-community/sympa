@@ -31,7 +31,7 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(input-file=s);
+use constant _options => qw(input_file=s);
 use constant _args    => qw(family);
 
 sub _run {

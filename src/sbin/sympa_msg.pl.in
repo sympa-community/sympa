@@ -29,7 +29,7 @@ use lib split(/:/, $ENV{SYMPALIB} || ''), '--modulesdir--';
 use strict;
 use warnings;
 use English qw(-no_match_vars);
-use Getopt::Long;
+use Getopt::Long qw(:config no_ignore_case);
 use Pod::Usage;
 use POSIX qw();
 
@@ -60,7 +60,7 @@ srand(time());
 my %options;
 unless (
     GetOptions(
-        \%main::options, 'debug|d',  'log_level=s', 'foreground',
+        \%main::options, 'debug|d',  'log_level=s', 'foreground|F',
         'config|f=s',    'lang|l=s', 'mail|m',      'keepcopy|k=s',
         'help|h',        'version|v',
     )

@@ -36,7 +36,7 @@ use Sympa::Spindle::ProcessRequest;
 
 use parent qw(Sympa::CLI);
 
-use constant _options => qw(close-unknown input-file=s);
+use constant _options => qw(close_unknown input_file=s);
 use constant _args    => qw(family);
 
 my $log = Sympa::Log->instance;

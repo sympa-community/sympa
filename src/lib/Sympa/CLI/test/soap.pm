@@ -25,7 +25,6 @@ package Sympa::CLI::test::soap;
 use strict;
 use warnings;
 use Encode qw();
-use Getopt::Long;
 use HTTP::Cookies;
 use SOAP::Lite;
 

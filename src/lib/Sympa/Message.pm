@@ -51,6 +51,7 @@ use Sympa;
 use Conf;
 use Sympa::Constants;
 use Sympa::HTML::FormatText;
+use Sympa::HTML::URIFind;
 use Sympa::HTMLSanitizer;
 use Sympa::Language;
 use Sympa::Log;
@@ -167,8 +168,34 @@ sub new {
     $self->{_entity_cache} = $entity;
     $self->{'size'}        = length $serialized;
 
+    # Get sender of the message according to header fields specified by
+    # 'sender_headers' parameter.
+    # Note: On "Resent-*:" headers, the first occurrence must be used (see
+    # RFC 5322 3.6.6).
+    # FIXME: Though "From:" can occur multiple times, only the first
+    # one is detected.
+    # FIXME: S/MIME signer may not be the same as the sender given by this
+    # code.
     unless (exists $self->{'sender'} and defined $self->{'sender'}) {
-        ($self->{'sender'}, $self->{'gecos'}) = $self->_get_sender_email;
+        foreach my $field (split /[\s,]+/, $Conf::Conf{'sender_headers'}) {
+            if (lc $field eq 'return-path') {
+                # Try to get envelope sender.
+                if (    $self->{'envelope_sender'}
+                    and $self->{'envelope_sender'} ne '<>') {
+                    $self->{'sender'} = Sympa::Tools::Text::canonic_email(
+                        $self->{'envelope_sender'});
+                    last;
+                }
+            } else {
+                my ($gecos, $sender) =
+                    _parse_nameaddr($self->get_header($field));
+                if (defined $sender) {
+                    ($self->{'gecos'}, $self->{'sender'}) = ($gecos, $sender);
+                    last;
+                }
+            }
+
+        }
     }
 
     ## Store decoded subject and its original charset
@@ -246,68 +273,37 @@ sub new_from_file {
     return $self;
 }
 
-## Get sender of the message according to header fields specified by
-## 'sender_headers' parameter.
-## FIXME: S/MIME signer may not be same as the sender given by this function.
-sub _get_sender_email {
-    my $self = shift;
+sub _parse_nameaddr {
+    my $addr = shift;
 
-    my $hdr = $self->{_head};
-
-    my $sender = undef;
-    my $gecos  = undef;
-    foreach my $field (split /[\s,]+/, $Conf::Conf{'sender_headers'}) {
-        if (lc $field eq 'return-path') {
-            ## Try to get envelope sender
-            if (    $self->{'envelope_sender'}
-                and $self->{'envelope_sender'} ne '<>') {
-                $sender = Sympa::Tools::Text::canonic_email(
-                    $self->{'envelope_sender'});
-            }
-        } elsif ($hdr->get($field)) {
-            ## Try to get message header.
-            ## On "Resent-*:" headers, the first occurrence must be used (see
-            ## RFC 5322 3.6.6).
-            ## FIXME: Though "From:" can occur multiple times, only the first
-            ## one is detected.
-            my $addr = $hdr->get($field, 0);               # get the first one
-            my @sender_hdr = Mail::Address->parse($addr);
-            if (@sender_hdr and $sender_hdr[0]->address) {
-                $sender = Sympa::Tools::Text::canonic_email(
-                    $sender_hdr[0]->address);
-                my $phrase = $sender_hdr[0]->phrase;
-                if (length($phrase // '')) {
-                    # Unquote quoted strings in the phrase.
-                    # cf. RFC 5322, 3.2.4 and 3.2.5.
-                    $phrase =~ s{(?<!\S) " ((?:\\. | [^\\"])*) " (?!\S)}{
+    my ($gecos, $sender);
+    if (($addr // '') =~ /\S/) {
+        chomp $addr;
+        my @sender_hdr = Mail::Address->parse($addr);
+        if (@sender_hdr and $sender_hdr[0]->address) {
+            $sender =
+                Sympa::Tools::Text::canonic_email($sender_hdr[0]->address);
+            my $phrase = $sender_hdr[0]->phrase;
+            if (($phrase // '') =~ /\S/) {
+                # Unquote quoted strings in the phrase.
+                # cf. RFC 5322, 3.2.4 and 3.2.5.
+                $phrase =~ s{(?<!\S) " ((?:\\. | [^\\"])*) " (?!\S)}{
                         my $qcontent = $1;
                         $qcontent =~ s/\\(.)/$1/grs;
                     }egsx;
 
-                    # Decode B- or Q-encoded words. Note that some (mistaken)
-                    # implementations may quote encoded words.
-                    $gecos = MIME::EncWords::decode_mimewords($phrase,
-                        Charset => 'UTF-8');
-                    # Eliminate hostile characters.
-                    $gecos =~ s/(\r\n|\r|\n)(?=[ \t])//g;
-                    $gecos =~ s/[\0\r\n]+//g;
-                }
-                last;
+                # Decode B- or Q-encoded words. Note that some (mistaken)
+                # implementations may quote encoded words.
+                $gecos = MIME::EncWords::decode_mimewords($phrase,
+                    Charset => 'UTF-8');
+                # Eliminate hostile characters.
+                $gecos =~ s/(\r\n|\r|\n)(?=[ \t])//g;
+                $gecos =~ s/[\0\r\n]+//g;
             }
         }
-
-        last if defined $sender;
     }
-    unless (defined $sender) {
-        #$log->syslog('debug3', 'No valid sender address');
-        return;
-    }
-    unless (Sympa::Tools::Text::valid_email($sender)) {
-        $log->syslog('err', 'Invalid sender address "%s"', $sender);
-        return;
-    }
-
-    return ($sender, $gecos);
+    return unless Sympa::Tools::Text::valid_email($sender);
+    return ($gecos, $sender);
 }
 
 # Note that this must be called after decrypting message
@@ -607,8 +603,8 @@ sub check_dkim_sigs {
         : $self->{context};
 
     return
-        unless Sympa::Tools::Data::smart_eq(
-        Conf::get_robot_conf($robot_id || '*', 'dkim_feature'), 'on');
+        unless 'on' eq
+        (Conf::get_robot_conf($robot_id || '*', 'dkim_feature') // '');
 
     my $dkim;
     unless ($dkim = Mail::DKIM::Verifier->new()) {
@@ -1100,10 +1096,8 @@ sub smime_decrypt {
         (      $content_type eq 'application/pkcs7-mime'
             or $content_type eq 'application/x-pkcs7-mime'
         )
-        and !Sympa::Tools::Data::smart_eq(
-            $self->{_head}->mime_attr('Content-Type.smime-type'),
-            qr/signed-data/i
-        )
+        and ($self->{_head}->mime_attr('Content-Type.smime-type') // '') !~
+        /signed-data/i
     ) {
         return 0;
     }
@@ -1179,11 +1173,7 @@ sub smime_decrypt {
     # multipart
     $head->delete('Content-Disposition')
         if $self->get_header('Content-Disposition');
-    if (Sympa::Tools::Data::smart_eq(
-            $head->mime_attr('Content-Type'),
-            qr/multipart/i
-        )
-    ) {
+    if (($head->mime_attr('Content-Type') // '') =~ /multipart/i) {
         $head->delete('Content-Transfer-Encoding')
             if $self->get_header('Content-Transfer-Encoding');
     }
@@ -1536,6 +1526,8 @@ sub _personalize_attrs {
         $value =~ s/(?:\r\n|\r|\n)(?=[ \t])//g;    # unfold
         $data->{headers}{$key} = $value;
     }
+    $data->{sender}  = $self->{sender};
+    $data->{gecos}   = $self->{gecos};
     $data->{subject} = $self->{decoded_subject};
 
     return $data;
@@ -2161,16 +2153,19 @@ sub _append_footer_header_to_part {
         $log->syslog('debug3', "Treating text/html part");
 
         # Escape special characters.
-        $header_msg = Sympa::Tools::Text::encode_html($header_msg);
-        $header_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
-        $header_msg =~ s,(\r\n|\r|\n),<br/>,g;
-        $footer_msg = Sympa::Tools::Text::encode_html($footer_msg);
-        $footer_msg =~ s/(\r\n|\r|\n)$//;       # strip the last newline.
-        $footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
-        $global_footer_msg =
-            Sympa::Tools::Text::encode_html($global_footer_msg);
+        #---acb: and for all three header/footer parts, wrap all URIs
+        # in HTML tags, and keep newlines for readability and for
+        # outlook.com parsing:
+        my $finder = Sympa::HTML::URIFind->new;
+        $finder->find(\$header_msg);
+        $header_msg =~ s/(\r\n|\r|\n)$//;           # strip the last newline.
+        $header_msg =~ s,(\r\n|\r|\n),<br/>$1,g;    # keep newlines
+        $finder->find(\$footer_msg);
+        $footer_msg =~ s/(\r\n|\r|\n)$//;           # strip the last newline.
+        $footer_msg =~ s,(\r\n|\r|\n),<br/>$1,g;    # keep newlines
+        $finder->find(\$global_footer_msg);
         $global_footer_msg =~ s/(\r\n|\r|\n)$//;    # strip the last newline.
-        $global_footer_msg =~ s,(\r\n|\r|\n),<br/>,g;
+        $global_footer_msg =~ s,(\r\n|\r|\n),<br/>$1,g;    # keep newlines
 
         $new_body = $body;
         if (length $header_msg) {
@@ -2287,10 +2282,8 @@ sub _urlize_one_part {
 
     return undef unless ($parent_eff_type eq 'multipart/mixed');
 
-    my $expl     = $list->{'dir'} . '/urlized';
-    my $listname = $list->{'name'};
-    my $head     = $entity->head;
-    my $encoding = $head->mime_encoding;
+    my $expl = $list->{'dir'} . '/urlized';
+    my $head = $entity->head;
 
     # name of the linked file
     my $filename;
@@ -2333,10 +2326,8 @@ sub _urlize_one_part {
     if ($entity->bodyhandle) {
         my $ct = $entity->effective_type || 'text/plain';
         printf $fh "Content-Type: %s", $ct;
-        printf $fh "; Charset=%s",
-            $head->mime_attr('Content-Type.Charset')
-            if Sympa::Tools::Data::smart_eq(
-            $head->mime_attr('Content-Type.Charset'), qr/\S/);
+        printf $fh "; Charset=%s", $head->mime_attr('Content-Type.Charset')
+            if ($head->mime_attr('Content-Type.Charset') // '') =~ /\S/;
         print $fh "\n\n";
         print $fh $entity->bodyhandle->as_string;
     } else {
@@ -2350,7 +2341,7 @@ sub _urlize_one_part {
     my $size = -s $file;
 
     ## Only URLize files with a moderate size
-    if ($size < $Conf::Conf{'urlize_min_size'}) {
+    if ($size < Conf::get_robot_conf($list->{'domain'}, 'urlize_min_size')) {
         unlink $file;
         return undef;
     }
@@ -3104,8 +3095,6 @@ sub _do_message {
         chomp $_;
         MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
     } ($msgent->head->get('From', 0));
-    $from = $language->gettext("[Unknown]")
-        unless defined $from and length $from;
     my ($subject) = map {
         chomp $_;
         MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
@@ -3122,17 +3111,9 @@ sub _do_message {
         chomp $_;
         MIME::EncWords::decode_mimewords($_, Charset => 'UTF-8')
     } ($msgent->head->get('Cc'));
-
-    my @fromline = Mail::Address->parse($msgent->head->get('From'));
-    my $name;
-    if ($fromline[0]) {
-        $name = MIME::EncWords::decode_mimewords($fromline[0]->name(),
-            Charset => 'utf8');
-        $name = $fromline[0]->address()
-            unless defined $name and $name =~ /\S/;
-        chomp $name;
-    }
-    $name = $from unless defined $name and length $name;
+    my ($name) =
+        grep { defined and /\S/ } _parse_nameaddr($msgent->head->get('From'));
+    $name ||= $language->gettext("[Unknown]");
 
     $string .= $language->gettext(
         "\n[Attached message follows]\n-----Original message-----\n");
@@ -3316,8 +3297,7 @@ sub dmarc_protect {
     my $domain_regex   = $list->{'admin'}{'dmarc_protection'}{'domain_regex'};
 
     my $original_from = $self->get_header('From');
-    my ($from)        = Mail::Address->parse($original_from);
-    my $from_address  = $from->address if $from;
+    my ($origName, $from_address) = _parse_nameaddr($original_from);
     $log->syslog('debug', 'From address: <%s>', $from_address);
 
     # Will this message be processed?
@@ -3380,14 +3360,10 @@ sub dmarc_protect {
     }
     $log->syslog('debug', 'Anonymous From: %s', $anonaddr);
 
-    if ($from) {
+    if ($from_address) {
         # We should always have a From address in reality, unless the
         # message is from a badly-behaved automate.
-        my $origName =
-            MIME::EncWords::decode_mimewords($from->phrase,
-            Charset => 'UTF-8')
-            if defined $from->phrase;
-        unless (defined $origName and $origName =~ /\S/) {
+        unless (($origName // '') =~ /\S/) {
             # If we dont have a Phrase, should we search the Sympa
             # database for the sender to obtain their name that way?
             # Might be difficult.

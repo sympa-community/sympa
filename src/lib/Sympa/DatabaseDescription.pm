@@ -76,7 +76,7 @@ my %full_db_struct = (
             },
             'suspend_start_date_subscriber' => {
                 'struct' => 'int(11)',
-                'doc' => 'the Unix time when message reception is suspended',
+                'doc' => 'the Unix time when message reception was suspended',
                 'order' => 6,
             },
             'suspend_end_date_subscriber' => {
@@ -87,17 +87,17 @@ my %full_db_struct = (
             },
             'bounce_subscriber' => {
                 'struct' => 'varchar(35)',
-                'doc'    => 'FIXME',
+                'doc'    => 'unix time of first bounce / unix time of last bounce / nb of bounces / error code',
                 'order'  => 8,
             },
             'bounce_score_subscriber' => {
                 'struct' => 'smallint(6)',
-                'doc'    => 'FIXME',
+                'doc'    => 'bounce score for this subscriber',
                 'order'  => 9,
             },
             'bounce_address_subscriber' => {
                 'struct' => $email_struct,
-                'doc'    => 'FIXME',
+                'doc'    => 'VERP bounce address',
                 'order'  => 10,
             },
             #'date_subscriber' => {
@@ -122,19 +122,19 @@ my %full_db_struct = (
             'update_epoch_subscriber' => {
                 'struct' => 'int(11)',
                 'doc' =>
-                    'the last time when subscription is confirmed by subscriber',
+                    'last time subscription was confirmed by subscriber',
                 'order' => 12.5,
             },
             'inclusion_subscriber' => {
                 'struct' => 'int(11)',
                 'doc' =>
-                    'the last time when list user is synchronized with data source',
+                    'last time subscribers\' list was synchronized with data source',
                 'order' => 12.6,
             },
             'inclusion_ext_subscriber' => {
                 'struct' => 'int(11)',
                 'doc' =>
-                    'the last time when list user is synchronized with external data source',
+                    'last time subscribers\' list  was synchronized with external data source',
                 'order' => 12.7,
             },
             'inclusion_label_subscriber' => {
@@ -149,14 +149,14 @@ my %full_db_struct = (
             },
             'number_messages_subscriber' => {
                 'struct'   => 'int(5)',
-                'doc'      => 'the number of message the subscriber sent',
+                'doc'      => 'the number of messages the subscriber sent',
                 'not_null' => 1,
                 'order'    => 5,
                 'order'    => 14,
             },
             'visibility_subscriber' => {
                 'struct' => 'varchar(20)',
-                'doc'    => 'FIXME',
+                'doc'    => 'visibility of subscriber in list review page',
                 'order'  => 15,
             },
             'topics_subscriber' => {
@@ -186,12 +186,12 @@ my %full_db_struct = (
             #},
             'custom_attribute_subscriber' => {
                 'struct' => 'text',
-                'doc'    => 'FIXME',
+                'doc'    => 'custom attribute(s) of subscriber',
                 'order'  => 20,
             },
 
         },
-        'doc'   => 'This table store subscription, subscription option etc.',
+        'doc'   => 'This table stores subscription, subscription options, etc...',
         'order' => 1,
     },
     'user_table' => {
@@ -239,7 +239,7 @@ my %full_db_struct = (
             },
             'cookie_delay_user' => {
                 'struct' => 'int(11)',
-                'doc'    => 'FIXME',
+                'doc'    => 'user cookie max age in minutes (0 is session)',
                 'order'  => 8,
             },
             'lang_user' => {
@@ -249,12 +249,12 @@ my %full_db_struct = (
             },
             'attributes_user' => {
                 'struct' => 'text',
-                'doc'    => 'FIXME',
+                'doc'    => 'user custom attributes',
                 'order'  => 10,
             },
             'data_user' => {
                 'struct' => 'text',
-                'doc'    => 'FIXME',
+                'doc'    => 'user misc WUI preferences',
                 'order'  => 11,
             },
         },
@@ -420,34 +420,34 @@ my %full_db_struct = (
                 'struct' => sprintf(
                     'varchar(%d)', Sympa::Constants::FAMILY_LEN() + 7
                 ),
-                'doc'      => 'FIXME',
+                'doc'      => 'name of the list',
                 'order'    => 1,
                 'primary'  => 1,
                 'not_null' => 1,
             },
             'robot_exclusion' => {
                 'struct'   => $robot_struct,
-                'doc'      => 'FIXME',
+                'doc'      => 'robot (domain) of the list',
                 'order'    => 2,
                 'primary'  => 1,
                 'not_null' => 1,
             },
             'user_exclusion' => {
                 'struct'   => $email_struct,
-                'doc'      => 'FIXME',
+                'doc'      => 'excluded subscriber email address',
                 'order'    => 3,
                 'primary'  => 1,
                 'not_null' => 1,
             },
             'family_exclusion' => {
                 'struct'  => $family_struct,
-                'doc'     => 'FIXME',
+                'doc'     => 'family of the list',
                 'primary' => 1,
                 'order'   => 4,
             },
             'date_exclusion' => {
                 'struct' => 'int(11)',
-                'doc'    => 'FIXME',
+                'doc'    => 'the date this entry was created or updated',
                 'order'  => 5,
             },
         },
@@ -557,38 +557,38 @@ my %full_db_struct = (
         'fields' => {
             'ticket_one_time_ticket' => {
                 'struct'  => 'varchar(30)',
-                'doc'     => 'FIXME',
+                'doc'     => 'random value of the one time ticket',
                 'primary' => 1,
                 'order'   => 1,
             },
             'email_one_time_ticket' => {
                 'struct' => $email_struct,
-                'doc'    => 'FIXME',
+                'doc'    => 'email associated with one time ticket',
                 'order'  => 2,
             },
             'robot_one_time_ticket' => {
                 'struct' => $robot_struct,
-                'doc'    => 'FIXME',
+                'doc'    => 'robot (domain) of the one time ticket',
                 'order'  => 3,
             },
             'date_one_time_ticket' => {
                 'struct' => 'int(11)',
-                'doc'    => 'FIXME',
+                'doc'    => 'the date this entry was created or updated',
                 'order'  => 4,
             },
             'data_one_time_ticket' => {
                 'struct' => 'varchar(200)',
-                'doc'    => 'FIXME',
+                'doc'    => 'data associated with one time ticket',
                 'order'  => 5,
             },
             'remote_addr_one_time_ticket' => {
                 'struct' => 'varchar(60)',
-                'doc'    => 'FIXME',
+                'doc'    => 'Remote address associated with one time ticket',
                 'order'  => 6,
             },
             'status_one_time_ticket' => {
                 'struct' => 'varchar(60)',
-                'doc'    => 'FIXME',
+                'doc'    => 'status of one time ticket',
                 'order'  => 7,
             },
         },
@@ -656,7 +656,7 @@ my %full_db_struct = (
             },
             'date_notification' => {
                 'struct'   => 'int(11)',
-                'doc'      => 'FIXME',
+                'doc'      => 'the date this entry was created or updated',
                 'not_null' => 1,
                 'order'    => 11,
             },
@@ -769,50 +769,50 @@ my %full_db_struct = (
             #},
             'date_stat' => {
                 'struct'   => 'int(11)',
-                'doc'      => 'FIXME',
+                'doc'      => 'unix epoch this entry was created or updated',
                 'order'    => 2,
                 'not_null' => 1,
             },
             'email_stat' => {
                 'struct' => $email_struct,
-                'doc'    => 'FIXME',
+                'doc'    => 'user email who ran the task',
                 'order'  => 3,
             },
             'operation_stat' => {
                 'struct'   => 'varchar(50)',
-                'doc'      => 'FIXME',
+                'doc'      => 'operation thas was run',
                 'order'    => 4,
                 'not_null' => 1,
             },
             'list_stat' => {
                 'struct' => $list_struct,
-                'doc'    => 'FIXME',
+                'doc'    => 'list name against which the task was run',
                 'order'  => 5,
             },
             'daemon_stat' => {
                 'struct' => 'varchar(20)',
-                'doc'    => 'FIXME',
+                'doc'    => 'daemon which ran the task',
                 'order'  => 6,
             },
             'user_ip_stat' => {
                 'struct' => 'varchar(100)',
-                'doc'    => 'FIXME',
+                'doc'    => 'remote ip of user',
                 'order'  => 7,
             },
             'robot_stat' => {
                 'struct'   => $robot_struct,
-                'doc'      => 'FIXME',
+                'doc'      => 'domain (robot) of the list',
                 'order'    => 8,
                 'not_null' => 1,
             },
             'parameter_stat' => {
                 'struct' => 'varchar(50)',
-                'doc'    => 'FIXME',
+                'doc'    => 'unused except to store message size on send_mail',
                 'order'  => 9,
             },
             'read_stat' => {
                 'struct'   => 'tinyint(1)',
-                'doc'      => 'FIXME',
+                'doc'      => 'data was aggregated in stat_counter_table',
                 'order'    => 10,
                 'not_null' => 1,
             },
@@ -832,30 +832,30 @@ my %full_db_struct = (
             #},
             'beginning_date_counter' => {
                 'struct'   => 'int(11)',
-                'doc'      => 'FIXME',
+                'doc'      => 'unix time for the beginning of the stats',
                 'order'    => 2,
                 'not_null' => 1,
             },
             'end_date_counter' => {
                 'struct' => 'int(11)',
-                'doc'    => 'FIXME',
+                'doc'    => 'unix time for the end of the stats',
                 'order'  => 1,
             },
             'data_counter' => {
                 'struct'   => 'varchar(50)',
-                'doc'      => 'FIXME',
+                'doc'      => 'type of operation',
                 'not_null' => 1,
                 'order'    => 3,
             },
             'robot_counter' => {
                 'struct'   => $robot_struct,
-                'doc'      => 'FIXME',
+                'doc'      => 'domain (robot)',
                 'not_null' => 1,
                 'order'    => 4,
             },
             'list_counter' => {
                 'struct' => $list_struct,
-                'doc'    => 'FIXME',
+                'doc'    => 'list',
                 'order'  => 5,
             },
             #'variation_counter' => {
@@ -870,7 +870,7 @@ my %full_db_struct = (
             #},
             'count_counter' => {
                 'struct' => 'int',
-                'doc'    => 'FIXME',
+                'doc'    => 'number of occurences',
                 'order'  => 8,
             },
         },
@@ -1007,45 +1007,45 @@ my %full_db_struct = (
         'fields' => {
             'netid_netidmap' => {
                 'struct'   => 'varchar(100)',
-                'doc'      => 'FIXME',
+                'doc'      => 'user netid',
                 'primary'  => 1,
                 'not_null' => 1,
                 'order'    => 1,
             },
             'serviceid_netidmap' => {
                 'struct'   => 'varchar(100)',
-                'doc'      => 'FIXME',
+                'doc'      => 'SSO service',
                 'primary'  => 1,
                 'not_null' => 1,
                 'order'    => 2,
             },
             'email_netidmap' => {
                 'struct' => $email_struct,
-                'doc'    => 'FIXME',
+                'doc'    => 'user email',
                 'order'  => 4,
             },
             'robot_netidmap' => {
                 'struct'   => $robot_struct,
-                'doc'      => 'FIXME',
+                'doc'      => 'robot (domain)',
                 'primary'  => 1,
                 'not_null' => 1,
                 'order'    => 3,
             },
         },
         'order' => 13,
-        'doc'   => 'FIXME',
+        'doc'   => 'This table stores information for users login with SSO',
     },
     'conf_table' => {
         'fields' => {
             'robot_conf' => {
                 'struct'  => $robot_struct,
-                'doc'     => 'FIXME',
+                'doc'     => 'robot (domain) of the conf',
                 'primary' => 1,
                 'order'   => 1,
             },
             'label_conf' => {
                 'struct'  => 'varchar(80)',
-                'doc'     => 'FIXME',
+                'doc'     => 'parameter name of the conf',
                 'primary' => 1,
                 'order'   => 2,
             },
@@ -1056,7 +1056,7 @@ my %full_db_struct = (
                 'order' => 3,
             },
         },
-        'doc'   => 'FIXME',
+        'doc'   => 'The conf table stores the parameters values for robots',
         'order' => 14,
     },
     'list_table' => {
