@@ -18,7 +18,7 @@
         <h4>[% o.title %]</h4>
         [% IF o.defined('stats_values') %]
             <div id="[% chartid %]" style="height:400px;">
-                <script>
+                <script nonce="[% csp_nonce %]">
                     <!--
                     var line = [% o.stats_values %];
                     $.jqplot('[% chartid %]', [line], {
