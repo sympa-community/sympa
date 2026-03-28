@@ -1,5 +1,41 @@
 # Change Log
 
+## [6.2.78](https://github.com/sympa-community/sympa/tree/6.2.78) (2026-03-28)
+
+[Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.76...6.2.78)
+
+**Incompatible changes:**
+
+* Drop support for Perl earlier than 5.26.0 ([\#1801](https://github.com/sympa-community/sympa/issues/1801)) by @ikedas in [\#1923](https://github.com/sympa-community/sympa/pull/1923)
+* Make Unicode::UTF8 mandatory by @ikedas in [\#1906](https://github.com/sympa-community/sympa/pull/1906)
+* Giving up Archive-Zip by @ikedas in [\#1902](https://github.com/sympa-community/sympa/pull/1902)
+
+**Implemented enhancements:**
+
+* For HTML messages, add HTML tags to all URIs in message footer/header text by @adam12b1 in [\#1916](https://github.com/sympa-community/sympa/pull/1916)
+* Add text of the error on parsing failure by @xavierba in [\#1963](https://github.com/sympa-community/sympa/pull/1963)
+* Personalization: Use the content of original originator field in the template ([\#1962](https://github.com/sympa-community/sympa/issues/1962)) by @ikedas in [\#1974](https://github.com/sympa-community/sympa/pull/1974)
+* Try and remove FIXMEs from database description by @xavierba in [\#2019](https://github.com/sympa-community/sympa/pull/2019)
+* Implementation of moveUser SOAP method ([\#1903](https://github.com/sympa-community/sympa/issues/1903)) by @farialima in [\#1904](https://github.com/sympa-community/sympa/pull/1904)
+
+**Fixed bugs:**
+
+* Bad inclusion label subscriber with long path ([\#1943](https://github.com/sympa-community/sympa/issues/1943)) by @acasadoual in [\#1952](https://github.com/sympa-community/sympa/pull/1952)
+* Fix dmarc_protection from address by @dasJ in [\#1958](https://github.com/sympa-community/sympa/pull/1958)
+* Getopt::Long options are case insensitive unless configured ([\#1966](https://github.com/sympa-community/sympa/issues/1966)) by @woodfighter in [\#1967](https://github.com/sympa-community/sympa/pull/1967)
+* Sympa::Tools::Text: Noncharacters are no longer treated as ill-formed by @ikedas in [\#2025](https://github.com/sympa-community/sympa/pull/2025)
+* Fix: gettext/dcgettext with Ubuntu runner failed by @ikedas in [\#2027](https://github.com/sympa-community/sympa/pull/2027)
+* Fix: Scenario crashes due to a typo in code ([\#1938](https://github.com/sympa-community/sympa/issues/1938)) by @xavierba in [\#1998](https://github.com/sympa-community/sympa/pull/1998)
+* Properly authorize copy_list action by @cgx in [\#1908](https://github.com/sympa-community/sympa/pull/1908)
+* WWSympa: Cannot send messages using web interface on a fully moderated list ([\#1977](https://github.com/sympa-community/sympa/issues/1977)) by @ikedas in [\#1979](https://github.com/sympa-community/sympa/pull/1979)
+* sympa.pl: Getopt::Long warnings ([\#1968](https://github.com/sympa-community/sympa/issues/1968)) and refactoring by @ikedas in [\#1984](https://github.com/sympa-community/sympa/pull/1984)
+* PostgreSQL - Unable to execute SQL statement - ERROR: relation "dual" does not exist ([\#1983](https://github.com/sympa-community/sympa/issues/1983)) by @ikedas in [\#1994](https://github.com/sympa-community/sympa/pull/1994)
+* Documentation says `regexp` and `negative_regexp` keywords is valid for `cas` and `generic_sso` paragraph in `auth.conf` ([\#2016](https://github.com/sympa-community/sympa/issues/2016)) by @ikedas in [\#2031](https://github.com/sympa-community/sympa/pull/2031)
+* `urlize_min_size` paarameter should work also on domain level ([\#2017](https://github.com/sympa-community/sympa/issues/2017)) by @ikedas in [\#2033](https://github.com/sympa-community/sympa/pull/2033)
+* make gettext up-to-date by @ikedas in [\#2036](https://github.com/sympa-community/sympa/pull/2036)
+* Adding users/members/admins with very long display name fails ([\#1997](https://github.com/sympa-community/sympa/issues/1997)) by @ikedas in [\#2035](https://github.com/sympa-community/sympa/pull/2035)
+* "Use of uninitialized value" warning ([\#1941](https://github.com/sympa-community/sympa/issues/1941)) by @ikedas in [\#2034](https://github.com/sympa-community/sympa/pull/2034)
+
 ## [6.2.76](https://github.com/sympa-community/sympa/tree/6.2.76) (2025-02-04)
 
 [Full Changelog](https://github.com/sympa-community/sympa/compare/6.2.74...6.2.76)
