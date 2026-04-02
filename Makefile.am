@@ -24,6 +24,7 @@
 SUBDIRS = src default doc po service www
 
 check_SCRIPTS = \
+	t/00_cpan_modules.t \
 	t/01_Conf.t \
 	t/CLI_getoptions.t \
 	t/Config_XML.t \
