@@ -173,31 +173,7 @@ requires 'URI::Find::Schemeless', '20160806';
 ### Recommendations
 ##
 
-# Use XS version of some modules to make Sympa faster
-# Used to make copy of internal data structures.
-recommends 'Clone', '>= 0.31';
-
-# Used to encrypt passwords with the Bcrypt hash algorithm
-recommends 'Crypt::Eksblowfish', '>= 0.009';
-
-# Used for configureable hardening of passwords via the password_validation sympa.conf directive.
-recommends 'Data::Password', '>= 1.07';
-
-# Useful when running command line utilities in the console not supporting UTF-8 encoding
-recommends 'Encode::Locale', '>= 1.02';
-
-# Note: 'Mail::DKIM::Signer' is included in Mail-DKIM.
-
-# Note: 'Mail::DKIM::TextWrap' is included in Mail-DKIM.
-
-# Required in order to use DKIM features (both for signature verification and signature insertion)
-recommends 'Mail::DKIM::Verifier', '>= 0.37';
-
-# This is required if you set a value for "dmarc_protection_mode" which requires DNS verification
-recommends 'Net::DNS', '>= 0.65';
-
-# This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.
-recommends 'Net::SMTP';
+# Recommandations will no longer be defined. Use "feature" directive instead.
 
 ### Features
 ##
@@ -206,6 +182,7 @@ feature 'cas', 'CAS Single Sign-On client libraries. Required if you configure S
     requires 'AuthCAS', '>= 1.4';
 };
 
+# Use XS version of some modules to make Sympa faster
 feature 'Clone', 'Used to make copy of internal data structures.' => sub {
     requires 'Clone', '>= 0.31';
 };
@@ -253,6 +230,10 @@ feature 'sqlite', 'SQLite database driver, required if you connect to a SQLite d
     requires 'DBD::SQLite', '>= 1.31';
 };
 
+on 'test' => sub {
+    requires 'DBD::SQLite', '>= 1.31';
+};
+
 #feature 'sybase', 'Sybase database driver, required if you connect to a Sybase database.' => sub {
 #    requires 'DBD::Sybase', '>= 0.90';
 #};
@@ -271,8 +252,10 @@ feature 'Encode::Locale', 'Useful when running command line utilities in the con
 };
 
 feature 'macos', 'Requirements specific to macOS.' => sub {
-    # Use dlopen() for macOS Big Sur or later.
-    requires 'ExtUtils::MakeMaker', '>= 7.58';
+    on 'configure' => sub {
+        # Use dlopen() for macOS Big Sur or later.
+        requires 'ExtUtils::MakeMaker', '>= 7.58';
+    };
 };
 
 feature 'remote-list-including', 'Required when including members of a remote list.' => sub {
@@ -281,6 +264,8 @@ feature 'remote-list-including', 'Required when including members of a remote li
 
 feature 'Mail::DKIM::Verifier', 'Required in order to use DKIM features (both for signature verification and signature insertion).' => sub {
     requires 'Mail::DKIM::Verifier', '>= 0.37';
+    # Note: 'Mail::DKIM::Signer' is also included in Mail-DKIM.
+    # Note: 'Mail::DKIM::TextWrap' is also included in Mail-DKIM.
 };
 
 feature 'Mail::DKIM::ARC::Signer', 'Required in order to use ARC features to add ARC seals.' => sub {
@@ -317,6 +302,10 @@ feature 'ldap-secure', 'Required to query LDAP directories over TLS.' => sub {
     # Note: 'Net::LDAPS' is also included in perl-ldap.
 };
 
+on 'test' => sub {
+    requires 'Test::Net::LDAP', '>= 0.06';
+};
+
 feature 'Net::SMTP', 'This is required if you set "list_check_smtp" sympa.conf parameter, used to check existing aliases before mailing list creation.' => sub {
     requires 'Net::SMTP';
 };
@@ -326,7 +315,7 @@ feature 'soap', 'Required if you want to run the Sympa SOAP server that provides
 };
 
 feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
-    # Note: These became required (>=6.2.77b).
+    # Note: These became required (>=6.2.78).
     #requires 'Unicode::Normalize', '>= 1.03';
     #requires 'Unicode::UTF8', '>= 0.58';
 };
@@ -334,7 +323,7 @@ feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
 on 'test' => sub {
     requires 'Test::Compile';
     requires 'Test::Harness';
-    requires 'Test::More';
+    requires 'Test::More', '>= 0.84'; # note() is available.
     requires 'Test::Pod', '>= 1.41';
 };
 
@@ -343,5 +332,4 @@ on 'develop' => sub {
     requires 'Test::PerlTidy', '== 20130104';
     requires 'Perl::Tidy', '== 20180220';
     requires 'Code::TidyAll';
-    requires 'Test::Net::LDAP', '>= 0.06';
 };
