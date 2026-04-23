@@ -75,14 +75,10 @@ sub run {
         map {s/[.].*\z//r} grep {defined} @ENV{qw(LANGUAGE LC_ALL LANG)};
     $language->set_lang(@langs, 'en-US', 'en');
 
-    # Parse options if necessary.
+    # Parse command and options.
     my %options;
-    if ($options) {
-        %options = %$options;
-    } else {
-        $class = $class->getoptions(\%options, \@argv);
-        return undef unless $class;
-    }
+    ($class, %options) = $class->getoptions($options, \@argv);
+    return undef unless $class;
 
     # Suppress console output if specified.
     # Setup language if specified.
@@ -92,26 +88,24 @@ sub run {
     $class->arrange(%options) if $class->_need_priv;
 
     # Parse arguments.
-    if (@argv) {
-        @argv = $class->parseargs(@argv);
-        return unless @argv;
-    }
+    return undef unless $class->parseargs(\@argv);
 
     $class->_run(\%options, @argv);
 }
 
 sub getoptions {
-    my $class     = shift;
-    my $options_r = shift;
-    my $argv_r    = shift;
+    my $class   = shift;
+    my $options = shift;
+    my $argv_r  = shift;
+    my @argv    = @$argv_r;
 
-    while (@$argv_r and ($argv_r->[0] // '') =~ /\A\w+\z/) {
+    while (@argv and ($argv[0] // '') =~ /\A\w+\z/) {
         # Check if (sub-)command is implemented.
         my $dir = $INC{($class =~ s|::|/|gr) . '.pm'} =~ s/[.]pm\z//r;
-        last unless -e "$dir/$argv_r->[0].pm";
+        last unless -e "$dir/$argv[0].pm";
 
         # Load module for the command.
-        my $command = shift @$argv_r;
+        my $command = shift @argv;
         my $subclass = sprintf '%s::%s', $class, $command;
         unless (eval(sprintf 'require %s', $subclass)
             and $subclass->isa($class)) {
@@ -126,17 +120,21 @@ sub getoptions {
         # No valid main command.
         warn $language->gettext_sprintf(
             'Invalid argument \'%s\' (command is expected)',
-            ($argv_r->[0] // ''))
+            ($argv[0] // ''))
             . "\n";
         return undef;
     }
 
-    if (grep /^-/, $class->_options) {
+    # Parse options if necessary.
+    my %options;
+    if ($options) {
+        %options = %$options;
+    } elsif (grep /^-/, $class->_options) {
         ;
     } elsif (
         not Getopt::Long::GetOptionsFromArray(
-            $argv_r,
-            $options_r,
+            \@argv,
+            \%options,
             map {
                 # If option name contains hyphen-minus, underscore is also
                 # allowed and the latter will be used for keys in the hash.
@@ -154,13 +152,16 @@ sub getoptions {
         return undef;
     }
 
-    return $class;
+    @$argv_r = @argv;
+    return ($class, %options);
 }
 
-# Parse arguments.
 sub parseargs {
-    my $class = shift;
-    my @argv  = @_;
+    my $class  = shift;
+    my $argv_r = shift;
+    my @argv   = @$argv_r;
+
+    return $argv_r unless @argv;
 
     my @parsed_argv = ();
     foreach my $argdefs ($class->_args) {
@@ -176,7 +177,7 @@ sub parseargs {
             warn $language->gettext_sprintf('Missing argument (%s)',
                 _arg_expected($defs))
                 . "\n";
-            return;
+            return undef;
         }
         foreach my $arg (@a) {
             my $val;
@@ -233,12 +234,13 @@ sub parseargs {
                     'Invalid argument \'%s\' (%s)',
                     $arg, _arg_expected($defs))
                     . "\n";
-                return;
+                return undef;
             }
         }
     }
 
-    return (@parsed_argv, @argv);
+    @$argv_r = (@parsed_argv, @argv);
+    return $argv_r;
 }
 
 sub _options       {qw(config|f=s debug|d lang|l=s log_level=s mail|m noout)}

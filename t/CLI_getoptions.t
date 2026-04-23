@@ -59,11 +59,10 @@ sub dotest {
     my $wishedArgv    = shift;
     my @argv          = @_;
 
-    diag join(' ', @argv) =~ s/(.{73}).*/$1.../r;
-    my %options;
-    my $class = Sympa::CLI->getoptions(\%options, \@argv);
+    my ($class, %options) = Sympa::CLI->getoptions(undef, \@argv);
 
-    is $class, $wishedClass, "Class $wishedClass";
+    ok $class, join(' ', @_) =~ s/(.{73}).*/$1.../r;
+    is $class, $wishedClass, $wishedClass;
     is_deeply \%options, $wishedOptions, sprintf '{%s}',
         join(', ', sort keys %$wishedOptions) =~ s/(.{65}).*/$1.../r;
     is_deeply \@argv, $wishedArgv, sprintf '[%s]',
