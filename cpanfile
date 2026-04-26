@@ -334,7 +334,7 @@ feature 'safe-unicode', 'Sanitizes inputs with Unicode text.' => sub {
 on 'test' => sub {
     requires 'Test::Compile';
     requires 'Test::Harness';
-    requires 'Test::More';
+    requires 'Test::More', '>= 0.96';
     requires 'Test::Pod', '>= 1.41';
 };
 
