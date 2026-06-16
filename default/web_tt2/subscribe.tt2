@@ -12,109 +12,43 @@
     </p>
 [%~ ELSE ~%]
     [% IF listconf.custom_attribute.size() ~%]
-        <p>[%|loc(list)%]You want to subscribe to list %1.[%END%]
-        [%|loc%]Please fill in the form below and then click the validation button:[%END%]</p>
+        <p>
+            [%|loc(list)%]You want to subscribe to list %1.[%END%]
+            [%|loc%]Please fill in the form below and then click the validation button:[%END%]
+        </p>
     [%~ ELSE ~%]
-        <p>[%|loc(list)%]You've made a subscription request to %1.[%END%]
-        [%|loc%]To confirm your request, please click the button below:[%END%]</p>
+        <p>
+            [%|loc(list)%]You've made a subscription request to %1.[%END%]
+            [%|loc%]To confirm your request, please click the button below:[%END%]
+        </p>
     [%~ END %]
-
-    <style>
-        .subscribe-form { max-width: 500px; }
-        .subscribe-form .field { margin-bottom: 1rem; }
-        .subscribe-form label { display: block; font-weight: bold; margin-bottom: 0.3rem; }
-        .subscribe-form input[type="text"],
-        .subscribe-form input[type="email"] {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-        .subscribe-form .checkbox-group { list-style: none; padding: 0; margin: 0; }
-        .subscribe-form .checkbox-group li { margin-bottom: 0.4rem; }
-        .subscribe-form .checkbox-group label { font-weight: normal; display: inline; margin-left: 0.4rem; }
-        .subscribe-form .captcha-field { margin: 1rem 0; }
-        .subscribe-form .submit-btn { margin-top: 1rem; }
-    </style>
-
-    <form action="[% path_cgi %]" method="post" class="subscribe-form">
-        <fieldset style="border:none; padding:0;">
-
-            <!-- 1. Prénom -->
-            <div class="field">
-                <label for="custom_attribute.firstname">First name : *</label>
-                <input type="text" id="custom_attribute.firstname"
-                       name="custom_attribute.firstname"
-                       placeholder="Jane" value="" required />
-            </div>
-
-            <!-- 2. Nom -->
-            <div class="field">
-                <label for="gecos">Last name :</label>
-                <input type="text" id="gecos" name="gecos"
-                       placeholder="Smith" value="[% gecos %]" />
-            </div>
-
-            <!-- 3. Email -->
-            <div class="field">
-                <label for="email">E-mail address :</label>
+    <form action="[% path_cgi %]" method="post">
+        <fieldset>
+            <div>
+                <label for="email">[%|loc%]Your e-mail address:[%END%]</label>
                 [% IF user.email ~%]
-                    <input type="email" id="email" name="email"
-                           value="[% user.email %]" readonly
-                           style="background:#f5f5f5; cursor:not-allowed;" />
+                    <span id="email">[% user.email %]</span>
+                    <input type="hidden" name="email" value="[% user.email %]" />
                 [%~ ELSE ~%]
-                    <input type="email" id="email" name="email"
-                           placeholder="user@example.org" value="[% email %]" />
+                    <input id="email" name="email" value="[% email %]" />
                 [%~ END %]
             </div>
-
-            <!-- 4. Domaine -->
-            <div class="field">
-                <label>Domain :</label>
-                <ul class="checkbox-group">
-                    <li>
-                        <input type="checkbox" id="domain_recherche"
-                               class="domain-check" value="recherche" />
-                        <label for="domain_recherche">Recherche</label>
-                    </li>
-                    <li>
-                        <input type="checkbox" id="domain_enseignement"
-                               class="domain-check" value="enseignement" />
-                        <label for="domain_enseignement">Enseignement supérieur</label>
-                    </li>
-                </ul>
-                <input type="hidden" id="domain_value" name="custom_attribute.domain" value="" />
+            <div>
+                <label for="gecos">[%|loc%]Name:[%END%]</label>
+                <input id="gecos" name="gecos" value="[% gecos %]" />
             </div>
-
+            [% PROCESS edit_attributes.tt2 %]
             <input type="hidden" name="list" value="[% list %]" />
-
-            <!-- 5. reCAPTCHA -->
-            <div class="field captcha-field">
-                <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+            [% IF conf.recaptcha_site_key ~%]
+            <div>
+                <script src="[% conf.recaptcha_api_url %]" async defer></script>
+                <div class="g-recaptcha" data-sitekey="[% conf.recaptcha_site_key %]"></div>
             </div>
-
-            <!-- 6. Bouton -->
-            <div class="field submit-btn">
-                <input class="MainMenuLinks button" type="submit"
-                       name="action_subscribe"
-                       id="btn_subscribe"
-                       value="[%|loc(list)%]I subscribe to list %1[%END%]" />
+            [%~ END %]
+            <div>
+                <input class="MainMenuLinks" type="submit" name="action_subscribe" value="[%|loc(list)%]I subscribe to list %1[%END%]" />
             </div>
-
         </fieldset>
     </form>
-
-    <script>
-    document.getElementById('btn_subscribe').addEventListener('click', function() {
-        var checked = [];
-        document.querySelectorAll('.domain-check:checked').forEach(function(cb) {
-            checked.push(cb.value);
-        });
-        document.getElementById('domain_value').value = checked.join(',');
-    });
-    </script>
 [%~ END %]
 <!-- end subscribe.tt2 -->
