@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: sympa\n"
 "Report-Msgid-Bugs-To: https://translate.sympa.community\n"
-"POT-Creation-Date: 2026-03-28 00:48:35+0000\n"
-"PO-Revision-Date: 2025-06-06 02:19+0000\n"
+"POT-Creation-Date: 2026-03-29 00:48:16+0000\n"
+"PO-Revision-Date: 2026-06-09 20:46+0000\n"
 "Last-Translator: Leonardo Lopes <leobruno@gmail.com>\n"
 "Language-Team: Português do Brasil\n"
 "Language: pt_BR\n"
@@ -19,7 +19,7 @@ msgstr ""
 "X-Generator: Pootle 2.8\n"
 "X-Rosetta-Version: 0.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-POOTLE-MTIME: 1749176392.000000\n"
+"X-POOTLE-MTIME: 1781038019.000000\n"
 
 #: src/libexec/ldap_alias_manager.pl.in:43
 #: src/libexec/mysql_alias_manager.pl.in:28
@@ -36,7 +36,7 @@ msgstr "Argumentos insuficientes para a opção %s"
 
 #: src/lib/Sympa/CLI.pm:405
 msgid "Duplicate specification \"%s\" for option \"%s\""
-msgstr ""
+msgstr "Especificação duplicada \"%s\" para a opção \"%s\""
 
 #: src/lib/Sympa/CLI.pm:406
 msgid "Option %s is ambiguous (%s)"
@@ -132,7 +132,7 @@ msgstr "Argumento inválido '%s' (é esperado um comando)"
 #: src/lib/Sympa/CLI.pm:150
 #, c-format
 msgid "See '%s help %s'"
-msgstr ""
+msgstr "Ver '%s help %s'"
 
 #. This entry contains sprintf conversions.  See
 #. https://perldoc.perl.org/functions/sprintf for details.
@@ -2246,6 +2246,10 @@ msgid ""
 "Sympa also can be configured to reject messages based on the \"From:\" "
 "header field value (see \"loop_prevention_regex\")."
 msgstr ""
+"Rejeita mensagens que parecem ser de serviços automatizados, com base em "
+"alguns campos de cabeçalho (\"Content-Identifier:\", \"Auto-Submitted:\").\n"
+"O Sympa também pode ser configurado para rejeitar mensagens com base no "
+"valor do campo de cabeçalho \"De:\" (consulte \"loop_prevention_regex\")."
 
 #: src/lib/Sympa/Config/Schema.pm:1385
 msgid "Incoming SMTP header fields to be removed"
@@ -2262,6 +2266,11 @@ msgid ""
 "The removal of these header fields is applied before Sympa adds its own "
 "header fields (\"rfc2369_header_fields\" and \"custom_header\")."
 msgstr ""
+"Use-o, por exemplo, para garantir alguma privacidade para seus usuários caso "
+"o modo \"anonymous_sender\" seja inapropriado.\n"
+"A remoção desses campos de cabeçalho é aplicada antes do Sympa adicionar os "
+"seus próprios campos de cabeçalho (\"rfc2369_header_fields\" e "
+"\"custom_header\")."
 
 #: src/lib/Sympa/Config/Schema.pm:1402
 msgid "Outgoing SMTP header fields to be removed"
@@ -2278,6 +2287,10 @@ msgid ""
 "is a convenient way to remove Sympa's own header fields (like \"X-Loop:\" or "
 "\"X-no-archive:\") if you wish."
 msgstr ""
+"A remoção ocorre depois dos campos de cabeçalho do próprio Sympa serem "
+"adicionados; portanto, é uma maneira conveniente de remover os próprios "
+"campos de cabeçalho do Sympa (como \"X-Loop:\" ou \"X-no-archive:\"), se "
+"desejar."
 
 #: src/lib/Sympa/Config/Schema.pm:1418
 msgid "RFC 2369 Header fields"
@@ -2293,20 +2306,27 @@ msgid ""
 "\"List-Id:\" header field defined in RFC 2919 is always added. Sympa also "
 "adds \"Archived-At:\" header field defined in RFC 5064."
 msgstr ""
+"Especifique quais campos de cabeçalho padrão RFC 2369 da lista de "
+"distribuição que serão adicionados.\n"
+"O campo de cabeçalho \"List-Id:\" definido na RFC 2919 é sempre adicionado. "
+"O Sympa também adiciona o campo de cabeçalho \"Archived-At:\" definido na "
+"RFC 5064."
 
 #: src/lib/Sympa/Config/Schema.pm:1437
 msgid "Minimum size to be urlized"
-msgstr ""
+msgstr "Tamanho mínimo a ser urlizado"
 
 #: src/lib/Sympa/Config/Schema.pm:1439
 msgid ""
 "When a subscriber chose \"urlize\" reception mode, attachments not smaller "
 "than this size will be urlized."
 msgstr ""
+"Quando um inscrito escolher o modo de recepção \"urlize\", os anexos que não "
+"sejam menores do que este tamanho serão urlizados."
 
 #: src/lib/Sympa/Config/Schema.pm:1448
 msgid "Allowed external links in sanitized HTML"
-msgstr ""
+msgstr "Links externos permitidos em HTML sanitizado"
 
 #: src/lib/Sympa/Config/Schema.pm:1450
 msgid ""
@@ -2315,6 +2335,10 @@ msgid ""
 "scrubbed. If \"*\" character is included, it matches any subdomains. Single "
 "\"*\" allows any hosts."
 msgstr ""
+"Quando o conteúdo HTML de uma mensagem precisar ser limpo, os links "
+"(atributos \"href\" ou \"src\") com os hosts listados neste parâmetro não "
+"serão limpos. Se o caractere \"*\" for incluído, ele corresponderá a "
+"qualquer subdomínio. Um único \"*\" permite qualquer host."
 
 #: src/lib/Sympa/Config/Schema.pm:1461
 msgid "Default priority for a packet"
@@ -2326,7 +2350,7 @@ msgstr "A prioridade padrão definida para um pacote a ser enviado em massa."
 
 #: src/lib/Sympa/Config/Schema.pm:1472
 msgid "Fork threshold of bulk daemon"
-msgstr ""
+msgstr "Limite de fork do daemon em massa"
 
 #: src/lib/Sympa/Config/Schema.pm:1474
 msgid ""
@@ -2368,7 +2392,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1512
 msgid "Interval between checks of packet numbers"
-msgstr ""
+msgstr "Intervalo entre verificações de números de pacotes"
 
 #: src/lib/Sympa/Config/Schema.pm:1514
 msgid ""
@@ -2383,7 +2407,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:1523
 msgid "Log invocation of sendmail"
-msgstr ""
+msgstr "Log de invocação do sendmail"
 
 #: src/lib/Sympa/Config/Schema.pm:1525
 msgid "This can be overwritten by \"-m\" option for sympa.pl."
@@ -2416,6 +2440,10 @@ msgid ""
 "you can limit the number of recipients for a particular domain. Check the "
 "\"nrcpt_by_domain.conf\" configuration file."
 msgstr ""
+"Este fator de agrupamento permite que os processos sendmail otimizem o "
+"número de sessões SMTP para distribuição de mensagens. Se necessário, você "
+"pode limitar o número de destinatários para um determinado domínio. "
+"Verifique o arquivo de configuração \"nrcpt_by_domain.conf\"."
 
 #: src/lib/Sympa/Config/Schema.pm:1556
 msgid "Maximum number of different mail domains per call to sendmail"
@@ -2430,6 +2458,8 @@ msgid ""
 "Defines who can create lists (or request list creation) by creating new "
 "lists or by renaming or copying existing lists."
 msgstr ""
+"Define quem pode criar listas (ou solicitar a criação de listas) criando "
+"novas listas ou renomeando ou copiando listas existentes."
 
 #: src/lib/Sympa/Config/Schema.pm:1577
 msgid "Allow adding subscribers to a list not open"
@@ -2440,6 +2470,8 @@ msgid ""
 "If set to \"off\", adding subscribers to, or removing subscribers from a "
 "list with status other than \"open\" is forbidden."
 msgstr ""
+"Se definido como \"off\", fica proibido adicionar ou remover subscritores de "
+"uma lista com o estado diferente de \"aberta\"."
 
 #: src/lib/Sympa/Config/Schema.pm:1587
 msgid "Who is able to send remind messages over all lists"
@@ -2492,6 +2524,9 @@ msgid ""
 "open_notify or auth_notify to allow owner notification of each unsubscribe "
 "command."
 msgstr ""
+"Este parâmetro especifica o método de cancelamento de inscrição para a "
+"lista. Use open_notify ou auth_notify para permitir que o proprietário seja "
+"notificado a cada comando de cancelamento de inscrição."
 
 #: src/lib/Sympa/Config/Schema.pm:1676
 msgid "Who can delete subscribers"
@@ -2520,6 +2555,10 @@ msgid ""
 "subscriber addresses can be abused by spammers, it is strongly recommended "
 "that you only authorize owners or subscribers to access the subscriber list. "
 msgstr ""
+"Este parâmetro especifica quem pode acessar a lista de membros. Visto que os "
+"endereços dos inscritos podem ser usados por spammers, é altamente "
+"recomendável que você autorize o acesso à lista de inscritos apenas pelos "
+"proprietários ou inscritos."
 
 #: src/lib/Sympa/Config/Schema.pm:1720
 msgid "Required domains for list owners"
@@ -2532,10 +2571,14 @@ msgid ""
 "domains associated with an organization, while allowing moderators and "
 "subscribers from the Internet at large."
 msgstr ""
+"Restringe a propriedade da lista a endereços dos domínios especificados. "
+"Isto pode ser usado para reservar a propriedade da lista a um grupo de "
+"usuários confiáveis dos domínios associado à organização, enquanto "
+"moderadores e inscritos podem ser de qualquer domínio da Internet."
 
 #: src/lib/Sympa/Config/Schema.pm:1736
 msgid "Minimum owners in required domains"
-msgstr ""
+msgstr "Mínimo de proprietários nos domínios requeridos"
 
 #: src/lib/Sympa/Config/Schema.pm:1740
 msgid ""
@@ -2545,6 +2588,12 @@ msgid ""
 "owners can be from any domain. This setting can be used to ensure that there "
 "is always at least one known contact point for any mailing list."
 msgstr ""
+"Número mínimo de proprietários de cada lista que deve satisfazer a restrição "
+"owner_domain. O default zero (0) significa que *todos* os proprietários "
+"devem satisfazer. O valor 1 requer que apenas um proprietário satisfaça "
+"owner_domain; todos os outros poderão ser de qualquer domínio. Esta "
+"configuração pode ser usada para garantir que sempre exista pelo menos um "
+"ponto de contato conhecido em qualquer lista."
 
 #: default/web_tt2/d_control.tt2:2 default/web_tt2/d_editfile.tt2:2
 #: default/web_tt2/d_properties.tt2:2 default/web_tt2/d_upload.tt2:2
@@ -2583,7 +2632,7 @@ msgstr "Kbytes"
 
 #: src/lib/Sympa/Config/Schema.pm:1802
 msgid "Ignore \"X-no-archive:\" header field"
-msgstr ""
+msgstr "Ignorar o campo \"X-no-archive:\" do header"
 
 #: src/lib/Sympa/Config/Schema.pm:1804
 msgid ""
@@ -2591,6 +2640,9 @@ msgid ""
 "an \"X-no-archive:\" header field set. This parameter allows one to change "
 "this behavior."
 msgstr ""
+"O comportamento padrão do Sympa é não arquivar mensagens recebidas que tenha "
+"o campo \"X-no-archive:\" definido no header. Esse parâmetro permite alterar "
+"este comportamento."
 
 #: src/lib/Sympa/Config/Schema.pm:1813
 msgid "Custom archiver"
@@ -2626,6 +2678,11 @@ msgid ""
 "Note that even if setting this parameter disabled, past archives will not be "
 "removed and will be accessible according to access settings by each list."
 msgstr ""
+"Se habilitado, mensagens distribuídas via listas serão arquivadas. Caso "
+"contrário, o arquivamento é desabilitado.\n"
+"Note que mesmo desabilitando esse parâmetro, arquivos antigos não serão "
+"removidos e estarão acessíveis de acordo com as configurações de acesso de "
+"cada lista."
 
 #: src/lib/Sympa/Config/Schema.pm:1870
 msgid ""
@@ -2641,7 +2698,7 @@ msgstr "direito de acesso"
 
 #: src/lib/Sympa/Config/Schema.pm:1898
 msgid "access right by mail commands"
-msgstr ""
+msgstr "direito de acesso por comandos de e-mail"
 
 #: src/lib/Sympa/Config/Schema.pm:1918
 msgid "Maximum number of month archived"
@@ -2691,6 +2748,8 @@ msgid ""
 "The list owner receives a warning whenever a message is distributed and the "
 "number (percentage) of bounces exceeds this value."
 msgstr ""
+"O proprietário da lista recebe um alerta sempre que uma mensagem for "
+"distribuída e o número (percentual) de retornos exceder a este valor."
 
 #: src/lib/Sympa/Config/Schema.pm:1982 src/lib/Sympa/Config/Schema.pm:1990
 msgid "%"
@@ -2714,6 +2773,9 @@ msgid ""
 "This parameter defines a lower limit for each category of bouncing users.For "
 "example, level 1 begins from 45 to level_2_treshold."
 msgstr ""
+"Cada inscrito com retorno de mensagens tem uma pontuação (de 0 a 100).\n"
+"Este parâmetro define o limite inferior para cada categoria de retorno. Por "
+"exemplo, nível 1 começa em 45 e vai até level_2_treshold."
 
 #: src/lib/Sympa/Config/Schema.pm:2022 src/lib/Sympa/Config/Schema.pm:2068
 msgid "points"
@@ -2875,7 +2937,7 @@ msgstr ""
 
 #: src/lib/Sympa/Config/Schema.pm:2281 src/lib/Sympa/Config/Schema.pm:5066
 msgid "Task for cleaning tables"
-msgstr ""
+msgstr "Tarefa para limpar tabelas"
 
 #: src/lib/Sympa/Config/Schema.pm:2283
 msgid ""
@@ -5370,8 +5432,8 @@ msgid ""
 "Completely removes the current list. Listmaster privileges are required to "
 "restore a list once it has been removed."
 msgstr ""
-"Remove completamente a lista atual. É necessário ter privilégios de "
-"administrador feral de listas para restaurar uma lista."
+"Remove completamente a lista atual. É necessário ter privilégios de gerente "
+"de listas para restaurar uma lista."
 
 #: default/web_tt2/admin.tt2:77 default/web_tt2/confirm_action.tt2:238
 msgid "Rename List"
@@ -7379,7 +7441,6 @@ msgstr ""
 "solicitar outros serviços."
 
 #: default/web_tt2/home.tt2:18
-#, fuzzy
 msgid "Logging In"
 msgstr "Iniciar sessão"
 
@@ -7388,6 +7449,8 @@ msgid ""
 "Many functions in Sympa require you to identify yourself to the system by "
 "logging in, using the login form in the top right menu."
 msgstr ""
+"Muitas funções do Sympa requerem que você se identifique no sistema pelo "
+"login, usando o formulário no menu superior, à direta."
 
 #: default/web_tt2/home.tt2:22
 msgid ""
@@ -7833,7 +7896,7 @@ msgstr ""
 #: default/web_tt2/login_menu.tt2:52 default/web_tt2/login_menu.tt2:57
 #: default/web_tt2/renewpasswd.tt2:8
 msgid "Login"
-msgstr "E-mail"
+msgstr "Login"
 
 #: default/web_tt2/login.tt2:17
 msgid ""
