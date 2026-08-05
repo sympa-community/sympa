@@ -577,7 +577,7 @@ sub _split_xml_file {
         ## creating list XML document
         my $list_doc =
             XML::LibXML::Document->createDocument($doc->version(),
-            $doc->encoding());
+            $doc->encoding() // 'UTF-8');
         $list_doc->setDocumentElement($list_elt);
 
         ## creating the list xml file
