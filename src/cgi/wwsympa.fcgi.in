@@ -1474,7 +1474,8 @@ while ($query = Sympa::WWW::FastCGI->new) {
             my $old_subaction = $in{'subaction'};
 
             ## Check required action parameters
-            my $check_action = $action eq 'move_list' && $in{'mode'} eq 'copy' ? 'copy_list' : $action;
+            my $check_action = $action eq 'move_list'
+                && $in{'mode'} eq 'copy' ? 'copy_list' : $action;
             my $check_output = check_action_parameters($check_action);
 
             unless (defined $check_output) {
@@ -15464,7 +15465,7 @@ sub do_arc_download {
             next unless $message;
 
             my $string = $message->as_string =~ s/\r?\n/\r\n/gr;
-            my $rv = $zip->addString($string,
+            my $rv     = $zip->addString($string,
                 Name => sprintf('%s/%s.eml', $arc_dirname, $handle->basename)
             );
             unless ($rv) {

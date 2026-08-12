@@ -87,8 +87,9 @@ my %full_db_struct = (
             },
             'bounce_subscriber' => {
                 'struct' => 'varchar(35)',
-                'doc'    => 'unix time of first bounce / unix time of last bounce / nb of bounces / error code',
-                'order'  => 8,
+                'doc' =>
+                    'unix time of first bounce / unix time of last bounce / nb of bounces / error code',
+                'order' => 8,
             },
             'bounce_score_subscriber' => {
                 'struct' => 'smallint(6)',
@@ -121,8 +122,7 @@ my %full_db_struct = (
             #},
             'update_epoch_subscriber' => {
                 'struct' => 'int(11)',
-                'doc' =>
-                    'last time subscription was confirmed by subscriber',
+                'doc' => 'last time subscription was confirmed by subscriber',
                 'order' => 12.5,
             },
             'inclusion_subscriber' => {
@@ -191,7 +191,8 @@ my %full_db_struct = (
             },
 
         },
-        'doc'   => 'This table stores subscription, subscription options, etc...',
+        'doc' =>
+            'This table stores subscription, subscription options, etc...',
         'order' => 1,
     },
     'user_table' => {
@@ -807,8 +808,8 @@ my %full_db_struct = (
             },
             'parameter_stat' => {
                 'struct' => 'varchar(50)',
-                'doc'    => 'unused except to store message size on send_mail',
-                'order'  => 9,
+                'doc'   => 'unused except to store message size on send_mail',
+                'order' => 9,
             },
             'read_stat' => {
                 'struct'   => 'tinyint(1)',

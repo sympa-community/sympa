@@ -50,8 +50,7 @@ is $dec, $unicode_email, 'decode_filesystem_safe, Unicode';
 # Note: Noncharacters (U+nFFFE, U+nFFFF and U+FDD0..U+FDEF) are no longer
 #   ill-formed according to Unicode Corrigendum #9.
 is Sympa::Tools::Text::canonic_text(
-    "\xED\xA0\x80\n\n\xF4\x90\x80\x80\n\xF8\x88\x80\x80\x80\n"
-    ),
+    "\xED\xA0\x80\n\n\xF4\x90\x80\x80\n\xF8\x88\x80\x80\x80\n"),
     Encode::encode_utf8(
     "\x{FFFD}\x{FFFD}\x{FFFD}\n\n\x{FFFD}\x{FFFD}\x{FFFD}\x{FFFD}\n\x{FFFD}\x{FFFD}\x{FFFD}\x{FFFD}\x{FFFD}\n"
     ),
