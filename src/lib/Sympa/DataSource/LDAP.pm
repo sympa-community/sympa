@@ -67,22 +67,8 @@ sub _open_operation {
     my $self    = shift;
     my %options = @_;
 
-    my $ldap_suffix = $options{suffix} || $self->{suffix};
-    my $ldap_filter = $options{filter} || $self->{filter};
-    my $ldap_attrs  = $options{attrs}  || $self->{attrs};
-    my $ldap_scope  = $options{scope}  || $self->{scope};
-    my $ldap_deref  = $options{deref}  || $self->{deref};
-
-    my @args = (
-        base    => $ldap_suffix,
-        filter  => $ldap_filter,
-        attrs   => [split /\s*,\s*/, $ldap_attrs],
-        scope   => $ldap_scope,
-        deref   => $ldap_deref,
-        control => $self->{_page} ? [$self->{_page}] : []
-    );
-
-    my $mesg = $self->{_db}->do_operation('search', @args);
+    my $mesg = $self->{_db}->do_operation('search', %options,
+        control => ($self->{_page} ? [$self->{_page}] : []));
 
     unless ($mesg) {
         $log->syslog(
@@ -94,7 +80,8 @@ sub _open_operation {
         if ($self->{_page}) {
             # We had an abnormal exit, so let the server know we do not want any more
             $self->{_page}->size(0);
-            $self->{_db}->do_operation('search', @args);
+            $self->{_db}->do_operation('search', %options,
+                control => [$self->{_page}]);
         }
 
         return undef;
