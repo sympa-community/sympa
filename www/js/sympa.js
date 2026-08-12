@@ -5,7 +5,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2017, 2018, 2023 The Sympa Community. See the
+# Copyright 2017, 2018, 2019, 2025 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -72,11 +72,13 @@ $(function() {
 });
 
 /*
- * No longer used as of 6.2.17, however, can be included in older archives.
+ * No longer used, however, can be included in older archives.
  */
 function isNotEmpty(i) { return true; }
 function request_confirm(m) { return true; }
 function toggle_selection(myfield) { return false; }
+function checkbox_check_topic(f) { return true; }
+function check_reject_spam(f, w) { return true; }
 
 /* Toggle selection. */
 /* Fields included in .toggleContainer and specified by data-selector
@@ -102,23 +104,37 @@ $(function() {
     });
 });
 
-// check if rejecting quietly spams TODO
-function check_reject_spam(form,warningId) {
-	if(form.elements['iConfirm'].checked) return true;
-	
-	if(form.elements['message_template'].options[form.elements['message_template'].selectedIndex].value ==  'reject_quiet') return true;
-	
-	$('#' + warningId).show();
-	return false;
-}
+// check if rejecting quietly spams
+$(function() {
+    $('.checkRejectSpam').on('click', function() {
+        var form = $(this).parents('form');
+
+        if (form.elements['iConfirm'].checked)
+            return true;
+        if (form.elements['message_template']
+            .options[form.elements['message_template'].selectedIndex]
+            .value == 'reject_quiet')
+            return true;
+
+        $('#warningSpam').show();
+        return false;
+    });
+});
 
 // To check at least one checkbox checked
-function checkbox_check_topic(form, warningId) {
-	if($(form).find('input[name^="topic_"]:checked').length) return true;
-	
-	$('#' + warningId).show();
-	return false;
-}
+$(function() {
+    $('.topicChecked').each(
+        function () {
+            var form = $(this).parents('form');
+            $(this).on('click', function() {
+                if (form.find('input[name^="topic_"]:checked').length)
+                    return true;
+                return false;
+            });
+            return true;
+        }
+    );
+});
 
 /* Add a button to reset all fields in log form. */
 $(function() {
@@ -339,6 +355,46 @@ $(function(){
 
             return false;
         });
+    });
+});
+
+$(function() {
+    $('span.decoText').each(function(){
+        var elm = $(this);
+        try {
+            var chars = String(elm.data('text')).split(',').map(
+                function(val) {
+                    if (isNaN(val)) {
+                        throw new Error('Non-numeric data');
+                    }
+                    return val.toString(10);
+                }
+            );
+            elm.text(String.fromCharCode.apply(null, chars));
+            elm.attr('data-text', null);
+        } catch(e) {
+            return false;
+        }
+        return true;
+    });
+
+    $("a[href='mailto:decoText']").each(function(){
+        var elm = $(this);
+        try {
+            var chars = String(elm.data('text')).split(',').map(
+                function(val) {
+                    if (isNaN(val)) {
+                        throw new Error('Non-numeric data');
+                    }
+                    return val.toString(10);
+                }
+            );
+            elm.attr('href', 'mailto:' + String.fromCharCode.apply(null, chars));
+            elm.attr('data-text', null);
+        } catch(e) {
+            return false;
+        }
+        return true;
     });
 });
 

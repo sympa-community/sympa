@@ -1,6 +1,5 @@
 # -*- indent-tabs-mode: nil; -*-
 # vim:ft=perl:et:sw=4
-# $Id$
 
 # Sympa - SYsteme de Multi-Postage Automatique
 #
@@ -8,7 +7,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2021 The Sympa Community. See the
+# Copyright 2021, 2025 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -267,47 +266,53 @@ sub decorate_email_concealed {
 sub decorate_email_js {
     my $self = shift;
 
-    my $text = '';
-    while (my $item = $self->_queue_shift) {
-        $text .= $item->{text};
-    }
-
-    if (index($text, '<') == 0) {
-        return _decorate_email_js($text);
-    }
-
     my $decorated = '';
-    my $dtext     = Sympa::Tools::Text::decode_html($text);
-    pos $dtext = 0;
-    while ($dtext =~ /\G((?:\n|.)*?)\b($email_like_re)\b/cg) {
-        $decorated .=
-              Sympa::Tools::Text::encode_html($1)
-            . _decorate_email_js(Sympa::Tools::Text::encode_html($2));
-    }
-    if (pos $dtext) {
-        return $decorated
-            . Sympa::Tools::Text::encode_html(substr $dtext, pos $dtext);
+    while (my $item = $self->_queue_shift) {
+        if ($item->{event} eq 'text') {
+            my $dtext = Sympa::Tools::Text::decode_html($item->{text});
+            pos $dtext = 0;
+            while ($dtext =~ m{\G(.*?)\b($email_like_re)\b}cg) {
+                $decorated .= Sympa::Tools::Text::encode_html($1)
+                    . _decorate_email_js($2);
+            }
+            $decorated .=
+                Sympa::Tools::Text::encode_html(substr $dtext, pos $dtext);
+        } elsif ($item->{event} eq 'start'
+            and $item->{attr}
+            and 0 == index(lc($item->{attr}->{href} // ''), 'mailto:')) {
+            # Empties mailto URL in link target
+            my $text = $item->{text};
+            $text =~ s{(?<=\bhref=)([^\s>]+)}{
+                my $val = $1;
+                $val =~ s/\A['"\s]+//;
+                $val =~ s/['"\s]+\z//;
+                $val =~ s/\Amailto://i;
+                sprintf '"mailto:decoText" data-text="%s"',
+                    _decorate_email_js_encode(
+                        Sympa::Tools::Text::decode_html($val))
+            }egi;
+            $decorated .= $text;
+        } else {
+            $decorated .= $item->{text};
+        }
     }
 
-    return $text;
+    return $decorated;
 }
 
 sub _decorate_email_js {
     my $text = shift;
 
-    my @texts = map {
-        my $str = (defined $_) ? $_ : '';
-        $str =~ s/([\\\"])/\\$1/g;
-        $str =~ s/\r\n|\r|\n/\\n/g;
-        $str =~ s/\t/\\t/g;
-        $str;
+    return join '', map {
+        sprintf '<span class="decoText" data-text="%s">%s</span>',
+            _decorate_email_js_encode($_), '*' x length $_;
     } split /\b|(?=\@)|(?<=\@)/, $text;
-    return
-          sprintf '<script type="text/javascript">' . "\n" . '<!--' . "\n"
-        . 'document.write(%s)' . "\n"
-        . '// -->' . "\n"
-        . '</script>',
-        join(" +\n", map { '"' . $_ . '"' } @texts);
+}
+
+sub _decorate_email_js_encode {
+    my $text = shift;
+
+    join ',', map { ord $_ } split //, $text;
 }
 
 1;

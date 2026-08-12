@@ -13,12 +13,13 @@
             </button>&nbsp;
         </p>
         <p>
-            <button class="action" type="submit" name="action_reject"
-                    value="[%|loc%]Reject[%END%]" data-tooltip
-                    [% IF msg.value.spam_status == 'spam' ~%]
-                        onclick="return check_reject_spam(reject_mail,'warningSpam')" aria-haspopup="true"
-                    [%~ END %]
-                    title="[%|loc%]Reject[%END%]">
+            <button class="action[%IF msg.value.spam_status == 'spam'%] checkRejectSpam[%END%]"
+             type="submit" name="action_reject"
+             value="[%|loc%]Reject[%END%]" data-tooltip
+             [% IF msg.value.spam_status == 'spam' ~%]
+                aria-haspopup="true"
+             [% END ~%]
+             title="[%|loc%]Reject[%END%]">
                 <i class="fas fa-trash-alt fa-lg"></i> [%|loc%]Reject[%END%]
             </button>
             <select name="message_template">
