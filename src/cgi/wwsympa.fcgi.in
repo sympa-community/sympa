@@ -1003,13 +1003,6 @@ our %in_regexp = (
     'role' => 'member|editor|owner',
 );
 
-## Regexp applied on incoming parameters (%in)
-## This regular expression defines forbidden expressions applied on all
-## incoming parameters
-## Note that you can use the ^ and $ expressions to match beginning and ending
-## of expressions
-our %in_negative_regexp = ('arc_file' => '^(arctxt|\.)');
-
 # No longer used as of 6.2.19b.
 #my %filtering;
 
@@ -2089,13 +2082,6 @@ sub get_parameters {
             $regexp = $in_regexp{'*'};
         }
 
-        my $negative_regexp;
-        if ($pname =~ /^additional_field/) {
-            $negative_regexp = $in_negative_regexp{'additional_field'};
-        } elsif ($in_negative_regexp{$pname}) {
-            $negative_regexp = $in_negative_regexp{$pname};
-        }
-
         # If we are editing an HTML file in the shared, allow HTML but prevent
         # XSS.
         if (   $pname eq 'content'
@@ -2113,9 +2099,7 @@ sub get_parameters {
             }
         }
         foreach my $one_p (split /\0/, $in{$p}) {
-            if ($one_p !~ /^$regexp$/s
-                || (defined $negative_regexp && $one_p =~ /$negative_regexp/s)
-            ) {
+            unless ($one_p =~ /\A$regexp\z/s) {
                 add_stash('user', 'syntax_errors', {p_name => $p});
                 wwslog(
                     'err',
@@ -8471,16 +8455,12 @@ sub do_arc {
         $in{'arc_file'} = $html_metadata->{filename} if $html_metadata;
     } else {
         $html_metadata = $archive->html_fetch(file => $in{'arc_file'});
+        $in{'arc_file'} = $html_metadata->{filename} if $html_metadata;
     }
     unless ($html_metadata) {
+        print "Status: 404 Not Found\n";
         wwslog('err', 'Unable to read HTML message <%s>', $in{'arc_file'});
-        add_stash(
-            'user',
-            'month_not_found',
-            {   'arc_file' => $in{'arc_file'},
-                'month'    => $in{'month'},
-            }
-        );
+        add_stash('user', 'no_required_file');
         return undef;
     }
 
