@@ -48,10 +48,25 @@ dotest(
     [], qw(upgrade outgoing -n)
 );
 
+dotest('Sympa::CLI::create', {input_file => '<path_to_input>'},
+    [], qw(create --input-file=<path_to_input>));
+dotest('Sympa::CLI::create', {input_file => '<path_to_input>'},
+    [], qw(create --input-file <path_to_input>));
+dotest('Sympa::CLI::create', {input_file => '<path_to_input>'},
+    [], qw(create --input_file=<path_to_input>));
+
 # PR #1344
 dotest('Sympa::CLI::config', {}, [qw(unknown)], qw(config unknown));
 dotest('Sympa::CLI::config::create', {}, [qw(unknown)],
     qw(config create unknown));
+
+# Issue #1966
+dotest('Sympa::CLI::add', {config => '<path_to_config>', force => 1},
+    [qw(mylist@example.org)],
+    qw(add -F -f <path_to_config> mylist@example.org));
+
+# Unknown options
+dotest(undef, {}, [qw(config create --unknown)], qw(config create --unknown));
 
 sub dotest {
     my $wishedClass   = shift;
@@ -59,15 +74,18 @@ sub dotest {
     my $wishedArgv    = shift;
     my @argv          = @_;
 
-    diag join(' ', @argv) =~ s/(.{73}).*/$1.../r;
-    my %options;
-    my $class = Sympa::CLI->getoptions(\%options, \@argv);
+    my @warnings;
+    local $SIG{__WARN__} = sub { push @warnings, @_ };
 
-    is $class, $wishedClass, "Class $wishedClass";
-    is_deeply \%options, $wishedOptions, sprintf '{%s}',
-        join(', ', sort keys %$wishedOptions) =~ s/(.{65}).*/$1.../r;
-    is_deeply \@argv, $wishedArgv, sprintf '[%s]',
-        join(', ', @$wishedArgv) =~ s/(.{65}).*/$1.../r;
+    note join(' ', @_) =~ s/(.{73}).*/$1.../r;
+    my ($class, %options) = Sympa::CLI->getoptions(undef, \@argv);
+    is $class, $wishedClass, $wishedClass;
+    is_deeply \%options, $wishedOptions,
+        join('', explain $wishedOptions) =~ s/\n\s*//gr;
+    is_deeply \@argv, $wishedArgv,
+        join('', explain $wishedArgv) =~ s/\n\s*//gr;
+
+    note map { '  ' . $_ } @warnings if @warnings;
 }
 
 done_testing;
