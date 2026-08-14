@@ -13,6 +13,7 @@
 
 * Fix breakage by PR #1984 (#2049) [\#2050](https://github.com/sympa-community/sympa/pull/2050)
 * Fix breakage by refactoring on PR#2028 [\#2066](https://github.com/sympa-community/sympa/pull/2066)
+* WWSympa: arc: Deleted or raw message files could be fetched [\##2068](https://github.com/sympa-community/sympa/pull/2068)
 
 ## [6.2.78](https://github.com/sympa-community/sympa/tree/6.2.78) (2026-03-28)
 
