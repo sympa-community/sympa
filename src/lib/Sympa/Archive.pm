@@ -8,7 +8,7 @@
 # Copyright (c) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
 # 2006, 2007, 2008, 2009, 2010, 2011 Comite Reseau des Universites
 # Copyright (c) 2011, 2012, 2013, 2014, 2015, 2016, 2017 GIP RENATER
-# Copyright 2018, 2019, 2020, 2021 The Sympa Community. See the
+# Copyright 2018, 2019, 2020, 2021, 2026 The Sympa Community. See the
 # AUTHORS.md file at the top-level directory of this distribution and at
 # <https://github.com/sympa-community/sympa.git>.
 #
@@ -214,7 +214,14 @@ sub html_fetch {
     return undef unless $self->{arc_directory};
     return undef unless $options{file};
 
-    my $html_file = $self->{arc_directory} . '/' . $options{file};
+    # Omit arctxt etc.
+    return undef
+        if grep { 0 == index $_, '.' or $_ eq 'arctxt' or $_ eq 'deleted' }
+        split m{/+}, $options{file};
+    # Remove extra slashes.
+    my $file = join '/', grep {length} split m{/+}, $options{file};
+
+    my $html_file = $self->{arc_directory} . '/' . $file;
     my $handle = IO::File->new($html_file, '<');
 
     unless ($handle) {
@@ -244,7 +251,7 @@ sub html_fetch {
     }
     seek $handle, 0, 0;
     $metadata->{html_content} = do { local $RS; <$handle> };
-    $metadata->{filename} = $options{file};
+    $metadata->{filename} = $file;
 
     return $metadata;
 }
