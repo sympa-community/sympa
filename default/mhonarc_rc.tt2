@@ -610,7 +610,12 @@ $POWERED_BY$
                         </label>
                 <% END %>
                 <input class="MainMenuLinks" type="submit" name="action_compose_mail" value="<%|loc%>Reply<%END%>" /><br />
+                <% IF is_listmaster %>
+                <input class="MainMenuLinks" type="submit" name="action_send_me" value="Re-deliver to:" />
+                <input name="send_msg_to" value="<%|loc(user.email)%>%1<%END%>" /><br />
+                <% ELSE %>
                 <input class="MainMenuLinks" type="submit" name="action_send_me" value="<%|loc(user.email)%>Re-deliver to %1<%END%>" /><br />
+                <% END %>
                 <input type="hidden" name="yyyy" value="$yyyy$" />
                 <input type="hidden" name="month" value="$mois$" />
                 <input type="hidden" name="msgid" value="$MSGID$" />
