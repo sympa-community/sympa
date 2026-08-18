@@ -869,6 +869,7 @@ our %in_regexp = (
     'new_email'     => Sympa::Regexps::email(),
     'sender'        => Sympa::Regexps::email(),
     'fromaddr'      => Sympa::Regexps::email(),
+    'send_msg_to'   => Sympa::Regexps::email(),
     'del_emails'    => '.*',
     'to' => '(([\w\-\_\.\/\+\=\']+|\".*\")\s[\w\-]+(\.[\w\-]+)+(,?))*',
     'automatic_list_part_*' => '[\w\-\.\+]*',
@@ -8610,14 +8611,20 @@ sub do_remove_arc {
 #  Sends a web archive message to a
 #  requesting user
 #
-# IN : -
+# IN : user to deliver to
 #
 # OUT : 'arc' | 1 | undef
 #
 ####################################################
 sub do_send_me {
-    wwslog('info', '(%s, %s, %s, %s)',
-        $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'});
+    wwslog('info', '(%s, %s, %s, %s, %s)',
+        $in{'list'}, $in{'yyyy'}, $in{'month'}, $in{'msgid'}, $in{'send_msg_to'});
+
+    if ($param->{'is_listmaster'}) {
+        $param->{'send_msg_to'} = $in{'send_msg_to'} || $param->{'user'}{'email'};
+    } else {
+        $param->{'send_msg_to'} = $param->{'user'}{'email'};
+    }
 
     my $message_id = Sympa::Tools::Text::canonic_message_id($in{'msgid'});
     unless ($message_id
@@ -8629,7 +8636,7 @@ sub do_send_me {
     }
 
     my $spindle = Sympa::Spindle::ResendArchive->new(
-        resent_by  => $param->{'user'}{'email'},
+        resent_by  => $param->{'send_msg_to'},
         context    => $list,
         arc        => "$in{'yyyy'}-$in{'month'}",
         message_id => $message_id,
@@ -8642,8 +8649,8 @@ sub do_send_me {
         return undef;
     } elsif ($spindle->{finish} and $spindle->{finish} eq 'success') {
         wwslog(
-            'info',      'Message %s spooled for %s',
-            $message_id, $param->{'user'}{'email'}
+            'info',      'Message %s spooled for %s by %s',
+            $message_id, $param->{'send_msg_to'}, $param->{'user'}{'email'}
         );
         add_stash('notice', 'performed');
         $in{'month'} = $in{'yyyy'} . "-" . $in{'month'};
@@ -8653,7 +8660,7 @@ sub do_send_me {
         wwslog(
             'err',
             'Impossible to send archive file to %s',
-            $param->{'user'}{'email'}
+            $param->{'send_msg_to'}
         );
         return undef;
     }
