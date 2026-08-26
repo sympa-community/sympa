@@ -3487,8 +3487,18 @@ sub _check_dmarc_rr {
     my $rrstr;
     my $sp = 0;
     while (0 <= index $domain, '.') {
-        my $packet = $dns->query("_dmarc.$domain", 'TXT');
-        next unless $packet;
+        # Note: send() is used instead of query(), because the latter returns
+        # undef both when the lookup failed and when it succeeded without any
+        # matching record.  send() returns undef only in the former case, so
+        # that a failure (blocked socket, timeout, SERVFAIL etc.) can be
+        # reported instead of being taken for "domain has no DMARC record".
+        my $packet = $dns->send("_dmarc.$domain", 'TXT');
+        unless ($packet) {
+            $log->syslog('err',
+                'DNS lookup of "_dmarc.%s" TXT failed: %s. DMARC protection is not applied',
+                $domain, $dns->errorstring);
+            next;
+        }
 
         ($rrstr) = grep { $_ and $_ =~ /\Av=DMARC/i } map {
             # Note: txtdata() of Net::DNS::RR::TXT >=0.69 returns array of
