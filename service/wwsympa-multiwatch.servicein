@@ -9,9 +9,8 @@ Group=--GROUP--
 ExecStart=/usr/bin/multiwatch \
           -f $WWS_FCGI_CHILDREN -- \
           --execcgidir--/wwsympa.fcgi
-StandardOutput=null
+StandardOutput=journal
 StandardInput=socket
-StandardError=journal
 Environment="WWS_FCGI_CHILDREN=5"
 EnvironmentFile=-/etc/default/sympa
 EnvironmentFile=-/etc/sysconfig/sympa
