@@ -660,7 +660,8 @@ sub gettext_strftime {
         POSIX::setlocale(POSIX::LC_TIME(), 'C');
     } else {
         $format = $self->gettext($format);
-
+        $format = Encode::decode('UTF-8', $format);
+		
         ## If POSIX locale was not set, emulate format strings.
         unless ($self->{locale_time}
             and $self->{locale_time} ne 'C'
